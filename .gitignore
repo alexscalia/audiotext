@@ -1,0 +1,39 @@
+# deps
+node_modules
+.pnpm-store
+
+# build
+.next
+.turbo
+dist
+out
+build
+
+# env
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# editor / os
+.DS_Store
+.idea
+.vscode/*
+!.vscode/extensions.json
+
+# rust (future)
+target
+**/*.rs.bk
+
+# misc
+coverage
+*.tsbuildinfo
+next-env.d.ts
+
+# omfc local state
+.omfc/

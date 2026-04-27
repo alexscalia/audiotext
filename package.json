@@ -1,0 +1,24 @@
+{
+  "name": "audiotext",
+  "private": true,
+  "version": "0.0.0",
+  "packageManager": "pnpm@10.23.0",
+  "engines": {
+    "node": ">=20.18.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "db:generate": "pnpm --filter @audiotext/db db:generate",
+    "db:migrate": "pnpm --filter @audiotext/db db:migrate",
+    "db:studio": "pnpm --filter @audiotext/db db:studio",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "turbo": "2.9.6",
+    "typescript": "^5",
+    "prettier": "3.4.2"
+  }
+}
