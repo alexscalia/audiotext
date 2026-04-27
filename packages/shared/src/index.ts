@@ -10,6 +10,8 @@ export const UserSchema = z.object({
   id: z.string().uuid(),
   email: z.string().email(),
   createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+  deletedAt: z.string().datetime().nullable(),
 });
 export type User = z.infer<typeof UserSchema>;
 
@@ -23,6 +25,8 @@ export const RoleSchema = z.object({
   name: z.string().min(1).max(64),
   description: z.string().nullable(),
   createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+  deletedAt: z.string().datetime().nullable(),
 });
 export type Role = z.infer<typeof RoleSchema>;
 
@@ -43,6 +47,8 @@ export const PermissionSchema = z.object({
   key: PermissionKey,
   description: z.string().nullable(),
   createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+  deletedAt: z.string().datetime().nullable(),
 });
 export type Permission = z.infer<typeof PermissionSchema>;
 
@@ -64,13 +70,19 @@ export const GrantPermissionInput = z.object({
 });
 export type GrantPermissionInput = z.infer<typeof GrantPermissionInput>;
 
+export const CountryCode = z
+  .string()
+  .length(2)
+  .regex(/^[A-Z]{2}$/, "ISO 3166-1 alpha-2");
+export type CountryCode = z.infer<typeof CountryCode>;
+
 export const CarrierAddressSchema = z.object({
   line1: z.string().min(1).max(256),
   line2: z.string().max(256).optional(),
   city: z.string().min(1).max(128),
   state: z.string().max(128).optional(),
   postalCode: z.string().min(1).max(32),
-  country: z.string().length(2).regex(/^[A-Z]{2}$/, "ISO 3166-1 alpha-2"),
+  countryCode: CountryCode,
 });
 export type CarrierAddress = z.infer<typeof CarrierAddressSchema>;
 
@@ -164,6 +176,41 @@ export type CreateChatContactInput = z.infer<typeof CreateChatContactInput>;
 
 export const UpdateChatContactInput = chatContactBase.partial();
 export type UpdateChatContactInput = z.infer<typeof UpdateChatContactInput>;
+
+export const TerminationStatusEnum = z.enum(["active", "inactive"]);
+export type TerminationStatus = z.infer<typeof TerminationStatusEnum>;
+
+export const CurrencyEnum = z.enum(["usd", "eur", "gbp"]);
+export type Currency = z.infer<typeof CurrencyEnum>;
+
+export const TerminationSchema = z.object({
+  id: z.string().uuid(),
+  status: TerminationStatusEnum,
+  carrierId: z.string().uuid(),
+  name: z.string().min(1).max(128),
+  internalRouteName: z.string().min(1).max(128),
+  carrierRouteName: z.string().min(1).max(128),
+  currency: CurrencyEnum,
+  countryCode: CountryCode,
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+  deletedAt: z.string().datetime().nullable(),
+});
+export type Termination = z.infer<typeof TerminationSchema>;
+
+export const CreateTerminationInput = z.object({
+  status: TerminationStatusEnum.default("active"),
+  carrierId: z.string().uuid(),
+  name: z.string().min(1).max(128),
+  internalRouteName: z.string().min(1).max(128),
+  carrierRouteName: z.string().min(1).max(128),
+  currency: CurrencyEnum,
+  countryCode: CountryCode,
+});
+export type CreateTerminationInput = z.infer<typeof CreateTerminationInput>;
+
+export const UpdateTerminationInput = CreateTerminationInput.partial();
+export type UpdateTerminationInput = z.infer<typeof UpdateTerminationInput>;
 
 export const UserWithRolesSchema = UserSchema.extend({
   roles: z.array(

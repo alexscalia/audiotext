@@ -19,7 +19,7 @@ export type CarrierBillingDetails = {
     city: string;
     state?: string;
     postalCode: string;
-    country: string;
+    countryCode: string;
   };
   taxId?: string;
   paymentTerms?: string;
@@ -33,31 +33,73 @@ export type CarrierBillingDetails = {
   notes?: string;
 };
 
-export const users = pgTable("users", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  email: text("email").notNull().unique(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-});
+export const users = pgTable(
+  "users",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    email: text("email").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("users_email_unique_active")
+      .on(t.email)
+      .where(sql`${t.deletedAt} IS NULL`),
+    index("users_deleted_at_idx").on(t.deletedAt),
+  ],
+);
 
-export const roles = pgTable("roles", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  name: text("name").notNull().unique(),
-  description: text("description"),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-});
+export const roles = pgTable(
+  "roles",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    name: text("name").notNull(),
+    description: text("description"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("roles_name_unique_active")
+      .on(t.name)
+      .where(sql`${t.deletedAt} IS NULL`),
+    index("roles_deleted_at_idx").on(t.deletedAt),
+  ],
+);
 
-export const permissions = pgTable("permissions", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  key: text("key").notNull().unique(),
-  description: text("description"),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-});
+export const permissions = pgTable(
+  "permissions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    key: text("key").notNull(),
+    description: text("description"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("permissions_key_unique_active")
+      .on(t.key)
+      .where(sql`${t.deletedAt} IS NULL`),
+    index("permissions_deleted_at_idx").on(t.deletedAt),
+  ],
+);
 
 export const userRoles = pgTable(
   "user_roles",
@@ -71,10 +113,16 @@ export const userRoles = pgTable(
     assignedAt: timestamp("assigned_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
   (t) => [
     primaryKey({ columns: [t.userId, t.roleId] }),
     index("user_roles_role_idx").on(t.roleId),
+    index("user_roles_deleted_at_idx").on(t.deletedAt),
   ],
 );
 
@@ -90,10 +138,16 @@ export const rolePermissions = pgTable(
     grantedAt: timestamp("granted_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
   (t) => [
     primaryKey({ columns: [t.roleId, t.permissionId] }),
     index("role_permissions_permission_idx").on(t.permissionId),
+    index("role_permissions_deleted_at_idx").on(t.deletedAt),
   ],
 );
 
@@ -210,6 +264,67 @@ export const chatContactsRelations = relations(chatContacts, ({ one }) => ({
     fields: [chatContacts.carrierId],
     references: [carriers.id],
   }),
+}));
+
+export const terminationStatus = pgEnum("termination_status", [
+  "active",
+  "inactive",
+]);
+export type TerminationStatus = (typeof terminationStatus.enumValues)[number];
+
+export const currency = pgEnum("currency", ["usd", "eur", "gbp"]);
+export type Currency = (typeof currency.enumValues)[number];
+
+export const terminations = pgTable(
+  "terminations",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    status: terminationStatus("status").notNull().default("active"),
+    carrierId: uuid("carrier_id")
+      .notNull()
+      .references(() => carriers.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    internalRouteName: text("internal_route_name").notNull(),
+    carrierRouteName: text("carrier_route_name").notNull(),
+    currency: currency("currency").notNull(),
+    countryCode: text("country_code").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("terminations_carrier_internal_unique_active")
+      .on(t.carrierId, t.internalRouteName)
+      .where(sql`${t.deletedAt} IS NULL`),
+    check(
+      "terminations_country_code_iso2",
+      sql`${t.countryCode} ~ '^[A-Z]{2}$'`,
+    ),
+    index("terminations_carrier_idx").on(t.carrierId),
+    index("terminations_status_idx").on(t.status),
+    index("terminations_country_idx").on(t.countryCode),
+    index("terminations_deleted_at_idx").on(t.deletedAt),
+  ],
+);
+
+export type TerminationRow = typeof terminations.$inferSelect;
+export type NewTerminationRow = typeof terminations.$inferInsert;
+
+export const terminationsRelations = relations(terminations, ({ one }) => ({
+  carrier: one(carriers, {
+    fields: [terminations.carrierId],
+    references: [carriers.id],
+  }),
+}));
+
+export const carriersRelations = relations(carriers, ({ many }) => ({
+  terminations: many(terminations),
+  chatContacts: many(chatContacts),
 }));
 
 export type UserRow = typeof users.$inferSelect;

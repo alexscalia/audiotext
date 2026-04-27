@@ -29,6 +29,20 @@
       "when": 1777312516082,
       "tag": "0003_aspiring_electro",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1777313026995,
+      "tag": "0004_overjoyed_celestials",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1777313197787,
+      "tag": "0005_daily_gertrude_yorkes",
+      "breakpoints": true
     }
   ]
 }
