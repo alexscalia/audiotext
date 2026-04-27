@@ -315,10 +315,51 @@ export const terminations = pgTable(
 export type TerminationRow = typeof terminations.$inferSelect;
 export type NewTerminationRow = typeof terminations.$inferInsert;
 
-export const terminationsRelations = relations(terminations, ({ one }) => ({
+export const terminationsRelations = relations(terminations, ({ one, many }) => ({
   carrier: one(carriers, {
     fields: [terminations.carrierId],
     references: [carriers.id],
+  }),
+  dids: many(dids),
+}));
+
+export const dids = pgTable(
+  "dids",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    terminationId: uuid("termination_id")
+      .notNull()
+      .references(() => terminations.id, { onDelete: "cascade" }),
+    number: text("number").notNull(),
+    lastSuccessfulAttemptAt: timestamp("last_successful_attempt_at", {
+      withTimezone: true,
+    }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("dids_number_unique_active")
+      .on(t.number)
+      .where(sql`${t.deletedAt} IS NULL`),
+    index("dids_termination_idx").on(t.terminationId),
+    index("dids_last_success_idx").on(t.lastSuccessfulAttemptAt),
+    index("dids_deleted_at_idx").on(t.deletedAt),
+  ],
+);
+
+export type DidRow = typeof dids.$inferSelect;
+export type NewDidRow = typeof dids.$inferInsert;
+
+export const didsRelations = relations(dids, ({ one }) => ({
+  termination: one(terminations, {
+    fields: [dids.terminationId],
+    references: [terminations.id],
   }),
 }));
 

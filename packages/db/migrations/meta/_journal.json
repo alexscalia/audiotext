@@ -43,6 +43,13 @@
       "when": 1777313197787,
       "tag": "0005_daily_gertrude_yorkes",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1777313619802,
+      "tag": "0006_windy_kulan_gath",
+      "breakpoints": true
     }
   ]
 }

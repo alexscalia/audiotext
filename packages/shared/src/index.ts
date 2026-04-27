@@ -212,6 +212,36 @@ export type CreateTerminationInput = z.infer<typeof CreateTerminationInput>;
 export const UpdateTerminationInput = CreateTerminationInput.partial();
 export type UpdateTerminationInput = z.infer<typeof UpdateTerminationInput>;
 
+export const DidNumber = z
+  .string()
+  .min(3)
+  .max(32)
+  .regex(/^\+?[0-9]+$/, "digits only, optional leading +");
+
+export const DidSchema = z.object({
+  id: z.string().uuid(),
+  terminationId: z.string().uuid(),
+  number: DidNumber,
+  lastSuccessfulAttemptAt: z.string().datetime().nullable(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+  deletedAt: z.string().datetime().nullable(),
+});
+export type Did = z.infer<typeof DidSchema>;
+
+export const CreateDidInput = z.object({
+  terminationId: z.string().uuid(),
+  number: DidNumber,
+});
+export type CreateDidInput = z.infer<typeof CreateDidInput>;
+
+export const UpdateDidInput = z.object({
+  terminationId: z.string().uuid().optional(),
+  number: DidNumber.optional(),
+  lastSuccessfulAttemptAt: z.string().datetime().nullable().optional(),
+});
+export type UpdateDidInput = z.infer<typeof UpdateDidInput>;
+
 export const UserWithRolesSchema = UserSchema.extend({
   roles: z.array(
     RoleSchema.extend({
