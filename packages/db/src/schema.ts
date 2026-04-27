@@ -1,12 +1,37 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   pgTable,
+  pgEnum,
   uuid,
   text,
   timestamp,
   primaryKey,
   index,
+  uniqueIndex,
+  jsonb,
+  check,
 } from "drizzle-orm/pg-core";
+
+export type CarrierBillingDetails = {
+  address: {
+    line1: string;
+    line2?: string;
+    city: string;
+    state?: string;
+    postalCode: string;
+    country: string;
+  };
+  taxId?: string;
+  paymentTerms?: string;
+  bank?: {
+    name: string;
+    accountNumber: string;
+    routingNumber?: string;
+    iban?: string;
+    swift?: string;
+  };
+  notes?: string;
+};
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -103,6 +128,89 @@ export const rolePermissionsRelations = relations(
     }),
   }),
 );
+
+export const carriers = pgTable(
+  "carriers",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    name: text("name").notNull(),
+    businessName: text("business_name").notNull(),
+    billingDetails: jsonb("billing_details")
+      .$type<CarrierBillingDetails>()
+      .notNull(),
+    ratesEmail: text("rates_email").notNull(),
+    billingEmail: text("billing_email").notNull(),
+    nocName: text("noc_name").notNull(),
+    nocEmail: text("noc_email").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("carriers_name_unique_active")
+      .on(t.name)
+      .where(sql`${t.deletedAt} IS NULL`),
+    index("carriers_deleted_at_idx").on(t.deletedAt),
+  ],
+);
+
+export type CarrierRow = typeof carriers.$inferSelect;
+export type NewCarrierRow = typeof carriers.$inferInsert;
+
+export const chatApp = pgEnum("chat_app", ["whatsapp", "telegram", "signal"]);
+export type ChatApp = (typeof chatApp.enumValues)[number];
+
+export const chatContacts = pgTable(
+  "chat_contacts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id").references(() => users.id, {
+      onDelete: "cascade",
+    }),
+    carrierId: uuid("carrier_id").references(() => carriers.id, {
+      onDelete: "cascade",
+    }),
+    chatApp: chatApp("chat_app").notNull(),
+    chatId: text("chat_id").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    check(
+      "chat_contacts_owner_xor",
+      sql`((${t.userId} IS NOT NULL)::int + (${t.carrierId} IS NOT NULL)::int) = 1`,
+    ),
+    index("chat_contacts_user_idx").on(t.userId),
+    index("chat_contacts_carrier_idx").on(t.carrierId),
+    index("chat_contacts_app_id_idx").on(t.chatApp, t.chatId),
+    index("chat_contacts_deleted_at_idx").on(t.deletedAt),
+  ],
+);
+
+export type ChatContactRow = typeof chatContacts.$inferSelect;
+export type NewChatContactRow = typeof chatContacts.$inferInsert;
+
+export const chatContactsRelations = relations(chatContacts, ({ one }) => ({
+  user: one(users, {
+    fields: [chatContacts.userId],
+    references: [users.id],
+  }),
+  carrier: one(carriers, {
+    fields: [chatContacts.carrierId],
+    references: [carriers.id],
+  }),
+}));
 
 export type UserRow = typeof users.$inferSelect;
 export type NewUserRow = typeof users.$inferInsert;
