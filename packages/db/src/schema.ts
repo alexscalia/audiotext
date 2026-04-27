@@ -10,6 +10,8 @@ import {
   uniqueIndex,
   jsonb,
   check,
+  integer,
+  boolean,
 } from "drizzle-orm/pg-core";
 
 export type CarrierBillingDetails = {
@@ -366,6 +368,129 @@ export const didsRelations = relations(dids, ({ one }) => ({
 export const carriersRelations = relations(carriers, ({ many }) => ({
   terminations: many(terminations),
   chatContacts: many(chatContacts),
+  trunks: many(trunks),
+}));
+
+export const trunkStatus = pgEnum("trunk_status", [
+  "active",
+  "inactive",
+  "testing",
+]);
+export type TrunkStatus = (typeof trunkStatus.enumValues)[number];
+
+export const trunkDirection = pgEnum("trunk_direction", [
+  "inbound",
+  "outbound",
+  "both",
+]);
+export type TrunkDirection = (typeof trunkDirection.enumValues)[number];
+
+export const trunkProtocol = pgEnum("trunk_protocol", ["sip", "sips"]);
+export type TrunkProtocol = (typeof trunkProtocol.enumValues)[number];
+
+export const trunkTransport = pgEnum("trunk_transport", ["udp", "tcp", "tls"]);
+export type TrunkTransport = (typeof trunkTransport.enumValues)[number];
+
+export const trunkAuthType = pgEnum("trunk_auth_type", [
+  "ip",
+  "userpass",
+  "both",
+]);
+export type TrunkAuthType = (typeof trunkAuthType.enumValues)[number];
+
+export const trunkDtmfMode = pgEnum("trunk_dtmf_mode", [
+  "rfc2833",
+  "inband",
+  "info",
+]);
+export type TrunkDtmfMode = (typeof trunkDtmfMode.enumValues)[number];
+
+export const trunkNatMode = pgEnum("trunk_nat_mode", [
+  "no",
+  "yes",
+  "force_rport",
+  "comedia",
+]);
+export type TrunkNatMode = (typeof trunkNatMode.enumValues)[number];
+
+export const trunks = pgTable(
+  "trunks",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    carrierId: uuid("carrier_id")
+      .notNull()
+      .references(() => carriers.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    status: trunkStatus("status").notNull().default("active"),
+    direction: trunkDirection("direction").notNull().default("both"),
+    protocol: trunkProtocol("protocol").notNull().default("sip"),
+    transport: trunkTransport("transport").notNull().default("udp"),
+    host: text("host").notNull(),
+    port: integer("port").notNull().default(5060),
+    authType: trunkAuthType("auth_type").notNull(),
+    username: text("username"),
+    passwordEncrypted: text("password_encrypted"),
+    realm: text("realm"),
+    fromUser: text("from_user"),
+    fromDomain: text("from_domain"),
+    register: boolean("register").notNull().default(false),
+    proxy: text("proxy"),
+    expiresSeconds: integer("expires_seconds"),
+    qualifySeconds: integer("qualify_seconds"),
+    maxChannels: integer("max_channels"),
+    cpsLimit: integer("cps_limit"),
+    codecs: jsonb("codecs")
+      .$type<string[]>()
+      .notNull()
+      .default(sql`'[]'::jsonb`),
+    dtmfMode: trunkDtmfMode("dtmf_mode").notNull().default("rfc2833"),
+    natMode: trunkNatMode("nat_mode").notNull().default("no"),
+    ipAcl: jsonb("ip_acl").$type<string[]>(),
+    metadata: jsonb("metadata").$type<Record<string, unknown>>(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("trunks_carrier_name_unique_active")
+      .on(t.carrierId, t.name)
+      .where(sql`${t.deletedAt} IS NULL`),
+    index("trunks_carrier_idx").on(t.carrierId),
+    index("trunks_status_idx").on(t.status),
+    index("trunks_deleted_at_idx").on(t.deletedAt),
+    check("trunks_port_range", sql`${t.port} BETWEEN 1 AND 65535`),
+    check(
+      "trunks_auth_userpass_complete",
+      sql`${t.authType} NOT IN ('userpass','both') OR (${t.username} IS NOT NULL AND ${t.passwordEncrypted} IS NOT NULL)`,
+    ),
+    check(
+      "trunks_auth_ip_complete",
+      sql`${t.authType} NOT IN ('ip','both') OR (${t.ipAcl} IS NOT NULL AND jsonb_array_length(${t.ipAcl}) > 0)`,
+    ),
+    check(
+      "trunks_max_channels_positive",
+      sql`${t.maxChannels} IS NULL OR ${t.maxChannels} > 0`,
+    ),
+    check(
+      "trunks_cps_limit_positive",
+      sql`${t.cpsLimit} IS NULL OR ${t.cpsLimit} > 0`,
+    ),
+  ],
+);
+
+export type TrunkRow = typeof trunks.$inferSelect;
+export type NewTrunkRow = typeof trunks.$inferInsert;
+
+export const trunksRelations = relations(trunks, ({ one }) => ({
+  carrier: one(carriers, {
+    fields: [trunks.carrierId],
+    references: [carriers.id],
+  }),
 }));
 
 export type UserRow = typeof users.$inferSelect;

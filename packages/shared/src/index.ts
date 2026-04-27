@@ -212,6 +212,140 @@ export type CreateTerminationInput = z.infer<typeof CreateTerminationInput>;
 export const UpdateTerminationInput = CreateTerminationInput.partial();
 export type UpdateTerminationInput = z.infer<typeof UpdateTerminationInput>;
 
+export const TrunkStatusEnum = z.enum(["active", "inactive", "testing"]);
+export type TrunkStatus = z.infer<typeof TrunkStatusEnum>;
+
+export const TrunkDirectionEnum = z.enum(["inbound", "outbound", "both"]);
+export type TrunkDirection = z.infer<typeof TrunkDirectionEnum>;
+
+export const TrunkProtocolEnum = z.enum(["sip", "sips"]);
+export type TrunkProtocol = z.infer<typeof TrunkProtocolEnum>;
+
+export const TrunkTransportEnum = z.enum(["udp", "tcp", "tls"]);
+export type TrunkTransport = z.infer<typeof TrunkTransportEnum>;
+
+export const TrunkAuthTypeEnum = z.enum(["ip", "userpass", "both"]);
+export type TrunkAuthType = z.infer<typeof TrunkAuthTypeEnum>;
+
+export const TrunkDtmfModeEnum = z.enum(["rfc2833", "inband", "info"]);
+export type TrunkDtmfMode = z.infer<typeof TrunkDtmfModeEnum>;
+
+export const TrunkNatModeEnum = z.enum(["no", "yes", "force_rport", "comedia"]);
+export type TrunkNatMode = z.infer<typeof TrunkNatModeEnum>;
+
+export const IpOrCidr = z
+  .string()
+  .min(2)
+  .max(64)
+  .regex(
+    /^([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(\/(3[0-2]|[12]?[0-9]))?|[0-9a-fA-F:]+(\/(1[01][0-9]|12[0-8]|[1-9]?[0-9]))?)$/,
+    "IPv4/IPv6 address or CIDR",
+  );
+export type IpOrCidr = z.infer<typeof IpOrCidr>;
+
+export const CodecCode = z
+  .string()
+  .min(2)
+  .max(16)
+  .regex(/^[a-z0-9]+$/, "lowercase alphanumeric");
+export type CodecCode = z.infer<typeof CodecCode>;
+
+export const Port = z.number().int().min(1).max(65535);
+export const PositiveInt = z.number().int().positive();
+
+const trunkBaseFields = {
+  carrierId: z.string().uuid(),
+  name: z.string().min(1).max(128),
+  status: TrunkStatusEnum.default("active"),
+  direction: TrunkDirectionEnum.default("both"),
+  protocol: TrunkProtocolEnum.default("sip"),
+  transport: TrunkTransportEnum.default("udp"),
+  host: z.string().min(1).max(255),
+  port: Port.default(5060),
+  realm: z.string().max(255).optional(),
+  fromUser: z.string().max(128).optional(),
+  fromDomain: z.string().max(255).optional(),
+  register: z.boolean().default(false),
+  proxy: z.string().max(255).optional(),
+  expiresSeconds: PositiveInt.optional(),
+  qualifySeconds: PositiveInt.optional(),
+  maxChannels: PositiveInt.optional(),
+  cpsLimit: PositiveInt.optional(),
+  codecs: z.array(CodecCode).default([]),
+  dtmfMode: TrunkDtmfModeEnum.default("rfc2833"),
+  natMode: TrunkNatModeEnum.default("no"),
+  metadata: z.record(z.string(), z.unknown()).optional(),
+};
+
+export const TrunkSchema = z.object({
+  id: z.string().uuid(),
+  carrierId: z.string().uuid(),
+  name: z.string(),
+  status: TrunkStatusEnum,
+  direction: TrunkDirectionEnum,
+  protocol: TrunkProtocolEnum,
+  transport: TrunkTransportEnum,
+  host: z.string(),
+  port: Port,
+  authType: TrunkAuthTypeEnum,
+  username: z.string().nullable(),
+  passwordEncrypted: z.string().nullable(),
+  realm: z.string().nullable(),
+  fromUser: z.string().nullable(),
+  fromDomain: z.string().nullable(),
+  register: z.boolean(),
+  proxy: z.string().nullable(),
+  expiresSeconds: z.number().int().nullable(),
+  qualifySeconds: z.number().int().nullable(),
+  maxChannels: z.number().int().nullable(),
+  cpsLimit: z.number().int().nullable(),
+  codecs: z.array(CodecCode),
+  dtmfMode: TrunkDtmfModeEnum,
+  natMode: TrunkNatModeEnum,
+  ipAcl: z.array(IpOrCidr).nullable(),
+  metadata: z.record(z.string(), z.unknown()).nullable(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+  deletedAt: z.string().datetime().nullable(),
+});
+export type Trunk = z.infer<typeof TrunkSchema>;
+
+export const CreateTrunkInput = z.discriminatedUnion("authType", [
+  z.object({
+    authType: z.literal("ip"),
+    ipAcl: z.array(IpOrCidr).min(1),
+    ...trunkBaseFields,
+  }),
+  z.object({
+    authType: z.literal("userpass"),
+    username: z.string().min(1).max(128),
+    password: z.string().min(1).max(256),
+    ...trunkBaseFields,
+  }),
+  z.object({
+    authType: z.literal("both"),
+    ipAcl: z.array(IpOrCidr).min(1),
+    username: z.string().min(1).max(128),
+    password: z.string().min(1).max(256),
+    ...trunkBaseFields,
+  }),
+]);
+export type CreateTrunkInput = z.infer<typeof CreateTrunkInput>;
+
+export const UpdateTrunkInput = z.object({
+  ...Object.fromEntries(
+    Object.entries(trunkBaseFields).map(([k, v]) => [
+      k,
+      (v as z.ZodType).optional(),
+    ]),
+  ),
+  authType: TrunkAuthTypeEnum.optional(),
+  username: z.string().min(1).max(128).nullable().optional(),
+  password: z.string().min(1).max(256).optional(),
+  ipAcl: z.array(IpOrCidr).min(1).nullable().optional(),
+});
+export type UpdateTrunkInput = z.infer<typeof UpdateTrunkInput>;
+
 export const DidNumber = z
   .string()
   .min(3)
