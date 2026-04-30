@@ -55,16 +55,21 @@ crates/     reserved for future Rust port — empty stub today
 
 ### Backend (`apps/api`) — Hono on Node
 
-Single entry: `apps/api/src/index.ts`. Uses `@hono/node-server`, `hono/cors`, `hono/logger`. The chained route registrations export an `AppType` (`export type AppType = typeof routes`) for future Hono RPC consumption from the web app — not wired into a client yet.
+Single entry: `apps/api/src/index.ts`. Uses `@hono/node-server`, `hono/logger`. Routes are chained onto a `routes` const and `export type AppType = typeof routes` is published for future Hono RPC consumption (no `hc<AppType>()` client wired yet). The `serve(...)` handle is captured and a `SIGTERM`/`SIGINT` shutdown closes it plus the `pg.Pool` from `@audiotext/db`.
 
 Runtime model: workspace packages `@audiotext/db` and `@audiotext/shared` ship raw TypeScript (`main: "./src/index.ts"`) — there is **no compile step that emits JS for them**. Both `dev` and `start` scripts run `tsx`, which transpiles workspace `.ts` on the fly. `build` is `tsc --noEmit` (typecheck only) — it does NOT produce a `dist/`. Don't try to `node dist/index.js`; it won't resolve workspace deps. If you ever need a real bundle for prod, you'll need to either build `@audiotext/db` + `@audiotext/shared` to JS and update their `main`, or bundle the api with tsup/esbuild and inline workspace code.
 
-Better Auth lives in `apps/api/src/lib/auth.ts` (Drizzle adapter, `usePlural: true`, `generateId: false`, `emailAndPassword: { enabled: true }`). It's mounted in `index.ts` with `app.on(["GET","POST"], "/api/auth/*", c => auth.handler(c.req.raw))`. The Next-specific `nextCookies()` plugin was removed in the Hono port — Hono's CORS middleware with `credentials: true` covers cross-origin cookie behavior.
+Env loading: `tsx` does **not** auto-load `.env`. Both scripts pass `--env-file=../../.env` (Node ≥20 native flag) so the api picks up the root `.env` from `apps/api/`. If you add new scripts, repeat the flag — relying on shell-exported env will only work in your terminal.
+
+Better Auth lives in `apps/api/src/lib/auth.ts` (Drizzle adapter, `usePlural: true`, `generateId: false`, `emailAndPassword: { enabled: true }`). It's mounted in `index.ts` with `app.on(["GET","POST"], "/api/auth/*", c => auth.handler(c.req.raw))`. `secret` is read from `BETTER_AUTH_SECRET` (required in production; dev fallback is auto-generated). `trustedOrigins` is driven by `WEB_ORIGIN`.
 
 ### Auth flow across the two apps
 
-- `apps/web/next.config.ts` rewrites `/api/auth/:path*` → `${API_URL}/api/auth/:path*` (server-side proxy, keeps cookies first-party when the client uses the web origin).
-- `apps/web/src/lib/auth-client.ts` calls `createAuthClient({ baseURL: NEXT_PUBLIC_API_URL })`. Currently that env var defaults to `http://localhost:3001` in `.env.example` — meaning the browser calls api directly (cross-origin), so the api server's CORS middleware (`origin: WEB_ORIGIN`, `credentials: true`) is what makes login work. If you want same-origin cookies via the rewrite instead, point `NEXT_PUBLIC_API_URL` at the web origin (or unset it). Both modes are viable; pick one and stick with it.
+Single mode: **same-origin via Next.js rewrite**.
+
+- `apps/web/next.config.ts` rewrites `/api/auth/:path*` → `${API_URL}/api/auth/:path*` (server-side proxy on the web app).
+- `apps/web/src/lib/auth-client.ts` calls `createAuthClient()` with **no `baseURL`** — the browser hits the web origin, web proxies to api server-side, cookies land first-party on the web origin.
+- Don't reintroduce `baseURL: NEXT_PUBLIC_API_URL` — that would force cross-origin requests and require CORS middleware on the api (which was intentionally removed). If a real cross-origin client appears (mobile, third-party), add CORS scoped to that route, don't make it the default.
 
 ### Database conventions (`packages/db/src/schema.ts`)
 
