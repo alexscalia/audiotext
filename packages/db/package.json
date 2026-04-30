@@ -15,7 +15,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/migrate.ts",
     "db:studio": "drizzle-kit studio",
-    "db:push": "drizzle-kit push"
+    "db:push": "drizzle-kit push",
+    "db:seed": "tsx src/seed.ts"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",
@@ -24,6 +25,7 @@
   "devDependencies": {
     "@audiotext/tsconfig": "workspace:*",
     "@types/pg": "8.20.0",
+    "better-auth": "^1.6.9",
     "drizzle-kit": "0.31.10",
     "tsx": "^4.19.2",
     "typescript": "^6.0.3"

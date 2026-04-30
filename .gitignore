@@ -37,3 +37,6 @@ next-env.d.ts
 
 # omfc local state
 .omfc/
+
+# playwright mcp
+.playwright-mcp/
