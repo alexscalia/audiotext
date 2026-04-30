@@ -9,6 +9,23 @@ CREATE TYPE "public"."trunk_nat_mode" AS ENUM('no', 'yes', 'force_rport', 'comed
 CREATE TYPE "public"."trunk_protocol" AS ENUM('sip', 'sips');--> statement-breakpoint
 CREATE TYPE "public"."trunk_status" AS ENUM('active', 'inactive', 'testing');--> statement-breakpoint
 CREATE TYPE "public"."trunk_transport" AS ENUM('udp', 'tcp', 'tls');--> statement-breakpoint
+CREATE TABLE "accounts" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"user_id" uuid NOT NULL,
+	"account_id" text NOT NULL,
+	"provider_id" text NOT NULL,
+	"access_token" text,
+	"refresh_token" text,
+	"id_token" text,
+	"access_token_expires_at" timestamp with time zone,
+	"refresh_token_expires_at" timestamp with time zone,
+	"scope" text,
+	"password" text,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"deleted_at" timestamp with time zone
+);
+--> statement-breakpoint
 CREATE TABLE "at_voice_numbers" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"at_voice_termination_id" uuid NOT NULL,
@@ -112,6 +129,18 @@ CREATE TABLE "roles" (
 	"deleted_at" timestamp with time zone
 );
 --> statement-breakpoint
+CREATE TABLE "sessions" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"user_id" uuid NOT NULL,
+	"token" text NOT NULL,
+	"expires_at" timestamp with time zone NOT NULL,
+	"ip_address" text,
+	"user_agent" text,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"deleted_at" timestamp with time zone
+);
+--> statement-breakpoint
 CREATE TABLE "user_roles" (
 	"user_id" uuid NOT NULL,
 	"role_id" uuid NOT NULL,
@@ -123,7 +152,20 @@ CREATE TABLE "user_roles" (
 --> statement-breakpoint
 CREATE TABLE "users" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"name" text NOT NULL,
 	"email" text NOT NULL,
+	"email_verified" boolean DEFAULT false NOT NULL,
+	"image" text,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"deleted_at" timestamp with time zone
+);
+--> statement-breakpoint
+CREATE TABLE "verifications" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"identifier" text NOT NULL,
+	"value" text NOT NULL,
+	"expires_at" timestamp with time zone NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone
@@ -185,6 +227,7 @@ CREATE TABLE "voice_trunks" (
 	CONSTRAINT "voice_trunks_cps_limit_positive" CHECK ("voice_trunks"."cps_limit" IS NULL OR "voice_trunks"."cps_limit" > 0)
 );
 --> statement-breakpoint
+ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "at_voice_numbers" ADD CONSTRAINT "at_voice_numbers_at_voice_termination_id_fk" FOREIGN KEY ("at_voice_termination_id") REFERENCES "public"."at_voice_terminations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "at_voice_terminations" ADD CONSTRAINT "at_voice_terminations_carrier_id_carriers_id_fk" FOREIGN KEY ("carrier_id") REFERENCES "public"."carriers"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "chat_contacts" ADD CONSTRAINT "chat_contacts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -192,9 +235,13 @@ ALTER TABLE "chat_contacts" ADD CONSTRAINT "chat_contacts_carrier_id_carriers_id
 ALTER TABLE "numbering_plan_lines" ADD CONSTRAINT "numbering_plan_lines_numbering_plan_id_numbering_plans_id_fk" FOREIGN KEY ("numbering_plan_id") REFERENCES "public"."numbering_plans"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "role_permissions" ADD CONSTRAINT "role_permissions_role_id_roles_id_fk" FOREIGN KEY ("role_id") REFERENCES "public"."roles"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "role_permissions" ADD CONSTRAINT "role_permissions_permission_id_permissions_id_fk" FOREIGN KEY ("permission_id") REFERENCES "public"."permissions"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "user_roles" ADD CONSTRAINT "user_roles_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "user_roles" ADD CONSTRAINT "user_roles_role_id_roles_id_fk" FOREIGN KEY ("role_id") REFERENCES "public"."roles"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "voice_trunks" ADD CONSTRAINT "voice_trunks_carrier_id_carriers_id_fk" FOREIGN KEY ("carrier_id") REFERENCES "public"."carriers"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+CREATE UNIQUE INDEX "accounts_provider_account_unique_active" ON "accounts" USING btree ("provider_id","account_id") WHERE "accounts"."deleted_at" IS NULL;--> statement-breakpoint
+CREATE INDEX "accounts_user_idx" ON "accounts" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "accounts_deleted_at_idx" ON "accounts" USING btree ("deleted_at");--> statement-breakpoint
 CREATE UNIQUE INDEX "at_voice_numbers_number_unique_active" ON "at_voice_numbers" USING btree ("number") WHERE "at_voice_numbers"."deleted_at" IS NULL;--> statement-breakpoint
 CREATE INDEX "at_voice_numbers_at_voice_termination_idx" ON "at_voice_numbers" USING btree ("at_voice_termination_id");--> statement-breakpoint
 CREATE INDEX "at_voice_numbers_last_success_idx" ON "at_voice_numbers" USING btree ("last_successful_attempt_at");--> statement-breakpoint
@@ -224,10 +271,17 @@ CREATE INDEX "role_permissions_permission_idx" ON "role_permissions" USING btree
 CREATE INDEX "role_permissions_deleted_at_idx" ON "role_permissions" USING btree ("deleted_at");--> statement-breakpoint
 CREATE UNIQUE INDEX "roles_name_unique_active" ON "roles" USING btree ("name") WHERE "roles"."deleted_at" IS NULL;--> statement-breakpoint
 CREATE INDEX "roles_deleted_at_idx" ON "roles" USING btree ("deleted_at");--> statement-breakpoint
+CREATE UNIQUE INDEX "sessions_token_unique_active" ON "sessions" USING btree ("token") WHERE "sessions"."deleted_at" IS NULL;--> statement-breakpoint
+CREATE INDEX "sessions_user_idx" ON "sessions" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "sessions_expires_at_idx" ON "sessions" USING btree ("expires_at");--> statement-breakpoint
+CREATE INDEX "sessions_deleted_at_idx" ON "sessions" USING btree ("deleted_at");--> statement-breakpoint
 CREATE INDEX "user_roles_role_idx" ON "user_roles" USING btree ("role_id");--> statement-breakpoint
 CREATE INDEX "user_roles_deleted_at_idx" ON "user_roles" USING btree ("deleted_at");--> statement-breakpoint
 CREATE UNIQUE INDEX "users_email_unique_active" ON "users" USING btree ("email") WHERE "users"."deleted_at" IS NULL;--> statement-breakpoint
 CREATE INDEX "users_deleted_at_idx" ON "users" USING btree ("deleted_at");--> statement-breakpoint
+CREATE INDEX "verifications_identifier_idx" ON "verifications" USING btree ("identifier");--> statement-breakpoint
+CREATE INDEX "verifications_expires_at_idx" ON "verifications" USING btree ("expires_at");--> statement-breakpoint
+CREATE INDEX "verifications_deleted_at_idx" ON "verifications" USING btree ("deleted_at");--> statement-breakpoint
 CREATE INDEX "voice_cdrs_started_at_idx" ON "voice_cdrs" USING btree ("started_at");--> statement-breakpoint
 CREATE INDEX "voice_cdrs_internal_route_idx" ON "voice_cdrs" USING btree ("internal_route_name");--> statement-breakpoint
 CREATE INDEX "voice_cdrs_deleted_at_idx" ON "voice_cdrs" USING btree ("deleted_at");--> statement-breakpoint

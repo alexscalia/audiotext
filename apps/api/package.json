@@ -10,9 +10,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "next": "16.2.4",
     "@audiotext/db": "workspace:*",
-    "@audiotext/shared": "workspace:*"
+    "@audiotext/shared": "workspace:*",
+    "better-auth": "^1.6.9",
+    "next": "16.2.4"
   },
   "devDependencies": {
     "@types/node": "^20",
