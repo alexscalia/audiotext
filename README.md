@@ -1,24 +1,27 @@
 # audiotext
 
-Monorepo. Next.js 16 frontend + backend, Postgres 17. Future: Rust backend port lives in `crates/`.
+Monorepo. Next.js 16 frontend, Hono backend, Postgres 17. Future: Rust backend port lives in `crates/`.
 
 ## Stack
 
 - pnpm 10 + Turborepo 2
-- Next.js 16.2 (App Router, Turbopack, TS, Tailwind)
-- Drizzle ORM + node-postgres
-- Zod shared contracts
-- Postgres 17 via Docker Compose
+- **Frontend:** Next.js 16.2 (App Router, Turbopack, TS) + Tailwind + Radix UI
+- **Data tables:** TanStack Table (logic) + TanStack Virtual (perf)
+- **Analytics:** Tremor (high-density charts)
+- **Backend:** Hono + Zod (shared types via RPC)
+- **Auth:** Better Auth (sessions + Drizzle adapter, shared between web + api)
+- **Fetching:** TanStack Query (syncs Hono data into tables)
+- **DB:** Postgres 17 via Docker Compose, Drizzle ORM + node-postgres
 
 ## Layout
 
 ```
 apps/
   web/      Next.js frontend (port 3000)
-  api/      Next.js backend, route handlers only (port 3001)
+  api/      Hono backend, RPC + route handlers (port 3001)
 packages/
   db/       Drizzle schema + client
-  shared/   zod contracts shared across web + api
+  shared/   Zod contracts shared across web + api (Hono RPC types)
   tsconfig/ shared tsconfig bases
 crates/     reserved for future Rust backend port
 ```
@@ -39,4 +42,4 @@ pnpm dev
 
 ## Future Rust port
 
-Backend contract lives in `packages/shared` (zod). Rust crate in `crates/api` will mirror those schemas (serde + manual or via `zod-to-json-schema` → `typify`). Drop `apps/api` when Rust crate hits parity.
+Backend contract lives in `packages/shared` (Zod) and is exposed to the web app via Hono RPC. Rust crate in `crates/api` will mirror those schemas (serde + manual or via `zod-to-json-schema` → `typify`) and re-expose the same routes. Drop `apps/api` when Rust crate hits parity.

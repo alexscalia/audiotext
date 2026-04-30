@@ -6,12 +6,14 @@ import {
   text,
   timestamp,
   primaryKey,
+  foreignKey,
   index,
   uniqueIndex,
   jsonb,
   check,
   integer,
   boolean,
+  numeric,
 } from "drizzle-orm/pg-core";
 
 export type CarrierBillingDetails = {
@@ -277,8 +279,8 @@ export type TerminationStatus = (typeof terminationStatus.enumValues)[number];
 export const currency = pgEnum("currency", ["usd", "eur", "gbp"]);
 export type Currency = (typeof currency.enumValues)[number];
 
-export const terminations = pgTable(
-  "terminations",
+export const atVoiceTerminations = pgTable(
+  "at_voice_terminations",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     status: terminationStatus("status").notNull().default("active"),
@@ -287,7 +289,6 @@ export const terminations = pgTable(
       .references(() => carriers.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
     internalRouteName: text("internal_route_name").notNull(),
-    carrierRouteName: text("carrier_route_name").notNull(),
     currency: currency("currency").notNull(),
     countryCode: text("country_code").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
@@ -300,38 +301,36 @@ export const terminations = pgTable(
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
   (t) => [
-    uniqueIndex("terminations_carrier_internal_unique_active")
+    uniqueIndex("at_voice_terminations_carrier_internal_unique_active")
       .on(t.carrierId, t.internalRouteName)
       .where(sql`${t.deletedAt} IS NULL`),
     check(
-      "terminations_country_code_iso2",
+      "at_voice_terminations_country_code_iso2",
       sql`${t.countryCode} ~ '^[A-Z]{2}$'`,
     ),
-    index("terminations_carrier_idx").on(t.carrierId),
-    index("terminations_status_idx").on(t.status),
-    index("terminations_country_idx").on(t.countryCode),
-    index("terminations_deleted_at_idx").on(t.deletedAt),
+    index("at_voice_terminations_carrier_idx").on(t.carrierId),
+    index("at_voice_terminations_status_idx").on(t.status),
+    index("at_voice_terminations_country_idx").on(t.countryCode),
+    index("at_voice_terminations_deleted_at_idx").on(t.deletedAt),
   ],
 );
 
-export type TerminationRow = typeof terminations.$inferSelect;
-export type NewTerminationRow = typeof terminations.$inferInsert;
+export type AtVoiceTerminationRow = typeof atVoiceTerminations.$inferSelect;
+export type NewAtVoiceTerminationRow = typeof atVoiceTerminations.$inferInsert;
 
-export const terminationsRelations = relations(terminations, ({ one, many }) => ({
+export const atVoiceTerminationsRelations = relations(atVoiceTerminations, ({ one, many }) => ({
   carrier: one(carriers, {
-    fields: [terminations.carrierId],
+    fields: [atVoiceTerminations.carrierId],
     references: [carriers.id],
   }),
-  dids: many(dids),
+  atVoiceNumbers: many(atVoiceNumbers),
 }));
 
-export const dids = pgTable(
-  "dids",
+export const atVoiceNumbers = pgTable(
+  "at_voice_numbers",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    terminationId: uuid("termination_id")
-      .notNull()
-      .references(() => terminations.id, { onDelete: "cascade" }),
+    atVoiceTerminationId: uuid("at_voice_termination_id").notNull(),
     number: text("number").notNull(),
     lastSuccessfulAttemptAt: timestamp("last_successful_attempt_at", {
       withTimezone: true,
@@ -346,29 +345,34 @@ export const dids = pgTable(
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
   (t) => [
-    uniqueIndex("dids_number_unique_active")
+    uniqueIndex("at_voice_numbers_number_unique_active")
       .on(t.number)
       .where(sql`${t.deletedAt} IS NULL`),
-    index("dids_termination_idx").on(t.terminationId),
-    index("dids_last_success_idx").on(t.lastSuccessfulAttemptAt),
-    index("dids_deleted_at_idx").on(t.deletedAt),
+    index("at_voice_numbers_at_voice_termination_idx").on(t.atVoiceTerminationId),
+    index("at_voice_numbers_last_success_idx").on(t.lastSuccessfulAttemptAt),
+    index("at_voice_numbers_deleted_at_idx").on(t.deletedAt),
+    foreignKey({
+      name: "at_voice_numbers_at_voice_termination_id_fk",
+      columns: [t.atVoiceTerminationId],
+      foreignColumns: [atVoiceTerminations.id],
+    }).onDelete("cascade"),
   ],
 );
 
-export type DidRow = typeof dids.$inferSelect;
-export type NewDidRow = typeof dids.$inferInsert;
+export type AtVoiceNumberRow = typeof atVoiceNumbers.$inferSelect;
+export type NewAtVoiceNumberRow = typeof atVoiceNumbers.$inferInsert;
 
-export const didsRelations = relations(dids, ({ one }) => ({
-  termination: one(terminations, {
-    fields: [dids.terminationId],
-    references: [terminations.id],
+export const atVoiceNumbersRelations = relations(atVoiceNumbers, ({ one }) => ({
+  termination: one(atVoiceTerminations, {
+    fields: [atVoiceNumbers.atVoiceTerminationId],
+    references: [atVoiceTerminations.id],
   }),
 }));
 
 export const carriersRelations = relations(carriers, ({ many }) => ({
-  terminations: many(terminations),
+  atVoiceTerminations: many(atVoiceTerminations),
   chatContacts: many(chatContacts),
-  trunks: many(trunks),
+  voiceTrunks: many(voiceTrunks),
 }));
 
 export const trunkStatus = pgEnum("trunk_status", [
@@ -413,8 +417,8 @@ export const trunkNatMode = pgEnum("trunk_nat_mode", [
 ]);
 export type TrunkNatMode = (typeof trunkNatMode.enumValues)[number];
 
-export const trunks = pgTable(
-  "trunks",
+export const voiceTrunks = pgTable(
+  "voice_trunks",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     carrierId: uuid("carrier_id")
@@ -457,46 +461,83 @@ export const trunks = pgTable(
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
   (t) => [
-    uniqueIndex("trunks_carrier_name_unique_active")
+    uniqueIndex("voice_trunks_carrier_name_unique_active")
       .on(t.carrierId, t.name)
       .where(sql`${t.deletedAt} IS NULL`),
-    index("trunks_carrier_idx").on(t.carrierId),
-    index("trunks_status_idx").on(t.status),
-    index("trunks_deleted_at_idx").on(t.deletedAt),
-    check("trunks_port_range", sql`${t.port} BETWEEN 1 AND 65535`),
+    index("voice_trunks_carrier_idx").on(t.carrierId),
+    index("voice_trunks_status_idx").on(t.status),
+    index("voice_trunks_deleted_at_idx").on(t.deletedAt),
+    check("voice_trunks_port_range", sql`${t.port} BETWEEN 1 AND 65535`),
     check(
-      "trunks_auth_userpass_complete",
+      "voice_trunks_auth_userpass_complete",
       sql`${t.authType} NOT IN ('userpass','both') OR (${t.username} IS NOT NULL AND ${t.passwordEncrypted} IS NOT NULL)`,
     ),
     check(
-      "trunks_auth_ip_complete",
+      "voice_trunks_auth_ip_complete",
       sql`${t.authType} NOT IN ('ip','both') OR (${t.ipAcl} IS NOT NULL AND jsonb_array_length(${t.ipAcl}) > 0)`,
     ),
     check(
-      "trunks_max_channels_positive",
+      "voice_trunks_max_channels_positive",
       sql`${t.maxChannels} IS NULL OR ${t.maxChannels} > 0`,
     ),
     check(
-      "trunks_cps_limit_positive",
+      "voice_trunks_cps_limit_positive",
       sql`${t.cpsLimit} IS NULL OR ${t.cpsLimit} > 0`,
     ),
   ],
 );
 
-export type TrunkRow = typeof trunks.$inferSelect;
-export type NewTrunkRow = typeof trunks.$inferInsert;
+export type VoiceTrunkRow = typeof voiceTrunks.$inferSelect;
+export type NewVoiceTrunkRow = typeof voiceTrunks.$inferInsert;
 
-export const trunksRelations = relations(trunks, ({ one }) => ({
+export const voiceTrunksRelations = relations(voiceTrunks, ({ one }) => ({
   carrier: one(carriers, {
-    fields: [trunks.carrierId],
+    fields: [voiceTrunks.carrierId],
     references: [carriers.id],
   }),
 }));
 
-export const numberingPlan = pgTable(
-  "numbering_plan",
+export const numberingPlanStatus = pgEnum("numbering_plan_status", [
+  "enabled",
+  "disabled",
+]);
+export type NumberingPlanStatus =
+  (typeof numberingPlanStatus.enumValues)[number];
+
+export const numberingPlans = pgTable(
+  "numbering_plans",
   {
     id: uuid("id").primaryKey().defaultRandom(),
+    name: text("name").notNull(),
+    status: numberingPlanStatus("status").notNull().default("enabled"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("numbering_plans_name_unique_active")
+      .on(t.name)
+      .where(sql`${t.deletedAt} IS NULL`),
+    index("numbering_plans_status_idx").on(t.status),
+    index("numbering_plans_deleted_at_idx").on(t.deletedAt),
+  ],
+);
+
+export type NumberingPlanRow = typeof numberingPlans.$inferSelect;
+export type NewNumberingPlanRow = typeof numberingPlans.$inferInsert;
+
+export const numberingPlanLines = pgTable(
+  "numbering_plan_lines",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    numberingPlanId: uuid("numbering_plan_id")
+      .notNull()
+      .references(() => numberingPlans.id, { onDelete: "cascade" }),
     countryCode: text("country_code").notNull(),
     areaCode: text("area_code"),
     operatorName: text("operator_name").notNull(),
@@ -512,27 +553,88 @@ export const numberingPlan = pgTable(
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
   (t) => [
-    uniqueIndex("numbering_plan_country_area_operator_unique_active")
-      .on(t.countryCode, t.areaCode, t.operatorName)
+    uniqueIndex(
+      "numbering_plan_lines_plan_country_area_operator_unique_active",
+    )
+      .on(t.numberingPlanId, t.countryCode, t.areaCode, t.operatorName)
       .where(sql`${t.deletedAt} IS NULL`),
-    index("numbering_plan_country_idx").on(t.countryCode),
-    index("numbering_plan_country_area_idx").on(t.countryCode, t.areaCode),
-    index("numbering_plan_deleted_at_idx").on(t.deletedAt),
+    index("numbering_plan_lines_plan_idx").on(t.numberingPlanId),
+    index("numbering_plan_lines_country_idx").on(t.countryCode),
+    index("numbering_plan_lines_country_area_idx").on(
+      t.countryCode,
+      t.areaCode,
+    ),
+    index("numbering_plan_lines_deleted_at_idx").on(t.deletedAt),
     check(
-      "numbering_plan_country_code_iso2",
+      "numbering_plan_lines_country_code_iso2",
       sql`${t.countryCode} ~ '^[A-Z]{2}$'`,
     ),
-    check("numbering_plan_min_digits_positive", sql`${t.minDigits} > 0`),
-    check("numbering_plan_max_digits_positive", sql`${t.maxDigits} > 0`),
+    check("numbering_plan_lines_min_digits_positive", sql`${t.minDigits} > 0`),
+    check("numbering_plan_lines_max_digits_positive", sql`${t.maxDigits} > 0`),
     check(
-      "numbering_plan_digits_range",
+      "numbering_plan_lines_digits_range",
       sql`${t.minDigits} <= ${t.maxDigits}`,
     ),
   ],
 );
 
-export type NumberingPlanRow = typeof numberingPlan.$inferSelect;
-export type NewNumberingPlanRow = typeof numberingPlan.$inferInsert;
+export type NumberingPlanLineRow = typeof numberingPlanLines.$inferSelect;
+export type NewNumberingPlanLineRow = typeof numberingPlanLines.$inferInsert;
+
+export const numberingPlansRelations = relations(
+  numberingPlans,
+  ({ many }) => ({
+    lines: many(numberingPlanLines),
+  }),
+);
+
+export const numberingPlanLinesRelations = relations(
+  numberingPlanLines,
+  ({ one }) => ({
+    plan: one(numberingPlans, {
+      fields: [numberingPlanLines.numberingPlanId],
+      references: [numberingPlans.id],
+    }),
+  }),
+);
+
+export const voiceCdrs = pgTable(
+  "voice_cdrs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    startedAt: timestamp("started_at", { withTimezone: true }).notNull(),
+    endedAt: timestamp("ended_at", { withTimezone: true }),
+    durationSecs: integer("duration_secs").notNull(),
+    buyCurrency: currency("buy_currency").notNull(),
+    buyRate: numeric("buy_rate", { precision: 18, scale: 6 }).notNull(),
+    sellCurrency: currency("sell_currency").notNull(),
+    sellRate: numeric("sell_rate", { precision: 18, scale: 6 }).notNull(),
+    internalRouteName: text("internal_route_name").notNull(),
+    inboundRouteName: text("inbound_route_name"),
+    outboundRouteName: text("outbound_route_name"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    index("voice_cdrs_started_at_idx").on(t.startedAt),
+    index("voice_cdrs_internal_route_idx").on(t.internalRouteName),
+    index("voice_cdrs_deleted_at_idx").on(t.deletedAt),
+    check("voice_cdrs_duration_non_negative", sql`${t.durationSecs} >= 0`),
+    check(
+      "voice_cdrs_ended_after_started",
+      sql`${t.endedAt} IS NULL OR ${t.endedAt} >= ${t.startedAt}`,
+    ),
+  ],
+);
+
+export type VoiceCdrRow = typeof voiceCdrs.$inferSelect;
+export type NewVoiceCdrRow = typeof voiceCdrs.$inferInsert;
 
 export type UserRow = typeof users.$inferSelect;
 export type NewUserRow = typeof users.$inferInsert;

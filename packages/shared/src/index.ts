@@ -177,61 +177,59 @@ export type CreateChatContactInput = z.infer<typeof CreateChatContactInput>;
 export const UpdateChatContactInput = chatContactBase.partial();
 export type UpdateChatContactInput = z.infer<typeof UpdateChatContactInput>;
 
-export const TerminationStatusEnum = z.enum(["active", "inactive"]);
-export type TerminationStatus = z.infer<typeof TerminationStatusEnum>;
+export const AtVoiceTerminationStatusEnum = z.enum(["active", "inactive"]);
+export type AtVoiceTerminationStatus = z.infer<typeof AtVoiceTerminationStatusEnum>;
 
 export const CurrencyEnum = z.enum(["usd", "eur", "gbp"]);
 export type Currency = z.infer<typeof CurrencyEnum>;
 
-export const TerminationSchema = z.object({
+export const AtVoiceTerminationSchema = z.object({
   id: z.string().uuid(),
-  status: TerminationStatusEnum,
+  status: AtVoiceTerminationStatusEnum,
   carrierId: z.string().uuid(),
   name: z.string().min(1).max(128),
   internalRouteName: z.string().min(1).max(128),
-  carrierRouteName: z.string().min(1).max(128),
   currency: CurrencyEnum,
   countryCode: CountryCode,
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
   deletedAt: z.string().datetime().nullable(),
 });
-export type Termination = z.infer<typeof TerminationSchema>;
+export type AtVoiceTermination = z.infer<typeof AtVoiceTerminationSchema>;
 
-export const CreateTerminationInput = z.object({
-  status: TerminationStatusEnum.default("active"),
+export const CreateAtVoiceTerminationInput = z.object({
+  status: AtVoiceTerminationStatusEnum.default("active"),
   carrierId: z.string().uuid(),
   name: z.string().min(1).max(128),
   internalRouteName: z.string().min(1).max(128),
-  carrierRouteName: z.string().min(1).max(128),
   currency: CurrencyEnum,
   countryCode: CountryCode,
 });
-export type CreateTerminationInput = z.infer<typeof CreateTerminationInput>;
+export type CreateAtVoiceTerminationInput = z.infer<typeof CreateAtVoiceTerminationInput>;
 
-export const UpdateTerminationInput = CreateTerminationInput.partial();
-export type UpdateTerminationInput = z.infer<typeof UpdateTerminationInput>;
+export const UpdateAtVoiceTerminationInput = CreateAtVoiceTerminationInput.partial();
+export type UpdateAtVoiceTerminationInput = z.infer<typeof UpdateAtVoiceTerminationInput>;
 
-export const TrunkStatusEnum = z.enum(["active", "inactive", "testing"]);
-export type TrunkStatus = z.infer<typeof TrunkStatusEnum>;
+export const VoiceTrunkStatusEnum = z.enum(["active", "inactive", "testing"]);
+export type VoiceTrunkStatus = z.infer<typeof VoiceTrunkStatusEnum>;
 
-export const TrunkDirectionEnum = z.enum(["inbound", "outbound", "both"]);
-export type TrunkDirection = z.infer<typeof TrunkDirectionEnum>;
+export const VoiceTrunkDirectionEnum = z.enum(["inbound", "outbound", "both"]);
+export type VoiceTrunkDirection = z.infer<typeof VoiceTrunkDirectionEnum>;
 
-export const TrunkProtocolEnum = z.enum(["sip", "sips"]);
-export type TrunkProtocol = z.infer<typeof TrunkProtocolEnum>;
+export const VoiceTrunkProtocolEnum = z.enum(["sip", "sips"]);
+export type VoiceTrunkProtocol = z.infer<typeof VoiceTrunkProtocolEnum>;
 
-export const TrunkTransportEnum = z.enum(["udp", "tcp", "tls"]);
-export type TrunkTransport = z.infer<typeof TrunkTransportEnum>;
+export const VoiceTrunkTransportEnum = z.enum(["udp", "tcp", "tls"]);
+export type VoiceTrunkTransport = z.infer<typeof VoiceTrunkTransportEnum>;
 
-export const TrunkAuthTypeEnum = z.enum(["ip", "userpass", "both"]);
-export type TrunkAuthType = z.infer<typeof TrunkAuthTypeEnum>;
+export const VoiceTrunkAuthTypeEnum = z.enum(["ip", "userpass", "both"]);
+export type VoiceTrunkAuthType = z.infer<typeof VoiceTrunkAuthTypeEnum>;
 
-export const TrunkDtmfModeEnum = z.enum(["rfc2833", "inband", "info"]);
-export type TrunkDtmfMode = z.infer<typeof TrunkDtmfModeEnum>;
+export const VoiceTrunkDtmfModeEnum = z.enum(["rfc2833", "inband", "info"]);
+export type VoiceTrunkDtmfMode = z.infer<typeof VoiceTrunkDtmfModeEnum>;
 
-export const TrunkNatModeEnum = z.enum(["no", "yes", "force_rport", "comedia"]);
-export type TrunkNatMode = z.infer<typeof TrunkNatModeEnum>;
+export const VoiceTrunkNatModeEnum = z.enum(["no", "yes", "force_rport", "comedia"]);
+export type VoiceTrunkNatMode = z.infer<typeof VoiceTrunkNatModeEnum>;
 
 export const IpOrCidr = z
   .string()
@@ -253,13 +251,13 @@ export type CodecCode = z.infer<typeof CodecCode>;
 export const Port = z.number().int().min(1).max(65535);
 export const PositiveInt = z.number().int().positive();
 
-const trunkBaseFields = {
+const voiceTrunkBaseFields = {
   carrierId: z.string().uuid(),
   name: z.string().min(1).max(128),
-  status: TrunkStatusEnum.default("active"),
-  direction: TrunkDirectionEnum.default("both"),
-  protocol: TrunkProtocolEnum.default("sip"),
-  transport: TrunkTransportEnum.default("udp"),
+  status: VoiceTrunkStatusEnum.default("active"),
+  direction: VoiceTrunkDirectionEnum.default("both"),
+  protocol: VoiceTrunkProtocolEnum.default("sip"),
+  transport: VoiceTrunkTransportEnum.default("udp"),
   host: z.string().min(1).max(255),
   port: Port.default(5060),
   realm: z.string().max(255).optional(),
@@ -272,22 +270,22 @@ const trunkBaseFields = {
   maxChannels: PositiveInt.optional(),
   cpsLimit: PositiveInt.optional(),
   codecs: z.array(CodecCode).default([]),
-  dtmfMode: TrunkDtmfModeEnum.default("rfc2833"),
-  natMode: TrunkNatModeEnum.default("no"),
+  dtmfMode: VoiceTrunkDtmfModeEnum.default("rfc2833"),
+  natMode: VoiceTrunkNatModeEnum.default("no"),
   metadata: z.record(z.string(), z.unknown()).optional(),
 };
 
-export const TrunkSchema = z.object({
+export const VoiceTrunkSchema = z.object({
   id: z.string().uuid(),
   carrierId: z.string().uuid(),
   name: z.string(),
-  status: TrunkStatusEnum,
-  direction: TrunkDirectionEnum,
-  protocol: TrunkProtocolEnum,
-  transport: TrunkTransportEnum,
+  status: VoiceTrunkStatusEnum,
+  direction: VoiceTrunkDirectionEnum,
+  protocol: VoiceTrunkProtocolEnum,
+  transport: VoiceTrunkTransportEnum,
   host: z.string(),
   port: Port,
-  authType: TrunkAuthTypeEnum,
+  authType: VoiceTrunkAuthTypeEnum,
   username: z.string().nullable(),
   passwordEncrypted: z.string().nullable(),
   realm: z.string().nullable(),
@@ -300,81 +298,121 @@ export const TrunkSchema = z.object({
   maxChannels: z.number().int().nullable(),
   cpsLimit: z.number().int().nullable(),
   codecs: z.array(CodecCode),
-  dtmfMode: TrunkDtmfModeEnum,
-  natMode: TrunkNatModeEnum,
+  dtmfMode: VoiceTrunkDtmfModeEnum,
+  natMode: VoiceTrunkNatModeEnum,
   ipAcl: z.array(IpOrCidr).nullable(),
   metadata: z.record(z.string(), z.unknown()).nullable(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
   deletedAt: z.string().datetime().nullable(),
 });
-export type Trunk = z.infer<typeof TrunkSchema>;
+export type VoiceTrunk = z.infer<typeof VoiceTrunkSchema>;
 
-export const CreateTrunkInput = z.discriminatedUnion("authType", [
+export const CreateVoiceTrunkInput = z.discriminatedUnion("authType", [
   z.object({
     authType: z.literal("ip"),
     ipAcl: z.array(IpOrCidr).min(1),
-    ...trunkBaseFields,
+    ...voiceTrunkBaseFields,
   }),
   z.object({
     authType: z.literal("userpass"),
     username: z.string().min(1).max(128),
     password: z.string().min(1).max(256),
-    ...trunkBaseFields,
+    ...voiceTrunkBaseFields,
   }),
   z.object({
     authType: z.literal("both"),
     ipAcl: z.array(IpOrCidr).min(1),
     username: z.string().min(1).max(128),
     password: z.string().min(1).max(256),
-    ...trunkBaseFields,
+    ...voiceTrunkBaseFields,
   }),
 ]);
-export type CreateTrunkInput = z.infer<typeof CreateTrunkInput>;
+export type CreateVoiceTrunkInput = z.infer<typeof CreateVoiceTrunkInput>;
 
-export const UpdateTrunkInput = z.object({
+export const UpdateVoiceTrunkInput = z.object({
   ...Object.fromEntries(
-    Object.entries(trunkBaseFields).map(([k, v]) => [
+    Object.entries(voiceTrunkBaseFields).map(([k, v]) => [
       k,
       (v as z.ZodType).optional(),
     ]),
   ),
-  authType: TrunkAuthTypeEnum.optional(),
+  authType: VoiceTrunkAuthTypeEnum.optional(),
   username: z.string().min(1).max(128).nullable().optional(),
   password: z.string().min(1).max(256).optional(),
   ipAcl: z.array(IpOrCidr).min(1).nullable().optional(),
 });
-export type UpdateTrunkInput = z.infer<typeof UpdateTrunkInput>;
+export type UpdateVoiceTrunkInput = z.infer<typeof UpdateVoiceTrunkInput>;
 
-export const DidNumber = z
+export const AtVoiceNumberDigits = z
   .string()
   .min(3)
   .max(32)
   .regex(/^\+?[0-9]+$/, "digits only, optional leading +");
 
-export const DidSchema = z.object({
+export const AtVoiceNumberSchema = z.object({
   id: z.string().uuid(),
-  terminationId: z.string().uuid(),
-  number: DidNumber,
+  atVoiceTerminationId: z.string().uuid(),
+  number: AtVoiceNumberDigits,
   lastSuccessfulAttemptAt: z.string().datetime().nullable(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
   deletedAt: z.string().datetime().nullable(),
 });
-export type Did = z.infer<typeof DidSchema>;
+export type AtVoiceNumber = z.infer<typeof AtVoiceNumberSchema>;
 
-export const CreateDidInput = z.object({
-  terminationId: z.string().uuid(),
-  number: DidNumber,
+export const CreateAtVoiceNumberInput = z.object({
+  atVoiceTerminationId: z.string().uuid(),
+  number: AtVoiceNumberDigits,
 });
-export type CreateDidInput = z.infer<typeof CreateDidInput>;
+export type CreateAtVoiceNumberInput = z.infer<typeof CreateAtVoiceNumberInput>;
 
-export const UpdateDidInput = z.object({
-  terminationId: z.string().uuid().optional(),
-  number: DidNumber.optional(),
+export const UpdateAtVoiceNumberInput = z.object({
+  atVoiceTerminationId: z.string().uuid().optional(),
+  number: AtVoiceNumberDigits.optional(),
   lastSuccessfulAttemptAt: z.string().datetime().nullable().optional(),
 });
-export type UpdateDidInput = z.infer<typeof UpdateDidInput>;
+export type UpdateAtVoiceNumberInput = z.infer<typeof UpdateAtVoiceNumberInput>;
+
+export const MoneyRate = z
+  .string()
+  .regex(/^-?\d+(\.\d+)?$/, "decimal string");
+export type MoneyRate = z.infer<typeof MoneyRate>;
+
+export const VoiceCdrSchema = z.object({
+  id: z.string().uuid(),
+  startedAt: z.string().datetime(),
+  endedAt: z.string().datetime().nullable(),
+  durationSecs: z.number().int().nonnegative(),
+  buyCurrency: CurrencyEnum,
+  buyRate: MoneyRate,
+  sellCurrency: CurrencyEnum,
+  sellRate: MoneyRate,
+  internalRouteName: z.string().min(1).max(128),
+  inboundRouteName: z.string().min(1).max(128).nullable(),
+  outboundRouteName: z.string().min(1).max(128).nullable(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+  deletedAt: z.string().datetime().nullable(),
+});
+export type VoiceCdr = z.infer<typeof VoiceCdrSchema>;
+
+export const CreateVoiceCdrInput = z.object({
+  startedAt: z.string().datetime(),
+  endedAt: z.string().datetime().optional(),
+  durationSecs: z.number().int().nonnegative(),
+  buyCurrency: CurrencyEnum,
+  buyRate: MoneyRate,
+  sellCurrency: CurrencyEnum,
+  sellRate: MoneyRate,
+  internalRouteName: z.string().min(1).max(128),
+  inboundRouteName: z.string().min(1).max(128).optional(),
+  outboundRouteName: z.string().min(1).max(128).optional(),
+});
+export type CreateVoiceCdrInput = z.infer<typeof CreateVoiceCdrInput>;
+
+export const UpdateVoiceCdrInput = CreateVoiceCdrInput.partial();
+export type UpdateVoiceCdrInput = z.infer<typeof UpdateVoiceCdrInput>;
 
 export const UserWithRolesSchema = UserSchema.extend({
   roles: z.array(
