@@ -1,0 +1,44 @@
+{
+  "Common": {
+    "appName": "audiotext",
+    "language": "Lingua",
+    "english": "Inglese",
+    "italian": "Italiano"
+  },
+  "Login": {
+    "title": "Bentornato",
+    "subtitle": "Inserisci i tuoi dati",
+    "email": "Indirizzo email",
+    "password": "Password",
+    "remember": "Ricordami per 30 giorni",
+    "forgot": "Password dimenticata",
+    "submit": "Accedi",
+    "submitting": "Accesso in corso...",
+    "errorFallback": "Accesso non riuscito"
+  },
+  "Nav": {
+    "dashboard": "Dashboard",
+    "users": "Utenti",
+    "calls": "Chiamate",
+    "numbering": "Piani di numerazione",
+    "trunks": "Trunk",
+    "settings": "Impostazioni"
+  },
+  "Header": {
+    "search": "Cerca",
+    "notifications": "Notifiche",
+    "expandSidebar": "Espandi barra laterale",
+    "collapseSidebar": "Comprimi barra laterale",
+    "signOut": "Esci"
+  },
+  "Dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Panoramica della tua piattaforma audiotext",
+    "activeCalls": "Chiamate attive",
+    "users": "Utenti",
+    "trunks": "Trunk",
+    "numberingPlans": "Piani di numerazione",
+    "recentActivity": "Attività recente",
+    "noActivity": "Nessuna attività."
+  }
+}

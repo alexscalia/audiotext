@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { signIn } from "@/lib/auth-client";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 
 export default function AdminLoginPage() {
   const router = useRouter();
+  const t = useTranslations("Login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
@@ -23,7 +26,7 @@ export default function AdminLoginPage() {
     });
     setLoading(false);
     if (error) {
-      setError(error.message ?? "Sign in failed");
+      setError(error.message ?? t("errorFallback"));
       return;
     }
     router.push("/admin/dashboard");
@@ -32,21 +35,24 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen flex bg-white">
       <div className="flex flex-1 flex-col px-8 py-10 sm:px-16 lg:px-24">
-        <div className="flex items-center gap-2">
-          <div className="h-7 w-7 rounded-full border-2 border-black flex items-center justify-center">
-            <div className="h-3 w-3 rounded-full bg-black" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="h-7 w-7 rounded-full border-2 border-black flex items-center justify-center">
+              <div className="h-3 w-3 rounded-full bg-black" />
+            </div>
+            <span className="text-lg font-bold tracking-tight text-black">
+              audiotext
+            </span>
           </div>
-          <span className="text-lg font-bold tracking-tight text-black">
-            audiotext
-          </span>
+          <LocaleSwitcher />
         </div>
 
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-sm">
             <h1 className="text-4xl font-bold tracking-tight text-black">
-              Welcome back
+              {t("title")}
             </h1>
-            <p className="mt-2 text-sm text-gray-500">Please enter your details</p>
+            <p className="mt-2 text-sm text-gray-500">{t("subtitle")}</p>
 
             <form onSubmit={onSubmit} className="mt-8 space-y-5">
               <div>
@@ -54,7 +60,7 @@ export default function AdminLoginPage() {
                   htmlFor="email"
                   className="block text-sm font-medium text-black"
                 >
-                  Email address
+                  {t("email")}
                 </label>
                 <input
                   id="email"
@@ -72,7 +78,7 @@ export default function AdminLoginPage() {
                   htmlFor="password"
                   className="block text-sm font-medium text-black"
                 >
-                  Password
+                  {t("password")}
                 </label>
                 <input
                   id="password"
@@ -93,13 +99,13 @@ export default function AdminLoginPage() {
                     onChange={(e) => setRemember(e.target.checked)}
                     className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
                   />
-                  Remember for 30 days
+                  {t("remember")}
                 </label>
                 <a
                   href="#"
                   className="text-sm font-medium text-blue-600 hover:underline"
                 >
-                  Forgot password
+                  {t("forgot")}
                 </a>
               </div>
 
@@ -114,13 +120,12 @@ export default function AdminLoginPage() {
                 disabled={loading}
                 className="w-full rounded-md bg-black px-4 py-2.5 text-sm font-semibold text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 disabled:opacity-60"
               >
-                {loading ? "Signing in..." : "Sign in"}
+                {loading ? t("submitting") : t("submit")}
               </button>
             </form>
           </div>
         </div>
       </div>
-
     </div>
   );
 }

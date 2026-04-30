@@ -1,19 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { signOut } from "@/lib/auth-client";
+import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+
+type NavKey = "dashboard" | "users" | "calls" | "numbering" | "trunks" | "settings";
 
 type NavItem = {
   href: string;
-  label: string;
+  key: NavKey;
   icon: React.ReactNode;
 };
 
 const NAV: NavItem[] = [
   {
     href: "/admin/dashboard",
-    label: "Dashboard",
+    key: "dashboard",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-5 w-5">
         <path d="M3 12 12 3l9 9" strokeLinecap="round" strokeLinejoin="round" />
@@ -23,7 +25,7 @@ const NAV: NavItem[] = [
   },
   {
     href: "/admin/users",
-    label: "Users",
+    key: "users",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-5 w-5">
         <circle cx="12" cy="8" r="3.5" />
@@ -33,7 +35,7 @@ const NAV: NavItem[] = [
   },
   {
     href: "/admin/calls",
-    label: "Calls",
+    key: "calls",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-5 w-5">
         <path d="M5 4h3l2 5-2 1a11 11 0 0 0 6 6l1-2 5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" strokeLinejoin="round" />
@@ -42,7 +44,7 @@ const NAV: NavItem[] = [
   },
   {
     href: "/admin/numbering",
-    label: "Numbering plans",
+    key: "numbering",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-5 w-5">
         <rect x="4" y="4" width="16" height="16" rx="2" />
@@ -52,7 +54,7 @@ const NAV: NavItem[] = [
   },
   {
     href: "/admin/trunks",
-    label: "Trunks",
+    key: "trunks",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-5 w-5">
         <path d="M4 7h16M4 12h16M4 17h16" strokeLinecap="round" />
@@ -61,7 +63,7 @@ const NAV: NavItem[] = [
   },
   {
     href: "/admin/settings",
-    label: "Settings",
+    key: "settings",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-5 w-5">
         <circle cx="12" cy="12" r="3" />
@@ -73,12 +75,7 @@ const NAV: NavItem[] = [
 
 export function Sidebar({ collapsed = false }: { collapsed?: boolean }) {
   const pathname = usePathname();
-  const router = useRouter();
-
-  async function onSignOut() {
-    await signOut();
-    router.push("/admin/login");
-  }
+  const t = useTranslations("Nav");
 
   return (
     <aside
@@ -102,11 +99,12 @@ export function Sidebar({ collapsed = false }: { collapsed?: boolean }) {
       <nav className={`flex-1 py-6 space-y-1 ${collapsed ? "px-2" : "px-4"}`}>
         {NAV.map((item) => {
           const active = pathname === item.href || pathname.startsWith(item.href + "/");
+          const label = t(item.key);
           return (
             <Link
               key={item.href}
               href={item.href}
-              title={collapsed ? item.label : undefined}
+              title={collapsed ? label : undefined}
               className={`group relative flex items-center gap-3 rounded-md text-sm font-medium transition-colors ${
                 collapsed ? "justify-center px-0 py-2" : "px-3 py-2"
               } ${
@@ -116,26 +114,12 @@ export function Sidebar({ collapsed = false }: { collapsed?: boolean }) {
               }`}
             >
               <span className={active ? "text-white" : "text-gray-500"}>{item.icon}</span>
-              {!collapsed && <span>{item.label}</span>}
+              {!collapsed && <span>{label}</span>}
             </Link>
           );
         })}
       </nav>
 
-      <div className={`border-t border-gray-200 ${collapsed ? "p-2" : "p-4"}`}>
-        <button
-          onClick={onSignOut}
-          title={collapsed ? "Sign out" : undefined}
-          className={`flex w-full items-center gap-3 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-black ${
-            collapsed ? "justify-center px-0 py-2" : "px-3 py-2"
-          }`}
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-5 w-5 text-gray-500">
-            <path d="M15 17l5-5-5-5M20 12H9M12 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          {!collapsed && <span>Sign out</span>}
-        </button>
-      </div>
     </aside>
   );
 }

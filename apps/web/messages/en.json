@@ -1,0 +1,44 @@
+{
+  "Common": {
+    "appName": "audiotext",
+    "language": "Language",
+    "english": "English",
+    "italian": "Italian"
+  },
+  "Login": {
+    "title": "Welcome back",
+    "subtitle": "Please enter your details",
+    "email": "Email address",
+    "password": "Password",
+    "remember": "Remember for 30 days",
+    "forgot": "Forgot password",
+    "submit": "Sign in",
+    "submitting": "Signing in...",
+    "errorFallback": "Sign in failed"
+  },
+  "Nav": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "calls": "Calls",
+    "numbering": "Numbering plans",
+    "trunks": "Trunks",
+    "settings": "Settings"
+  },
+  "Header": {
+    "search": "Search",
+    "notifications": "Notifications",
+    "expandSidebar": "Expand sidebar",
+    "collapseSidebar": "Collapse sidebar",
+    "signOut": "Sign out"
+  },
+  "Dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Overview of your audiotext platform",
+    "activeCalls": "Active calls",
+    "users": "Users",
+    "trunks": "Trunks",
+    "numberingPlans": "Numbering plans",
+    "recentActivity": "Recent activity",
+    "noActivity": "No activity yet."
+  }
+}
