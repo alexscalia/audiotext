@@ -3,34 +3,63 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { signIn } from "@/lib/auth-client";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+
+const loginSchema = z.object({
+  email: z
+    .string()
+    .min(1, { message: "emailRequired" })
+    .email({ message: "emailInvalid" }),
+  password: z
+    .string()
+    .min(1, { message: "passwordRequired" })
+    .min(8, { message: "passwordMin" }),
+  remember: z.boolean().optional(),
+});
+
+type LoginValues = z.infer<typeof loginSchema>;
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const t = useTranslations("Login");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [remember, setRemember] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const tErrors = useTranslations("Login.errors");
+  const tServer = useTranslations("Login.serverErrors");
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: "", password: "", remember: false },
+  });
+
+  const translateError = (key?: string) =>
+    key ? tErrors(key as Parameters<typeof tErrors>[0]) : null;
+
+  const onSubmit = handleSubmit(async (values) => {
+    setSubmitError(null);
     const { error } = await signIn.email({
-      email,
-      password,
-      rememberMe: remember,
+      email: values.email,
+      password: values.password,
+      rememberMe: values.remember,
     });
-    setLoading(false);
     if (error) {
-      setError(error.message ?? t("errorFallback"));
+      const code = error.code;
+      if (code && tServer.has(code as Parameters<typeof tServer.has>[0])) {
+        setSubmitError(tServer(code as Parameters<typeof tServer>[0]));
+      } else {
+        setSubmitError(error.message ?? t("errorFallback"));
+      }
       return;
     }
     router.push("/admin/dashboard");
-  }
+  });
 
   return (
     <div className="min-h-screen flex bg-white">
@@ -54,7 +83,7 @@ export default function AdminLoginPage() {
             </h1>
             <p className="mt-2 text-sm text-gray-500">{t("subtitle")}</p>
 
-            <form onSubmit={onSubmit} className="mt-8 space-y-5">
+            <form onSubmit={onSubmit} className="mt-8 space-y-5" noValidate>
               <div>
                 <label
                   htmlFor="email"
@@ -65,12 +94,16 @@ export default function AdminLoginPage() {
                 <input
                   id="email"
                   type="email"
-                  required
                   autoComplete="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  aria-invalid={!!errors.email}
+                  {...register("email")}
                   className="mt-2 block w-full rounded-md border border-gray-300 px-3 py-2.5 text-sm text-black placeholder-gray-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
                 />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-600" role="alert">
+                    {translateError(errors.email.message)}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -83,20 +116,23 @@ export default function AdminLoginPage() {
                 <input
                   id="password"
                   type="password"
-                  required
                   autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  aria-invalid={!!errors.password}
+                  {...register("password")}
                   className="mt-2 block w-full rounded-md border border-gray-300 px-3 py-2.5 text-sm text-black placeholder-gray-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
                 />
+                {errors.password && (
+                  <p className="mt-1 text-sm text-red-600" role="alert">
+                    {translateError(errors.password.message)}
+                  </p>
+                )}
               </div>
 
               <div className="flex items-center justify-between">
                 <label className="flex items-center gap-2 text-sm text-black">
                   <input
                     type="checkbox"
-                    checked={remember}
-                    onChange={(e) => setRemember(e.target.checked)}
+                    {...register("remember")}
                     className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
                   />
                   {t("remember")}
@@ -109,18 +145,18 @@ export default function AdminLoginPage() {
                 </a>
               </div>
 
-              {error && (
+              {submitError && (
                 <p className="text-sm text-red-600" role="alert">
-                  {error}
+                  {submitError}
                 </p>
               )}
 
               <button
                 type="submit"
-                disabled={loading}
+                disabled={isSubmitting}
                 className="w-full rounded-md bg-black px-4 py-2.5 text-sm font-semibold text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 disabled:opacity-60"
               >
-                {loading ? t("submitting") : t("submit")}
+                {isSubmitting ? t("submitting") : t("submit")}
               </button>
             </form>
           </div>

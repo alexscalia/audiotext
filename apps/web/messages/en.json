@@ -14,7 +14,24 @@
     "forgot": "Forgot password",
     "submit": "Sign in",
     "submitting": "Signing in...",
-    "errorFallback": "Sign in failed"
+    "errorFallback": "Sign in failed",
+    "errors": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Enter a valid email",
+      "passwordRequired": "Password is required",
+      "passwordMin": "Password must be at least 8 characters"
+    },
+    "serverErrors": {
+      "INVALID_EMAIL_OR_PASSWORD": "Invalid email or password",
+      "USER_NOT_FOUND": "No account found for that email",
+      "EMAIL_NOT_VERIFIED": "Please verify your email before signing in",
+      "INVALID_PASSWORD": "Invalid password",
+      "USER_ALREADY_EXISTS": "An account with that email already exists",
+      "FAILED_TO_CREATE_USER": "Could not create account",
+      "FAILED_TO_CREATE_SESSION": "Could not create session",
+      "ACCOUNT_NOT_FOUND": "Account not found",
+      "TOO_MANY_REQUESTS": "Too many attempts, please try again later"
+    }
   },
   "Nav": {
     "dashboard": "Dashboard",

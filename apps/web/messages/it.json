@@ -14,7 +14,24 @@
     "forgot": "Password dimenticata",
     "submit": "Accedi",
     "submitting": "Accesso in corso...",
-    "errorFallback": "Accesso non riuscito"
+    "errorFallback": "Accesso non riuscito",
+    "errors": {
+      "emailRequired": "L'email è obbligatoria",
+      "emailInvalid": "Inserisci un'email valida",
+      "passwordRequired": "La password è obbligatoria",
+      "passwordMin": "La password deve avere almeno 8 caratteri"
+    },
+    "serverErrors": {
+      "INVALID_EMAIL_OR_PASSWORD": "Email o password non validi",
+      "USER_NOT_FOUND": "Nessun account trovato per questa email",
+      "EMAIL_NOT_VERIFIED": "Verifica la tua email prima di accedere",
+      "INVALID_PASSWORD": "Password non valida",
+      "USER_ALREADY_EXISTS": "Esiste già un account con questa email",
+      "FAILED_TO_CREATE_USER": "Impossibile creare l'account",
+      "FAILED_TO_CREATE_SESSION": "Impossibile creare la sessione",
+      "ACCOUNT_NOT_FOUND": "Account non trovato",
+      "TOO_MANY_REQUESTS": "Troppi tentativi, riprova più tardi"
+    }
   },
   "Nav": {
     "dashboard": "Dashboard",
