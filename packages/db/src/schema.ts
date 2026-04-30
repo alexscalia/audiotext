@@ -493,6 +493,47 @@ export const trunksRelations = relations(trunks, ({ one }) => ({
   }),
 }));
 
+export const numberingPlan = pgTable(
+  "numbering_plan",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    countryCode: text("country_code").notNull(),
+    areaCode: text("area_code"),
+    operatorName: text("operator_name").notNull(),
+    minDigits: integer("min_digits").notNull(),
+    maxDigits: integer("max_digits").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("numbering_plan_country_area_operator_unique_active")
+      .on(t.countryCode, t.areaCode, t.operatorName)
+      .where(sql`${t.deletedAt} IS NULL`),
+    index("numbering_plan_country_idx").on(t.countryCode),
+    index("numbering_plan_country_area_idx").on(t.countryCode, t.areaCode),
+    index("numbering_plan_deleted_at_idx").on(t.deletedAt),
+    check(
+      "numbering_plan_country_code_iso2",
+      sql`${t.countryCode} ~ '^[A-Z]{2}$'`,
+    ),
+    check("numbering_plan_min_digits_positive", sql`${t.minDigits} > 0`),
+    check("numbering_plan_max_digits_positive", sql`${t.maxDigits} > 0`),
+    check(
+      "numbering_plan_digits_range",
+      sql`${t.minDigits} <= ${t.maxDigits}`,
+    ),
+  ],
+);
+
+export type NumberingPlanRow = typeof numberingPlan.$inferSelect;
+export type NewNumberingPlanRow = typeof numberingPlan.$inferInsert;
+
 export type UserRow = typeof users.$inferSelect;
 export type NewUserRow = typeof users.$inferInsert;
 export type RoleRow = typeof roles.$inferSelect;
