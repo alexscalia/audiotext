@@ -1,9 +1,26 @@
-WEB
-Core: NextJS + Tailwind + Radix UI
-Data: TanStack Table (Logic) + TanStack Virtual (Performance)
-Analytics: Tremor (High-density charts)
-Backend & Safety: HonoJS + Zod (Shared types via RPC)
-Fetching: TanStack Query (Syncs Hono data to your tables)
-DB: Postgres
+# Tech Stack
 
-SIPRecommended Hybrid ArchitectureTo maximize active calls on your stack, avoid "hairpinning" media through your application.Signaling Layer (Kamailio):Receives the INVITE.Queries your Rust/Hono API (or a Redis cache populated by them) for the LCR decision.If it's a Wholesale Call: Rewrites the SIP headers and forwards to the Carrier IP. (Audio goes via RTPEngine).If it's an IVR Call: Routes the call to a FreeSWITCH cluster.Media Layer (RTPEngine vs. FreeSWITCH):RTPEngine: Sits on the edge. It relays raw UDP audio packets between your customer and the carrier. It uses almost zero CPU.FreeSWITCH: Sits behind the firewall. It only handles the small % of traffic that requires actual file playback.
+## Web
+
+- **Core:** Next.js + Tailwind + Radix UI
+- **Data:** TanStack Table (logic) + TanStack Virtual (performance)
+- **Analytics:** Tremor (high-density charts)
+- **Backend & Safety:** Hono + Zod (shared types via RPC)
+- **Fetching:** TanStack Query (syncs Hono data to tables)
+- **DB:** Postgres
+
+## SIP — Recommended Hybrid Architecture
+
+Maximize active calls by avoiding "hairpinning" media through the application.
+
+### Signaling Layer (Kamailio)
+
+- Receives the `INVITE`.
+- Queries the Rust/Hono API (or a Redis cache populated by them) for the LCR decision.
+- **Wholesale call:** rewrites SIP headers, forwards to carrier IP. Audio flows via RTPEngine.
+- **IVR call:** routes to a FreeSWITCH cluster.
+
+### Media Layer
+
+- **RTPEngine** — sits on the edge. Relays raw UDP audio packets between customer and carrier. Near-zero CPU.
+- **FreeSWITCH** — sits behind the firewall. Handles only the small share of traffic that needs actual file playback.
