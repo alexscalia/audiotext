@@ -114,24 +114,6 @@ export function CarrierViewModal({
         </>
       }
     >
-      <div className="mb-5 flex items-center gap-2">
-        <span
-          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
-            isActive
-              ? "bg-green-50 text-green-700 ring-1 ring-inset ring-green-200"
-              : "bg-gray-100 text-gray-700 ring-1 ring-inset ring-gray-200"
-          }`}
-        >
-          <span
-            aria-hidden="true"
-            className={`h-1.5 w-1.5 rounded-full ${
-              isActive ? "bg-green-500" : "bg-gray-400"
-            }`}
-          />
-          {isActive ? tStatus("active") : tStatus("inactive")}
-        </span>
-      </div>
-
       {/* GENERAL */}
       <div
         role="tabpanel"
@@ -147,7 +129,23 @@ export function CarrierViewModal({
               { label: tFields("businessName"), value: carrier.businessName },
               {
                 label: tFields("status"),
-                value: isActive ? tStatus("active") : tStatus("inactive"),
+                value: (
+                  <span
+                    className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
+                      isActive
+                        ? "bg-green-50 text-green-700 ring-1 ring-inset ring-green-200"
+                        : "bg-gray-100 text-gray-700 ring-1 ring-inset ring-gray-200"
+                    }`}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={`h-1.5 w-1.5 rounded-full ${
+                        isActive ? "bg-green-500" : "bg-gray-400"
+                      }`}
+                    />
+                    {isActive ? tStatus("active") : tStatus("inactive")}
+                  </span>
+                ),
               },
             ]}
           />
@@ -299,24 +297,29 @@ function Section({
 function DefList({
   items,
 }: {
-  items: { label: string; value?: string | null }[];
+  items: { label: string; value?: React.ReactNode }[];
 }) {
   return (
     <dl className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
-      {items.map((item) => (
-        <div key={item.label} className="min-w-0">
-          <dt className="text-xs font-medium uppercase tracking-wide text-gray-500">
-            {item.label}
-          </dt>
-          <dd
-            className={`mt-1 break-words text-sm ${
-              item.value ? "text-black" : "text-gray-400"
-            }`}
-          >
-            {item.value && item.value.trim().length > 0 ? item.value : "—"}
-          </dd>
-        </div>
-      ))}
+      {items.map((item) => {
+        const isString = typeof item.value === "string";
+        const stringEmpty = isString && (item.value as string).trim().length === 0;
+        const isEmpty = item.value == null || stringEmpty;
+        return (
+          <div key={item.label} className="min-w-0">
+            <dt className="text-xs font-medium uppercase tracking-wide text-gray-500">
+              {item.label}
+            </dt>
+            <dd
+              className={`mt-1 break-words text-sm ${
+                isEmpty ? "text-gray-400" : "text-black"
+              }`}
+            >
+              {isEmpty ? "—" : item.value}
+            </dd>
+          </div>
+        );
+      })}
     </dl>
   );
 }
