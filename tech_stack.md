@@ -16,7 +16,7 @@ Maximize active calls by avoiding "hairpinning" media through the application.
 ### Signaling Layer (Kamailio)
 
 - Receives the `INVITE`.
-- Queries the Rust/Hono API (or a Redis cache populated by them) for the LCR decision.
+- Queries the Zig signaling service (or a Redis cache populated by it) for the LCR decision.
 - **Wholesale call:** rewrites SIP headers, forwards to carrier IP. Audio flows via RTPEngine.
 - **IVR call:** routes to a FreeSWITCH cluster.
 
