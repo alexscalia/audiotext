@@ -146,6 +146,21 @@ export type CreateCarrierInput = z.infer<typeof CreateCarrierInput>;
 export const UpdateCarrierInput = CreateCarrierInput.partial();
 export type UpdateCarrierInput = z.infer<typeof UpdateCarrierInput>;
 
+export const CarrierListItemSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  businessName: z.string(),
+  status: CarrierStatusEnum,
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+});
+export type CarrierListItem = z.infer<typeof CarrierListItemSchema>;
+
+export const CarrierListResponseSchema = z.object({
+  carriers: z.array(CarrierListItemSchema),
+});
+export type CarrierListResponse = z.infer<typeof CarrierListResponseSchema>;
+
 export const ChatAppEnum = z.enum(["whatsapp", "telegram", "signal"]);
 export type ChatApp = z.infer<typeof ChatAppEnum>;
 

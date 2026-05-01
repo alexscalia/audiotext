@@ -8,7 +8,7 @@ Monorepo. Next.js 16 frontend, Hono backend, Postgres 17. Future: Rust backend p
 - **Frontend:** Next.js 16.2 (App Router, Turbopack, TS) + Tailwind + Radix UI
 - **Data tables:** TanStack Table (logic) + TanStack Virtual (perf)
 - **Analytics:** Tremor (high-density charts)
-- **Backend:** Hono + Zod (shared types via RPC)
+- **Backend:** Hono + Zod (shared types via RPC, OpenAPI spec via `@hono/zod-openapi`)
 - **Auth:** Better Auth (sessions + Drizzle adapter, shared between web + api)
 - **Fetching:** TanStack Query (syncs Hono data into tables)
 - **DB:** Postgres 17 via Docker Compose, Drizzle ORM + node-postgres
@@ -38,6 +38,8 @@ pnpm dev
 
 - web: http://localhost:3000
 - api: http://localhost:3001/health
+- api docs (Swagger UI): http://localhost:3001/docs
+- api OpenAPI spec: http://localhost:3001/openapi.json
 - adminer: http://localhost:8080
 
 ## Future Rust port

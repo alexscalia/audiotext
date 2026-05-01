@@ -1,5 +1,6 @@
 import { serve } from "@hono/node-server";
-import { Hono } from "hono";
+import { OpenAPIHono } from "@hono/zod-openapi";
+import { swaggerUI } from "@hono/swagger-ui";
 import { logger } from "hono/logger";
 import { pool } from "@audiotext/db";
 import { auth } from "./lib/auth";
@@ -7,11 +8,21 @@ import { carriersRoutes } from "./routes/carriers";
 
 const PORT = Number(process.env.PORT ?? 3001);
 
-const app = new Hono();
+const app = new OpenAPIHono();
 
 app.use("*", logger());
 
 app.on(["GET", "POST"], "/api/auth/*", (c) => auth.handler(c.req.raw));
+
+app.doc("/openapi.json", {
+  openapi: "3.0.0",
+  info: {
+    title: "audiotext API",
+    version: "0.0.0",
+  },
+});
+
+app.get("/docs", swaggerUI({ url: "/openapi.json" }));
 
 const routes = app
   .get("/", (c) => c.json({ message: "Hello world!" }))
@@ -23,6 +34,7 @@ const routes = app
 
 const server = serve({ fetch: app.fetch, port: PORT }, ({ port }) => {
   console.log(`api listening on http://localhost:${port}`);
+  console.log(`docs at http://localhost:${port}/docs`);
 });
 
 async function shutdown(signal: string) {
