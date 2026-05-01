@@ -81,11 +81,15 @@
       "inactive": "Inattivo"
     },
     "actions": {
+      "view": "Visualizza",
       "edit": "Modifica",
       "delete": "Elimina",
       "open": "Apri menu azioni",
       "cancel": "Annulla",
       "close": "Chiudi"
+    },
+    "view": {
+      "bankEmpty": "Nessun dato bancario disponibile."
     },
     "tabs": {
       "general": "Generale",

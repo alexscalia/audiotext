@@ -81,11 +81,15 @@
       "inactive": "Inactive"
     },
     "actions": {
+      "view": "View",
       "edit": "Edit",
       "delete": "Delete",
       "open": "Open actions menu",
       "cancel": "Cancel",
       "close": "Close"
+    },
+    "view": {
+      "bankEmpty": "No bank details on file."
     },
     "tabs": {
       "general": "General",

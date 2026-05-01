@@ -15,21 +15,91 @@ import {
   CarrierFormModal,
   type CarrierFormValues,
 } from "@/components/admin/carrier-form-modal";
+import { CarrierViewModal } from "@/components/admin/carrier-view-modal";
 
 type CarrierStatus = "active" | "inactive";
 
-type Carrier = {
-  id: string;
-  name: string;
-  status: CarrierStatus;
-};
+type Carrier = CarrierFormValues & { id: string };
+
+function makeMock(
+  id: string,
+  name: string,
+  businessName: string,
+  status: CarrierStatus,
+  overrides?: Partial<CarrierFormValues>
+): Carrier {
+  const base: CarrierFormValues = {
+    name,
+    businessName,
+    status,
+    billingDetails: {
+      address: {
+        line1: "Via Roma 1",
+        line2: "",
+        city: "Milano",
+        state: "MI",
+        postalCode: "20121",
+        countryCode: "IT",
+      },
+      taxId: "IT01234567890",
+      paymentTerms: "Net 30",
+      notes: "",
+      bank: undefined,
+    },
+    ratesName: "Marco Rossi",
+    ratesEmail: "rates@example.com",
+    billingName: "Giulia Bianchi",
+    billingEmail: "billing@example.com",
+    nocName: "NOC Desk",
+    nocEmail: "noc@example.com",
+    salesName: "Luca Verdi",
+    salesEmail: "sales@example.com",
+  };
+  return { id, ...base, ...overrides };
+}
 
 const MOCK_CARRIERS: Carrier[] = [
-  { id: "c-1", name: "Telecom Italia", status: "active" },
-  { id: "c-2", name: "Vodafone Wholesale", status: "active" },
-  { id: "c-3", name: "Wind Tre Business", status: "inactive" },
-  { id: "c-4", name: "Fastweb Carrier", status: "active" },
-  { id: "c-5", name: "Iliad Voice", status: "inactive" },
+  makeMock("c-1", "Telecom Italia", "Telecom Italia S.p.A.", "active", {
+    billingDetails: {
+      address: {
+        line1: "Corso d'Italia 41",
+        line2: "",
+        city: "Roma",
+        state: "RM",
+        postalCode: "00198",
+        countryCode: "IT",
+      },
+      taxId: "IT00488410010",
+      paymentTerms: "Net 60",
+      notes: "Tier-1 incumbent. Use dedicated rates contact for monthly updates.",
+      bank: {
+        name: "Intesa Sanpaolo",
+        accountNumber: "100200300400",
+        routingNumber: "",
+        iban: "IT60X0542811101000000123456",
+        swift: "BCITITMM",
+      },
+    },
+  }),
+  makeMock("c-2", "Vodafone Wholesale", "Vodafone Italia S.p.A.", "active"),
+  makeMock("c-3", "Wind Tre Business", "WindTre S.p.A.", "inactive", {
+    billingDetails: {
+      address: {
+        line1: "Via Leonardo da Vinci 1",
+        line2: "",
+        city: "Rho",
+        state: "MI",
+        postalCode: "20017",
+        countryCode: "IT",
+      },
+      taxId: "IT13378520152",
+      paymentTerms: "Net 45",
+      notes: "",
+      bank: undefined,
+    },
+  }),
+  makeMock("c-4", "Fastweb Carrier", "Fastweb S.p.A.", "active"),
+  makeMock("c-5", "Iliad Voice", "Iliad Italia S.p.A.", "inactive"),
 ];
 
 function StatusBadge({ status }: { status: CarrierStatus }) {
@@ -54,10 +124,38 @@ function StatusBadge({ status }: { status: CarrierStatus }) {
   );
 }
 
-function ActionsCell({ carrier }: { carrier: Carrier }) {
+function ActionsCell({
+  carrier,
+  onView,
+}: {
+  carrier: Carrier;
+  onView: (carrier: Carrier) => void;
+}) {
   const t = useTranslations("Carriers.actions");
   return (
     <div className="flex items-center justify-end gap-1">
+      <button
+        type="button"
+        onClick={() => onView(carrier)}
+        aria-label={`${t("view")} ${carrier.name}`}
+        className="cursor-pointer rounded-md p-2 text-gray-500 transition-colors duration-150 hover:bg-gray-100 hover:text-black focus:outline-none focus:ring-1 focus:ring-black motion-reduce:transition-none"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.8}
+          className="h-4 w-4"
+          aria-hidden="true"
+        >
+          <path
+            d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+      </button>
       <button
         type="button"
         aria-label={`${t("edit")} ${carrier.name}`}
@@ -108,16 +206,17 @@ export default function CarriersPage() {
   const [globalFilter, setGlobalFilter] = useState("");
   const [carriers, setCarriers] = useState<Carrier[]>(MOCK_CARRIERS);
   const [modalOpen, setModalOpen] = useState(false);
+  const [viewing, setViewing] = useState<Carrier | null>(null);
 
   function handleCreate(values: CarrierFormValues) {
     setCarriers((prev) => [
-      {
-        id: `c-${Date.now()}`,
-        name: values.name,
-        status: values.status,
-      },
+      { id: `c-${Date.now()}`, ...values },
       ...prev,
     ]);
+  }
+
+  function handleView(carrier: Carrier) {
+    setViewing(carrier);
   }
 
   const columns = useMemo<ColumnDef<Carrier>[]>(
@@ -126,7 +225,13 @@ export default function CarriersPage() {
         accessorKey: "name",
         header: t("columns.name"),
         cell: ({ row }) => (
-          <span className="font-medium text-black">{row.original.name}</span>
+          <button
+            type="button"
+            onClick={() => handleView(row.original)}
+            className="cursor-pointer rounded-sm font-medium text-black underline-offset-2 hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-black"
+          >
+            {row.original.name}
+          </button>
         ),
       },
       {
@@ -140,7 +245,9 @@ export default function CarriersPage() {
         header: () => (
           <span className="block text-right">{t("columns.actions")}</span>
         ),
-        cell: ({ row }) => <ActionsCell carrier={row.original} />,
+        cell: ({ row }) => (
+          <ActionsCell carrier={row.original} onView={handleView} />
+        ),
         enableSorting: false,
       },
     ],
@@ -314,6 +421,14 @@ export default function CarriersPage() {
           open
           onClose={() => setModalOpen(false)}
           onCreate={handleCreate}
+        />
+      )}
+
+      {viewing && (
+        <CarrierViewModal
+          open
+          onClose={() => setViewing(null)}
+          carrier={viewing}
         />
       )}
     </div>
