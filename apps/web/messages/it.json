@@ -40,6 +40,7 @@
     "calls": "Chiamate",
     "numbering": "Piani di numerazione",
     "trunks": "Trunk",
+    "carriers": "Carrier",
     "settings": "Impostazioni"
   },
   "Header": {
@@ -62,5 +63,42 @@
     "numberingPlans": "Piani di numerazione",
     "recentActivity": "Attività recente",
     "noActivity": "Nessuna attività."
+  },
+  "Carriers": {
+    "title": "Carrier",
+    "subtitle": "Gestisci i carrier di interconnessione",
+    "newCarrier": "Nuovo carrier",
+    "search": "Cerca carrier",
+    "empty": "Nessun carrier presente.",
+    "noResults": "Nessun carrier corrisponde alla ricerca.",
+    "columns": {
+      "name": "Nome",
+      "status": "Stato",
+      "actions": "Azioni"
+    },
+    "status": {
+      "active": "Attivo",
+      "inactive": "Inattivo"
+    },
+    "actions": {
+      "edit": "Modifica",
+      "delete": "Elimina",
+      "open": "Apri menu azioni",
+      "cancel": "Annulla",
+      "close": "Chiudi"
+    },
+    "form": {
+      "subtitle": "Aggiungi un nuovo carrier di interconnessione.",
+      "name": "Nome",
+      "namePlaceholder": "es. Telecom Italia",
+      "status": "Stato",
+      "statusHelp": "I carrier inattivi non riceveranno traffico.",
+      "submit": "Crea carrier",
+      "submitting": "Creazione...",
+      "errors": {
+        "nameRequired": "Il nome è obbligatorio",
+        "nameTooLong": "Il nome deve avere al massimo 120 caratteri"
+      }
+    }
   }
 }

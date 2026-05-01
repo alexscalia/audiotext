@@ -40,6 +40,7 @@
     "calls": "Calls",
     "numbering": "Numbering plans",
     "trunks": "Trunks",
+    "carriers": "Carriers",
     "settings": "Settings"
   },
   "Header": {
@@ -62,5 +63,42 @@
     "numberingPlans": "Numbering plans",
     "recentActivity": "Recent activity",
     "noActivity": "No activity yet."
+  },
+  "Carriers": {
+    "title": "Carriers",
+    "subtitle": "Manage your interconnection carriers",
+    "newCarrier": "New carrier",
+    "search": "Search carriers",
+    "empty": "No carriers yet.",
+    "noResults": "No carriers match your search.",
+    "columns": {
+      "name": "Name",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "open": "Open actions menu",
+      "cancel": "Cancel",
+      "close": "Close"
+    },
+    "form": {
+      "subtitle": "Add a new interconnection carrier.",
+      "name": "Name",
+      "namePlaceholder": "e.g. Telecom Italia",
+      "status": "Status",
+      "statusHelp": "Inactive carriers won't receive traffic.",
+      "submit": "Create carrier",
+      "submitting": "Creating...",
+      "errors": {
+        "nameRequired": "Name is required",
+        "nameTooLong": "Name must be 120 characters or less"
+      }
+    }
   }
 }

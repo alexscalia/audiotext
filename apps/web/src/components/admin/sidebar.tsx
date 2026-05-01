@@ -5,7 +5,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-type NavKey = "dashboard" | "users" | "calls" | "numbering" | "trunks" | "settings";
+type NavKey =
+  | "dashboard"
+  | "users"
+  | "calls"
+  | "numbering"
+  | "trunks"
+  | "carriers"
+  | "settings";
 
 type NavItem = {
   href: string;
@@ -59,6 +66,17 @@ const NAV: NavItem[] = [
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-5 w-5">
         <path d="M4 7h16M4 12h16M4 17h16" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
+    href: "/admin/carriers",
+    key: "carriers",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-5 w-5">
+        <path d="M3 7h11v9H3zM14 10h4l3 3v3h-7" strokeLinejoin="round" />
+        <circle cx="7" cy="17" r="1.6" />
+        <circle cx="17" cy="17" r="1.6" />
       </svg>
     ),
   },
