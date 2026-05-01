@@ -13,10 +13,10 @@
     "lint": "echo \"no lint\"",
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "tsx src/migrate.ts",
+    "db:migrate": "tsx --env-file=../../.env src/migrate.ts",
     "db:studio": "drizzle-kit studio",
     "db:push": "drizzle-kit push",
-    "db:seed": "tsx src/seed.ts"
+    "db:seed": "tsx --env-file=../../.env src/seed.ts"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",
