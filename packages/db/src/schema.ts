@@ -383,11 +383,12 @@ export const chatContactsRelations = relations(chatContacts, ({ one }) => ({
   }),
 }));
 
-export const terminationStatus = pgEnum("termination_status", [
+export const atVoiceTerminationStatus = pgEnum("at_voice_termination_status", [
   "active",
   "inactive",
 ]);
-export type TerminationStatus = (typeof terminationStatus.enumValues)[number];
+export type AtVoiceTerminationStatus =
+  (typeof atVoiceTerminationStatus.enumValues)[number];
 
 export const currency = pgEnum("currency", ["usd", "eur", "gbp"]);
 export type Currency = (typeof currency.enumValues)[number];
@@ -396,7 +397,7 @@ export const atVoiceTerminations = pgTable(
   "at_voice_terminations",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    status: terminationStatus("status").notNull().default("active"),
+    status: atVoiceTerminationStatus("status").notNull().default("active"),
     carrierId: uuid("carrier_id")
       .notNull()
       .references(() => carriers.id, { onDelete: "cascade" }),
@@ -488,47 +489,60 @@ export const carriersRelations = relations(carriers, ({ many }) => ({
   voiceTrunks: many(voiceTrunks),
 }));
 
-export const trunkStatus = pgEnum("trunk_status", [
+export const voiceTrunkStatus = pgEnum("voice_trunk_status", [
   "active",
   "inactive",
   "testing",
 ]);
-export type TrunkStatus = (typeof trunkStatus.enumValues)[number];
+export type VoiceTrunkStatus = (typeof voiceTrunkStatus.enumValues)[number];
 
-export const trunkDirection = pgEnum("trunk_direction", [
+export const voiceTrunkDirection = pgEnum("voice_trunk_direction", [
   "inbound",
   "outbound",
   "both",
 ]);
-export type TrunkDirection = (typeof trunkDirection.enumValues)[number];
+export type VoiceTrunkDirection =
+  (typeof voiceTrunkDirection.enumValues)[number];
 
-export const trunkProtocol = pgEnum("trunk_protocol", ["sip", "sips"]);
-export type TrunkProtocol = (typeof trunkProtocol.enumValues)[number];
+export const voiceTrunkProtocol = pgEnum("voice_trunk_protocol", [
+  "sip",
+  "sips",
+]);
+export type VoiceTrunkProtocol =
+  (typeof voiceTrunkProtocol.enumValues)[number];
 
-export const trunkTransport = pgEnum("trunk_transport", ["udp", "tcp", "tls"]);
-export type TrunkTransport = (typeof trunkTransport.enumValues)[number];
+export const voiceTrunkTransport = pgEnum("voice_trunk_transport", [
+  "udp",
+  "tcp",
+  "tls",
+]);
+export type VoiceTrunkTransport =
+  (typeof voiceTrunkTransport.enumValues)[number];
 
-export const trunkAuthType = pgEnum("trunk_auth_type", [
+export const voiceTrunkAuthType = pgEnum("voice_trunk_auth_type", [
   "ip",
   "userpass",
   "both",
 ]);
-export type TrunkAuthType = (typeof trunkAuthType.enumValues)[number];
+export type VoiceTrunkAuthType =
+  (typeof voiceTrunkAuthType.enumValues)[number];
 
-export const trunkDtmfMode = pgEnum("trunk_dtmf_mode", [
+export const voiceTrunkDtmfMode = pgEnum("voice_trunk_dtmf_mode", [
   "rfc2833",
   "inband",
   "info",
 ]);
-export type TrunkDtmfMode = (typeof trunkDtmfMode.enumValues)[number];
+export type VoiceTrunkDtmfMode =
+  (typeof voiceTrunkDtmfMode.enumValues)[number];
 
-export const trunkNatMode = pgEnum("trunk_nat_mode", [
+export const voiceTrunkNatMode = pgEnum("voice_trunk_nat_mode", [
   "no",
   "yes",
   "force_rport",
   "comedia",
 ]);
-export type TrunkNatMode = (typeof trunkNatMode.enumValues)[number];
+export type VoiceTrunkNatMode =
+  (typeof voiceTrunkNatMode.enumValues)[number];
 
 export const voiceTrunks = pgTable(
   "voice_trunks",
@@ -538,13 +552,13 @@ export const voiceTrunks = pgTable(
       .notNull()
       .references(() => carriers.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
-    status: trunkStatus("status").notNull().default("active"),
-    direction: trunkDirection("direction").notNull().default("both"),
-    protocol: trunkProtocol("protocol").notNull().default("sip"),
-    transport: trunkTransport("transport").notNull().default("udp"),
+    status: voiceTrunkStatus("status").notNull().default("active"),
+    direction: voiceTrunkDirection("direction").notNull().default("both"),
+    protocol: voiceTrunkProtocol("protocol").notNull().default("sip"),
+    transport: voiceTrunkTransport("transport").notNull().default("udp"),
     host: text("host").notNull(),
     port: integer("port").notNull().default(5060),
-    authType: trunkAuthType("auth_type").notNull(),
+    authType: voiceTrunkAuthType("auth_type").notNull(),
     username: text("username"),
     passwordEncrypted: text("password_encrypted"),
     realm: text("realm"),
@@ -560,8 +574,8 @@ export const voiceTrunks = pgTable(
       .$type<string[]>()
       .notNull()
       .default(sql`'[]'::jsonb`),
-    dtmfMode: trunkDtmfMode("dtmf_mode").notNull().default("rfc2833"),
-    natMode: trunkNatMode("nat_mode").notNull().default("no"),
+    dtmfMode: voiceTrunkDtmfMode("dtmf_mode").notNull().default("rfc2833"),
+    natMode: voiceTrunkNatMode("nat_mode").notNull().default("no"),
     ipAcl: jsonb("ip_acl").$type<string[]>(),
     metadata: jsonb("metadata").$type<Record<string, unknown>>(),
     createdAt: timestamp("created_at", { withTimezone: true })
@@ -611,8 +625,8 @@ export const voiceTrunksRelations = relations(voiceTrunks, ({ one }) => ({
 }));
 
 export const numberingPlanStatus = pgEnum("numbering_plan_status", [
-  "enabled",
-  "disabled",
+  "active",
+  "inactive",
 ]);
 export type NumberingPlanStatus =
   (typeof numberingPlanStatus.enumValues)[number];
@@ -622,7 +636,7 @@ export const numberingPlans = pgTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     name: text("name").notNull(),
-    status: numberingPlanStatus("status").notNull().default("enabled"),
+    status: numberingPlanStatus("status").notNull().default("active"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),

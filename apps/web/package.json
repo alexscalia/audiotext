@@ -12,6 +12,8 @@
   "dependencies": {
     "@audiotext/shared": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
+    "@tanstack/react-table": "^8.21.3",
+    "@tanstack/react-virtual": "^3.13.24",
     "better-auth": "^1.6.9",
     "next": "16.2.4",
     "next-intl": "^4.11.0",
