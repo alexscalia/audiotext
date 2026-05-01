@@ -8,6 +8,13 @@
       "when": 1777538822798,
       "tag": "0000_fixed_madame_web",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1777595780490,
+      "tag": "0001_right_starhawk",
+      "breakpoints": true
     }
   ]
 }

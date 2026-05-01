@@ -307,7 +307,9 @@ export const carriers = pgTable(
     billingDetails: jsonb("billing_details")
       .$type<CarrierBillingDetails>()
       .notNull(),
+    ratesName: text("rates_name").notNull(),
     ratesEmail: text("rates_email").notNull(),
+    billingName: text("billing_name").notNull(),
     billingEmail: text("billing_email").notNull(),
     nocName: text("noc_name").notNull(),
     nocEmail: text("noc_email").notNull(),
