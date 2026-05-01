@@ -298,12 +298,16 @@ export const rolePermissionsRelations = relations(
   }),
 );
 
+export const carrierStatus = pgEnum("carrier_status", ["active", "inactive"]);
+export type CarrierStatus = (typeof carrierStatus.enumValues)[number];
+
 export const carriers = pgTable(
   "carriers",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     name: text("name").notNull(),
     businessName: text("business_name").notNull(),
+    status: carrierStatus("status").notNull().default("active"),
     billingDetails: jsonb("billing_details")
       .$type<CarrierBillingDetails>()
       .notNull(),
@@ -313,6 +317,8 @@ export const carriers = pgTable(
     billingEmail: text("billing_email").notNull(),
     nocName: text("noc_name").notNull(),
     nocEmail: text("noc_email").notNull(),
+    salesName: text("sales_name").notNull(),
+    salesEmail: text("sales_email").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -326,6 +332,7 @@ export const carriers = pgTable(
     uniqueIndex("carriers_name_unique_active")
       .on(t.name)
       .where(sql`${t.deletedAt} IS NULL`),
+    index("carriers_status_idx").on(t.status),
     index("carriers_deleted_at_idx").on(t.deletedAt),
   ],
 );

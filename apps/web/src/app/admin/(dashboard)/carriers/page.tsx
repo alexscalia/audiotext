@@ -12,9 +12,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import {
-  NewCarrierModal,
-  type NewCarrierValues,
-} from "@/components/admin/new-carrier-modal";
+  CarrierFormModal,
+  type CarrierFormValues,
+} from "@/components/admin/carrier-form-modal";
 
 type CarrierStatus = "active" | "inactive";
 
@@ -109,7 +109,7 @@ export default function CarriersPage() {
   const [carriers, setCarriers] = useState<Carrier[]>(MOCK_CARRIERS);
   const [modalOpen, setModalOpen] = useState(false);
 
-  function handleCreate(values: NewCarrierValues) {
+  function handleCreate(values: CarrierFormValues) {
     setCarriers((prev) => [
       {
         id: `c-${Date.now()}`,
@@ -309,11 +309,13 @@ export default function CarriersPage() {
         </div>
       </div>
 
-      <NewCarrierModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onCreate={handleCreate}
-      />
+      {modalOpen && (
+        <CarrierFormModal
+          open
+          onClose={() => setModalOpen(false)}
+          onCreate={handleCreate}
+        />
+      )}
     </div>
   );
 }

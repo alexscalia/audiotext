@@ -87,17 +87,64 @@
       "cancel": "Cancel",
       "close": "Close"
     },
+    "tabs": {
+      "general": "General",
+      "billing": "Billing",
+      "contacts": "Contacts"
+    },
     "form": {
       "subtitle": "Add a new interconnection carrier.",
-      "name": "Name",
-      "namePlaceholder": "e.g. Telecom Italia",
-      "status": "Status",
-      "statusHelp": "Inactive carriers won't receive traffic.",
       "submit": "Create carrier",
       "submitting": "Creating...",
+      "tabErrorCount": "{count, plural, one {# error} other {# errors}}",
+      "errorSummary": "Fix {count, plural, one {# error} other {# errors}} before saving.",
+      "sections": {
+        "address": "Billing address",
+        "financial": "Financial",
+        "bank": "Bank details",
+        "rates": "Rates contact",
+        "billing": "Billing contact",
+        "noc": "NOC contact",
+        "sales": "Sales contact"
+      },
+      "fields": {
+        "name": "Carrier name",
+        "namePlaceholder": "e.g. Telecom Italia",
+        "businessName": "Legal business name",
+        "businessNamePlaceholder": "e.g. Telecom Italia S.p.A.",
+        "status": "Status",
+        "addressLine1": "Address line 1",
+        "addressLine2": "Address line 2",
+        "city": "City",
+        "state": "State / Province",
+        "postalCode": "Postal code",
+        "countryCode": "Country (ISO 2)",
+        "countryCodePlaceholder": "IT",
+        "taxId": "Tax ID / VAT",
+        "paymentTerms": "Payment terms",
+        "paymentTermsPlaceholder": "e.g. Net 30",
+        "notes": "Notes",
+        "bankName": "Bank name",
+        "bankAccountNumber": "Account number",
+        "bankRoutingNumber": "Routing number",
+        "bankIban": "IBAN",
+        "bankSwift": "SWIFT / BIC",
+        "contactName": "Name",
+        "contactEmail": "Email"
+      },
+      "bank": {
+        "addToggle": "Add bank details",
+        "removeToggle": "Remove bank details"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
       "errors": {
-        "nameRequired": "Name is required",
-        "nameTooLong": "Name must be 120 characters or less"
+        "required": "This field is required",
+        "emailInvalid": "Enter a valid email",
+        "tooLong": "Too long",
+        "countryCodeIso2": "Use a 2-letter country code (e.g. IT, US)"
       }
     }
   }

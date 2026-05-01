@@ -104,10 +104,14 @@ export const CarrierBillingDetailsSchema = z.object({
 });
 export type CarrierBillingDetails = z.infer<typeof CarrierBillingDetailsSchema>;
 
+export const CarrierStatusEnum = z.enum(["active", "inactive"]);
+export type CarrierStatus = z.infer<typeof CarrierStatusEnum>;
+
 export const CarrierSchema = z.object({
   id: z.string().uuid(),
   name: z.string().min(1).max(128),
   businessName: z.string().min(1).max(256),
+  status: CarrierStatusEnum,
   billingDetails: CarrierBillingDetailsSchema,
   ratesName: z.string().min(1).max(128),
   ratesEmail: z.string().email(),
@@ -115,6 +119,8 @@ export const CarrierSchema = z.object({
   billingEmail: z.string().email(),
   nocName: z.string().min(1).max(128),
   nocEmail: z.string().email(),
+  salesName: z.string().min(1).max(128),
+  salesEmail: z.string().email(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
   deletedAt: z.string().datetime().nullable(),
@@ -124,6 +130,7 @@ export type Carrier = z.infer<typeof CarrierSchema>;
 export const CreateCarrierInput = z.object({
   name: z.string().min(1).max(128),
   businessName: z.string().min(1).max(256),
+  status: CarrierStatusEnum.default("active"),
   billingDetails: CarrierBillingDetailsSchema,
   ratesName: z.string().min(1).max(128),
   ratesEmail: z.string().email(),
@@ -131,6 +138,8 @@ export const CreateCarrierInput = z.object({
   billingEmail: z.string().email(),
   nocName: z.string().min(1).max(128),
   nocEmail: z.string().email(),
+  salesName: z.string().min(1).max(128),
+  salesEmail: z.string().email(),
 });
 export type CreateCarrierInput = z.infer<typeof CreateCarrierInput>;
 

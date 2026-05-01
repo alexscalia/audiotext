@@ -9,8 +9,21 @@ type ModalProps = {
   description?: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
+  /** Sticky region between header and scrolling body (e.g. tabs). */
+  subheader?: React.ReactNode;
   closeLabel: string;
   initialFocusRef?: React.RefObject<HTMLElement | null>;
+  /** Override max-width on the dialog. Defaults to `max-w-md`. */
+  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
+};
+
+const SIZE_CLASS: Record<NonNullable<ModalProps["size"]>, string> = {
+  sm: "max-w-sm",
+  md: "max-w-md",
+  lg: "max-w-lg",
+  xl: "max-w-xl",
+  "2xl": "max-w-2xl",
+  "3xl": "max-w-3xl",
 };
 
 export function Modal({
@@ -20,8 +33,10 @@ export function Modal({
   description,
   children,
   footer,
+  subheader,
   closeLabel,
   initialFocusRef,
+  size = "md",
 }: ModalProps) {
   const [entered, setEntered] = useState(false);
   const dialogRef = useRef<HTMLDivElement | null>(null);
@@ -82,13 +97,13 @@ export function Modal({
       />
       <div
         ref={dialogRef}
-        className={`relative z-10 w-full max-w-md rounded-t-2xl border border-gray-200 bg-white shadow-xl transition-all duration-200 ease-out motion-reduce:transition-none sm:rounded-2xl ${
+        className={`relative z-10 flex max-h-[calc(100dvh-env(safe-area-inset-bottom)-env(safe-area-inset-top)-2rem)] w-full ${SIZE_CLASS[size]} flex-col rounded-t-2xl border border-gray-200 bg-white shadow-xl transition-all duration-200 ease-out motion-reduce:transition-none sm:max-h-[85dvh] sm:rounded-2xl ${
           entered
             ? "translate-y-0 scale-100 opacity-100"
             : "translate-y-2 scale-[0.98] opacity-0"
         }`}
       >
-        <div className="flex items-start justify-between gap-4 border-b border-gray-200 px-6 py-4">
+        <div className="flex shrink-0 items-start justify-between gap-4 border-b border-gray-200 px-6 py-4">
           <div className="min-w-0">
             <h2
               id={titleId}
@@ -121,10 +136,18 @@ export function Modal({
           </button>
         </div>
 
-        <div className="px-6 py-5">{children}</div>
+        {subheader && (
+          <div className="shrink-0 border-b border-gray-200 bg-white">
+            {subheader}
+          </div>
+        )}
+
+        <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
+          {children}
+        </div>
 
         {footer && (
-          <div className="flex items-center justify-end gap-2 border-t border-gray-200 bg-gray-50 px-6 py-4 rounded-b-2xl">
+          <div className="flex shrink-0 items-center justify-end gap-2 rounded-b-2xl border-t border-gray-200 bg-gray-50 px-6 py-4">
             {footer}
           </div>
         )}

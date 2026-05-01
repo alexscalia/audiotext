@@ -87,17 +87,64 @@
       "cancel": "Annulla",
       "close": "Chiudi"
     },
+    "tabs": {
+      "general": "Generale",
+      "billing": "Fatturazione",
+      "contacts": "Contatti"
+    },
     "form": {
       "subtitle": "Aggiungi un nuovo carrier di interconnessione.",
-      "name": "Nome",
-      "namePlaceholder": "es. Telecom Italia",
-      "status": "Stato",
-      "statusHelp": "I carrier inattivi non riceveranno traffico.",
       "submit": "Crea carrier",
       "submitting": "Creazione...",
+      "tabErrorCount": "{count, plural, one {# errore} other {# errori}}",
+      "errorSummary": "Correggi {count, plural, one {# errore} other {# errori}} prima di salvare.",
+      "sections": {
+        "address": "Indirizzo di fatturazione",
+        "financial": "Finanziario",
+        "bank": "Dati bancari",
+        "rates": "Contatto tariffe",
+        "billing": "Contatto fatturazione",
+        "noc": "Contatto NOC",
+        "sales": "Contatto commerciale"
+      },
+      "fields": {
+        "name": "Nome carrier",
+        "namePlaceholder": "es. Telecom Italia",
+        "businessName": "Ragione sociale",
+        "businessNamePlaceholder": "es. Telecom Italia S.p.A.",
+        "status": "Stato",
+        "addressLine1": "Indirizzo riga 1",
+        "addressLine2": "Indirizzo riga 2",
+        "city": "Città",
+        "state": "Provincia / Regione",
+        "postalCode": "CAP",
+        "countryCode": "Paese (ISO 2)",
+        "countryCodePlaceholder": "IT",
+        "taxId": "Partita IVA / Codice fiscale",
+        "paymentTerms": "Termini di pagamento",
+        "paymentTermsPlaceholder": "es. 30 giorni",
+        "notes": "Note",
+        "bankName": "Nome banca",
+        "bankAccountNumber": "Numero conto",
+        "bankRoutingNumber": "Routing number",
+        "bankIban": "IBAN",
+        "bankSwift": "SWIFT / BIC",
+        "contactName": "Nome",
+        "contactEmail": "Email"
+      },
+      "bank": {
+        "addToggle": "Aggiungi dati bancari",
+        "removeToggle": "Rimuovi dati bancari"
+      },
+      "status": {
+        "active": "Attivo",
+        "inactive": "Inattivo"
+      },
       "errors": {
-        "nameRequired": "Il nome è obbligatorio",
-        "nameTooLong": "Il nome deve avere al massimo 120 caratteri"
+        "required": "Questo campo è obbligatorio",
+        "emailInvalid": "Inserisci un'email valida",
+        "tooLong": "Troppo lungo",
+        "countryCodeIso2": "Usa un codice paese di 2 lettere (es. IT, US)"
       }
     }
   }
