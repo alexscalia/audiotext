@@ -12,6 +12,7 @@
     "password": "Password",
     "remember": "Remember for 30 days",
     "forgot": "Forgot password",
+    "forgotUnavailable": "Password reset is not available yet",
     "submit": "Sign in",
     "submitting": "Signing in...",
     "errorFallback": "Sign in failed",
@@ -46,6 +47,10 @@
     "notifications": "Notifications",
     "expandSidebar": "Expand sidebar",
     "collapseSidebar": "Collapse sidebar",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "userMenu": "Open user menu",
+    "skipToContent": "Skip to main content",
     "signOut": "Sign out"
   },
   "Dashboard": {

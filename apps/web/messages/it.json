@@ -12,6 +12,7 @@
     "password": "Password",
     "remember": "Ricordami per 30 giorni",
     "forgot": "Password dimenticata",
+    "forgotUnavailable": "Il recupero password non è ancora disponibile",
     "submit": "Accedi",
     "submitting": "Accesso in corso...",
     "errorFallback": "Accesso non riuscito",
@@ -46,6 +47,10 @@
     "notifications": "Notifiche",
     "expandSidebar": "Espandi barra laterale",
     "collapseSidebar": "Comprimi barra laterale",
+    "openMenu": "Apri menu",
+    "closeMenu": "Chiudi menu",
+    "userMenu": "Apri menu utente",
+    "skipToContent": "Vai al contenuto principale",
     "signOut": "Esci"
   },
   "Dashboard": {
