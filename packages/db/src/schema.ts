@@ -719,6 +719,7 @@ export const numberingPlansRelations = relations(
   numberingPlans,
   ({ many }) => ({
     lines: many(numberingPlanLines),
+    destinations: many(numberingPlanDestinations),
   }),
 );
 
@@ -727,6 +728,67 @@ export const numberingPlanLinesRelations = relations(
   ({ one }) => ({
     plan: one(numberingPlans, {
       fields: [numberingPlanLines.numberingPlanId],
+      references: [numberingPlans.id],
+    }),
+  }),
+);
+
+export const numberingPlanDestinations = pgTable(
+  "numbering_plan_destinations",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    numberingPlanId: uuid("numbering_plan_id")
+      .notNull()
+      .references(() => numberingPlans.id, { onDelete: "cascade" }),
+    countryCode: text("country_code").notNull(),
+    name: text("name").notNull(),
+    minDigits: integer("min_digits").notNull(),
+    maxDigits: integer("max_digits").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("numbering_plan_destinations_plan_country_name_unique_active")
+      .on(t.numberingPlanId, t.countryCode, t.name)
+      .where(sql`${t.deletedAt} IS NULL`),
+    index("numbering_plan_destinations_plan_idx").on(t.numberingPlanId),
+    index("numbering_plan_destinations_country_idx").on(t.countryCode),
+    index("numbering_plan_destinations_deleted_at_idx").on(t.deletedAt),
+    check(
+      "numbering_plan_destinations_country_code_iso2",
+      sql`${t.countryCode} ~ '^[A-Z]{2}$'`,
+    ),
+    check(
+      "numbering_plan_destinations_min_digits_positive",
+      sql`${t.minDigits} > 0`,
+    ),
+    check(
+      "numbering_plan_destinations_max_digits_positive",
+      sql`${t.maxDigits} > 0`,
+    ),
+    check(
+      "numbering_plan_destinations_digits_range",
+      sql`${t.minDigits} <= ${t.maxDigits}`,
+    ),
+  ],
+);
+
+export type NumberingPlanDestinationRow =
+  typeof numberingPlanDestinations.$inferSelect;
+export type NewNumberingPlanDestinationRow =
+  typeof numberingPlanDestinations.$inferInsert;
+
+export const numberingPlanDestinationsRelations = relations(
+  numberingPlanDestinations,
+  ({ one }) => ({
+    plan: one(numberingPlans, {
+      fields: [numberingPlanDestinations.numberingPlanId],
       references: [numberingPlans.id],
     }),
   }),
@@ -769,6 +831,40 @@ export const voiceCdrs = pgTable(
 
 export type VoiceCdrRow = typeof voiceCdrs.$inferSelect;
 export type NewVoiceCdrRow = typeof voiceCdrs.$inferInsert;
+
+export const voiceRateSheetStatus = pgEnum("voice_rate_sheet_status", [
+  "active",
+  "inactive",
+]);
+export type VoiceRateSheetStatus =
+  (typeof voiceRateSheetStatus.enumValues)[number];
+
+export const voiceRateSheets = pgTable(
+  "voice_rate_sheets",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    name: text("name").notNull(),
+    status: voiceRateSheetStatus("status").notNull().default("active"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("voice_rate_sheets_name_unique_active")
+      .on(t.name)
+      .where(sql`${t.deletedAt} IS NULL`),
+    index("voice_rate_sheets_status_idx").on(t.status),
+    index("voice_rate_sheets_deleted_at_idx").on(t.deletedAt),
+  ],
+);
+
+export type VoiceRateSheetRow = typeof voiceRateSheets.$inferSelect;
+export type NewVoiceRateSheetRow = typeof voiceRateSheets.$inferInsert;
 
 export type UserRow = typeof users.$inferSelect;
 export type NewUserRow = typeof users.$inferInsert;
