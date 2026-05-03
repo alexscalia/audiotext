@@ -136,6 +136,8 @@ const CARRIERS: CarrierFixture[] = [
       billingEmail: "billing@acme-telecom.com",
       nocName: "NOC Acme",
       nocEmail: "noc@acme-telecom.com",
+      salesName: "Luca Verdi",
+      salesEmail: "sales@acme-telecom.com",
       billingDetails: {
         address: {
           line1: "Via Roma 12",
@@ -168,6 +170,8 @@ const CARRIERS: CarrierFixture[] = [
       billingEmail: "ar@globex.io",
       nocName: "Globex NOC",
       nocEmail: "noc@globex.io",
+      salesName: "Kyle Reese",
+      salesEmail: "sales@globex.io",
       billingDetails: {
         address: {
           line1: "221B Baker Street",
@@ -194,6 +198,8 @@ const CARRIERS: CarrierFixture[] = [
       billingEmail: "billing@initech.com",
       nocName: "Initech NOC",
       nocEmail: "noc@initech.com",
+      salesName: "Michael Bolton",
+      salesEmail: "sales@initech.com",
       billingDetails: {
         address: {
           line1: "4120 Freidrich Lane",

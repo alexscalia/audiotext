@@ -1,14 +1,16 @@
+CREATE TYPE "public"."at_voice_termination_status" AS ENUM('active', 'inactive');--> statement-breakpoint
+CREATE TYPE "public"."carrier_status" AS ENUM('active', 'inactive');--> statement-breakpoint
 CREATE TYPE "public"."chat_app" AS ENUM('whatsapp', 'telegram', 'signal');--> statement-breakpoint
 CREATE TYPE "public"."currency" AS ENUM('usd', 'eur', 'gbp');--> statement-breakpoint
-CREATE TYPE "public"."numbering_plan_status" AS ENUM('enabled', 'disabled');--> statement-breakpoint
-CREATE TYPE "public"."termination_status" AS ENUM('active', 'inactive');--> statement-breakpoint
-CREATE TYPE "public"."trunk_auth_type" AS ENUM('ip', 'userpass', 'both');--> statement-breakpoint
-CREATE TYPE "public"."trunk_direction" AS ENUM('inbound', 'outbound', 'both');--> statement-breakpoint
-CREATE TYPE "public"."trunk_dtmf_mode" AS ENUM('rfc2833', 'inband', 'info');--> statement-breakpoint
-CREATE TYPE "public"."trunk_nat_mode" AS ENUM('no', 'yes', 'force_rport', 'comedia');--> statement-breakpoint
-CREATE TYPE "public"."trunk_protocol" AS ENUM('sip', 'sips');--> statement-breakpoint
-CREATE TYPE "public"."trunk_status" AS ENUM('active', 'inactive', 'testing');--> statement-breakpoint
-CREATE TYPE "public"."trunk_transport" AS ENUM('udp', 'tcp', 'tls');--> statement-breakpoint
+CREATE TYPE "public"."numbering_plan_status" AS ENUM('active', 'inactive');--> statement-breakpoint
+CREATE TYPE "public"."voice_rate_sheet_status" AS ENUM('active', 'inactive');--> statement-breakpoint
+CREATE TYPE "public"."voice_trunk_auth_type" AS ENUM('ip', 'userpass', 'both');--> statement-breakpoint
+CREATE TYPE "public"."voice_trunk_direction" AS ENUM('inbound', 'outbound', 'both');--> statement-breakpoint
+CREATE TYPE "public"."voice_trunk_dtmf_mode" AS ENUM('rfc2833', 'inband', 'info');--> statement-breakpoint
+CREATE TYPE "public"."voice_trunk_nat_mode" AS ENUM('no', 'yes', 'force_rport', 'comedia');--> statement-breakpoint
+CREATE TYPE "public"."voice_trunk_protocol" AS ENUM('sip', 'sips');--> statement-breakpoint
+CREATE TYPE "public"."voice_trunk_status" AS ENUM('active', 'inactive', 'testing');--> statement-breakpoint
+CREATE TYPE "public"."voice_trunk_transport" AS ENUM('udp', 'tcp', 'tls');--> statement-breakpoint
 CREATE TABLE "accounts" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
@@ -38,7 +40,7 @@ CREATE TABLE "at_voice_numbers" (
 --> statement-breakpoint
 CREATE TABLE "at_voice_terminations" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"status" "termination_status" DEFAULT 'active' NOT NULL,
+	"status" "at_voice_termination_status" DEFAULT 'active' NOT NULL,
 	"carrier_id" uuid NOT NULL,
 	"name" text NOT NULL,
 	"internal_route_name" text NOT NULL,
@@ -54,11 +56,16 @@ CREATE TABLE "carriers" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL,
 	"business_name" text NOT NULL,
+	"status" "carrier_status" DEFAULT 'active' NOT NULL,
 	"billing_details" jsonb NOT NULL,
+	"rates_name" text NOT NULL,
 	"rates_email" text NOT NULL,
+	"billing_name" text NOT NULL,
 	"billing_email" text NOT NULL,
 	"noc_name" text NOT NULL,
 	"noc_email" text NOT NULL,
+	"sales_name" text NOT NULL,
+	"sales_email" text NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone
@@ -74,6 +81,22 @@ CREATE TABLE "chat_contacts" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone,
 	CONSTRAINT "chat_contacts_owner_xor" CHECK ((("chat_contacts"."user_id" IS NOT NULL)::int + ("chat_contacts"."carrier_id" IS NOT NULL)::int) = 1)
+);
+--> statement-breakpoint
+CREATE TABLE "numbering_plan_destinations" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"numbering_plan_id" uuid NOT NULL,
+	"country_code" text NOT NULL,
+	"name" text NOT NULL,
+	"min_digits" integer NOT NULL,
+	"max_digits" integer NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"deleted_at" timestamp with time zone,
+	CONSTRAINT "numbering_plan_destinations_country_code_iso2" CHECK ("numbering_plan_destinations"."country_code" ~ '^[A-Z]{2}$'),
+	CONSTRAINT "numbering_plan_destinations_min_digits_positive" CHECK ("numbering_plan_destinations"."min_digits" > 0),
+	CONSTRAINT "numbering_plan_destinations_max_digits_positive" CHECK ("numbering_plan_destinations"."max_digits" > 0),
+	CONSTRAINT "numbering_plan_destinations_digits_range" CHECK ("numbering_plan_destinations"."min_digits" <= "numbering_plan_destinations"."max_digits")
 );
 --> statement-breakpoint
 CREATE TABLE "numbering_plan_lines" (
@@ -96,7 +119,7 @@ CREATE TABLE "numbering_plan_lines" (
 CREATE TABLE "numbering_plans" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL,
-	"status" "numbering_plan_status" DEFAULT 'enabled' NOT NULL,
+	"status" "numbering_plan_status" DEFAULT 'active' NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone
@@ -190,17 +213,26 @@ CREATE TABLE "voice_cdrs" (
 	CONSTRAINT "voice_cdrs_ended_after_started" CHECK ("voice_cdrs"."ended_at" IS NULL OR "voice_cdrs"."ended_at" >= "voice_cdrs"."started_at")
 );
 --> statement-breakpoint
+CREATE TABLE "voice_rate_sheets" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"name" text NOT NULL,
+	"status" "voice_rate_sheet_status" DEFAULT 'active' NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"deleted_at" timestamp with time zone
+);
+--> statement-breakpoint
 CREATE TABLE "voice_trunks" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"carrier_id" uuid NOT NULL,
 	"name" text NOT NULL,
-	"status" "trunk_status" DEFAULT 'active' NOT NULL,
-	"direction" "trunk_direction" DEFAULT 'both' NOT NULL,
-	"protocol" "trunk_protocol" DEFAULT 'sip' NOT NULL,
-	"transport" "trunk_transport" DEFAULT 'udp' NOT NULL,
+	"status" "voice_trunk_status" DEFAULT 'active' NOT NULL,
+	"direction" "voice_trunk_direction" DEFAULT 'both' NOT NULL,
+	"protocol" "voice_trunk_protocol" DEFAULT 'sip' NOT NULL,
+	"transport" "voice_trunk_transport" DEFAULT 'udp' NOT NULL,
 	"host" text NOT NULL,
 	"port" integer DEFAULT 5060 NOT NULL,
-	"auth_type" "trunk_auth_type" NOT NULL,
+	"auth_type" "voice_trunk_auth_type" NOT NULL,
 	"username" text,
 	"password_encrypted" text,
 	"realm" text,
@@ -213,8 +245,8 @@ CREATE TABLE "voice_trunks" (
 	"max_channels" integer,
 	"cps_limit" integer,
 	"codecs" jsonb DEFAULT '[]'::jsonb NOT NULL,
-	"dtmf_mode" "trunk_dtmf_mode" DEFAULT 'rfc2833' NOT NULL,
-	"nat_mode" "trunk_nat_mode" DEFAULT 'no' NOT NULL,
+	"dtmf_mode" "voice_trunk_dtmf_mode" DEFAULT 'rfc2833' NOT NULL,
+	"nat_mode" "voice_trunk_nat_mode" DEFAULT 'no' NOT NULL,
 	"ip_acl" jsonb,
 	"metadata" jsonb,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
@@ -232,6 +264,7 @@ ALTER TABLE "at_voice_numbers" ADD CONSTRAINT "at_voice_numbers_at_voice_termina
 ALTER TABLE "at_voice_terminations" ADD CONSTRAINT "at_voice_terminations_carrier_id_carriers_id_fk" FOREIGN KEY ("carrier_id") REFERENCES "public"."carriers"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "chat_contacts" ADD CONSTRAINT "chat_contacts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "chat_contacts" ADD CONSTRAINT "chat_contacts_carrier_id_carriers_id_fk" FOREIGN KEY ("carrier_id") REFERENCES "public"."carriers"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "numbering_plan_destinations" ADD CONSTRAINT "numbering_plan_destinations_numbering_plan_id_numbering_plans_id_fk" FOREIGN KEY ("numbering_plan_id") REFERENCES "public"."numbering_plans"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "numbering_plan_lines" ADD CONSTRAINT "numbering_plan_lines_numbering_plan_id_numbering_plans_id_fk" FOREIGN KEY ("numbering_plan_id") REFERENCES "public"."numbering_plans"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "role_permissions" ADD CONSTRAINT "role_permissions_role_id_roles_id_fk" FOREIGN KEY ("role_id") REFERENCES "public"."roles"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "role_permissions" ADD CONSTRAINT "role_permissions_permission_id_permissions_id_fk" FOREIGN KEY ("permission_id") REFERENCES "public"."permissions"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -252,11 +285,16 @@ CREATE INDEX "at_voice_terminations_status_idx" ON "at_voice_terminations" USING
 CREATE INDEX "at_voice_terminations_country_idx" ON "at_voice_terminations" USING btree ("country_code");--> statement-breakpoint
 CREATE INDEX "at_voice_terminations_deleted_at_idx" ON "at_voice_terminations" USING btree ("deleted_at");--> statement-breakpoint
 CREATE UNIQUE INDEX "carriers_name_unique_active" ON "carriers" USING btree ("name") WHERE "carriers"."deleted_at" IS NULL;--> statement-breakpoint
+CREATE INDEX "carriers_status_idx" ON "carriers" USING btree ("status");--> statement-breakpoint
 CREATE INDEX "carriers_deleted_at_idx" ON "carriers" USING btree ("deleted_at");--> statement-breakpoint
 CREATE INDEX "chat_contacts_user_idx" ON "chat_contacts" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "chat_contacts_carrier_idx" ON "chat_contacts" USING btree ("carrier_id");--> statement-breakpoint
 CREATE INDEX "chat_contacts_app_id_idx" ON "chat_contacts" USING btree ("chat_app","chat_id");--> statement-breakpoint
 CREATE INDEX "chat_contacts_deleted_at_idx" ON "chat_contacts" USING btree ("deleted_at");--> statement-breakpoint
+CREATE UNIQUE INDEX "numbering_plan_destinations_plan_country_name_unique_active" ON "numbering_plan_destinations" USING btree ("numbering_plan_id","country_code","name") WHERE "numbering_plan_destinations"."deleted_at" IS NULL;--> statement-breakpoint
+CREATE INDEX "numbering_plan_destinations_plan_idx" ON "numbering_plan_destinations" USING btree ("numbering_plan_id");--> statement-breakpoint
+CREATE INDEX "numbering_plan_destinations_country_idx" ON "numbering_plan_destinations" USING btree ("country_code");--> statement-breakpoint
+CREATE INDEX "numbering_plan_destinations_deleted_at_idx" ON "numbering_plan_destinations" USING btree ("deleted_at");--> statement-breakpoint
 CREATE UNIQUE INDEX "numbering_plan_lines_plan_country_area_operator_unique_active" ON "numbering_plan_lines" USING btree ("numbering_plan_id","country_code","area_code","operator_name") WHERE "numbering_plan_lines"."deleted_at" IS NULL;--> statement-breakpoint
 CREATE INDEX "numbering_plan_lines_plan_idx" ON "numbering_plan_lines" USING btree ("numbering_plan_id");--> statement-breakpoint
 CREATE INDEX "numbering_plan_lines_country_idx" ON "numbering_plan_lines" USING btree ("country_code");--> statement-breakpoint
@@ -285,6 +323,9 @@ CREATE INDEX "verifications_deleted_at_idx" ON "verifications" USING btree ("del
 CREATE INDEX "voice_cdrs_started_at_idx" ON "voice_cdrs" USING btree ("started_at");--> statement-breakpoint
 CREATE INDEX "voice_cdrs_internal_route_idx" ON "voice_cdrs" USING btree ("internal_route_name");--> statement-breakpoint
 CREATE INDEX "voice_cdrs_deleted_at_idx" ON "voice_cdrs" USING btree ("deleted_at");--> statement-breakpoint
+CREATE UNIQUE INDEX "voice_rate_sheets_name_unique_active" ON "voice_rate_sheets" USING btree ("name") WHERE "voice_rate_sheets"."deleted_at" IS NULL;--> statement-breakpoint
+CREATE INDEX "voice_rate_sheets_status_idx" ON "voice_rate_sheets" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "voice_rate_sheets_deleted_at_idx" ON "voice_rate_sheets" USING btree ("deleted_at");--> statement-breakpoint
 CREATE UNIQUE INDEX "voice_trunks_carrier_name_unique_active" ON "voice_trunks" USING btree ("carrier_id","name") WHERE "voice_trunks"."deleted_at" IS NULL;--> statement-breakpoint
 CREATE INDEX "voice_trunks_carrier_idx" ON "voice_trunks" USING btree ("carrier_id");--> statement-breakpoint
 CREATE INDEX "voice_trunks_status_idx" ON "voice_trunks" USING btree ("status");--> statement-breakpoint

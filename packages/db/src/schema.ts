@@ -665,71 +665,10 @@ export const numberingPlans = pgTable(
 export type NumberingPlanRow = typeof numberingPlans.$inferSelect;
 export type NewNumberingPlanRow = typeof numberingPlans.$inferInsert;
 
-export const numberingPlanLines = pgTable(
-  "numbering_plan_lines",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    numberingPlanId: uuid("numbering_plan_id")
-      .notNull()
-      .references(() => numberingPlans.id, { onDelete: "cascade" }),
-    countryCode: text("country_code").notNull(),
-    areaCode: text("area_code"),
-    operatorName: text("operator_name").notNull(),
-    minDigits: integer("min_digits").notNull(),
-    maxDigits: integer("max_digits").notNull(),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-    updatedAt: timestamp("updated_at", { withTimezone: true })
-      .notNull()
-      .defaultNow()
-      .$onUpdate(() => new Date()),
-    deletedAt: timestamp("deleted_at", { withTimezone: true }),
-  },
-  (t) => [
-    uniqueIndex(
-      "numbering_plan_lines_plan_country_area_operator_unique_active",
-    )
-      .on(t.numberingPlanId, t.countryCode, t.areaCode, t.operatorName)
-      .where(sql`${t.deletedAt} IS NULL`),
-    index("numbering_plan_lines_plan_idx").on(t.numberingPlanId),
-    index("numbering_plan_lines_country_idx").on(t.countryCode),
-    index("numbering_plan_lines_country_area_idx").on(
-      t.countryCode,
-      t.areaCode,
-    ),
-    index("numbering_plan_lines_deleted_at_idx").on(t.deletedAt),
-    check(
-      "numbering_plan_lines_country_code_iso2",
-      sql`${t.countryCode} ~ '^[A-Z]{2}$'`,
-    ),
-    check("numbering_plan_lines_min_digits_positive", sql`${t.minDigits} > 0`),
-    check("numbering_plan_lines_max_digits_positive", sql`${t.maxDigits} > 0`),
-    check(
-      "numbering_plan_lines_digits_range",
-      sql`${t.minDigits} <= ${t.maxDigits}`,
-    ),
-  ],
-);
-
-export type NumberingPlanLineRow = typeof numberingPlanLines.$inferSelect;
-export type NewNumberingPlanLineRow = typeof numberingPlanLines.$inferInsert;
-
 export const numberingPlansRelations = relations(
   numberingPlans,
   ({ many }) => ({
-    lines: many(numberingPlanLines),
     destinations: many(numberingPlanDestinations),
-  }),
-);
-
-export const numberingPlanLinesRelations = relations(
-  numberingPlanLines,
-  ({ one }) => ({
-    plan: one(numberingPlans, {
-      fields: [numberingPlanLines.numberingPlanId],
-      references: [numberingPlans.id],
-    }),
   }),
 );
 
@@ -786,10 +725,58 @@ export type NewNumberingPlanDestinationRow =
 
 export const numberingPlanDestinationsRelations = relations(
   numberingPlanDestinations,
-  ({ one }) => ({
+  ({ many, one }) => ({
     plan: one(numberingPlans, {
       fields: [numberingPlanDestinations.numberingPlanId],
       references: [numberingPlans.id],
+    }),
+    prefixes: many(numberingPlanPrefixes),
+  }),
+);
+
+export const numberingPlanPrefixes = pgTable(
+  "numbering_plan_prefixes",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    numberingPlanDestinationId: uuid("numbering_plan_destination_id")
+      .notNull()
+      .references(() => numberingPlanDestinations.id, { onDelete: "cascade" }),
+    prefix: text("prefix").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("numbering_plan_prefixes_destination_prefix_unique_active")
+      .on(t.numberingPlanDestinationId, t.prefix)
+      .where(sql`${t.deletedAt} IS NULL`),
+    index("numbering_plan_prefixes_destination_idx").on(
+      t.numberingPlanDestinationId,
+    ),
+    index("numbering_plan_prefixes_prefix_idx").on(t.prefix),
+    index("numbering_plan_prefixes_deleted_at_idx").on(t.deletedAt),
+    check(
+      "numbering_plan_prefixes_prefix_digits",
+      sql`${t.prefix} ~ '^[0-9]+$'`,
+    ),
+  ],
+);
+
+export type NumberingPlanPrefixRow = typeof numberingPlanPrefixes.$inferSelect;
+export type NewNumberingPlanPrefixRow =
+  typeof numberingPlanPrefixes.$inferInsert;
+
+export const numberingPlanPrefixesRelations = relations(
+  numberingPlanPrefixes,
+  ({ one }) => ({
+    destination: one(numberingPlanDestinations, {
+      fields: [numberingPlanPrefixes.numberingPlanDestinationId],
+      references: [numberingPlanDestinations.id],
     }),
   }),
 );
