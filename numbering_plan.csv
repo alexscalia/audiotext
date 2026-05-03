@@ -1,257 +1,349 @@
-Country,Country Code,Destination,Country code,Code,Min digits,Max digits
-Afghanistan,AF,Proper,93,,11,11
-Afghanistan,AF,ATOMA,93,76,11,11
-Afghanistan,AF,ATOMA,93,77,11,11
-Afghanistan,AF,AWCC,93,70,11,11
-Afghanistan,AF,AWCC,93,71,11,11
-Afghanistan,AF,Etisalat,93,73,11,11
-Afghanistan,AF,Etisalat,93,78,11,11
-Afghanistan,AF,Roshan,93,72,11,11
-Afghanistan,AF,Roshan,93,79,11,11
-Afghanistan,AF,Salaam,93,74,11,11
-Albania,AL,Proper,355,,11,11
-Albania,AL,One,355,67,12,12
-Albania,AL,One,355,68,12,12
-Albania,AL,Vodafone,355,69,12,12
-Algeria,DZ,Proper,213,,11,11
-Algeria,DZ,Djezzy,213,7,12,12
-Algeria,DZ,Mobilis,213,6,12,12
-Algeria,DZ,Ooredoo,213,5,12,12
-Andorra,AD,Proper,376,,9,9
-Andorra,AD,Andorra Telecom,376,3,9,9
-Andorra,AD,Andorra Telecom,376,4,9,9
-Andorra,AD,Andorra Telecom,376,6,9,9
-Angola,AO,Proper,244,,12,12
-Angola,AO,Africell,244,95,12,12
-Angola,AO,Movicel,244,91,12,12
-Angola,AO,Movicel,244,99,12,12
-Angola,AO,Unitel,244,92,12,12
-Angola,AO,Unitel,244,93,12,12
-Angola,AO,Unitel,244,94,12,12
-Antigua and Barbuda,AG,Proper,1268,,11,11
-Antigua and Barbuda,AG,Mobile,1268,,11,11
-Argentina,AR,Proper,54,,12,12
-Argentina,AR,Mobile,54,9,13,13
-Armenia,AM,Proper,374,,11,11
-Armenia,AM,Team Telecom,374,43,11,11
-Armenia,AM,Team Telecom,374,91,11,11
-Armenia,AM,Team Telecom,374,96,11,11
-Armenia,AM,Team Telecom,374,99,11,11
-Armenia,AM,Ucom,374,41,11,11
-Armenia,AM,Ucom,374,44,11,11
-Armenia,AM,Ucom,374,55,11,11
-Armenia,AM,Ucom,374,95,11,11
-Armenia,AM,Viva-MTS,374,77,11,11
-Armenia,AM,Viva-MTS,374,93,11,11
-Armenia,AM,Viva-MTS,374,94,11,11
-Armenia,AM,Viva-MTS,374,98,11,11
-Australia,AU,Proper,61,,11,11
-Australia,AU,Mobile,61,4,11,11
-Austria,AT,Proper,43,,6,15
-Austria,AT,A1,43,664,11,13
-Austria,AT,Drei,43,660,11,13
-Austria,AT,Drei,43,699,11,13
-Austria,AT,Magenta,43,676,11,13
-Azerbaijan,AZ,Proper,994,,12,12
-Azerbaijan,AZ,Azercell,994,10,12,12
-Azerbaijan,AZ,Azercell,994,50,12,12
-Azerbaijan,AZ,Azercell,994,51,12,12
-Azerbaijan,AZ,Bakcell,994,55,12,12
-Azerbaijan,AZ,Bakcell,994,99,12,12
-Azerbaijan,AZ,Nar,994,70,12,12
-Azerbaijan,AZ,Nar,994,77,12,12
-Bahamas,BS,Proper,1242,,11,11
-Bahamas,BS,Mobile,1242,,11,11
-Bahrain,BH,Proper,973,,11,11
-Bahrain,BH,Batelco,973,39,11,11
-Bahrain,BH,stc,973,33,11,11
-Bahrain,BH,stc,973,34,11,11
-Bahrain,BH,stc,973,35,11,11
-Bahrain,BH,Zain,973,36,11,11
-Bahrain,BH,Zain,973,37,11,11
-Bangladesh,BD,Proper,880,,12,12
-Bangladesh,BD,Airtel,880,16,13,13
-Bangladesh,BD,Banglalink,880,14,13,13
-Bangladesh,BD,Banglalink,880,19,13,13
-Bangladesh,BD,Grameenphone,880,13,13,13
-Bangladesh,BD,Grameenphone,880,17,13,13
-Bangladesh,BD,Robi,880,18,13,13
-Bangladesh,BD,Teletalk,880,15,13,13
-Barbados,BB,Proper,1246,,11,11
-Barbados,BB,Mobile,1246,,11,11
-Cambodia,KH,Proper,855,,11,12
-Cambodia,KH,Cellcard,855,11,11,12
-Cambodia,KH,Cellcard,855,12,11,12
-Cambodia,KH,Cellcard,855,14,11,12
-Cambodia,KH,Cellcard,855,17,11,12
-Cambodia,KH,Cellcard,855,61,11,12
-Cambodia,KH,Cellcard,855,76,11,12
-Cambodia,KH,Cellcard,855,77,11,12
-Cambodia,KH,Cellcard,855,78,11,12
-Cambodia,KH,Cellcard,855,79,11,12
-Cambodia,KH,Cellcard,855,85,11,12
-Cambodia,KH,Cellcard,855,89,11,12
-Cambodia,KH,Cellcard,855,92,11,12
-Cambodia,KH,Cellcard,855,95,11,12
-Cambodia,KH,Cellcard,855,99,11,12
-Cambodia,KH,Metfone,855,31,11,12
-Cambodia,KH,Metfone,855,60,11,12
-Cambodia,KH,Metfone,855,66,11,12
-Cambodia,KH,Metfone,855,67,11,12
-Cambodia,KH,Metfone,855,68,11,12
-Cambodia,KH,Metfone,855,71,11,12
-Cambodia,KH,Metfone,855,88,11,12
-Cambodia,KH,Metfone,855,90,11,12
-Cambodia,KH,Mobile,855,97,11,12
-Cambodia,KH,Smart,855,10,11,12
-Cambodia,KH,Smart,855,15,11,12
-Cambodia,KH,Smart,855,16,11,12
-Cambodia,KH,Smart,855,69,11,12
-Cambodia,KH,Smart,855,70,11,12
-Cambodia,KH,Smart,855,81,11,12
-Cambodia,KH,Smart,855,86,11,12
-Cambodia,KH,Smart,855,87,11,12
-Cambodia,KH,Smart,855,93,11,12
-Cambodia,KH,Smart,855,96,11,12
-Cambodia,KH,Smart,855,98,11,12
-Canada,CA,Proper,1,,,
-Canada,CA,Bell,1,,,
-Canada,CA,Rogers,1,,,
-Canada,CA,Telus,1,,,
-Denmark,DK,Proper,45,,,
-Denmark,DK,3,45,50,,
-Denmark,DK,TDC,45,2,,
-Denmark,DK,Telenor,45,30,,
-Denmark,DK,Telia,45,40,,
-Ecuador,EC,Proper,593,,,
-Ecuador,EC,Claro,593,9,,
-Ecuador,EC,CNT,593,9,,
-Ecuador,EC,Movistar,593,9,,
-Egypt,EG,Proper,20,,,
-Egypt,EG,Etisalat,20,11,,
-Egypt,EG,Orange,20,12,,
-Egypt,EG,Vodafone,20,10,,
-Egypt,EG,WE,20,15,,
-Fiji,FJ,Proper,679,,,
-Fiji,FJ,Digicel,679,7,,
-Fiji,FJ,Vodafone,679,8,,
-Fiji,FJ,Vodafone,679,9,,
-Finland,FI,Proper,358,,,
-Finland,FI,DNA,358,44,,
-Finland,FI,DNA,358,45,,
-Finland,FI,Elisa,358,46,,
-Finland,FI,Elisa,358,50,,
-Finland,FI,Telia,358,40,,
-Finland,FI,Telia,358,41,,
-American Samoa,AS,Proper,1,,,
-Anguilla,AI,Proper,1,,,
-Antarctica,AQ,Proper,672,,,
-Aruba,AW,Proper,297,,,
-Ascension Island,AC,Proper,247,,,
-Belarus,BY,Proper,375,,12,12
-Belarus,BY,A1,375,44,12,12
-Belarus,BY,life,375,25,12,12
-Belarus,BY,Mobile,375,29,12,12
-Belarus,BY,MTS,375,33,12,12
-Belgium,BE,Proper,32,,10,11
-Belgium,BE,Mobile,32,4,11,11
-Belize,BZ,Proper,501,,10,10
-Belize,BZ,Mobile,501,6,10,10
-Benin,BJ,Proper,229,,13,13
-Benin,BJ,Mobile,229,01,13,13
-Bermuda,BM,Proper,1441,,11,11
-Bermuda,BM,Mobile,1441,,11,11
-Bhutan,BT,Proper,975,,10,10
-Bhutan,BT,B-Mobile,975,16,11,11
-Bhutan,BT,B-Mobile,975,17,11,11
-Bhutan,BT,TashiCell,975,77,11,11
-Bhutan,BT,TashiCell,975,87,11,11
-Bolivia,BO,Proper,591,,11,11
-Bolivia,BO,Mobile,591,6,11,11
-Bolivia,BO,Mobile,591,7,11,11
-Bosnia and Herzegovina,BA,Proper,387,,11,11
-Bosnia and Herzegovina,BA,BH Telecom,387,60,11,11
-Bosnia and Herzegovina,BA,BH Telecom,387,61,11,11
-Bosnia and Herzegovina,BA,BH Telecom,387,62,11,11
-Bosnia and Herzegovina,BA,HT Eronet,387,63,11,11
-Bosnia and Herzegovina,BA,m:tel,387,65,11,11
-Bosnia and Herzegovina,BA,m:tel,387,66,11,11
-Botswana,BW,Proper,267,,10,10
-Botswana,BW,BTC Mobile,267,73,11,11
-Botswana,BW,Mascom,267,71,11,11
-Botswana,BW,Mobile,267,74,11,11
-Botswana,BW,Mobile,267,75,11,11
-Botswana,BW,Mobile,267,76,11,11
-Botswana,BW,Mobile,267,77,11,11
-Botswana,BW,Orange,267,72,11,11
-Brazil,BR,Proper,55,,12,12
-Brazil,BR,Mobile,55,9,13,13
-British Virgin Islands,VG,Proper,1284,,11,11
-British Virgin Islands,VG,Mobile,1284,,11,11
-Brunei,BN,Proper,673,,10,10
-Brunei,BN,Mobile,673,7,10,10
-Brunei,BN,Mobile,673,8,10,10
-Bulgaria,BG,Proper,359,,11,11
-Bulgaria,BG,A1,359,88,12,12
-Bulgaria,BG,Vivacom,359,87,12,12
-Bulgaria,BG,Yettel,359,89,12,12
-Burkina Faso,BF,Proper,226,,11,11
-Burkina Faso,BF,Mobile,226,0,11,11
-Burkina Faso,BF,Mobile,226,5,11,11
-Burkina Faso,BF,Mobile,226,6,11,11
-Burkina Faso,BF,Mobile,226,7,11,11
-Burma (Myanmar),MM,Proper,95,,9,11
-Burma (Myanmar),MM,Mobile,95,9,11,12
-Burundi,BI,Proper,257,,11,11
-Burundi,BI,Econet Leo,257,71,11,11
-Burundi,BI,Econet Leo,257,72,11,11
-Burundi,BI,Econet Leo,257,76,11,11
-Burundi,BI,Econet Leo,257,79,11,11
-Burundi,BI,Lumitel,257,61,11,11
-Burundi,BI,Lumitel,257,62,11,11
-Burundi,BI,Lumitel,257,67,11,11
-Burundi,BI,Lumitel,257,68,11,11
-Burundi,BI,Lumitel,257,69,11,11
-Burundi,BI,Onatel,257,77,11,11
-Burundi,BI,Smart,257,75,11,11
-Cameroon,CM,Proper,237,,12,12
-Cameroon,CM,Camtel,237,62,12,12
-Cameroon,CM,Mobile,237,65,12,12
-Cameroon,CM,MTN,237,67,12,12
-Cameroon,CM,MTN,237,68,12,12
-Cameroon,CM,Nexttel,237,66,12,12
-Cameroon,CM,Orange,237,69,12,12
-Cape Verde,CV,Proper,238,,10,10
-Cape Verde,CV,Mobile,238,9,10,10
-Cayman Islands,KY,Proper,1345,,11,11
-Cayman Islands,KY,Mobile,1345,,11,11
-Central African Republic,CF,Proper,236,,,
-Chad,TD,Proper,235,,,
-Chile,CL,Proper,56,,,
-China,CN,Proper,86,,,
-Christmas Island,CX,Proper,61,,,
-Cocos (Keeling) Islands,CC,Proper,61,,,
-Colombia,CO,Proper,57,,,
-Comoros,KM,Proper,269,,,
-Congo,CG,Proper,242,,,
-Cook Islands,CK,Proper,682,,,
-Costa Rica,CR,Proper,506,,,
-Croatia,HR,Proper,385,,,
-Cuba,CU,Proper,53,,,
-Cyprus,CY,Proper,357,,,
-Czech Republic,CZ,Proper,420,,,
-Democratic Republic of the Congo,CD,Proper,243,,,
-Diego Garcia,DG,Proper,246,,,
-Djibouti,DJ,Proper,253,,,
-Dominica,DM,Proper,1,,,
-Dominican Republic,DO,Proper,1,,,
-El Salvador,SV,Proper,503,,,
-Equatorial Guinea,GQ,Proper,240,,,
-Eritrea,ER,Proper,291,,,
-Estonia,EE,Proper,372,,,
-Ethiopia,ET,Proper,251,,,
-Falkland Islands,FK,Proper,500,,,
-Faroe Islands,FO,Proper,298,,,
-France,FR,Proper,33,,,
-French Guiana,GF,Proper,594,,,
-French Polynesia,PF,Proper,689,,,
+Country,Country Code,Destination,Country code,Code,Min digits,Max digits,Website
+Afghanistan,AF,Proper,93,,11,11,
+Afghanistan,AF,ATOMA,93,76,11,11,https://www.atoma.com
+Afghanistan,AF,ATOMA,93,77,11,11,https://www.atoma.com
+Afghanistan,AF,AWCC,93,70,11,11,https://www.afghan-wireless.com
+Afghanistan,AF,AWCC,93,71,11,11,https://www.afghan-wireless.com
+Afghanistan,AF,Etisalat,93,73,11,11,https://www.etisalat.af
+Afghanistan,AF,Etisalat,93,78,11,11,https://www.etisalat.af
+Afghanistan,AF,Roshan,93,72,11,11,https://www.roshan.af
+Afghanistan,AF,Roshan,93,79,11,11,https://www.roshan.af
+Afghanistan,AF,Salaam,93,74,11,11,https://salaam.af
+Albania,AL,Proper,355,,11,11,
+Albania,AL,One,355,67,12,12,https://www.one.al
+Albania,AL,One,355,68,12,12,https://www.one.al
+Albania,AL,Vodafone,355,69,12,12,https://www.vodafone.al
+Algeria,DZ,Proper,213,,11,11,
+Algeria,DZ,Djezzy,213,7,12,12,
+Algeria,DZ,Mobilis,213,6,12,12,https://www.mobilis.dz
+Algeria,DZ,Ooredoo,213,5,12,12,https://www.ooredoo.dz
+Andorra,AD,Proper,376,,9,9,
+Andorra,AD,Andorra Telecom,376,3,9,9,https://www.andorratelecom.ad
+Andorra,AD,Andorra Telecom,376,4,9,9,https://www.andorratelecom.ad
+Andorra,AD,Andorra Telecom,376,6,9,9,https://www.andorratelecom.ad
+Angola,AO,Proper,244,,12,12,
+Angola,AO,Africell,244,95,12,12,https://www.africell.ao
+Angola,AO,Movicel,244,91,12,12,
+Angola,AO,Movicel,244,99,12,12,
+Angola,AO,Unitel,244,92,12,12,https://www.unitel.ao
+Angola,AO,Unitel,244,93,12,12,https://www.unitel.ao
+Angola,AO,Unitel,244,94,12,12,https://www.unitel.ao
+Antigua and Barbuda,AG,Proper,1268,,11,11,
+Antigua and Barbuda,AG,Mobile,1268,,11,11,
+Argentina,AR,Proper,54,,12,12,
+Argentina,AR,Mobile,54,9,13,13,
+Armenia,AM,Proper,374,,11,11,
+Armenia,AM,Team Telecom,374,43,11,11,https://www.telecomarmenia.am
+Armenia,AM,Team Telecom,374,91,11,11,https://www.telecomarmenia.am
+Armenia,AM,Team Telecom,374,96,11,11,https://www.telecomarmenia.am
+Armenia,AM,Team Telecom,374,99,11,11,https://www.telecomarmenia.am
+Armenia,AM,Ucom,374,41,11,11,https://www.ucom.am
+Armenia,AM,Ucom,374,44,11,11,https://www.ucom.am
+Armenia,AM,Ucom,374,55,11,11,https://www.ucom.am
+Armenia,AM,Ucom,374,95,11,11,https://www.ucom.am
+Armenia,AM,Viva-MTS,374,77,11,11,https://www.mts.am
+Armenia,AM,Viva-MTS,374,93,11,11,https://www.mts.am
+Armenia,AM,Viva-MTS,374,94,11,11,https://www.mts.am
+Armenia,AM,Viva-MTS,374,98,11,11,https://www.mts.am
+Australia,AU,Proper,61,,11,11,
+Australia,AU,Mobile,61,4,11,11,
+Austria,AT,Proper,43,,6,15,
+Austria,AT,A1,43,664,11,13,https://www.a1.net
+Austria,AT,Drei,43,660,11,13,https://www.drei.at
+Austria,AT,Drei,43,699,11,13,https://www.drei.at
+Austria,AT,Magenta,43,676,11,13,https://www.magenta.at
+Azerbaijan,AZ,Proper,994,,12,12,
+Azerbaijan,AZ,Azercell,994,10,12,12,https://www.azercell.com
+Azerbaijan,AZ,Azercell,994,50,12,12,https://www.azercell.com
+Azerbaijan,AZ,Azercell,994,51,12,12,https://www.azercell.com
+Azerbaijan,AZ,Bakcell,994,55,12,12,https://www.bakcell.com
+Azerbaijan,AZ,Bakcell,994,99,12,12,https://www.bakcell.com
+Azerbaijan,AZ,Nar,994,70,12,12,https://www.nar.az
+Azerbaijan,AZ,Nar,994,77,12,12,https://www.nar.az
+Bahamas,BS,Proper,1242,,11,11,
+Bahamas,BS,Mobile,1242,,11,11,
+Bahrain,BH,Proper,973,,11,11,
+Bahrain,BH,Batelco,973,39,11,11,https://www.batelco.com
+Bahrain,BH,stc,973,33,11,11,https://www.stc.com.bh
+Bahrain,BH,stc,973,34,11,11,https://www.stc.com.bh
+Bahrain,BH,stc,973,35,11,11,https://www.stc.com.bh
+Bahrain,BH,Zain,973,36,11,11,https://www.bh.zain.com
+Bahrain,BH,Zain,973,37,11,11,https://www.bh.zain.com
+Bangladesh,BD,Proper,880,,12,12,
+Bangladesh,BD,Airtel,880,16,13,13,https://www.bd.airtel.com
+Bangladesh,BD,Banglalink,880,14,13,13,https://www.banglalink.net
+Bangladesh,BD,Banglalink,880,19,13,13,https://www.banglalink.net
+Bangladesh,BD,Grameenphone,880,13,13,13,https://www.grameenphone.com
+Bangladesh,BD,Grameenphone,880,17,13,13,https://www.grameenphone.com
+Bangladesh,BD,Robi,880,18,13,13,https://www.robi.com.bd
+Bangladesh,BD,Teletalk,880,15,13,13,https://www.teletalk.com.bd
+Barbados,BB,Proper,1246,,11,11,
+Barbados,BB,Mobile,1246,,11,11,
+Cambodia,KH,Proper,855,,11,12,
+Cambodia,KH,Cellcard,855,11,11,12,https://www.cellcard.com.kh
+Cambodia,KH,Cellcard,855,12,11,12,https://www.cellcard.com.kh
+Cambodia,KH,Cellcard,855,14,11,12,https://www.cellcard.com.kh
+Cambodia,KH,Cellcard,855,17,11,12,https://www.cellcard.com.kh
+Cambodia,KH,Cellcard,855,61,11,12,https://www.cellcard.com.kh
+Cambodia,KH,Cellcard,855,76,11,12,https://www.cellcard.com.kh
+Cambodia,KH,Cellcard,855,77,11,12,https://www.cellcard.com.kh
+Cambodia,KH,Cellcard,855,78,11,12,https://www.cellcard.com.kh
+Cambodia,KH,Cellcard,855,79,11,12,https://www.cellcard.com.kh
+Cambodia,KH,Cellcard,855,85,11,12,https://www.cellcard.com.kh
+Cambodia,KH,Cellcard,855,89,11,12,https://www.cellcard.com.kh
+Cambodia,KH,Cellcard,855,92,11,12,https://www.cellcard.com.kh
+Cambodia,KH,Cellcard,855,95,11,12,https://www.cellcard.com.kh
+Cambodia,KH,Cellcard,855,99,11,12,https://www.cellcard.com.kh
+Cambodia,KH,Metfone,855,31,11,12,https://www.metfone.com.kh
+Cambodia,KH,Metfone,855,60,11,12,https://www.metfone.com.kh
+Cambodia,KH,Metfone,855,66,11,12,https://www.metfone.com.kh
+Cambodia,KH,Metfone,855,67,11,12,https://www.metfone.com.kh
+Cambodia,KH,Metfone,855,68,11,12,https://www.metfone.com.kh
+Cambodia,KH,Metfone,855,71,11,12,https://www.metfone.com.kh
+Cambodia,KH,Metfone,855,88,11,12,https://www.metfone.com.kh
+Cambodia,KH,Metfone,855,90,11,12,https://www.metfone.com.kh
+Cambodia,KH,Metfone,855,97,11,12,https://www.metfone.com.kh
+Cambodia,KH,Smart,855,10,11,12,https://www.smart.com.kh
+Cambodia,KH,Smart,855,15,11,12,https://www.smart.com.kh
+Cambodia,KH,Smart,855,16,11,12,https://www.smart.com.kh
+Cambodia,KH,Smart,855,69,11,12,https://www.smart.com.kh
+Cambodia,KH,Smart,855,70,11,12,https://www.smart.com.kh
+Cambodia,KH,Smart,855,81,11,12,https://www.smart.com.kh
+Cambodia,KH,Smart,855,86,11,12,https://www.smart.com.kh
+Cambodia,KH,Smart,855,87,11,12,https://www.smart.com.kh
+Cambodia,KH,Smart,855,93,11,12,https://www.smart.com.kh
+Cambodia,KH,Smart,855,96,11,12,https://www.smart.com.kh
+Cambodia,KH,Smart,855,98,11,12,https://www.smart.com.kh
+Canada,CA,Proper,1,,11,11,
+Canada,CA,Mobile,1,,11,11,
+Denmark,DK,Proper,45,,,,
+Denmark,DK,3,45,50,,,https://www.3.dk
+Denmark,DK,TDC,45,2,,,https://www.tdc.dk
+Denmark,DK,Telenor,45,30,,,https://www.telenor.dk
+Denmark,DK,Telia,45,40,,,https://www.telia.dk
+Ecuador,EC,Proper,593,,,,
+Ecuador,EC,Claro,593,9,,,https://www.claro.com.ec
+Ecuador,EC,CNT,593,9,,,
+Ecuador,EC,Movistar,593,9,,,https://www.movistar.com.ec
+Egypt,EG,Proper,20,,,,
+Egypt,EG,Etisalat,20,11,,,https://www.etisalat.eg
+Egypt,EG,Orange,20,12,,,https://www.orange.eg
+Egypt,EG,Vodafone,20,10,,,https://www.vodafone.com.eg
+Egypt,EG,WE,20,15,,,https://www.te.eg
+Fiji,FJ,Proper,679,,,,
+Fiji,FJ,Digicel,679,7,,,https://www.digicelgroup.com
+Fiji,FJ,Vodafone,679,8,,,https://www.vodafone.com.fj
+Fiji,FJ,Vodafone,679,9,,,https://www.vodafone.com.fj
+Finland,FI,Proper,358,,,,
+Finland,FI,DNA,358,44,,,https://www.dna.fi
+Finland,FI,DNA,358,45,,,https://www.dna.fi
+Finland,FI,Elisa,358,46,,,https://elisa.fi
+Finland,FI,Elisa,358,50,,,https://elisa.fi
+Finland,FI,Telia,358,40,,,https://www.telia.fi
+Finland,FI,Telia,358,41,,,https://www.telia.fi
+American Samoa,AS,Proper,1684,,11,11,
+American Samoa,AS,Mobile,1684,,11,11,
+Anguilla,AI,Proper,1264,,11,11,
+Anguilla,AI,Mobile,1264,,11,11,
+Antarctica,AQ,Proper,672,,9,9,
+Aruba,AW,Proper,297,,10,10,
+Aruba,AW,Mobile,297,5,10,10,
+Aruba,AW,Mobile,297,6,10,10,
+Aruba,AW,Mobile,297,7,10,10,
+Ascension Island,AC,Proper,247,,8,8,
+Ascension Island,AC,Sure,247,,8,8,
+Belarus,BY,Proper,375,,12,12,
+Belarus,BY,A1,375,44,12,12,https://www.a1.by
+Belarus,BY,life,375,25,12,12,
+Belarus,BY,Mobile,375,29,12,12,
+Belarus,BY,MTS,375,33,12,12,https://www.mts.by
+Belgium,BE,Proper,32,,10,11,
+Belgium,BE,Mobile,32,4,11,11,
+Belize,BZ,Proper,501,,10,10,
+Belize,BZ,Mobile,501,6,10,10,
+Benin,BJ,Proper,229,,13,13,
+Benin,BJ,Mobile,229,01,13,13,
+Bermuda,BM,Proper,1441,,11,11,
+Bermuda,BM,Mobile,1441,,11,11,
+Bhutan,BT,Proper,975,,10,10,
+Bhutan,BT,B-Mobile,975,16,11,11,https://www.bt.bt
+Bhutan,BT,B-Mobile,975,17,11,11,https://www.bt.bt
+Bhutan,BT,TashiCell,975,77,11,11,https://www.tashicell.com
+Bhutan,BT,TashiCell,975,87,11,11,https://www.tashicell.com
+Bolivia,BO,Proper,591,,11,11,
+Bolivia,BO,Mobile,591,6,11,11,
+Bolivia,BO,Mobile,591,7,11,11,
+Bosnia and Herzegovina,BA,Proper,387,,11,11,
+Bosnia and Herzegovina,BA,BH Telecom,387,60,11,11,https://www.bhtelecom.ba
+Bosnia and Herzegovina,BA,BH Telecom,387,61,11,11,https://www.bhtelecom.ba
+Bosnia and Herzegovina,BA,BH Telecom,387,62,11,11,https://www.bhtelecom.ba
+Bosnia and Herzegovina,BA,HT Eronet,387,63,11,11,https://www.hteronet.ba
+Bosnia and Herzegovina,BA,m:tel,387,65,11,11,https://www.mtel.ba
+Bosnia and Herzegovina,BA,m:tel,387,66,11,11,https://www.mtel.ba
+Botswana,BW,Proper,267,,10,10,
+Botswana,BW,BTC Mobile,267,73,11,11,https://www.btc.bw
+Botswana,BW,Mascom,267,71,11,11,https://www.mascom.bw
+Botswana,BW,Mobile,267,74,11,11,
+Botswana,BW,Mobile,267,75,11,11,
+Botswana,BW,Mobile,267,76,11,11,
+Botswana,BW,Mobile,267,77,11,11,
+Botswana,BW,Orange,267,72,11,11,https://www.orange.co.bw
+Brazil,BR,Proper,55,,12,12,
+Brazil,BR,Mobile,55,9,13,13,
+British Virgin Islands,VG,Proper,1284,,11,11,
+British Virgin Islands,VG,Mobile,1284,,11,11,
+Brunei,BN,Proper,673,,10,10,
+Brunei,BN,Mobile,673,7,10,10,
+Brunei,BN,Mobile,673,8,10,10,
+Bulgaria,BG,Proper,359,,11,11,
+Bulgaria,BG,A1,359,88,12,12,https://www.a1.bg
+Bulgaria,BG,Vivacom,359,87,12,12,https://www.vivacom.bg
+Bulgaria,BG,Yettel,359,89,12,12,https://www.yettel.bg
+Burkina Faso,BF,Proper,226,,11,11,
+Burkina Faso,BF,Mobile,226,0,11,11,
+Burkina Faso,BF,Mobile,226,5,11,11,
+Burkina Faso,BF,Mobile,226,6,11,11,
+Burkina Faso,BF,Mobile,226,7,11,11,
+Burma (Myanmar),MM,Proper,95,,9,11,
+Burma (Myanmar),MM,Mobile,95,9,11,12,
+Burundi,BI,Proper,257,,11,11,
+Burundi,BI,Econet Leo,257,71,11,11,https://www.econet.bi
+Burundi,BI,Econet Leo,257,72,11,11,https://www.econet.bi
+Burundi,BI,Econet Leo,257,76,11,11,https://www.econet.bi
+Burundi,BI,Econet Leo,257,79,11,11,https://www.econet.bi
+Burundi,BI,Lumitel,257,61,11,11,
+Burundi,BI,Lumitel,257,62,11,11,
+Burundi,BI,Lumitel,257,67,11,11,
+Burundi,BI,Lumitel,257,68,11,11,
+Burundi,BI,Lumitel,257,69,11,11,
+Burundi,BI,Onatel,257,77,11,11,
+Burundi,BI,Smart,257,75,11,11,
+Cameroon,CM,Proper,237,,12,12,
+Cameroon,CM,Camtel,237,62,12,12,https://www.camtel.cm
+Cameroon,CM,Mobile,237,65,12,12,
+Cameroon,CM,MTN,237,67,12,12,
+Cameroon,CM,MTN,237,68,12,12,
+Cameroon,CM,Nexttel,237,66,12,12,
+Cameroon,CM,Orange,237,69,12,12,
+Cape Verde,CV,Proper,238,,10,10,
+Cape Verde,CV,Mobile,238,9,10,10,
+Cayman Islands,KY,Proper,1345,,11,11,
+Cayman Islands,KY,Mobile,1345,,11,11,
+Central African Republic,CF,Proper,236,,11,11,
+Central African Republic,CF,Mobile,236,70,11,11,
+Central African Republic,CF,Mobile,236,72,11,11,
+Central African Republic,CF,Mobile,236,75,11,11,
+Central African Republic,CF,Orange,236,74,11,11,
+Chad,TD,Proper,235,,11,11,
+Chad,TD,Airtel,235,63,11,11,https://www.airtel.td
+Chad,TD,Airtel,235,65,11,11,https://www.airtel.td
+Chad,TD,Airtel,235,66,11,11,https://www.airtel.td
+Chad,TD,Airtel,235,99,11,11,https://www.airtel.td
+Chad,TD,Mobile,235,90,11,11,
+Chad,TD,Moov,235,60,11,11,https://www.moov-africa.td
+Chad,TD,Moov,235,95,11,11,https://www.moov-africa.td
+Chad,TD,Moov,235,98,11,11,https://www.moov-africa.td
+Chad,TD,Salam,235,77,11,11,
+Chile,CL,Proper,56,,10,11,
+Chile,CL,Mobile,56,9,11,11,
+China,CN,Proper,86,,12,13,
+China,CN,Mobile,86,1,13,13,
+Christmas Island,CX,Proper,61,,11,11,
+Christmas Island,CX,Mobile,61,4,11,11,
+Cocos (Keeling) Islands,CC,Proper,61,,11,11,
+Cocos (Keeling) Islands,CC,Mobile,61,4,11,11,
+Colombia,CO,Proper,57,,10,10,
+Colombia,CO,Mobile,57,3,12,12,
+Comoros,KM,Proper,269,,10,10,
+Comoros,KM,Mobile,269,3,10,10,
+Congo,CG,Proper,242,,12,12,
+Congo,CG,Mobile,242,04,12,12,
+Congo,CG,Mobile,242,05,12,12,
+Congo,CG,Mobile,242,06,12,12,
+Cook Islands,CK,Proper,682,,8,8,
+Cook Islands,CK,Vodafone,682,5,8,8,https://www.vodafone.co.ck
+Cook Islands,CK,Vodafone,682,7,8,8,https://www.vodafone.co.ck
+Costa Rica,CR,Proper,506,,11,11,
+Costa Rica,CR,Mobile,506,5,11,11,
+Costa Rica,CR,Mobile,506,6,11,11,
+Costa Rica,CR,Mobile,506,7,11,11,
+Costa Rica,CR,Mobile,506,8,11,11,
+Croatia,HR,Proper,385,,11,11,
+Croatia,HR,A1,385,91,11,12,https://www.a1.hr
+Croatia,HR,A1,385,92,11,12,https://www.a1.hr
+Croatia,HR,Bonbon,385,96,11,12,https://www.bonbon.hr
+Croatia,HR,Bonbon,385,97,11,12,https://www.bonbon.hr
+Croatia,HR,Hrvatski Telekom,385,98,11,12,https://www.hrvatskitelekom.hr
+Croatia,HR,Hrvatski Telekom,385,99,11,12,https://www.hrvatskitelekom.hr
+Croatia,HR,Telemach,385,95,11,12,https://www.telemach.hr
+Cuba,CU,Proper,53,,10,10,
+Cuba,CU,ETECSA,53,5,10,10,https://www.etecsa.cu
+Cuba,CU,ETECSA,53,63,10,10,https://www.etecsa.cu
+Cyprus,CY,Proper,357,,11,11,
+Cyprus,CY,Cablenet,357,94,11,11,https://www.cablenet.com.cy
+Cyprus,CY,Cyta,357,97,11,11,https://www.cyta.com.cy
+Cyprus,CY,Cyta,357,99,11,11,https://www.cyta.com.cy
+Cyprus,CY,Epic,357,96,11,11,https://www.epic.com.cy
+Cyprus,CY,PrimeTel,357,95,11,11,https://www.primetel.com.cy
+Czech Republic,CZ,Proper,420,,12,12,
+Czech Republic,CZ,Mobile,420,60,12,12,
+Czech Republic,CZ,Mobile,420,70,12,12,
+Czech Republic,CZ,O2,420,72,12,12,https://www.o2.cz
+Czech Republic,CZ,O2,420,79,12,12,https://www.o2.cz
+Czech Republic,CZ,T-Mobile,420,73,12,12,https://www.t-mobile.cz
+Czech Republic,CZ,Vodafone,420,77,12,12,https://www.vodafone.cz
+Democratic Republic of the Congo,CD,Proper,243,,12,12,
+Democratic Republic of the Congo,CD,Africell,243,90,12,12,https://www.africell.cd
+Democratic Republic of the Congo,CD,Africell,243,91,12,12,https://www.africell.cd
+Democratic Republic of the Congo,CD,Airtel,243,97,12,12,https://www.airtel.cd
+Democratic Republic of the Congo,CD,Airtel,243,98,12,12,https://www.airtel.cd
+Democratic Republic of the Congo,CD,Airtel,243,99,12,12,https://www.airtel.cd
+Democratic Republic of the Congo,CD,Orange,243,80,12,12,https://www.orange.cd
+Democratic Republic of the Congo,CD,Orange,243,84,12,12,https://www.orange.cd
+Democratic Republic of the Congo,CD,Orange,243,85,12,12,https://www.orange.cd
+Democratic Republic of the Congo,CD,Orange,243,89,12,12,https://www.orange.cd
+Democratic Republic of the Congo,CD,Vodacom,243,81,12,12,https://www.vodacom.cd
+Democratic Republic of the Congo,CD,Vodacom,243,82,12,12,https://www.vodacom.cd
+Democratic Republic of the Congo,CD,Vodacom,243,83,12,12,https://www.vodacom.cd
+Diego Garcia,DG,Proper,246,,10,10,
+Djibouti,DJ,Proper,253,,11,11,
+Djibouti,DJ,Djibouti Telecom,253,77,11,11,
+Dominica,DM,Proper,1767,,11,11,
+Dominica,DM,Mobile,1767,,11,11,
+Dominican Republic,DO,Proper,1809,,11,11,
+Dominican Republic,DO,Proper,1829,,11,11,
+Dominican Republic,DO,Proper,1849,,11,11,
+Dominican Republic,DO,Mobile,1809,,11,11,
+Dominican Republic,DO,Mobile,1829,,11,11,
+Dominican Republic,DO,Mobile,1849,,11,11,
+El Salvador,SV,Proper,503,,11,11,
+El Salvador,SV,Mobile,503,6,11,11,
+El Salvador,SV,Mobile,503,7,11,11,
+Equatorial Guinea,GQ,Proper,240,,12,12,
+Equatorial Guinea,GQ,GETESA,240,55,12,12,
+Equatorial Guinea,GQ,Mobile,240,22,12,12,
+Equatorial Guinea,GQ,Mobile,240,33,12,12,
+Eritrea,ER,Proper,291,,10,10,
+Eritrea,ER,Eritel,291,7,10,10,
+Estonia,EE,Proper,372,,10,11,
+Estonia,EE,Mobile,372,5,10,11,
+Estonia,EE,Mobile,372,8,10,11,
+Ethiopia,ET,Proper,251,,12,12,
+Ethiopia,ET,Ethio Telecom,251,9,12,12,https://www.ethiotelecom.et
+Ethiopia,ET,Safaricom,251,7,12,12,https://www.safaricom.et
+Falkland Islands,FK,Proper,500,,8,8,
+Falkland Islands,FK,Sure,500,5,8,8,https://www.sure.co.fk
+Falkland Islands,FK,Sure,500,6,8,8,https://www.sure.co.fk
+Faroe Islands,FO,Proper,298,,9,9,
+Faroe Islands,FO,Foroya Tele,298,2,9,9,https://www.tele.fo
+Faroe Islands,FO,Mobile,298,7,9,9,
+Faroe Islands,FO,Mobile,298,8,9,9,
+Faroe Islands,FO,Mobile,298,9,9,9,
+France,FR,Proper,33,,11,11,
+France,FR,Mobile,33,6,11,11,
+France,FR,Mobile,33,7,11,11,
+French Guiana,GF,Proper,594,,12,12,
+French Guiana,GF,Mobile,594,694,12,12,
+French Polynesia,PF,Proper,689,,11,11,
+French Polynesia,PF,Vini,689,87,11,11,https://www.vini.pf
+French Polynesia,PF,Vodafone,689,89,11,11,https://www.vodafone.pf
