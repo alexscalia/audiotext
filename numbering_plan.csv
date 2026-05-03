@@ -1,349 +1,781 @@
-Country,Country Code,Destination,Country code,Code,Min digits,Max digits,Website
-Afghanistan,AF,Proper,93,,11,11,
-Afghanistan,AF,ATOMA,93,76,11,11,https://www.atoma.com
-Afghanistan,AF,ATOMA,93,77,11,11,https://www.atoma.com
-Afghanistan,AF,AWCC,93,70,11,11,https://www.afghan-wireless.com
-Afghanistan,AF,AWCC,93,71,11,11,https://www.afghan-wireless.com
-Afghanistan,AF,Etisalat,93,73,11,11,https://www.etisalat.af
-Afghanistan,AF,Etisalat,93,78,11,11,https://www.etisalat.af
-Afghanistan,AF,Roshan,93,72,11,11,https://www.roshan.af
-Afghanistan,AF,Roshan,93,79,11,11,https://www.roshan.af
-Afghanistan,AF,Salaam,93,74,11,11,https://salaam.af
-Albania,AL,Proper,355,,11,11,
-Albania,AL,One,355,67,12,12,https://www.one.al
-Albania,AL,One,355,68,12,12,https://www.one.al
-Albania,AL,Vodafone,355,69,12,12,https://www.vodafone.al
-Algeria,DZ,Proper,213,,11,11,
-Algeria,DZ,Djezzy,213,7,12,12,
-Algeria,DZ,Mobilis,213,6,12,12,https://www.mobilis.dz
-Algeria,DZ,Ooredoo,213,5,12,12,https://www.ooredoo.dz
-Andorra,AD,Proper,376,,9,9,
-Andorra,AD,Andorra Telecom,376,3,9,9,https://www.andorratelecom.ad
-Andorra,AD,Andorra Telecom,376,4,9,9,https://www.andorratelecom.ad
-Andorra,AD,Andorra Telecom,376,6,9,9,https://www.andorratelecom.ad
-Angola,AO,Proper,244,,12,12,
-Angola,AO,Africell,244,95,12,12,https://www.africell.ao
-Angola,AO,Movicel,244,91,12,12,
-Angola,AO,Movicel,244,99,12,12,
-Angola,AO,Unitel,244,92,12,12,https://www.unitel.ao
-Angola,AO,Unitel,244,93,12,12,https://www.unitel.ao
-Angola,AO,Unitel,244,94,12,12,https://www.unitel.ao
-Antigua and Barbuda,AG,Proper,1268,,11,11,
-Antigua and Barbuda,AG,Mobile,1268,,11,11,
-Argentina,AR,Proper,54,,12,12,
-Argentina,AR,Mobile,54,9,13,13,
-Armenia,AM,Proper,374,,11,11,
-Armenia,AM,Team Telecom,374,43,11,11,https://www.telecomarmenia.am
-Armenia,AM,Team Telecom,374,91,11,11,https://www.telecomarmenia.am
-Armenia,AM,Team Telecom,374,96,11,11,https://www.telecomarmenia.am
-Armenia,AM,Team Telecom,374,99,11,11,https://www.telecomarmenia.am
-Armenia,AM,Ucom,374,41,11,11,https://www.ucom.am
-Armenia,AM,Ucom,374,44,11,11,https://www.ucom.am
-Armenia,AM,Ucom,374,55,11,11,https://www.ucom.am
-Armenia,AM,Ucom,374,95,11,11,https://www.ucom.am
-Armenia,AM,Viva-MTS,374,77,11,11,https://www.mts.am
-Armenia,AM,Viva-MTS,374,93,11,11,https://www.mts.am
-Armenia,AM,Viva-MTS,374,94,11,11,https://www.mts.am
-Armenia,AM,Viva-MTS,374,98,11,11,https://www.mts.am
-Australia,AU,Proper,61,,11,11,
-Australia,AU,Mobile,61,4,11,11,
-Austria,AT,Proper,43,,6,15,
-Austria,AT,A1,43,664,11,13,https://www.a1.net
-Austria,AT,Drei,43,660,11,13,https://www.drei.at
-Austria,AT,Drei,43,699,11,13,https://www.drei.at
-Austria,AT,Magenta,43,676,11,13,https://www.magenta.at
-Azerbaijan,AZ,Proper,994,,12,12,
-Azerbaijan,AZ,Azercell,994,10,12,12,https://www.azercell.com
-Azerbaijan,AZ,Azercell,994,50,12,12,https://www.azercell.com
-Azerbaijan,AZ,Azercell,994,51,12,12,https://www.azercell.com
-Azerbaijan,AZ,Bakcell,994,55,12,12,https://www.bakcell.com
-Azerbaijan,AZ,Bakcell,994,99,12,12,https://www.bakcell.com
-Azerbaijan,AZ,Nar,994,70,12,12,https://www.nar.az
-Azerbaijan,AZ,Nar,994,77,12,12,https://www.nar.az
-Bahamas,BS,Proper,1242,,11,11,
-Bahamas,BS,Mobile,1242,,11,11,
-Bahrain,BH,Proper,973,,11,11,
-Bahrain,BH,Batelco,973,39,11,11,https://www.batelco.com
-Bahrain,BH,stc,973,33,11,11,https://www.stc.com.bh
-Bahrain,BH,stc,973,34,11,11,https://www.stc.com.bh
-Bahrain,BH,stc,973,35,11,11,https://www.stc.com.bh
-Bahrain,BH,Zain,973,36,11,11,https://www.bh.zain.com
-Bahrain,BH,Zain,973,37,11,11,https://www.bh.zain.com
-Bangladesh,BD,Proper,880,,12,12,
-Bangladesh,BD,Airtel,880,16,13,13,https://www.bd.airtel.com
-Bangladesh,BD,Banglalink,880,14,13,13,https://www.banglalink.net
-Bangladesh,BD,Banglalink,880,19,13,13,https://www.banglalink.net
-Bangladesh,BD,Grameenphone,880,13,13,13,https://www.grameenphone.com
-Bangladesh,BD,Grameenphone,880,17,13,13,https://www.grameenphone.com
-Bangladesh,BD,Robi,880,18,13,13,https://www.robi.com.bd
-Bangladesh,BD,Teletalk,880,15,13,13,https://www.teletalk.com.bd
-Barbados,BB,Proper,1246,,11,11,
-Barbados,BB,Mobile,1246,,11,11,
-Cambodia,KH,Proper,855,,11,12,
-Cambodia,KH,Cellcard,855,11,11,12,https://www.cellcard.com.kh
-Cambodia,KH,Cellcard,855,12,11,12,https://www.cellcard.com.kh
-Cambodia,KH,Cellcard,855,14,11,12,https://www.cellcard.com.kh
-Cambodia,KH,Cellcard,855,17,11,12,https://www.cellcard.com.kh
-Cambodia,KH,Cellcard,855,61,11,12,https://www.cellcard.com.kh
-Cambodia,KH,Cellcard,855,76,11,12,https://www.cellcard.com.kh
-Cambodia,KH,Cellcard,855,77,11,12,https://www.cellcard.com.kh
-Cambodia,KH,Cellcard,855,78,11,12,https://www.cellcard.com.kh
-Cambodia,KH,Cellcard,855,79,11,12,https://www.cellcard.com.kh
-Cambodia,KH,Cellcard,855,85,11,12,https://www.cellcard.com.kh
-Cambodia,KH,Cellcard,855,89,11,12,https://www.cellcard.com.kh
-Cambodia,KH,Cellcard,855,92,11,12,https://www.cellcard.com.kh
-Cambodia,KH,Cellcard,855,95,11,12,https://www.cellcard.com.kh
-Cambodia,KH,Cellcard,855,99,11,12,https://www.cellcard.com.kh
-Cambodia,KH,Metfone,855,31,11,12,https://www.metfone.com.kh
-Cambodia,KH,Metfone,855,60,11,12,https://www.metfone.com.kh
-Cambodia,KH,Metfone,855,66,11,12,https://www.metfone.com.kh
-Cambodia,KH,Metfone,855,67,11,12,https://www.metfone.com.kh
-Cambodia,KH,Metfone,855,68,11,12,https://www.metfone.com.kh
-Cambodia,KH,Metfone,855,71,11,12,https://www.metfone.com.kh
-Cambodia,KH,Metfone,855,88,11,12,https://www.metfone.com.kh
-Cambodia,KH,Metfone,855,90,11,12,https://www.metfone.com.kh
-Cambodia,KH,Metfone,855,97,11,12,https://www.metfone.com.kh
-Cambodia,KH,Smart,855,10,11,12,https://www.smart.com.kh
-Cambodia,KH,Smart,855,15,11,12,https://www.smart.com.kh
-Cambodia,KH,Smart,855,16,11,12,https://www.smart.com.kh
-Cambodia,KH,Smart,855,69,11,12,https://www.smart.com.kh
-Cambodia,KH,Smart,855,70,11,12,https://www.smart.com.kh
-Cambodia,KH,Smart,855,81,11,12,https://www.smart.com.kh
-Cambodia,KH,Smart,855,86,11,12,https://www.smart.com.kh
-Cambodia,KH,Smart,855,87,11,12,https://www.smart.com.kh
-Cambodia,KH,Smart,855,93,11,12,https://www.smart.com.kh
-Cambodia,KH,Smart,855,96,11,12,https://www.smart.com.kh
-Cambodia,KH,Smart,855,98,11,12,https://www.smart.com.kh
-Canada,CA,Proper,1,,11,11,
-Canada,CA,Mobile,1,,11,11,
-Denmark,DK,Proper,45,,,,
-Denmark,DK,3,45,50,,,https://www.3.dk
-Denmark,DK,TDC,45,2,,,https://www.tdc.dk
-Denmark,DK,Telenor,45,30,,,https://www.telenor.dk
-Denmark,DK,Telia,45,40,,,https://www.telia.dk
-Ecuador,EC,Proper,593,,,,
-Ecuador,EC,Claro,593,9,,,https://www.claro.com.ec
-Ecuador,EC,CNT,593,9,,,
-Ecuador,EC,Movistar,593,9,,,https://www.movistar.com.ec
-Egypt,EG,Proper,20,,,,
-Egypt,EG,Etisalat,20,11,,,https://www.etisalat.eg
-Egypt,EG,Orange,20,12,,,https://www.orange.eg
-Egypt,EG,Vodafone,20,10,,,https://www.vodafone.com.eg
-Egypt,EG,WE,20,15,,,https://www.te.eg
-Fiji,FJ,Proper,679,,,,
-Fiji,FJ,Digicel,679,7,,,https://www.digicelgroup.com
-Fiji,FJ,Vodafone,679,8,,,https://www.vodafone.com.fj
-Fiji,FJ,Vodafone,679,9,,,https://www.vodafone.com.fj
-Finland,FI,Proper,358,,,,
-Finland,FI,DNA,358,44,,,https://www.dna.fi
-Finland,FI,DNA,358,45,,,https://www.dna.fi
-Finland,FI,Elisa,358,46,,,https://elisa.fi
-Finland,FI,Elisa,358,50,,,https://elisa.fi
-Finland,FI,Telia,358,40,,,https://www.telia.fi
-Finland,FI,Telia,358,41,,,https://www.telia.fi
-American Samoa,AS,Proper,1684,,11,11,
-American Samoa,AS,Mobile,1684,,11,11,
-Anguilla,AI,Proper,1264,,11,11,
-Anguilla,AI,Mobile,1264,,11,11,
-Antarctica,AQ,Proper,672,,9,9,
-Aruba,AW,Proper,297,,10,10,
-Aruba,AW,Mobile,297,5,10,10,
-Aruba,AW,Mobile,297,6,10,10,
-Aruba,AW,Mobile,297,7,10,10,
-Ascension Island,AC,Proper,247,,8,8,
-Ascension Island,AC,Sure,247,,8,8,
-Belarus,BY,Proper,375,,12,12,
-Belarus,BY,A1,375,44,12,12,https://www.a1.by
-Belarus,BY,life,375,25,12,12,
-Belarus,BY,Mobile,375,29,12,12,
-Belarus,BY,MTS,375,33,12,12,https://www.mts.by
-Belgium,BE,Proper,32,,10,11,
-Belgium,BE,Mobile,32,4,11,11,
-Belize,BZ,Proper,501,,10,10,
-Belize,BZ,Mobile,501,6,10,10,
-Benin,BJ,Proper,229,,13,13,
-Benin,BJ,Mobile,229,01,13,13,
-Bermuda,BM,Proper,1441,,11,11,
-Bermuda,BM,Mobile,1441,,11,11,
-Bhutan,BT,Proper,975,,10,10,
-Bhutan,BT,B-Mobile,975,16,11,11,https://www.bt.bt
-Bhutan,BT,B-Mobile,975,17,11,11,https://www.bt.bt
-Bhutan,BT,TashiCell,975,77,11,11,https://www.tashicell.com
-Bhutan,BT,TashiCell,975,87,11,11,https://www.tashicell.com
-Bolivia,BO,Proper,591,,11,11,
-Bolivia,BO,Mobile,591,6,11,11,
-Bolivia,BO,Mobile,591,7,11,11,
-Bosnia and Herzegovina,BA,Proper,387,,11,11,
-Bosnia and Herzegovina,BA,BH Telecom,387,60,11,11,https://www.bhtelecom.ba
-Bosnia and Herzegovina,BA,BH Telecom,387,61,11,11,https://www.bhtelecom.ba
-Bosnia and Herzegovina,BA,BH Telecom,387,62,11,11,https://www.bhtelecom.ba
-Bosnia and Herzegovina,BA,HT Eronet,387,63,11,11,https://www.hteronet.ba
-Bosnia and Herzegovina,BA,m:tel,387,65,11,11,https://www.mtel.ba
-Bosnia and Herzegovina,BA,m:tel,387,66,11,11,https://www.mtel.ba
-Botswana,BW,Proper,267,,10,10,
-Botswana,BW,BTC Mobile,267,73,11,11,https://www.btc.bw
-Botswana,BW,Mascom,267,71,11,11,https://www.mascom.bw
-Botswana,BW,Mobile,267,74,11,11,
-Botswana,BW,Mobile,267,75,11,11,
-Botswana,BW,Mobile,267,76,11,11,
-Botswana,BW,Mobile,267,77,11,11,
-Botswana,BW,Orange,267,72,11,11,https://www.orange.co.bw
-Brazil,BR,Proper,55,,12,12,
-Brazil,BR,Mobile,55,9,13,13,
-British Virgin Islands,VG,Proper,1284,,11,11,
-British Virgin Islands,VG,Mobile,1284,,11,11,
-Brunei,BN,Proper,673,,10,10,
-Brunei,BN,Mobile,673,7,10,10,
-Brunei,BN,Mobile,673,8,10,10,
-Bulgaria,BG,Proper,359,,11,11,
-Bulgaria,BG,A1,359,88,12,12,https://www.a1.bg
-Bulgaria,BG,Vivacom,359,87,12,12,https://www.vivacom.bg
-Bulgaria,BG,Yettel,359,89,12,12,https://www.yettel.bg
-Burkina Faso,BF,Proper,226,,11,11,
-Burkina Faso,BF,Mobile,226,0,11,11,
-Burkina Faso,BF,Mobile,226,5,11,11,
-Burkina Faso,BF,Mobile,226,6,11,11,
-Burkina Faso,BF,Mobile,226,7,11,11,
-Burma (Myanmar),MM,Proper,95,,9,11,
-Burma (Myanmar),MM,Mobile,95,9,11,12,
-Burundi,BI,Proper,257,,11,11,
-Burundi,BI,Econet Leo,257,71,11,11,https://www.econet.bi
-Burundi,BI,Econet Leo,257,72,11,11,https://www.econet.bi
-Burundi,BI,Econet Leo,257,76,11,11,https://www.econet.bi
-Burundi,BI,Econet Leo,257,79,11,11,https://www.econet.bi
-Burundi,BI,Lumitel,257,61,11,11,
-Burundi,BI,Lumitel,257,62,11,11,
-Burundi,BI,Lumitel,257,67,11,11,
-Burundi,BI,Lumitel,257,68,11,11,
-Burundi,BI,Lumitel,257,69,11,11,
-Burundi,BI,Onatel,257,77,11,11,
-Burundi,BI,Smart,257,75,11,11,
-Cameroon,CM,Proper,237,,12,12,
-Cameroon,CM,Camtel,237,62,12,12,https://www.camtel.cm
-Cameroon,CM,Mobile,237,65,12,12,
-Cameroon,CM,MTN,237,67,12,12,
-Cameroon,CM,MTN,237,68,12,12,
-Cameroon,CM,Nexttel,237,66,12,12,
-Cameroon,CM,Orange,237,69,12,12,
-Cape Verde,CV,Proper,238,,10,10,
-Cape Verde,CV,Mobile,238,9,10,10,
-Cayman Islands,KY,Proper,1345,,11,11,
-Cayman Islands,KY,Mobile,1345,,11,11,
-Central African Republic,CF,Proper,236,,11,11,
-Central African Republic,CF,Mobile,236,70,11,11,
-Central African Republic,CF,Mobile,236,72,11,11,
-Central African Republic,CF,Mobile,236,75,11,11,
-Central African Republic,CF,Orange,236,74,11,11,
-Chad,TD,Proper,235,,11,11,
-Chad,TD,Airtel,235,63,11,11,https://www.airtel.td
-Chad,TD,Airtel,235,65,11,11,https://www.airtel.td
-Chad,TD,Airtel,235,66,11,11,https://www.airtel.td
-Chad,TD,Airtel,235,99,11,11,https://www.airtel.td
-Chad,TD,Mobile,235,90,11,11,
-Chad,TD,Moov,235,60,11,11,https://www.moov-africa.td
-Chad,TD,Moov,235,95,11,11,https://www.moov-africa.td
-Chad,TD,Moov,235,98,11,11,https://www.moov-africa.td
-Chad,TD,Salam,235,77,11,11,
-Chile,CL,Proper,56,,10,11,
-Chile,CL,Mobile,56,9,11,11,
-China,CN,Proper,86,,12,13,
-China,CN,Mobile,86,1,13,13,
-Christmas Island,CX,Proper,61,,11,11,
-Christmas Island,CX,Mobile,61,4,11,11,
-Cocos (Keeling) Islands,CC,Proper,61,,11,11,
-Cocos (Keeling) Islands,CC,Mobile,61,4,11,11,
-Colombia,CO,Proper,57,,10,10,
-Colombia,CO,Mobile,57,3,12,12,
-Comoros,KM,Proper,269,,10,10,
-Comoros,KM,Mobile,269,3,10,10,
-Congo,CG,Proper,242,,12,12,
-Congo,CG,Mobile,242,04,12,12,
-Congo,CG,Mobile,242,05,12,12,
-Congo,CG,Mobile,242,06,12,12,
-Cook Islands,CK,Proper,682,,8,8,
-Cook Islands,CK,Vodafone,682,5,8,8,https://www.vodafone.co.ck
-Cook Islands,CK,Vodafone,682,7,8,8,https://www.vodafone.co.ck
-Costa Rica,CR,Proper,506,,11,11,
-Costa Rica,CR,Mobile,506,5,11,11,
-Costa Rica,CR,Mobile,506,6,11,11,
-Costa Rica,CR,Mobile,506,7,11,11,
-Costa Rica,CR,Mobile,506,8,11,11,
-Croatia,HR,Proper,385,,11,11,
-Croatia,HR,A1,385,91,11,12,https://www.a1.hr
-Croatia,HR,A1,385,92,11,12,https://www.a1.hr
-Croatia,HR,Bonbon,385,96,11,12,https://www.bonbon.hr
-Croatia,HR,Bonbon,385,97,11,12,https://www.bonbon.hr
-Croatia,HR,Hrvatski Telekom,385,98,11,12,https://www.hrvatskitelekom.hr
-Croatia,HR,Hrvatski Telekom,385,99,11,12,https://www.hrvatskitelekom.hr
-Croatia,HR,Telemach,385,95,11,12,https://www.telemach.hr
-Cuba,CU,Proper,53,,10,10,
-Cuba,CU,ETECSA,53,5,10,10,https://www.etecsa.cu
-Cuba,CU,ETECSA,53,63,10,10,https://www.etecsa.cu
-Cyprus,CY,Proper,357,,11,11,
-Cyprus,CY,Cablenet,357,94,11,11,https://www.cablenet.com.cy
-Cyprus,CY,Cyta,357,97,11,11,https://www.cyta.com.cy
-Cyprus,CY,Cyta,357,99,11,11,https://www.cyta.com.cy
-Cyprus,CY,Epic,357,96,11,11,https://www.epic.com.cy
-Cyprus,CY,PrimeTel,357,95,11,11,https://www.primetel.com.cy
-Czech Republic,CZ,Proper,420,,12,12,
-Czech Republic,CZ,Mobile,420,60,12,12,
-Czech Republic,CZ,Mobile,420,70,12,12,
-Czech Republic,CZ,O2,420,72,12,12,https://www.o2.cz
-Czech Republic,CZ,O2,420,79,12,12,https://www.o2.cz
-Czech Republic,CZ,T-Mobile,420,73,12,12,https://www.t-mobile.cz
-Czech Republic,CZ,Vodafone,420,77,12,12,https://www.vodafone.cz
-Democratic Republic of the Congo,CD,Proper,243,,12,12,
-Democratic Republic of the Congo,CD,Africell,243,90,12,12,https://www.africell.cd
-Democratic Republic of the Congo,CD,Africell,243,91,12,12,https://www.africell.cd
-Democratic Republic of the Congo,CD,Airtel,243,97,12,12,https://www.airtel.cd
-Democratic Republic of the Congo,CD,Airtel,243,98,12,12,https://www.airtel.cd
-Democratic Republic of the Congo,CD,Airtel,243,99,12,12,https://www.airtel.cd
-Democratic Republic of the Congo,CD,Orange,243,80,12,12,https://www.orange.cd
-Democratic Republic of the Congo,CD,Orange,243,84,12,12,https://www.orange.cd
-Democratic Republic of the Congo,CD,Orange,243,85,12,12,https://www.orange.cd
-Democratic Republic of the Congo,CD,Orange,243,89,12,12,https://www.orange.cd
-Democratic Republic of the Congo,CD,Vodacom,243,81,12,12,https://www.vodacom.cd
-Democratic Republic of the Congo,CD,Vodacom,243,82,12,12,https://www.vodacom.cd
-Democratic Republic of the Congo,CD,Vodacom,243,83,12,12,https://www.vodacom.cd
-Diego Garcia,DG,Proper,246,,10,10,
-Djibouti,DJ,Proper,253,,11,11,
-Djibouti,DJ,Djibouti Telecom,253,77,11,11,
-Dominica,DM,Proper,1767,,11,11,
-Dominica,DM,Mobile,1767,,11,11,
-Dominican Republic,DO,Proper,1809,,11,11,
-Dominican Republic,DO,Proper,1829,,11,11,
-Dominican Republic,DO,Proper,1849,,11,11,
-Dominican Republic,DO,Mobile,1809,,11,11,
-Dominican Republic,DO,Mobile,1829,,11,11,
-Dominican Republic,DO,Mobile,1849,,11,11,
-El Salvador,SV,Proper,503,,11,11,
-El Salvador,SV,Mobile,503,6,11,11,
-El Salvador,SV,Mobile,503,7,11,11,
-Equatorial Guinea,GQ,Proper,240,,12,12,
-Equatorial Guinea,GQ,GETESA,240,55,12,12,
-Equatorial Guinea,GQ,Mobile,240,22,12,12,
-Equatorial Guinea,GQ,Mobile,240,33,12,12,
-Eritrea,ER,Proper,291,,10,10,
-Eritrea,ER,Eritel,291,7,10,10,
-Estonia,EE,Proper,372,,10,11,
-Estonia,EE,Mobile,372,5,10,11,
-Estonia,EE,Mobile,372,8,10,11,
-Ethiopia,ET,Proper,251,,12,12,
-Ethiopia,ET,Ethio Telecom,251,9,12,12,https://www.ethiotelecom.et
-Ethiopia,ET,Safaricom,251,7,12,12,https://www.safaricom.et
-Falkland Islands,FK,Proper,500,,8,8,
-Falkland Islands,FK,Sure,500,5,8,8,https://www.sure.co.fk
-Falkland Islands,FK,Sure,500,6,8,8,https://www.sure.co.fk
-Faroe Islands,FO,Proper,298,,9,9,
-Faroe Islands,FO,Foroya Tele,298,2,9,9,https://www.tele.fo
-Faroe Islands,FO,Mobile,298,7,9,9,
-Faroe Islands,FO,Mobile,298,8,9,9,
-Faroe Islands,FO,Mobile,298,9,9,9,
-France,FR,Proper,33,,11,11,
-France,FR,Mobile,33,6,11,11,
-France,FR,Mobile,33,7,11,11,
-French Guiana,GF,Proper,594,,12,12,
-French Guiana,GF,Mobile,594,694,12,12,
-French Polynesia,PF,Proper,689,,11,11,
-French Polynesia,PF,Vini,689,87,11,11,https://www.vini.pf
-French Polynesia,PF,Vodafone,689,89,11,11,https://www.vodafone.pf
+Country,Country Code,Destination,Country code,Code,Min digits,Max digits,Website,Google AI Verified
+Afghanistan,AF,Proper,93,,11,11,,Yes
+Afghanistan,AF,ATOMA,93,76,11,11,https://www.atoma.com,Yes
+Afghanistan,AF,ATOMA,93,77,11,11,https://www.atoma.com,Yes
+Afghanistan,AF,AWCC,93,70,11,11,https://www.afghan-wireless.com,Yes
+Afghanistan,AF,AWCC,93,71,11,11,https://www.afghan-wireless.com,Yes
+Afghanistan,AF,Etisalat,93,73,11,11,https://www.etisalat.af,Yes
+Afghanistan,AF,Etisalat,93,78,11,11,https://www.etisalat.af,Yes
+Afghanistan,AF,Roshan,93,72,11,11,https://www.roshan.af,Yes
+Afghanistan,AF,Roshan,93,79,11,11,https://www.roshan.af,Yes
+Afghanistan,AF,Salaam,93,74,11,11,https://salaam.af,Yes
+Albania,AL,Proper,355,,11,11,,Yes
+Albania,AL,One,355,67,12,12,https://www.one.al,Yes
+Albania,AL,One,355,68,12,12,https://www.one.al,Yes
+Albania,AL,Vodafone,355,69,12,12,https://www.vodafone.al,Yes
+Algeria,DZ,Proper,213,,11,11,,Yes
+Algeria,DZ,Djezzy,213,7,12,12,,Yes
+Algeria,DZ,Mobilis,213,6,12,12,https://www.mobilis.dz,Yes
+Algeria,DZ,Ooredoo,213,5,12,12,https://www.ooredoo.dz,Yes
+American Samoa,AS,Proper,1684,,11,11,,Yes
+American Samoa,AS,Mobile,1684,,11,11,,Yes
+Andorra,AD,Proper,376,,9,9,,Yes
+Andorra,AD,Andorra Telecom,376,3,9,9,https://www.andorratelecom.ad,Yes
+Andorra,AD,Andorra Telecom,376,4,9,9,https://www.andorratelecom.ad,Yes
+Andorra,AD,Andorra Telecom,376,6,9,9,https://www.andorratelecom.ad,Yes
+Angola,AO,Proper,244,,12,12,,Yes
+Angola,AO,Africell,244,95,12,12,https://www.africell.ao,Yes
+Angola,AO,Movicel,244,91,12,12,https://www.movicel.co.ao,Yes
+Angola,AO,Movicel,244,99,12,12,https://www.movicel.co.ao,Yes
+Angola,AO,Unitel,244,92,12,12,https://www.unitel.ao,Yes
+Angola,AO,Unitel,244,93,12,12,https://www.unitel.ao,Yes
+Angola,AO,Unitel,244,94,12,12,https://www.unitel.ao,Yes
+Anguilla,AI,Proper,1264,,11,11,,Yes
+Anguilla,AI,Mobile,1264,235,11,11,,Yes
+Anguilla,AI,Mobile,1264,476,11,11,,Yes
+Anguilla,AI,Mobile,1264,536,11,11,,Yes
+Anguilla,AI,Mobile,1264,537,11,11,,Yes
+Anguilla,AI,Mobile,1264,538,11,11,,Yes
+Anguilla,AI,Mobile,1264,539,11,11,,Yes
+Anguilla,AI,Mobile,1264,729,11,11,,Yes
+Anguilla,AI,Mobile,1264,772,11,11,,Yes
+Antarctica,AQ,Proper,672,,9,9,,
+Antigua and Barbuda,AG,Proper,1268,,11,11,,Yes
+Antigua and Barbuda,AG,APUA,1268,484,11,11,https://www.apua.ag,Yes
+Antigua and Barbuda,AG,APUA,1268,784,11,11,https://www.apua.ag,Yes
+Antigua and Barbuda,AG,Digicel,1268,536,11,11,https://www.digicelgroup.com,Yes
+Antigua and Barbuda,AG,Digicel,1268,537,11,11,https://www.digicelgroup.com,Yes
+Antigua and Barbuda,AG,Digicel,1268,538,11,11,https://www.digicelgroup.com,Yes
+Antigua and Barbuda,AG,Digicel,1268,539,11,11,https://www.digicelgroup.com,Yes
+Antigua and Barbuda,AG,Digicel,1268,732,11,11,https://www.digicelgroup.com,Yes
+Antigua and Barbuda,AG,Digicel,1268,734,11,11,https://www.digicelgroup.com,Yes
+Antigua and Barbuda,AG,Digicel,1268,736,11,11,https://www.digicelgroup.com,Yes
+Antigua and Barbuda,AG,Flow,1268,464,11,11,https://discoverflow.co,Yes
+Antigua and Barbuda,AG,Flow,1268,764,11,11,https://discoverflow.co,Yes
+Antigua and Barbuda,AG,Mobile,1268,720,11,11,,Yes
+Antigua and Barbuda,AG,Mobile,1268,721,11,11,,Yes
+Antigua and Barbuda,AG,Mobile,1268,722,11,11,,Yes
+Antigua and Barbuda,AG,Mobile,1268,723,11,11,,Yes
+Antigua and Barbuda,AG,Mobile,1268,724,11,11,,Yes
+Antigua and Barbuda,AG,Mobile,1268,725,11,11,,Yes
+Antigua and Barbuda,AG,Mobile,1268,726,11,11,,Yes
+Antigua and Barbuda,AG,Mobile,1268,727,11,11,,Yes
+Antigua and Barbuda,AG,Mobile,1268,728,11,11,,Yes
+Antigua and Barbuda,AG,Mobile,1268,729,11,11,,Yes
+Argentina,AR,Proper,54,,12,12,,Yes
+Argentina,AR,Mobile,54,9,13,13,,Yes
+Armenia,AM,Proper,374,,11,11,,Yes
+Armenia,AM,Team Telecom,374,43,11,11,https://www.telecomarmenia.am,Yes
+Armenia,AM,Team Telecom,374,91,11,11,https://www.telecomarmenia.am,Yes
+Armenia,AM,Team Telecom,374,96,11,11,https://www.telecomarmenia.am,Yes
+Armenia,AM,Team Telecom,374,99,11,11,https://www.telecomarmenia.am,Yes
+Armenia,AM,Ucom,374,41,11,11,https://www.ucom.am,Yes
+Armenia,AM,Ucom,374,44,11,11,https://www.ucom.am,Yes
+Armenia,AM,Ucom,374,55,11,11,https://www.ucom.am,Yes
+Armenia,AM,Ucom,374,95,11,11,https://www.ucom.am,Yes
+Armenia,AM,Viva-MTS,374,77,11,11,https://www.mts.am,Yes
+Armenia,AM,Viva-MTS,374,93,11,11,https://www.mts.am,Yes
+Armenia,AM,Viva-MTS,374,94,11,11,https://www.mts.am,Yes
+Armenia,AM,Viva-MTS,374,98,11,11,https://www.mts.am,Yes
+Aruba,AW,Proper,297,,10,10,,Yes
+Aruba,AW,Digicel,297,73,10,10,https://www.digicelaruba.com,Yes
+Aruba,AW,Digicel,297,74,10,10,https://www.digicelaruba.com,Yes
+Aruba,AW,Digicel,297,630,10,10,https://www.digicelaruba.com,Yes
+Aruba,AW,Digicel,297,640,10,10,https://www.digicelaruba.com,Yes
+Aruba,AW,Digicel,297,641,10,10,https://www.digicelaruba.com,Yes
+Aruba,AW,SETAR,297,592,10,10,https://www.setar.aw,Yes
+Aruba,AW,SETAR,297,593,10,10,https://www.setar.aw,Yes
+Aruba,AW,SETAR,297,594,10,10,https://www.setar.aw,Yes
+Aruba,AW,SETAR,297,597,10,10,https://www.setar.aw,Yes
+Aruba,AW,SETAR,297,598,10,10,https://www.setar.aw,Yes
+Aruba,AW,SETAR,297,660,10,10,https://www.setar.aw,Yes
+Aruba,AW,SETAR,297,661,10,10,https://www.setar.aw,Yes
+Aruba,AW,SETAR,297,690,10,10,https://www.setar.aw,Yes
+Aruba,AW,SETAR,297,995,10,10,https://www.setar.aw,Yes
+Aruba,AW,SETAR,297,996,10,10,https://www.setar.aw,Yes
+Aruba,AW,SETAR,297,997,10,10,https://www.setar.aw,Yes
+Aruba,AW,SETAR,297,998,10,10,https://www.setar.aw,Yes
+Ascension Island,AC,Proper,247,,8,8,,
+Australia,AU,Proper,61,,11,11,,Yes
+Australia,AU,Optus,61,401,11,11,https://www.optus.com.au,Yes
+Australia,AU,Optus,61,402,11,11,https://www.optus.com.au,Yes
+Australia,AU,Optus,61,403,11,11,https://www.optus.com.au,Yes
+Australia,AU,Optus,61,411,11,11,https://www.optus.com.au,Yes
+Australia,AU,Optus,61,412,11,11,https://www.optus.com.au,Yes
+Australia,AU,Optus,61,413,11,11,https://www.optus.com.au,Yes
+Australia,AU,Optus,61,421,11,11,https://www.optus.com.au,Yes
+Australia,AU,Optus,61,422,11,11,https://www.optus.com.au,Yes
+Australia,AU,Optus,61,423,11,11,https://www.optus.com.au,Yes
+Australia,AU,Telstra,61,400,11,11,https://www.telstra.com.au,Yes
+Australia,AU,Telstra,61,407,11,11,https://www.telstra.com.au,Yes
+Australia,AU,Telstra,61,408,11,11,https://www.telstra.com.au,Yes
+Australia,AU,Telstra,61,409,11,11,https://www.telstra.com.au,Yes
+Australia,AU,Telstra,61,417,11,11,https://www.telstra.com.au,Yes
+Australia,AU,Telstra,61,418,11,11,https://www.telstra.com.au,Yes
+Australia,AU,Telstra,61,419,11,11,https://www.telstra.com.au,Yes
+Australia,AU,Telstra,61,427,11,11,https://www.telstra.com.au,Yes
+Australia,AU,Telstra,61,428,11,11,https://www.telstra.com.au,Yes
+Australia,AU,Telstra,61,429,11,11,https://www.telstra.com.au,Yes
+Australia,AU,Vodafone,61,404,11,11,https://www.vodafone.com.au,Yes
+Australia,AU,Vodafone,61,405,11,11,https://www.vodafone.com.au,Yes
+Australia,AU,Vodafone,61,406,11,11,https://www.vodafone.com.au,Yes
+Australia,AU,Vodafone,61,414,11,11,https://www.vodafone.com.au,Yes
+Australia,AU,Vodafone,61,415,11,11,https://www.vodafone.com.au,Yes
+Australia,AU,Vodafone,61,416,11,11,https://www.vodafone.com.au,Yes
+Australia,AU,Vodafone,61,424,11,11,https://www.vodafone.com.au,Yes
+Australia,AU,Vodafone,61,425,11,11,https://www.vodafone.com.au,Yes
+Australia,AU,Vodafone,61,426,11,11,https://www.vodafone.com.au,Yes
+Austria,AT,Proper,43,,6,15,,Yes
+Austria,AT,A1,43,664,11,13,https://www.a1.net,Yes
+Austria,AT,Drei,43,660,11,13,https://www.drei.at,Yes
+Austria,AT,Drei,43,699,11,13,https://www.drei.at,Yes
+Austria,AT,Magenta,43,676,11,13,https://www.magenta.at,Yes
+Azerbaijan,AZ,Proper,994,,12,12,,Yes
+Azerbaijan,AZ,Azercell,994,10,12,12,https://www.azercell.com,Yes
+Azerbaijan,AZ,Azercell,994,50,12,12,https://www.azercell.com,Yes
+Azerbaijan,AZ,Azercell,994,51,12,12,https://www.azercell.com,Yes
+Azerbaijan,AZ,Bakcell,994,55,12,12,https://www.bakcell.com,Yes
+Azerbaijan,AZ,Bakcell,994,99,12,12,https://www.bakcell.com,Yes
+Azerbaijan,AZ,Nar,994,70,12,12,https://www.nar.az,Yes
+Azerbaijan,AZ,Nar,994,77,12,12,https://www.nar.az,Yes
+Bahamas,BS,Proper,1242,,11,11,,Yes
+Bahamas,BS,Mobile,1242,,11,11,,Yes
+Bahrain,BH,Proper,973,,11,11,,Yes
+Bahrain,BH,Batelco,973,39,11,11,https://www.batelco.com,Yes
+Bahrain,BH,stc,973,33,11,11,https://www.stc.com.bh,Yes
+Bahrain,BH,stc,973,34,11,11,https://www.stc.com.bh,Yes
+Bahrain,BH,stc,973,35,11,11,https://www.stc.com.bh,Yes
+Bahrain,BH,Zain,973,36,11,11,https://www.bh.zain.com,Yes
+Bahrain,BH,Zain,973,37,11,11,https://www.bh.zain.com,Yes
+Bangladesh,BD,Proper,880,,12,12,,Yes
+Bangladesh,BD,Airtel,880,16,13,13,https://www.bd.airtel.com,Yes
+Bangladesh,BD,Banglalink,880,14,13,13,https://www.banglalink.net,Yes
+Bangladesh,BD,Banglalink,880,19,13,13,https://www.banglalink.net,Yes
+Bangladesh,BD,Grameenphone,880,13,13,13,https://www.grameenphone.com,Yes
+Bangladesh,BD,Grameenphone,880,17,13,13,https://www.grameenphone.com,Yes
+Bangladesh,BD,Robi,880,18,13,13,https://www.robi.com.bd,Yes
+Bangladesh,BD,Teletalk,880,15,13,13,https://www.teletalk.com.bd,Yes
+Barbados,BB,Proper,1246,,11,11,,Yes
+Barbados,BB,Digicel,1246,230,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,231,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,232,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,233,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,234,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,240,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,241,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,242,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,243,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,244,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,245,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,246,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,247,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,248,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,249,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,250,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,251,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,252,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,253,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,254,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,255,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,256,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,257,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,258,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,259,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,260,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,261,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,262,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,263,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,264,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,265,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,266,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,267,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,268,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,269,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,820,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,821,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,822,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,823,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,824,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,825,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,826,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,827,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,828,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,829,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,830,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,831,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,832,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,833,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,834,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,835,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,836,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,837,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,838,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,839,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,840,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,841,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,842,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,843,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,844,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,845,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,846,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,847,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,848,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,849,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,850,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,851,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,852,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,853,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,854,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,855,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,856,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,857,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,858,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Digicel,1246,859,11,11,https://www.digicelgroup.com/bb,Yes
+Barbados,BB,Flow,1246,235,11,11,https://www.discoverflow.co/barbados,Yes
+Barbados,BB,Flow,1246,236,11,11,https://www.discoverflow.co/barbados,Yes
+Barbados,BB,Flow,1246,237,11,11,https://www.discoverflow.co/barbados,Yes
+Barbados,BB,Flow,1246,238,11,11,https://www.discoverflow.co/barbados,Yes
+Barbados,BB,Flow,1246,239,11,11,https://www.discoverflow.co/barbados,Yes
+Barbados,BB,Flow,1246,280,11,11,https://www.discoverflow.co/barbados,Yes
+Barbados,BB,Flow,1246,281,11,11,https://www.discoverflow.co/barbados,Yes
+Barbados,BB,Flow,1246,282,11,11,https://www.discoverflow.co/barbados,Yes
+Barbados,BB,Flow,1246,283,11,11,https://www.discoverflow.co/barbados,Yes
+Barbados,BB,Flow,1246,284,11,11,https://www.discoverflow.co/barbados,Yes
+Barbados,BB,Flow,1246,285,11,11,https://www.discoverflow.co/barbados,Yes
+Barbados,BB,Flow,1246,286,11,11,https://www.discoverflow.co/barbados,Yes
+Barbados,BB,Flow,1246,287,11,11,https://www.discoverflow.co/barbados,Yes
+Barbados,BB,Flow,1246,288,11,11,https://www.discoverflow.co/barbados,Yes
+Barbados,BB,Flow,1246,289,11,11,https://www.discoverflow.co/barbados,Yes
+Barbados,BB,Flow,1246,880,11,11,https://www.discoverflow.co/barbados,Yes
+Barbados,BB,Flow,1246,881,11,11,https://www.discoverflow.co/barbados,Yes
+Barbados,BB,Flow,1246,882,11,11,https://www.discoverflow.co/barbados,Yes
+Barbados,BB,Flow,1246,883,11,11,https://www.discoverflow.co/barbados,Yes
+Belarus,BY,Proper,375,,12,12,,Yes
+Belarus,BY,A1,375,44,12,12,https://www.a1.by,Yes
+Belarus,BY,A1,375,291,12,12,https://www.a1.by,Yes
+Belarus,BY,A1,375,293,12,12,https://www.a1.by,Yes
+Belarus,BY,A1,375,296,12,12,https://www.a1.by,Yes
+Belarus,BY,A1,375,299,12,12,https://www.a1.by,Yes
+Belarus,BY,life,375,25,12,12,https://life.com.by,Yes
+Belarus,BY,MTS,375,33,12,12,https://www.mts.by,Yes
+Belarus,BY,MTS,375,292,12,12,https://www.mts.by,Yes
+Belarus,BY,MTS,375,295,12,12,https://www.mts.by,Yes
+Belarus,BY,MTS,375,297,12,12,https://www.mts.by,Yes
+Belarus,BY,MTS,375,298,12,12,https://www.mts.by,Yes
+Belgium,BE,Proper,32,,10,11,,Yes
+Belgium,BE,BASE,32,480,11,11,https://www.base.be,Yes
+Belgium,BE,BASE,32,481,11,11,https://www.base.be,Yes
+Belgium,BE,BASE,32,482,11,11,https://www.base.be,Yes
+Belgium,BE,BASE,32,483,11,11,https://www.base.be,Yes
+Belgium,BE,BASE,32,484,11,11,https://www.base.be,Yes
+Belgium,BE,BASE,32,485,11,11,https://www.base.be,Yes
+Belgium,BE,BASE,32,486,11,11,https://www.base.be,Yes
+Belgium,BE,BASE,32,487,11,11,https://www.base.be,Yes
+Belgium,BE,BASE,32,488,11,11,https://www.base.be,Yes
+Belgium,BE,BASE,32,489,11,11,https://www.base.be,Yes
+Belgium,BE,DIGI,32,461,11,11,https://www.digi-belgium.be,Yes
+Belgium,BE,Orange,32,490,11,11,https://www.orange.be,Yes
+Belgium,BE,Orange,32,491,11,11,https://www.orange.be,Yes
+Belgium,BE,Orange,32,492,11,11,https://www.orange.be,Yes
+Belgium,BE,Orange,32,493,11,11,https://www.orange.be,Yes
+Belgium,BE,Orange,32,494,11,11,https://www.orange.be,Yes
+Belgium,BE,Orange,32,495,11,11,https://www.orange.be,Yes
+Belgium,BE,Orange,32,496,11,11,https://www.orange.be,Yes
+Belgium,BE,Orange,32,497,11,11,https://www.orange.be,Yes
+Belgium,BE,Orange,32,498,11,11,https://www.orange.be,Yes
+Belgium,BE,Orange,32,499,11,11,https://www.orange.be,Yes
+Belgium,BE,Proximus,32,470,11,11,https://www.proximus.be,Yes
+Belgium,BE,Proximus,32,471,11,11,https://www.proximus.be,Yes
+Belgium,BE,Proximus,32,472,11,11,https://www.proximus.be,Yes
+Belgium,BE,Proximus,32,473,11,11,https://www.proximus.be,Yes
+Belgium,BE,Proximus,32,474,11,11,https://www.proximus.be,Yes
+Belgium,BE,Proximus,32,475,11,11,https://www.proximus.be,Yes
+Belgium,BE,Proximus,32,476,11,11,https://www.proximus.be,Yes
+Belgium,BE,Proximus,32,477,11,11,https://www.proximus.be,Yes
+Belgium,BE,Proximus,32,478,11,11,https://www.proximus.be,Yes
+Belgium,BE,Proximus,32,479,11,11,https://www.proximus.be,Yes
+Belize,BZ,Proper,501,,10,10,,Yes
+Belize,BZ,Digi,501,60,10,10,https://www.livedigi.com,Yes
+Belize,BZ,Digi,501,61,10,10,https://www.livedigi.com,Yes
+Belize,BZ,Digi,501,62,10,10,https://www.livedigi.com,Yes
+Belize,BZ,Digi,501,63,10,10,https://www.livedigi.com,Yes
+Belize,BZ,Smart,501,66,10,10,https://www.smart-bz.com,Yes
+Belize,BZ,Smart,501,67,10,10,https://www.smart-bz.com,Yes
+Benin,BJ,Proper,229,,13,13,,Yes
+Benin,BJ,Celtiis,229,0120,13,13,https://www.celtiis.bj,Yes
+Benin,BJ,Celtiis,229,0121,13,13,https://www.celtiis.bj,Yes
+Benin,BJ,Celtiis,229,0122,13,13,https://www.celtiis.bj,Yes
+Benin,BJ,Celtiis,229,0123,13,13,https://www.celtiis.bj,Yes
+Benin,BJ,Celtiis,229,0124,13,13,https://www.celtiis.bj,Yes
+Benin,BJ,Celtiis,229,0128,13,13,https://www.celtiis.bj,Yes
+Benin,BJ,Celtiis,229,0129,13,13,https://www.celtiis.bj,Yes
+Benin,BJ,Celtiis,229,0140,13,13,https://www.celtiis.bj,Yes
+Benin,BJ,Celtiis,229,0141,13,13,https://www.celtiis.bj,Yes
+Benin,BJ,Celtiis,229,0143,13,13,https://www.celtiis.bj,Yes
+Benin,BJ,Celtiis,229,0144,13,13,https://www.celtiis.bj,Yes
+Benin,BJ,Celtiis,229,0147,13,13,https://www.celtiis.bj,Yes
+Benin,BJ,Celtiis,229,0148,13,13,https://www.celtiis.bj,Yes
+Benin,BJ,Celtiis,229,0149,13,13,https://www.celtiis.bj,Yes
+Benin,BJ,Celtiis,229,0192,13,13,https://www.celtiis.bj,Yes
+Benin,BJ,Celtiis,229,0193,13,13,https://www.celtiis.bj,Yes
+Benin,BJ,Moov,229,0145,13,13,https://www.moov-africa.bj,Yes
+Benin,BJ,Moov,229,0155,13,13,https://www.moov-africa.bj,Yes
+Benin,BJ,Moov,229,0158,13,13,https://www.moov-africa.bj,Yes
+Benin,BJ,Moov,229,0160,13,13,https://www.moov-africa.bj,Yes
+Benin,BJ,Moov,229,0163,13,13,https://www.moov-africa.bj,Yes
+Benin,BJ,Moov,229,0164,13,13,https://www.moov-africa.bj,Yes
+Benin,BJ,Moov,229,0165,13,13,https://www.moov-africa.bj,Yes
+Benin,BJ,Moov,229,0168,13,13,https://www.moov-africa.bj,Yes
+Benin,BJ,Moov,229,0194,13,13,https://www.moov-africa.bj,Yes
+Benin,BJ,Moov,229,0195,13,13,https://www.moov-africa.bj,Yes
+Benin,BJ,Moov,229,0198,13,13,https://www.moov-africa.bj,Yes
+Benin,BJ,Moov,229,0199,13,13,https://www.moov-africa.bj,Yes
+Benin,BJ,MTN,229,0142,13,13,https://www.mtn.bj,Yes
+Benin,BJ,MTN,229,0146,13,13,https://www.mtn.bj,Yes
+Benin,BJ,MTN,229,0150,13,13,https://www.mtn.bj,Yes
+Benin,BJ,MTN,229,0151,13,13,https://www.mtn.bj,Yes
+Benin,BJ,MTN,229,0152,13,13,https://www.mtn.bj,Yes
+Benin,BJ,MTN,229,0153,13,13,https://www.mtn.bj,Yes
+Benin,BJ,MTN,229,0154,13,13,https://www.mtn.bj,Yes
+Benin,BJ,MTN,229,0156,13,13,https://www.mtn.bj,Yes
+Benin,BJ,MTN,229,0157,13,13,https://www.mtn.bj,Yes
+Benin,BJ,MTN,229,0159,13,13,https://www.mtn.bj,Yes
+Benin,BJ,MTN,229,0161,13,13,https://www.mtn.bj,Yes
+Benin,BJ,MTN,229,0162,13,13,https://www.mtn.bj,Yes
+Benin,BJ,MTN,229,0166,13,13,https://www.mtn.bj,Yes
+Benin,BJ,MTN,229,0167,13,13,https://www.mtn.bj,Yes
+Benin,BJ,MTN,229,0169,13,13,https://www.mtn.bj,Yes
+Benin,BJ,MTN,229,0190,13,13,https://www.mtn.bj,Yes
+Benin,BJ,MTN,229,0191,13,13,https://www.mtn.bj,Yes
+Benin,BJ,MTN,229,0196,13,13,https://www.mtn.bj,Yes
+Benin,BJ,MTN,229,0197,13,13,https://www.mtn.bj,Yes
+Bermuda,BM,Proper,1441,,11,11,,Yes
+Bermuda,BM,Mobile,1441,,11,11,,Yes
+Bhutan,BT,Proper,975,,10,10,,Yes
+Bhutan,BT,B-Mobile,975,16,11,11,https://www.bt.bt,Yes
+Bhutan,BT,B-Mobile,975,17,11,11,https://www.bt.bt,Yes
+Bhutan,BT,TashiCell,975,77,11,11,https://www.tashicell.com,Yes
+Bolivia,BO,Proper,591,,11,11,,Yes
+Bolivia,BO,Entel,591,71,11,11,https://www.entel.bo,Yes
+Bolivia,BO,Entel,591,72,11,11,https://www.entel.bo,Yes
+Bolivia,BO,Entel,591,73,11,11,https://www.entel.bo,Yes
+Bolivia,BO,Entel,591,74,11,11,https://www.entel.bo,Yes
+Bolivia,BO,Mobile,591,6,11,11,,Yes
+Bolivia,BO,Tigo,591,76,11,11,https://tigo.com.bo,Yes
+Bolivia,BO,Tigo,591,77,11,11,https://tigo.com.bo,Yes
+Bolivia,BO,Tigo,591,78,11,11,https://tigo.com.bo,Yes
+Bolivia,BO,Viva,591,70,11,11,https://viva.com.bo,Yes
+Bolivia,BO,Viva,591,75,11,11,https://viva.com.bo,Yes
+Bolivia,BO,Viva,591,79,11,11,https://viva.com.bo,Yes
+Bosnia and Herzegovina,BA,Proper,387,,11,11,,Yes
+Bosnia and Herzegovina,BA,BH Telecom,387,60,11,11,https://www.bhtelecom.ba,Yes
+Bosnia and Herzegovina,BA,BH Telecom,387,61,11,11,https://www.bhtelecom.ba,Yes
+Bosnia and Herzegovina,BA,BH Telecom,387,62,11,11,https://www.bhtelecom.ba,Yes
+Bosnia and Herzegovina,BA,HT Eronet,387,63,11,11,https://www.hteronet.ba,Yes
+Bosnia and Herzegovina,BA,m:tel,387,65,11,11,https://www.mtel.ba,Yes
+Bosnia and Herzegovina,BA,m:tel,387,66,11,11,https://www.mtel.ba,Yes
+Botswana,BW,Proper,267,,10,10,,Yes
+Botswana,BW,BTC Mobile,267,73,11,11,https://www.btc.bw,Yes
+Botswana,BW,Mascom,267,71,11,11,https://www.mascom.bw,Yes
+Botswana,BW,Mobile,267,74,11,11,,Yes
+Botswana,BW,Mobile,267,75,11,11,,Yes
+Botswana,BW,Mobile,267,76,11,11,,Yes
+Botswana,BW,Mobile,267,77,11,11,,Yes
+Botswana,BW,Orange,267,72,11,11,https://www.orange.co.bw,Yes
+Brazil,BR,Proper,55,,12,12,,Yes
+Brazil,BR,Mobile,55,9,13,13,,Yes
+British Virgin Islands,VG,Proper,1284,,11,11,,Yes
+British Virgin Islands,VG,CCT,1284,440,11,11,https://www.cctbvi.com,Yes
+British Virgin Islands,VG,CCT,1284,441,11,11,https://www.cctbvi.com,Yes
+British Virgin Islands,VG,CCT,1284,442,11,11,https://www.cctbvi.com,Yes
+British Virgin Islands,VG,CCT,1284,443,11,11,https://www.cctbvi.com,Yes
+British Virgin Islands,VG,CCT,1284,444,11,11,https://www.cctbvi.com,Yes
+British Virgin Islands,VG,CCT,1284,445,11,11,https://www.cctbvi.com,Yes
+British Virgin Islands,VG,CCT,1284,496,11,11,https://www.cctbvi.com,Yes
+British Virgin Islands,VG,CCT,1284,499,11,11,https://www.cctbvi.com,Yes
+British Virgin Islands,VG,Digicel,1284,300,11,11,https://www.digicelgroup.com/vg,Yes
+British Virgin Islands,VG,Digicel,1284,340,11,11,https://www.digicelgroup.com/vg,Yes
+British Virgin Islands,VG,Digicel,1284,341,11,11,https://www.digicelgroup.com/vg,Yes
+British Virgin Islands,VG,Digicel,1284,342,11,11,https://www.digicelgroup.com/vg,Yes
+British Virgin Islands,VG,Digicel,1284,343,11,11,https://www.digicelgroup.com/vg,Yes
+British Virgin Islands,VG,Digicel,1284,344,11,11,https://www.digicelgroup.com/vg,Yes
+British Virgin Islands,VG,Digicel,1284,345,11,11,https://www.digicelgroup.com/vg,Yes
+British Virgin Islands,VG,Digicel,1284,346,11,11,https://www.digicelgroup.com/vg,Yes
+British Virgin Islands,VG,Digicel,1284,347,11,11,https://www.digicelgroup.com/vg,Yes
+British Virgin Islands,VG,Digicel,1284,368,11,11,https://www.digicelgroup.com/vg,Yes
+British Virgin Islands,VG,Flow,1284,540,11,11,https://discoverflow.co/british-virgin-islands,Yes
+British Virgin Islands,VG,Flow,1284,541,11,11,https://discoverflow.co/british-virgin-islands,Yes
+British Virgin Islands,VG,Flow,1284,542,11,11,https://discoverflow.co/british-virgin-islands,Yes
+British Virgin Islands,VG,Flow,1284,543,11,11,https://discoverflow.co/british-virgin-islands,Yes
+British Virgin Islands,VG,Flow,1284,544,11,11,https://discoverflow.co/british-virgin-islands,Yes
+British Virgin Islands,VG,Flow,1284,545,11,11,https://discoverflow.co/british-virgin-islands,Yes
+British Virgin Islands,VG,Flow,1284,546,11,11,https://discoverflow.co/british-virgin-islands,Yes
+British Virgin Islands,VG,Flow,1284,547,11,11,https://discoverflow.co/british-virgin-islands,Yes
+British Virgin Islands,VG,Flow,1284,568,11,11,https://discoverflow.co/british-virgin-islands,Yes
+Brunei,BN,Proper,673,,10,10,,Yes
+Brunei,BN,Mobile,673,7,10,10,,Yes
+Brunei,BN,Mobile,673,8,10,10,,Yes
+Brunei,BN,Mobile,673,228,10,10,,Yes
+Brunei,BN,Mobile,673,229,10,10,,Yes
+Bulgaria,BG,Proper,359,,11,11,,Yes
+Bulgaria,BG,A1,359,88,12,12,https://www.a1.bg,Yes
+Bulgaria,BG,Vivacom,359,87,12,12,https://www.vivacom.bg,Yes
+Bulgaria,BG,Yettel,359,89,12,12,https://www.yettel.bg,Yes
+Burkina Faso,BF,Proper,226,,11,11,,Yes
+Burkina Faso,BF,Moov Africa,226,01,11,11,https://www.moov-africa.bf,Yes
+Burkina Faso,BF,Moov Africa,226,02,11,11,https://www.moov-africa.bf,Yes
+Burkina Faso,BF,Moov Africa,226,03,11,11,https://www.moov-africa.bf,Yes
+Burkina Faso,BF,Moov Africa,226,50,11,11,https://www.moov-africa.bf,Yes
+Burkina Faso,BF,Moov Africa,226,51,11,11,https://www.moov-africa.bf,Yes
+Burkina Faso,BF,Moov Africa,226,52,11,11,https://www.moov-africa.bf,Yes
+Burkina Faso,BF,Moov Africa,226,53,11,11,https://www.moov-africa.bf,Yes
+Burkina Faso,BF,Moov Africa,226,60,11,11,https://www.moov-africa.bf,Yes
+Burkina Faso,BF,Moov Africa,226,61,11,11,https://www.moov-africa.bf,Yes
+Burkina Faso,BF,Moov Africa,226,62,11,11,https://www.moov-africa.bf,Yes
+Burkina Faso,BF,Moov Africa,226,63,11,11,https://www.moov-africa.bf,Yes
+Burkina Faso,BF,Moov Africa,226,70,11,11,https://www.moov-africa.bf,Yes
+Burkina Faso,BF,Moov Africa,226,71,11,11,https://www.moov-africa.bf,Yes
+Burkina Faso,BF,Moov Africa,226,72,11,11,https://www.moov-africa.bf,Yes
+Burkina Faso,BF,Moov Africa,226,73,11,11,https://www.moov-africa.bf,Yes
+Burkina Faso,BF,Orange,226,05,11,11,https://www.orange.bf,Yes
+Burkina Faso,BF,Orange,226,06,11,11,https://www.orange.bf,Yes
+Burkina Faso,BF,Orange,226,07,11,11,https://www.orange.bf,Yes
+Burkina Faso,BF,Orange,226,44,11,11,https://www.orange.bf,Yes
+Burkina Faso,BF,Orange,226,45,11,11,https://www.orange.bf,Yes
+Burkina Faso,BF,Orange,226,46,11,11,https://www.orange.bf,Yes
+Burkina Faso,BF,Orange,226,54,11,11,https://www.orange.bf,Yes
+Burkina Faso,BF,Orange,226,55,11,11,https://www.orange.bf,Yes
+Burkina Faso,BF,Orange,226,56,11,11,https://www.orange.bf,Yes
+Burkina Faso,BF,Orange,226,57,11,11,https://www.orange.bf,Yes
+Burkina Faso,BF,Orange,226,64,11,11,https://www.orange.bf,Yes
+Burkina Faso,BF,Orange,226,65,11,11,https://www.orange.bf,Yes
+Burkina Faso,BF,Orange,226,66,11,11,https://www.orange.bf,Yes
+Burkina Faso,BF,Orange,226,67,11,11,https://www.orange.bf,Yes
+Burkina Faso,BF,Orange,226,74,11,11,https://www.orange.bf,Yes
+Burkina Faso,BF,Orange,226,75,11,11,https://www.orange.bf,Yes
+Burkina Faso,BF,Orange,226,76,11,11,https://www.orange.bf,Yes
+Burkina Faso,BF,Orange,226,77,11,11,https://www.orange.bf,Yes
+Burkina Faso,BF,Telecel Faso,226,68,11,11,https://www.telecelfaso.bf,Yes
+Burkina Faso,BF,Telecel Faso,226,78,11,11,https://www.telecelfaso.bf,Yes
+Burkina Faso,BF,Telecel Faso,226,79,11,11,https://www.telecelfaso.bf,Yes
+Burma (Myanmar),MM,Proper,95,,9,11,,Yes
+Burma (Myanmar),MM,ATOM,95,976,11,11,https://www.atom.com.mm,Yes
+Burma (Myanmar),MM,ATOM,95,977,11,11,https://www.atom.com.mm,Yes
+Burma (Myanmar),MM,ATOM,95,978,11,11,https://www.atom.com.mm,Yes
+Burma (Myanmar),MM,ATOM,95,979,11,11,https://www.atom.com.mm,Yes
+Burma (Myanmar),MM,MPT,95,944,11,11,https://www.mpt.com.mm,Yes
+Burma (Myanmar),MM,MPT,95,945,11,11,https://www.mpt.com.mm,Yes
+Burma (Myanmar),MM,MPT,95,950,11,11,https://www.mpt.com.mm,Yes
+Burma (Myanmar),MM,MPT,95,951,11,11,https://www.mpt.com.mm,Yes
+Burma (Myanmar),MM,MPT,95,988,11,11,https://www.mpt.com.mm,Yes
+Burma (Myanmar),MM,MPT,95,989,11,11,https://www.mpt.com.mm,Yes
+Burma (Myanmar),MM,Mytel,95,968,11,11,https://mytel.com.mm,Yes
+Burma (Myanmar),MM,Mytel,95,969,11,11,https://mytel.com.mm,Yes
+Burma (Myanmar),MM,Ooredoo,95,994,11,11,https://ooredoo.com.mm,Yes
+Burma (Myanmar),MM,Ooredoo,95,995,11,11,https://ooredoo.com.mm,Yes
+Burma (Myanmar),MM,Ooredoo,95,996,11,11,https://ooredoo.com.mm,Yes
+Burma (Myanmar),MM,Ooredoo,95,997,11,11,https://ooredoo.com.mm,Yes
+Burma (Myanmar),MM,Ooredoo,95,998,11,11,https://ooredoo.com.mm,Yes
+Burundi,BI,Proper,257,,11,11,,Yes
+Burundi,BI,Econet Leo,257,71,11,11,https://www.econet.bi,Yes
+Burundi,BI,Econet Leo,257,72,11,11,https://www.econet.bi,Yes
+Burundi,BI,Econet Leo,257,75,11,11,https://www.econet.bi,Yes
+Burundi,BI,Econet Leo,257,76,11,11,https://www.econet.bi,Yes
+Burundi,BI,Econet Leo,257,79,11,11,https://www.econet.bi,Yes
+Burundi,BI,Lumitel,257,61,11,11,https://www.lumitel.bi,Yes
+Burundi,BI,Lumitel,257,62,11,11,https://www.lumitel.bi,Yes
+Burundi,BI,Lumitel,257,68,11,11,https://www.lumitel.bi,Yes
+Burundi,BI,Lumitel,257,69,11,11,https://www.lumitel.bi,Yes
+Burundi,BI,Onatel,257,77,11,11,https://www.onatel.bi,Yes
+Burundi,BI,Smart Mobile,257,78,11,11,,Yes
+Cambodia,KH,Proper,855,,11,12,,Yes
+Cambodia,KH,Cellcard,855,11,11,12,https://www.cellcard.com.kh,Yes
+Cambodia,KH,Cellcard,855,12,11,12,https://www.cellcard.com.kh,Yes
+Cambodia,KH,Cellcard,855,14,11,12,https://www.cellcard.com.kh,Yes
+Cambodia,KH,Cellcard,855,17,11,12,https://www.cellcard.com.kh,Yes
+Cambodia,KH,Cellcard,855,61,11,12,https://www.cellcard.com.kh,Yes
+Cambodia,KH,Cellcard,855,76,11,12,https://www.cellcard.com.kh,Yes
+Cambodia,KH,Cellcard,855,77,11,12,https://www.cellcard.com.kh,Yes
+Cambodia,KH,Cellcard,855,78,11,12,https://www.cellcard.com.kh,Yes
+Cambodia,KH,Cellcard,855,79,11,12,https://www.cellcard.com.kh,Yes
+Cambodia,KH,Cellcard,855,85,11,12,https://www.cellcard.com.kh,Yes
+Cambodia,KH,Cellcard,855,89,11,12,https://www.cellcard.com.kh,Yes
+Cambodia,KH,Cellcard,855,92,11,12,https://www.cellcard.com.kh,Yes
+Cambodia,KH,Cellcard,855,95,11,12,https://www.cellcard.com.kh,Yes
+Cambodia,KH,Cellcard,855,99,11,12,https://www.cellcard.com.kh,Yes
+Cambodia,KH,Metfone,855,31,11,12,https://www.metfone.com.kh,Yes
+Cambodia,KH,Metfone,855,60,11,12,https://www.metfone.com.kh,Yes
+Cambodia,KH,Metfone,855,66,11,12,https://www.metfone.com.kh,Yes
+Cambodia,KH,Metfone,855,67,11,12,https://www.metfone.com.kh,Yes
+Cambodia,KH,Metfone,855,68,11,12,https://www.metfone.com.kh,Yes
+Cambodia,KH,Metfone,855,71,11,12,https://www.metfone.com.kh,Yes
+Cambodia,KH,Metfone,855,88,11,12,https://www.metfone.com.kh,Yes
+Cambodia,KH,Metfone,855,90,11,12,https://www.metfone.com.kh,Yes
+Cambodia,KH,Metfone,855,97,11,12,https://www.metfone.com.kh,Yes
+Cambodia,KH,Smart,855,10,11,12,https://www.smart.com.kh,Yes
+Cambodia,KH,Smart,855,15,11,12,https://www.smart.com.kh,Yes
+Cambodia,KH,Smart,855,16,11,12,https://www.smart.com.kh,Yes
+Cambodia,KH,Smart,855,69,11,12,https://www.smart.com.kh,Yes
+Cambodia,KH,Smart,855,70,11,12,https://www.smart.com.kh,Yes
+Cambodia,KH,Smart,855,81,11,12,https://www.smart.com.kh,Yes
+Cambodia,KH,Smart,855,86,11,12,https://www.smart.com.kh,Yes
+Cambodia,KH,Smart,855,87,11,12,https://www.smart.com.kh,Yes
+Cambodia,KH,Smart,855,93,11,12,https://www.smart.com.kh,Yes
+Cambodia,KH,Smart,855,96,11,12,https://www.smart.com.kh,Yes
+Cambodia,KH,Smart,855,98,11,12,https://www.smart.com.kh,Yes
+Cameroon,CM,Proper,237,,12,12,,Yes
+Cameroon,CM,Camtel,237,62,12,12,https://www.camtel.cm,Yes
+Cameroon,CM,Mobile,237,65,12,12,,Yes
+Cameroon,CM,MTN,237,67,12,12,,Yes
+Cameroon,CM,MTN,237,68,12,12,,Yes
+Cameroon,CM,Nexttel,237,66,12,12,,Yes
+Cameroon,CM,Orange,237,69,12,12,,Yes
+Canada,CA,Proper,1,,11,11,,
+Canada,CA,Mobile,1,,11,11,,
+Cape Verde,CV,Proper,238,,10,10,,Yes
+Cape Verde,CV,Unitel T+,238,91,10,10,https://www.uniteltmais.cv,Yes
+Cape Verde,CV,Unitel T+,238,92,10,10,https://www.uniteltmais.cv,Yes
+Cape Verde,CV,Unitel T+,238,93,10,10,https://www.uniteltmais.cv,Yes
+Cape Verde,CV,Alou,238,95,10,10,https://www.alou.cv,Yes
+Cape Verde,CV,Alou,238,97,10,10,https://www.alou.cv,Yes
+Cape Verde,CV,Alou,238,98,10,10,https://www.alou.cv,Yes
+Cape Verde,CV,Alou,238,99,10,10,https://www.alou.cv,Yes
+Cayman Islands,KY,Proper,1345,,11,11,,
+Cayman Islands,KY,Mobile,1345,,11,11,,
+Central African Republic,CF,Proper,236,,11,11,,Yes
+Central African Republic,CF,Mobile,236,70,11,11,,Yes
+Central African Republic,CF,Mobile,236,72,11,11,,Yes
+Central African Republic,CF,Mobile,236,75,11,11,,Yes
+Central African Republic,CF,Orange,236,74,11,11,,Yes
+Chad,TD,Proper,235,,11,11,,Yes
+Chad,TD,Airtel,235,63,11,11,https://www.airtel.td,Yes
+Chad,TD,Airtel,235,65,11,11,https://www.airtel.td,Yes
+Chad,TD,Airtel,235,66,11,11,https://www.airtel.td,Yes
+Chad,TD,Airtel,235,99,11,11,https://www.airtel.td,Yes
+Chad,TD,Mobile,235,90,11,11,,Yes
+Chad,TD,Moov,235,60,11,11,https://www.moov-africa.td,Yes
+Chad,TD,Moov,235,95,11,11,https://www.moov-africa.td,Yes
+Chad,TD,Moov,235,98,11,11,https://www.moov-africa.td,Yes
+Chad,TD,Salam,235,77,11,11,,Yes
+Chile,CL,Proper,56,,10,11,,Yes
+Chile,CL,Mobile,56,9,11,11,,Yes
+China,CN,Proper,86,,12,13,,Yes
+China,CN,Mobile,86,1,13,13,,Yes
+Christmas Island,CX,Proper,61,,11,11,,
+Christmas Island,CX,Mobile,61,4,11,11,,
+Cocos (Keeling) Islands,CC,Proper,61,,11,11,,
+Cocos (Keeling) Islands,CC,Mobile,61,4,11,11,,
+Colombia,CO,Proper,57,,10,10,,Yes
+Colombia,CO,Mobile,57,3,12,12,,Yes
+Comoros,KM,Proper,269,,10,10,,
+Comoros,KM,Mobile,269,3,10,10,,
+Congo,CG,Proper,242,,12,12,,
+Congo,CG,Mobile,242,04,12,12,,
+Congo,CG,Mobile,242,05,12,12,,
+Congo,CG,Mobile,242,06,12,12,,
+Cook Islands,CK,Proper,682,,8,8,,
+Cook Islands,CK,Vodafone,682,5,8,8,https://www.vodafone.co.ck,
+Cook Islands,CK,Vodafone,682,7,8,8,https://www.vodafone.co.ck,
+Costa Rica,CR,Proper,506,,11,11,,
+Costa Rica,CR,Mobile,506,5,11,11,,
+Costa Rica,CR,Mobile,506,6,11,11,,
+Costa Rica,CR,Mobile,506,7,11,11,,
+Costa Rica,CR,Mobile,506,8,11,11,,
+Croatia,HR,Proper,385,,11,11,,Yes
+Croatia,HR,A1,385,91,11,12,https://www.a1.hr,Yes
+Croatia,HR,A1,385,92,11,12,https://www.a1.hr,Yes
+Croatia,HR,Bonbon,385,96,11,12,https://www.bonbon.hr,Yes
+Croatia,HR,Bonbon,385,97,11,12,https://www.bonbon.hr,Yes
+Croatia,HR,Hrvatski Telekom,385,98,11,12,https://www.hrvatskitelekom.hr,Yes
+Croatia,HR,Hrvatski Telekom,385,99,11,12,https://www.hrvatskitelekom.hr,Yes
+Croatia,HR,Telemach,385,95,11,12,https://www.telemach.hr,Yes
+Cuba,CU,Proper,53,,10,10,,Yes
+Cuba,CU,ETECSA,53,5,10,10,https://www.etecsa.cu,Yes
+Cuba,CU,ETECSA,53,63,10,10,https://www.etecsa.cu,Yes
+Cyprus,CY,Proper,357,,11,11,,Yes
+Cyprus,CY,Cablenet,357,94,11,11,https://www.cablenet.com.cy,Yes
+Cyprus,CY,Cyta,357,97,11,11,https://www.cyta.com.cy,Yes
+Cyprus,CY,Cyta,357,99,11,11,https://www.cyta.com.cy,Yes
+Cyprus,CY,Epic,357,96,11,11,https://www.epic.com.cy,Yes
+Cyprus,CY,PrimeTel,357,95,11,11,https://www.primetel.com.cy,Yes
+Czech Republic,CZ,Proper,420,,12,12,,Yes
+Czech Republic,CZ,Mobile,420,60,12,12,,Yes
+Czech Republic,CZ,Mobile,420,70,12,12,,Yes
+Czech Republic,CZ,O2,420,72,12,12,https://www.o2.cz,Yes
+Czech Republic,CZ,O2,420,79,12,12,https://www.o2.cz,Yes
+Czech Republic,CZ,T-Mobile,420,73,12,12,https://www.t-mobile.cz,Yes
+Czech Republic,CZ,Vodafone,420,77,12,12,https://www.vodafone.cz,Yes
+Democratic Republic of the Congo,CD,Proper,243,,12,12,,Yes
+Democratic Republic of the Congo,CD,Africell,243,90,12,12,https://www.africell.cd,Yes
+Democratic Republic of the Congo,CD,Africell,243,91,12,12,https://www.africell.cd,Yes
+Democratic Republic of the Congo,CD,Airtel,243,97,12,12,https://www.airtel.cd,Yes
+Democratic Republic of the Congo,CD,Airtel,243,98,12,12,https://www.airtel.cd,Yes
+Democratic Republic of the Congo,CD,Airtel,243,99,12,12,https://www.airtel.cd,Yes
+Democratic Republic of the Congo,CD,Orange,243,80,12,12,https://www.orange.cd,Yes
+Democratic Republic of the Congo,CD,Orange,243,84,12,12,https://www.orange.cd,Yes
+Democratic Republic of the Congo,CD,Orange,243,85,12,12,https://www.orange.cd,Yes
+Democratic Republic of the Congo,CD,Orange,243,89,12,12,https://www.orange.cd,Yes
+Democratic Republic of the Congo,CD,Vodacom,243,81,12,12,https://www.vodacom.cd,Yes
+Democratic Republic of the Congo,CD,Vodacom,243,82,12,12,https://www.vodacom.cd,Yes
+Democratic Republic of the Congo,CD,Vodacom,243,83,12,12,https://www.vodacom.cd,Yes
+Denmark,DK,Proper,45,,10,10,,
+Denmark,DK,3,45,50,10,10,https://www.3.dk,
+Denmark,DK,TDC,45,2,10,10,https://www.tdc.dk,
+Denmark,DK,Telenor,45,30,10,10,https://www.telenor.dk,
+Denmark,DK,Telia,45,40,10,10,https://www.telia.dk,
+Diego Garcia,DG,Proper,246,,10,10,,
+Djibouti,DJ,Proper,253,,11,11,,
+Djibouti,DJ,Djibouti Telecom,253,77,11,11,,
+Dominica,DM,Proper,1767,,11,11,,
+Dominica,DM,Mobile,1767,,11,11,,
+Dominican Republic,DO,Proper,1809,,11,11,,
+Dominican Republic,DO,Proper,1829,,11,11,,
+Dominican Republic,DO,Proper,1849,,11,11,,
+Dominican Republic,DO,Mobile,1809,,11,11,,
+Dominican Republic,DO,Mobile,1829,,11,11,,
+Dominican Republic,DO,Mobile,1849,,11,11,,
+Ecuador,EC,Proper,593,,,,,
+Ecuador,EC,Claro,593,9,,,https://www.claro.com.ec,
+Ecuador,EC,CNT,593,9,,,,
+Ecuador,EC,Movistar,593,9,,,https://www.movistar.com.ec,
+Egypt,EG,Proper,20,,,,,
+Egypt,EG,Etisalat,20,11,,,https://www.etisalat.eg,
+Egypt,EG,Orange,20,12,,,https://www.orange.eg,
+Egypt,EG,Vodafone,20,10,,,https://www.vodafone.com.eg,
+Egypt,EG,WE,20,15,,,https://www.te.eg,
+El Salvador,SV,Proper,503,,11,11,,
+El Salvador,SV,Mobile,503,6,11,11,,
+El Salvador,SV,Mobile,503,7,11,11,,
+Equatorial Guinea,GQ,Proper,240,,12,12,,Yes
+Equatorial Guinea,GQ,GETESA,240,55,12,12,,Yes
+Equatorial Guinea,GQ,Mobile,240,22,12,12,,Yes
+Equatorial Guinea,GQ,Mobile,240,33,12,12,,Yes
+Eritrea,ER,Proper,291,,10,10,,
+Eritrea,ER,Eritel,291,7,10,10,,
+Estonia,EE,Proper,372,,10,11,,Yes
+Estonia,EE,Mobile,372,5,10,11,,Yes
+Estonia,EE,Mobile,372,8,10,11,,Yes
+Ethiopia,ET,Proper,251,,12,12,,Yes
+Ethiopia,ET,Ethio Telecom,251,9,12,12,https://www.ethiotelecom.et,Yes
+Ethiopia,ET,Safaricom,251,7,12,12,https://www.safaricom.et,Yes
+Falkland Islands,FK,Proper,500,,8,8,,Yes
+Falkland Islands,FK,Sure,500,5,8,8,https://www.sure.co.fk,Yes
+Falkland Islands,FK,Sure,500,6,8,8,https://www.sure.co.fk,Yes
+Faroe Islands,FO,Proper,298,,9,9,,Yes
+Faroe Islands,FO,Foroya Tele,298,2,9,9,https://www.tele.fo,Yes
+Faroe Islands,FO,Mobile,298,7,9,9,,Yes
+Faroe Islands,FO,Mobile,298,8,9,9,,Yes
+Faroe Islands,FO,Mobile,298,9,9,9,,Yes
+Fiji,FJ,Proper,679,,,,,
+Fiji,FJ,Digicel,679,7,,,https://www.digicelgroup.com,
+Fiji,FJ,Vodafone,679,8,,,https://www.vodafone.com.fj,
+Fiji,FJ,Vodafone,679,9,,,https://www.vodafone.com.fj,
+Finland,FI,Proper,358,,,,,
+Finland,FI,DNA,358,44,,,https://www.dna.fi,
+Finland,FI,DNA,358,45,,,https://www.dna.fi,
+Finland,FI,Elisa,358,46,,,https://elisa.fi,
+Finland,FI,Elisa,358,50,,,https://elisa.fi,
+Finland,FI,Telia,358,40,,,https://www.telia.fi,
+Finland,FI,Telia,358,41,,,https://www.telia.fi,
+France,FR,Proper,33,,11,11,,Yes
+France,FR,Mobile,33,6,11,11,,Yes
+France,FR,Mobile,33,7,11,11,,Yes
+French Guiana,GF,Proper,594,,12,12,,
+French Guiana,GF,Mobile,594,694,12,12,,
+French Polynesia,PF,Proper,689,,11,11,,
+French Polynesia,PF,Vini,689,87,11,11,https://www.vini.pf,
+French Polynesia,PF,Vodafone,689,89,11,11,https://www.vodafone.pf,
+Germany,DE,Proper,49,,12,12,,Yes
+Germany,DE,1&1,49,156,12,13,https://www.1und1.de,Yes
+Germany,DE,O2,49,157,12,13,https://www.o2online.de,Yes
+Germany,DE,O2,49,159,12,13,https://www.o2online.de,Yes
+Germany,DE,O2,49,163,12,13,https://www.o2online.de,Yes
+Germany,DE,O2,49,176,12,13,https://www.o2online.de,Yes
+Germany,DE,O2,49,177,12,13,https://www.o2online.de,Yes
+Germany,DE,O2,49,178,12,13,https://www.o2online.de,Yes
+Germany,DE,O2,49,179,12,13,https://www.o2online.de,Yes
+Germany,DE,Telekom,49,151,12,13,https://www.telekom.de,Yes
+Germany,DE,Telekom,49,160,12,13,https://www.telekom.de,Yes
+Germany,DE,Telekom,49,170,12,13,https://www.telekom.de,Yes
+Germany,DE,Telekom,49,171,12,13,https://www.telekom.de,Yes
+Germany,DE,Telekom,49,175,12,13,https://www.telekom.de,Yes
+Germany,DE,Vodafone,49,152,12,13,https://www.vodafone.de,Yes
+Germany,DE,Vodafone,49,162,12,13,https://www.vodafone.de,Yes
+Germany,DE,Vodafone,49,172,12,13,https://www.vodafone.de,Yes
+Germany,DE,Vodafone,49,173,12,13,https://www.vodafone.de,Yes
+Germany,DE,Vodafone,49,174,12,13,https://www.vodafone.de,Yes
+Greece,GR,Proper,30,,12,12,,Yes
+Greece,GR,Cosmote,30,697,12,12,https://www.cosmote.gr,Yes
+Greece,GR,Cosmote,30,698,12,12,https://www.cosmote.gr,Yes
+Greece,GR,Mobile,30,691,12,12,,Yes
+Greece,GR,Nova,30,690,12,12,https://www.nova.gr,Yes
+Greece,GR,Nova,30,693,12,12,https://www.nova.gr,Yes
+Greece,GR,Nova,30,699,12,12,https://www.nova.gr,Yes
+Greece,GR,Vodafone,30,694,12,12,https://www.vodafone.gr,Yes
+Greece,GR,Vodafone,30,695,12,12,https://www.vodafone.gr,Yes
+Hungary,HU,Proper,36,,11,11,,Yes
+Hungary,HU,Magyar Telekom,36,30,11,11,https://www.telekom.hu,Yes
+Hungary,HU,One,36,31,11,11,https://www.one.hu,Yes
+Hungary,HU,One,36,50,11,11,https://www.one.hu,Yes
+Hungary,HU,One,36,70,11,11,https://www.one.hu,Yes
+Hungary,HU,Yettel,36,20,11,11,https://www.yettel.hu,Yes
+Iceland,IS,Proper,354,,10,10,,
+Iceland,IS,Mobile,354,6,10,10,,
+Iceland,IS,Mobile,354,7,10,10,,
+Iceland,IS,Mobile,354,8,10,10,,
+India,IN,Proper,91,,12,12,,
+India,IN,Mobile,91,6,12,12,,
+India,IN,Mobile,91,7,12,12,,
+India,IN,Mobile,91,8,12,12,,
+India,IN,Mobile,91,9,12,12,,
+Indonesia,ID,Proper,62,,11,13,,
+Indonesia,ID,Mobile,62,8,11,13,,
+Ireland,IE,Proper,353,,12,12,,
+Ireland,IE,Mobile,353,83,12,12,,
+Ireland,IE,Mobile,353,85,12,12,,
+Ireland,IE,Mobile,353,86,12,12,,
+Ireland,IE,Mobile,353,87,12,12,,
+Ireland,IE,Mobile,353,89,12,12,,
+Israel,IL,Proper,972,,12,12,,Yes
+Israel,IL,Cellcom,972,52,12,12,https://www.cellcom.co.il,Yes
+Israel,IL,Golan,972,58,12,12,https://www.golantelecom.co.il,Yes
+Israel,IL,Hot Mobile,972,53,12,12,https://www.hotmobile.co.il,Yes
+Israel,IL,Mobile,972,55,12,12,,Yes
+Israel,IL,Partner,972,54,12,12,https://www.partner.co.il,Yes
+Israel,IL,Pelephone,972,50,12,12,https://www.pelephone.co.il,Yes
+Italy,IT,Proper,39,,12,12,,Yes
+Italy,IT,Fastweb,39,380,12,12,https://www.fastweb.it,Yes
+Italy,IT,Iliad,39,351,12,12,https://www.iliad.it,Yes
+Italy,IT,PosteMobile,39,371,12,12,https://www.posteimpresa.poste.it,Yes
+Italy,IT,TIM,39,33,12,12,https://www.tim.it,Yes
+Italy,IT,Vodafone,39,34,12,12,https://www.vodafone.it,Yes
+Italy,IT,WindTre,39,32,12,12,https://www.windtre.it,Yes
+Italy,IT,WindTre,39,39,12,12,https://www.windtre.it,Yes
+Japan,JP,Proper,81,,12,12,,
+Japan,JP,Mobile,81,70,12,12,,
+Japan,JP,Mobile,81,80,12,12,,
+Japan,JP,Mobile,81,90,12,12,,
+Kenya,KE,Proper,254,,12,12,,
+Kenya,KE,Mobile,254,7,12,12,,
+Malaysia,MY,Proper,60,,11,12,,
+Malaysia,MY,Mobile,60,1,11,12,,
+Mexico,MX,Proper,52,,12,12,,
+Mexico,MX,Mobile,52,1,12,12,,
+Morocco,MA,Proper,212,,12,12,,
+Morocco,MA,Mobile,212,6,12,12,,
+Morocco,MA,Mobile,212,7,12,12,,
+Netherlands,NL,Proper,31,,11,11,,
+Netherlands,NL,Mobile,31,6,11,11,,
+New Zealand,NZ,Proper,64,,11,12,,
+New Zealand,NZ,Mobile,64,2,11,12,,
+Nigeria,NG,Proper,234,,13,13,,
+Nigeria,NG,Mobile,234,7,13,13,,
+Nigeria,NG,Mobile,234,8,13,13,,
+Nigeria,NG,Mobile,234,9,13,13,,
+Norway,NO,Proper,47,,10,10,,
+Norway,NO,Mobile,47,4,10,10,,
+Norway,NO,Mobile,47,9,10,10,,
+Pakistan,PK,Proper,92,,12,12,,
+Pakistan,PK,Mobile,92,3,12,12,,
+Philippines,PH,Proper,63,,12,12,,
+Philippines,PH,Mobile,63,9,12,12,,
