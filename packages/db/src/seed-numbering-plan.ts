@@ -4,8 +4,6 @@ import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "./schema.js";
 import type { VoiceNumberingPlanDestinationType } from "./schema.js";
 
-const PLAN_NAME = "Main";
-
 const DESTINATION_TYPES = new Set<VoiceNumberingPlanDestinationType>(
   schema.voiceNumberingPlanDestinationType.enumValues,
 );
@@ -85,13 +83,14 @@ function parseRows(): Fixture[] {
 
 async function ensurePlanId(
   db: NodePgDatabase<typeof schema>,
+  name: string,
 ): Promise<string> {
   const existing = await db
     .select()
     .from(schema.voiceNumberingPlans)
     .where(
       and(
-        eq(schema.voiceNumberingPlans.name, PLAN_NAME),
+        eq(schema.voiceNumberingPlans.name, name),
         isNull(schema.voiceNumberingPlans.deletedAt),
       ),
     )
@@ -100,10 +99,44 @@ async function ensurePlanId(
 
   const [created] = await db
     .insert(schema.voiceNumberingPlans)
-    .values({ name: PLAN_NAME, status: "active" })
+    .values({ name, status: "active" })
     .returning({ id: schema.voiceNumberingPlans.id });
-  if (!created) throw new Error("failed to create numbering plan");
+  if (!created) throw new Error(`failed to create numbering plan ${name}`);
   return created.id;
+}
+
+function buildSimplifiedFixtures(fixtures: Fixture[]): Fixture[] {
+  const result: Fixture[] = [];
+  const mergedByCountry = new Map<string, Fixture>();
+
+  for (const fixture of fixtures) {
+    if (fixture.type !== "mobile") {
+      result.push(fixture);
+      continue;
+    }
+    const existing = mergedByCountry.get(fixture.countryIso2);
+    if (!existing) {
+      const merged: Fixture = {
+        countryIso2: fixture.countryIso2,
+        name: "Mobile",
+        type: "mobile",
+        website: null,
+        minDigits: fixture.minDigits,
+        maxDigits: fixture.maxDigits,
+        codes: new Map<string, CodeTriplet>(fixture.codes),
+      };
+      mergedByCountry.set(fixture.countryIso2, merged);
+      result.push(merged);
+      continue;
+    }
+    existing.minDigits = Math.min(existing.minDigits, fixture.minDigits);
+    existing.maxDigits = Math.max(existing.maxDigits, fixture.maxDigits);
+    for (const [fullCode, triplet] of fixture.codes) {
+      if (!existing.codes.has(fullCode)) existing.codes.set(fullCode, triplet);
+    }
+  }
+
+  return result;
 }
 
 async function ensureDestinationId(
@@ -171,11 +204,12 @@ async function ensureCode(
   return true;
 }
 
-export async function seedVoiceNumberingPlan(
+async function seedPlan(
   db: NodePgDatabase<typeof schema>,
+  name: string,
+  fixtures: Fixture[],
 ): Promise<void> {
-  const fixtures = parseRows();
-  const planId = await ensurePlanId(db);
+  const planId = await ensurePlanId(db, name);
 
   let destinationsInserted = 0;
   let codesInserted = 0;
@@ -189,6 +223,16 @@ export async function seedVoiceNumberingPlan(
   }
 
   console.log(
-    `seeded numbering plan: ${fixtures.length} destinations (${destinationsInserted} ensured), ${codesInserted} codes inserted`,
+    `seeded ${name}: ${fixtures.length} destinations (${destinationsInserted} ensured), ${codesInserted} codes inserted`,
   );
+}
+
+export async function seedVoiceNumberingPlan(
+  db: NodePgDatabase<typeof schema>,
+): Promise<void> {
+  const fixtures = parseRows();
+  const simplified = buildSimplifiedFixtures(fixtures);
+
+  await seedPlan(db, "Extended", fixtures);
+  await seedPlan(db, "Simplified", simplified);
 }
