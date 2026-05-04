@@ -26,6 +26,7 @@ pnpm db:generate                     # generate SQL migration from schema.ts dif
 pnpm db:migrate                      # apply migrations (runs packages/db/src/migrate.ts)
 pnpm db:studio                       # drizzle-kit studio
 pnpm db:seed                         # tsx packages/db/src/seed.ts
+pnpm db:reset                        # dev-only: drop public schema → migrate → seed (refuses if NODE_ENV=production)
 ```
 
 Targeting a single workspace:

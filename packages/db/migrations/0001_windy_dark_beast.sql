@@ -1,1 +1,0 @@
-DROP TABLE "numbering_plan_lines" CASCADE;

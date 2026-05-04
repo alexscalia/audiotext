@@ -36,6 +36,14 @@ pnpm db:generate && pnpm db:migrate
 pnpm dev
 ```
 
+### DB scripts
+
+- `pnpm db:generate` — generate SQL migration from schema.ts diff
+- `pnpm db:migrate` — apply pending migrations
+- `pnpm db:seed` — seed dev data
+- `pnpm db:studio` — open drizzle-kit studio
+- `pnpm db:reset` — **dev only**, drops `public` schema, re-runs migrate + seed (refuses if `NODE_ENV=production`)
+
 - web: http://localhost:3000
 - api: http://localhost:3001/health
 - api docs (Swagger UI): http://localhost:3001/docs

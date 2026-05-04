@@ -1,5 +1,5 @@
 Country,Country Code,Destination,Country code,Code,Min digits,Max digits,Website,Google AI Verified,Type
-Afghanistan,AF,Proper,93,,11,11,,Yes,proper
+Afghanistan,AF,Landline,93,,11,11,,Yes,landline
 Afghanistan,AF,ATOMA,93,76,11,11,https://www.atoma.com,Yes,mobile
 Afghanistan,AF,ATOMA,93,77,11,11,https://www.atoma.com,Yes,mobile
 Afghanistan,AF,AWCC,93,70,11,11,https://www.afghan-wireless.com,Yes,mobile
@@ -9,28 +9,28 @@ Afghanistan,AF,Etisalat,93,78,11,11,https://www.etisalat.af,Yes,mobile
 Afghanistan,AF,Roshan,93,72,11,11,https://www.roshan.af,Yes,mobile
 Afghanistan,AF,Roshan,93,79,11,11,https://www.roshan.af,Yes,mobile
 Afghanistan,AF,Salaam,93,74,11,11,https://salaam.af,Yes,mobile
-Albania,AL,Proper,355,,11,11,,Yes,proper
+Albania,AL,Landline,355,,11,11,,Yes,landline
 Albania,AL,One,355,67,12,12,https://www.one.al,Yes,mobile
 Albania,AL,One,355,68,12,12,https://www.one.al,Yes,mobile
 Albania,AL,Vodafone,355,69,12,12,https://www.vodafone.al,Yes,mobile
-Algeria,DZ,Proper,213,,11,11,,Yes,proper
+Algeria,DZ,Landline,213,,11,11,,Yes,landline
 Algeria,DZ,Djezzy,213,7,12,12,,Yes,mobile
 Algeria,DZ,Mobilis,213,6,12,12,https://www.mobilis.dz,Yes,mobile
 Algeria,DZ,Ooredoo,213,5,12,12,https://www.ooredoo.dz,Yes,mobile
-American Samoa,AS,Proper,1684,,11,11,,Yes,proper
+American Samoa,AS,Landline,1684,,11,11,,Yes,landline
 American Samoa,AS,Mobile,1684,,11,11,,Yes,mobile
-Andorra,AD,Proper,376,,9,9,,Yes,proper
+Andorra,AD,Landline,376,,9,9,,Yes,landline
 Andorra,AD,Andorra Telecom,376,3,9,9,https://www.andorratelecom.ad,Yes,mobile
 Andorra,AD,Andorra Telecom,376,4,9,9,https://www.andorratelecom.ad,Yes,mobile
 Andorra,AD,Andorra Telecom,376,6,9,9,https://www.andorratelecom.ad,Yes,mobile
-Angola,AO,Proper,244,,12,12,,Yes,proper
+Angola,AO,Landline,244,,12,12,,Yes,landline
 Angola,AO,Africell,244,95,12,12,https://www.africell.ao,Yes,mobile
 Angola,AO,Movicel,244,91,12,12,https://www.movicel.co.ao,Yes,mobile
 Angola,AO,Movicel,244,99,12,12,https://www.movicel.co.ao,Yes,mobile
 Angola,AO,Unitel,244,92,12,12,https://www.unitel.ao,Yes,mobile
 Angola,AO,Unitel,244,93,12,12,https://www.unitel.ao,Yes,mobile
 Angola,AO,Unitel,244,94,12,12,https://www.unitel.ao,Yes,mobile
-Anguilla,AI,Proper,1264,,11,11,,Yes,proper
+Anguilla,AI,Landline,1264,,11,11,,Yes,landline
 Anguilla,AI,Mobile,1264,235,11,11,,Yes,mobile
 Anguilla,AI,Mobile,1264,476,11,11,,Yes,mobile
 Anguilla,AI,Mobile,1264,536,11,11,,Yes,mobile
@@ -39,8 +39,8 @@ Anguilla,AI,Mobile,1264,538,11,11,,Yes,mobile
 Anguilla,AI,Mobile,1264,539,11,11,,Yes,mobile
 Anguilla,AI,Mobile,1264,729,11,11,,Yes,mobile
 Anguilla,AI,Mobile,1264,772,11,11,,Yes,mobile
-Antarctica,AQ,Proper,672,,9,9,,,proper
-Antigua and Barbuda,AG,Proper,1268,,11,11,,Yes,proper
+Antarctica,AQ,Landline,672,,9,9,,,landline
+Antigua and Barbuda,AG,Landline,1268,,11,11,,Yes,landline
 Antigua and Barbuda,AG,APUA,1268,484,11,11,https://www.apua.ag,Yes,mobile
 Antigua and Barbuda,AG,APUA,1268,784,11,11,https://www.apua.ag,Yes,mobile
 Antigua and Barbuda,AG,Digicel,1268,536,11,11,https://www.digicelgroup.com,Yes,mobile
@@ -62,9 +62,9 @@ Antigua and Barbuda,AG,Mobile,1268,726,11,11,,Yes,mobile
 Antigua and Barbuda,AG,Mobile,1268,727,11,11,,Yes,mobile
 Antigua and Barbuda,AG,Mobile,1268,728,11,11,,Yes,mobile
 Antigua and Barbuda,AG,Mobile,1268,729,11,11,,Yes,mobile
-Argentina,AR,Proper,54,,12,12,,Yes,proper
+Argentina,AR,Landline,54,,12,12,,Yes,landline
 Argentina,AR,Mobile,54,9,13,13,,Yes,mobile
-Armenia,AM,Proper,374,,11,11,,Yes,proper
+Armenia,AM,Landline,374,,11,11,,Yes,landline
 Armenia,AM,Team Telecom,374,43,11,11,https://www.telecomarmenia.am,Yes,mobile
 Armenia,AM,Team Telecom,374,91,11,11,https://www.telecomarmenia.am,Yes,mobile
 Armenia,AM,Team Telecom,374,96,11,11,https://www.telecomarmenia.am,Yes,mobile
@@ -77,7 +77,7 @@ Armenia,AM,Viva-MTS,374,77,11,11,https://www.mts.am,Yes,mobile
 Armenia,AM,Viva-MTS,374,93,11,11,https://www.mts.am,Yes,mobile
 Armenia,AM,Viva-MTS,374,94,11,11,https://www.mts.am,Yes,mobile
 Armenia,AM,Viva-MTS,374,98,11,11,https://www.mts.am,Yes,mobile
-Aruba,AW,Proper,297,,10,10,,Yes,proper
+Aruba,AW,Landline,297,,10,10,,Yes,landline
 Aruba,AW,Digicel,297,73,10,10,https://www.digicelaruba.com,Yes,mobile
 Aruba,AW,Digicel,297,74,10,10,https://www.digicelaruba.com,Yes,mobile
 Aruba,AW,Digicel,297,630,10,10,https://www.digicelaruba.com,Yes,mobile
@@ -95,8 +95,8 @@ Aruba,AW,SETAR,297,995,10,10,https://www.setar.aw,Yes,mobile
 Aruba,AW,SETAR,297,996,10,10,https://www.setar.aw,Yes,mobile
 Aruba,AW,SETAR,297,997,10,10,https://www.setar.aw,Yes,mobile
 Aruba,AW,SETAR,297,998,10,10,https://www.setar.aw,Yes,mobile
-Ascension Island,AC,Proper,247,,8,8,,,proper
-Australia,AU,Proper,61,,11,11,,Yes,proper
+Ascension Island,AC,Landline,247,,8,8,,,landline
+Australia,AU,Landline,61,,11,11,,Yes,landline
 Australia,AU,Optus,61,401,11,11,https://www.optus.com.au,Yes,mobile
 Australia,AU,Optus,61,402,11,11,https://www.optus.com.au,Yes,mobile
 Australia,AU,Optus,61,403,11,11,https://www.optus.com.au,Yes,mobile
@@ -125,12 +125,12 @@ Australia,AU,Vodafone,61,416,11,11,https://www.vodafone.com.au,Yes,mobile
 Australia,AU,Vodafone,61,424,11,11,https://www.vodafone.com.au,Yes,mobile
 Australia,AU,Vodafone,61,425,11,11,https://www.vodafone.com.au,Yes,mobile
 Australia,AU,Vodafone,61,426,11,11,https://www.vodafone.com.au,Yes,mobile
-Austria,AT,Proper,43,,6,15,,Yes,proper
+Austria,AT,Landline,43,,6,15,,Yes,landline
 Austria,AT,A1,43,664,11,13,https://www.a1.net,Yes,mobile
 Austria,AT,Drei,43,660,11,13,https://www.drei.at,Yes,mobile
 Austria,AT,Drei,43,699,11,13,https://www.drei.at,Yes,mobile
 Austria,AT,Magenta,43,676,11,13,https://www.magenta.at,Yes,mobile
-Azerbaijan,AZ,Proper,994,,12,12,,Yes,proper
+Azerbaijan,AZ,Landline,994,,12,12,,Yes,landline
 Azerbaijan,AZ,Azercell,994,10,12,12,https://www.azercell.com,Yes,mobile
 Azerbaijan,AZ,Azercell,994,50,12,12,https://www.azercell.com,Yes,mobile
 Azerbaijan,AZ,Azercell,994,51,12,12,https://www.azercell.com,Yes,mobile
@@ -138,16 +138,16 @@ Azerbaijan,AZ,Bakcell,994,55,12,12,https://www.bakcell.com,Yes,mobile
 Azerbaijan,AZ,Bakcell,994,99,12,12,https://www.bakcell.com,Yes,mobile
 Azerbaijan,AZ,Nar,994,70,12,12,https://www.nar.az,Yes,mobile
 Azerbaijan,AZ,Nar,994,77,12,12,https://www.nar.az,Yes,mobile
-Bahamas,BS,Proper,1242,,11,11,,Yes,proper
+Bahamas,BS,Landline,1242,,11,11,,Yes,landline
 Bahamas,BS,Mobile,1242,,11,11,,Yes,mobile
-Bahrain,BH,Proper,973,,11,11,,Yes,proper
+Bahrain,BH,Landline,973,,11,11,,Yes,landline
 Bahrain,BH,Batelco,973,39,11,11,https://www.batelco.com,Yes,mobile
 Bahrain,BH,stc,973,33,11,11,https://www.stc.com.bh,Yes,mobile
 Bahrain,BH,stc,973,34,11,11,https://www.stc.com.bh,Yes,mobile
 Bahrain,BH,stc,973,35,11,11,https://www.stc.com.bh,Yes,mobile
 Bahrain,BH,Zain,973,36,11,11,https://www.bh.zain.com,Yes,mobile
 Bahrain,BH,Zain,973,37,11,11,https://www.bh.zain.com,Yes,mobile
-Bangladesh,BD,Proper,880,,12,12,,Yes,proper
+Bangladesh,BD,Landline,880,,12,12,,Yes,landline
 Bangladesh,BD,Airtel,880,16,13,13,https://www.bd.airtel.com,Yes,mobile
 Bangladesh,BD,Banglalink,880,14,13,13,https://www.banglalink.net,Yes,mobile
 Bangladesh,BD,Banglalink,880,19,13,13,https://www.banglalink.net,Yes,mobile
@@ -155,7 +155,7 @@ Bangladesh,BD,Grameenphone,880,13,13,13,https://www.grameenphone.com,Yes,mobile
 Bangladesh,BD,Grameenphone,880,17,13,13,https://www.grameenphone.com,Yes,mobile
 Bangladesh,BD,Robi,880,18,13,13,https://www.robi.com.bd,Yes,mobile
 Bangladesh,BD,Teletalk,880,15,13,13,https://www.teletalk.com.bd,Yes,mobile
-Barbados,BB,Proper,1246,,11,11,,Yes,proper
+Barbados,BB,Landline,1246,,11,11,,Yes,landline
 Barbados,BB,Digicel,1246,230,11,11,https://www.digicelgroup.com/bb,Yes,mobile
 Barbados,BB,Digicel,1246,231,11,11,https://www.digicelgroup.com/bb,Yes,mobile
 Barbados,BB,Digicel,1246,232,11,11,https://www.digicelgroup.com/bb,Yes,mobile
@@ -250,7 +250,7 @@ Barbados,BB,Flow,1246,880,11,11,https://www.discoverflow.co/barbados,Yes,mobile
 Barbados,BB,Flow,1246,881,11,11,https://www.discoverflow.co/barbados,Yes,mobile
 Barbados,BB,Flow,1246,882,11,11,https://www.discoverflow.co/barbados,Yes,mobile
 Barbados,BB,Flow,1246,883,11,11,https://www.discoverflow.co/barbados,Yes,mobile
-Belarus,BY,Proper,375,,12,12,,Yes,proper
+Belarus,BY,Landline,375,,12,12,,Yes,landline
 Belarus,BY,A1,375,44,12,12,https://www.a1.by,Yes,mobile
 Belarus,BY,A1,375,291,12,12,https://www.a1.by,Yes,mobile
 Belarus,BY,A1,375,293,12,12,https://www.a1.by,Yes,mobile
@@ -262,7 +262,7 @@ Belarus,BY,MTS,375,292,12,12,https://www.mts.by,Yes,mobile
 Belarus,BY,MTS,375,295,12,12,https://www.mts.by,Yes,mobile
 Belarus,BY,MTS,375,297,12,12,https://www.mts.by,Yes,mobile
 Belarus,BY,MTS,375,298,12,12,https://www.mts.by,Yes,mobile
-Belgium,BE,Proper,32,,10,11,,Yes,proper
+Belgium,BE,Landline,32,,10,11,,Yes,landline
 Belgium,BE,BASE,32,480,11,11,https://www.base.be,Yes,mobile
 Belgium,BE,BASE,32,481,11,11,https://www.base.be,Yes,mobile
 Belgium,BE,BASE,32,482,11,11,https://www.base.be,Yes,mobile
@@ -294,14 +294,14 @@ Belgium,BE,Proximus,32,476,11,11,https://www.proximus.be,Yes,mobile
 Belgium,BE,Proximus,32,477,11,11,https://www.proximus.be,Yes,mobile
 Belgium,BE,Proximus,32,478,11,11,https://www.proximus.be,Yes,mobile
 Belgium,BE,Proximus,32,479,11,11,https://www.proximus.be,Yes,mobile
-Belize,BZ,Proper,501,,10,10,,Yes,proper
+Belize,BZ,Landline,501,,10,10,,Yes,landline
 Belize,BZ,Digi,501,60,10,10,https://www.livedigi.com,Yes,mobile
 Belize,BZ,Digi,501,61,10,10,https://www.livedigi.com,Yes,mobile
 Belize,BZ,Digi,501,62,10,10,https://www.livedigi.com,Yes,mobile
 Belize,BZ,Digi,501,63,10,10,https://www.livedigi.com,Yes,mobile
 Belize,BZ,Smart,501,66,10,10,https://www.smart-bz.com,Yes,mobile
 Belize,BZ,Smart,501,67,10,10,https://www.smart-bz.com,Yes,mobile
-Benin,BJ,Proper,229,,13,13,,Yes,proper
+Benin,BJ,Landline,229,,13,13,,Yes,landline
 Benin,BJ,Celtiis,229,0120,13,13,https://www.celtiis.bj,Yes,mobile
 Benin,BJ,Celtiis,229,0121,13,13,https://www.celtiis.bj,Yes,mobile
 Benin,BJ,Celtiis,229,0122,13,13,https://www.celtiis.bj,Yes,mobile
@@ -349,13 +349,13 @@ Benin,BJ,MTN,229,0190,13,13,https://www.mtn.bj,Yes,mobile
 Benin,BJ,MTN,229,0191,13,13,https://www.mtn.bj,Yes,mobile
 Benin,BJ,MTN,229,0196,13,13,https://www.mtn.bj,Yes,mobile
 Benin,BJ,MTN,229,0197,13,13,https://www.mtn.bj,Yes,mobile
-Bermuda,BM,Proper,1441,,11,11,,Yes,proper
+Bermuda,BM,Landline,1441,,11,11,,Yes,landline
 Bermuda,BM,Mobile,1441,,11,11,,Yes,mobile
-Bhutan,BT,Proper,975,,10,10,,Yes,proper
+Bhutan,BT,Landline,975,,10,10,,Yes,landline
 Bhutan,BT,B-Mobile,975,16,11,11,https://www.bt.bt,Yes,mobile
 Bhutan,BT,B-Mobile,975,17,11,11,https://www.bt.bt,Yes,mobile
 Bhutan,BT,TashiCell,975,77,11,11,https://www.tashicell.com,Yes,mobile
-Bolivia,BO,Proper,591,,11,11,,Yes,proper
+Bolivia,BO,Landline,591,,11,11,,Yes,landline
 Bolivia,BO,Entel,591,71,11,11,https://www.entel.bo,Yes,mobile
 Bolivia,BO,Entel,591,72,11,11,https://www.entel.bo,Yes,mobile
 Bolivia,BO,Entel,591,73,11,11,https://www.entel.bo,Yes,mobile
@@ -367,14 +367,14 @@ Bolivia,BO,Tigo,591,78,11,11,https://tigo.com.bo,Yes,mobile
 Bolivia,BO,Viva,591,70,11,11,https://viva.com.bo,Yes,mobile
 Bolivia,BO,Viva,591,75,11,11,https://viva.com.bo,Yes,mobile
 Bolivia,BO,Viva,591,79,11,11,https://viva.com.bo,Yes,mobile
-Bosnia and Herzegovina,BA,Proper,387,,11,11,,Yes,proper
+Bosnia and Herzegovina,BA,Landline,387,,11,11,,Yes,landline
 Bosnia and Herzegovina,BA,BH Telecom,387,60,11,11,https://www.bhtelecom.ba,Yes,mobile
 Bosnia and Herzegovina,BA,BH Telecom,387,61,11,11,https://www.bhtelecom.ba,Yes,mobile
 Bosnia and Herzegovina,BA,BH Telecom,387,62,11,11,https://www.bhtelecom.ba,Yes,mobile
 Bosnia and Herzegovina,BA,HT Eronet,387,63,11,11,https://www.hteronet.ba,Yes,mobile
 Bosnia and Herzegovina,BA,m:tel,387,65,11,11,https://www.mtel.ba,Yes,mobile
 Bosnia and Herzegovina,BA,m:tel,387,66,11,11,https://www.mtel.ba,Yes,mobile
-Botswana,BW,Proper,267,,10,10,,Yes,proper
+Botswana,BW,Landline,267,,10,10,,Yes,landline
 Botswana,BW,BTC Mobile,267,73,11,11,https://www.btc.bw,Yes,mobile
 Botswana,BW,Mascom,267,71,11,11,https://www.mascom.bw,Yes,mobile
 Botswana,BW,Mobile,267,74,11,11,,Yes,mobile
@@ -382,9 +382,9 @@ Botswana,BW,Mobile,267,75,11,11,,Yes,mobile
 Botswana,BW,Mobile,267,76,11,11,,Yes,mobile
 Botswana,BW,Mobile,267,77,11,11,,Yes,mobile
 Botswana,BW,Orange,267,72,11,11,https://www.orange.co.bw,Yes,mobile
-Brazil,BR,Proper,55,,12,12,,Yes,proper
+Brazil,BR,Landline,55,,12,12,,Yes,landline
 Brazil,BR,Mobile,55,9,13,13,,Yes,mobile
-British Virgin Islands,VG,Proper,1284,,11,11,,Yes,proper
+British Virgin Islands,VG,Landline,1284,,11,11,,Yes,landline
 British Virgin Islands,VG,CCT,1284,440,11,11,https://www.cctbvi.com,Yes,mobile
 British Virgin Islands,VG,CCT,1284,441,11,11,https://www.cctbvi.com,Yes,mobile
 British Virgin Islands,VG,CCT,1284,442,11,11,https://www.cctbvi.com,Yes,mobile
@@ -412,16 +412,16 @@ British Virgin Islands,VG,Flow,1284,545,11,11,https://discoverflow.co/british-vi
 British Virgin Islands,VG,Flow,1284,546,11,11,https://discoverflow.co/british-virgin-islands,Yes,mobile
 British Virgin Islands,VG,Flow,1284,547,11,11,https://discoverflow.co/british-virgin-islands,Yes,mobile
 British Virgin Islands,VG,Flow,1284,568,11,11,https://discoverflow.co/british-virgin-islands,Yes,mobile
-Brunei,BN,Proper,673,,10,10,,Yes,proper
+Brunei,BN,Landline,673,,10,10,,Yes,landline
 Brunei,BN,Mobile,673,7,10,10,,Yes,mobile
 Brunei,BN,Mobile,673,8,10,10,,Yes,mobile
 Brunei,BN,Mobile,673,228,10,10,,Yes,mobile
 Brunei,BN,Mobile,673,229,10,10,,Yes,mobile
-Bulgaria,BG,Proper,359,,11,11,,Yes,proper
+Bulgaria,BG,Landline,359,,11,11,,Yes,landline
 Bulgaria,BG,A1,359,88,12,12,https://www.a1.bg,Yes,mobile
 Bulgaria,BG,Vivacom,359,87,12,12,https://www.vivacom.bg,Yes,mobile
 Bulgaria,BG,Yettel,359,89,12,12,https://www.yettel.bg,Yes,mobile
-Burkina Faso,BF,Proper,226,,11,11,,Yes,proper
+Burkina Faso,BF,Landline,226,,11,11,,Yes,landline
 Burkina Faso,BF,Moov Africa,226,01,11,11,https://www.moov-africa.bf,Yes,mobile
 Burkina Faso,BF,Moov Africa,226,02,11,11,https://www.moov-africa.bf,Yes,mobile
 Burkina Faso,BF,Moov Africa,226,03,11,11,https://www.moov-africa.bf,Yes,mobile
@@ -458,7 +458,7 @@ Burkina Faso,BF,Orange,226,77,11,11,https://www.orange.bf,Yes,mobile
 Burkina Faso,BF,Telecel Faso,226,68,11,11,https://www.telecelfaso.bf,Yes,mobile
 Burkina Faso,BF,Telecel Faso,226,78,11,11,https://www.telecelfaso.bf,Yes,mobile
 Burkina Faso,BF,Telecel Faso,226,79,11,11,https://www.telecelfaso.bf,Yes,mobile
-Burma (Myanmar),MM,Proper,95,,9,11,,Yes,proper
+Burma (Myanmar),MM,Landline,95,,9,11,,Yes,landline
 Burma (Myanmar),MM,ATOM,95,976,11,11,https://www.atom.com.mm,Yes,mobile
 Burma (Myanmar),MM,ATOM,95,977,11,11,https://www.atom.com.mm,Yes,mobile
 Burma (Myanmar),MM,ATOM,95,978,11,11,https://www.atom.com.mm,Yes,mobile
@@ -476,7 +476,7 @@ Burma (Myanmar),MM,Ooredoo,95,995,11,11,https://ooredoo.com.mm,Yes,mobile
 Burma (Myanmar),MM,Ooredoo,95,996,11,11,https://ooredoo.com.mm,Yes,mobile
 Burma (Myanmar),MM,Ooredoo,95,997,11,11,https://ooredoo.com.mm,Yes,mobile
 Burma (Myanmar),MM,Ooredoo,95,998,11,11,https://ooredoo.com.mm,Yes,mobile
-Burundi,BI,Proper,257,,11,11,,Yes,proper
+Burundi,BI,Landline,257,,11,11,,Yes,landline
 Burundi,BI,Econet Leo,257,71,11,11,https://www.econet.bi,Yes,mobile
 Burundi,BI,Econet Leo,257,72,11,11,https://www.econet.bi,Yes,mobile
 Burundi,BI,Econet Leo,257,75,11,11,https://www.econet.bi,Yes,mobile
@@ -488,7 +488,7 @@ Burundi,BI,Lumitel,257,68,11,11,https://www.lumitel.bi,Yes,mobile
 Burundi,BI,Lumitel,257,69,11,11,https://www.lumitel.bi,Yes,mobile
 Burundi,BI,Onatel,257,77,11,11,https://www.onatel.bi,Yes,mobile
 Burundi,BI,Smart Mobile,257,78,11,11,,Yes,mobile
-Cambodia,KH,Proper,855,,11,12,,Yes,proper
+Cambodia,KH,Landline,855,,11,12,,Yes,landline
 Cambodia,KH,Cellcard,855,11,11,12,https://www.cellcard.com.kh,Yes,mobile
 Cambodia,KH,Cellcard,855,12,11,12,https://www.cellcard.com.kh,Yes,mobile
 Cambodia,KH,Cellcard,855,14,11,12,https://www.cellcard.com.kh,Yes,mobile
@@ -523,7 +523,7 @@ Cambodia,KH,Smart,855,87,11,12,https://www.smart.com.kh,Yes,mobile
 Cambodia,KH,Smart,855,93,11,12,https://www.smart.com.kh,Yes,mobile
 Cambodia,KH,Smart,855,96,11,12,https://www.smart.com.kh,Yes,mobile
 Cambodia,KH,Smart,855,98,11,12,https://www.smart.com.kh,Yes,mobile
-Cameroon,CM,Proper,237,,12,12,,Yes,proper
+Cameroon,CM,Landline,237,,12,12,,Yes,landline
 Cameroon,CM,Camtel,237,620,12,12,https://www.camtel.cm,Yes,mobile
 Cameroon,CM,Camtel,237,621,12,12,https://www.camtel.cm,Yes,mobile
 Cameroon,CM,Camtel,237,622,12,12,https://www.camtel.cm,Yes,mobile
@@ -582,9 +582,9 @@ Cameroon,CM,Orange,237,696,12,12,https://orange.cm,Yes,mobile
 Cameroon,CM,Orange,237,697,12,12,https://orange.cm,Yes,mobile
 Cameroon,CM,Orange,237,698,12,12,https://orange.cm,Yes,mobile
 Cameroon,CM,Orange,237,699,12,12,https://orange.cm,Yes,mobile
-Canada,CA,Proper,1,,11,11,,,proper
+Canada,CA,Landline,1,,11,11,,,landline
 Canada,CA,Mobile,1,,11,11,,,mobile
-Cape Verde,CV,Proper,238,,10,10,,Yes,proper
+Cape Verde,CV,Landline,238,,10,10,,Yes,landline
 Cape Verde,CV,Unitel T+,238,91,10,10,https://www.uniteltmais.cv,Yes,mobile
 Cape Verde,CV,Unitel T+,238,92,10,10,https://www.uniteltmais.cv,Yes,mobile
 Cape Verde,CV,Unitel T+,238,93,10,10,https://www.uniteltmais.cv,Yes,mobile
@@ -592,7 +592,7 @@ Cape Verde,CV,Alou,238,95,10,10,https://www.alou.cv,Yes,mobile
 Cape Verde,CV,Alou,238,97,10,10,https://www.alou.cv,Yes,mobile
 Cape Verde,CV,Alou,238,98,10,10,https://www.alou.cv,Yes,mobile
 Cape Verde,CV,Alou,238,99,10,10,https://www.alou.cv,Yes,mobile
-Cayman Islands,KY,Proper,1345,,11,11,,Yes,proper
+Cayman Islands,KY,Landline,1345,,11,11,,Yes,landline
 Cayman Islands,KY,Digicel,1345,321,11,11,https://digicelcayman.com,Yes,mobile
 Cayman Islands,KY,Digicel,1345,322,11,11,https://digicelcayman.com,Yes,mobile
 Cayman Islands,KY,Digicel,1345,323,11,11,https://digicelcayman.com,Yes,mobile
@@ -627,7 +627,7 @@ Cayman Islands,KY,Flow,1345,936,11,11,https://www.discoverflow.ky,Yes,mobile
 Cayman Islands,KY,Flow,1345,937,11,11,https://www.discoverflow.ky,Yes,mobile
 Cayman Islands,KY,Flow,1345,938,11,11,https://www.discoverflow.ky,Yes,mobile
 Cayman Islands,KY,Flow,1345,939,11,11,https://www.discoverflow.ky,Yes,mobile
-Central African Republic,CF,Proper,236,,11,11,,Yes,proper
+Central African Republic,CF,Landline,236,,11,11,,Yes,landline
 Central African Republic,CF,Azur RCA,236,78,11,11,https://azur-rca.com,Yes,mobile
 Central African Republic,CF,Moov Africa,236,71,11,11,https://www.moov-africa.cf,Yes,mobile
 Central African Republic,CF,Moov Africa,236,73,11,11,https://www.moov-africa.cf,Yes,mobile
@@ -636,7 +636,7 @@ Central African Republic,CF,Orange RCA,236,72,11,11,https://www.orangerca.com,Ye
 Central African Republic,CF,Orange RCA,236,74,11,11,https://www.orangerca.com,Yes,mobile
 Central African Republic,CF,Telecel Centrafrique,236,75,11,11,https://www.telecel-rca.com,Yes,mobile
 Central African Republic,CF,Telecel Centrafrique,236,77,11,11,https://www.telecel-rca.com,Yes,mobile
-Chad,TD,Proper,235,,11,11,,Yes,proper
+Chad,TD,Landline,235,,11,11,,Yes,landline
 Chad,TD,Airtel,235,63,11,11,https://www.airtel.td,Yes,mobile
 Chad,TD,Airtel,235,65,11,11,https://www.airtel.td,Yes,mobile
 Chad,TD,Airtel,235,66,11,11,https://www.airtel.td,Yes,mobile
@@ -644,9 +644,9 @@ Chad,TD,Moov Africa,235,90,11,11,https://www.moov-africa.td,Yes,mobile
 Chad,TD,Moov Africa,235,95,11,11,https://www.moov-africa.td,Yes,mobile
 Chad,TD,Moov Africa,235,99,11,11,https://www.moov-africa.td,Yes,mobile
 Chad,TD,Salam,235,77,11,11,https://www.sotel.td,Yes,mobile
-Chile,CL,Proper,56,,10,11,,Yes,proper
+Chile,CL,Landline,56,,10,11,,Yes,landline
 Chile,CL,Mobile,56,9,11,11,,Yes,mobile
-China,CN,Proper,86,,12,13,,Yes,proper
+China,CN,Landline,86,,12,13,,Yes,landline
 China,CN,China Broadnet,86,192,13,13,https://10099.com.cn,Yes,mobile
 China,CN,China Mobile,86,134,13,13,https://www.10086.cn,Yes,mobile
 China,CN,China Mobile,86,135,13,13,https://www.10086.cn,Yes,mobile
@@ -696,7 +696,7 @@ China,CN,China Unicom,86,176,13,13,https://10010.com,Yes,mobile
 China,CN,China Unicom,86,185,13,13,https://10010.com,Yes,mobile
 China,CN,China Unicom,86,186,13,13,https://10010.com,Yes,mobile
 China,CN,China Unicom,86,196,13,13,https://10010.com,Yes,mobile
-Colombia,CO,Proper,57,,10,10,,Yes,proper
+Colombia,CO,Landline,57,,10,10,,Yes,landline
 Colombia,CO,Claro,57,310,12,12,https://www.claro.com.co,Yes,mobile
 Colombia,CO,Claro,57,311,12,12,https://www.claro.com.co,Yes,mobile
 Colombia,CO,Claro,57,312,12,12,https://www.claro.com.co,Yes,mobile
@@ -717,26 +717,26 @@ Colombia,CO,Tigo,57,304,12,12,https://tigo.com.co,Yes,mobile
 Colombia,CO,Tigo,57,305,12,12,https://tigo.com.co,Yes,mobile
 Colombia,CO,WOM,57,350,12,12,https://www.wom.co,Yes,mobile
 Colombia,CO,WOM,57,351,12,12,https://www.wom.co,Yes,mobile
-Comoros,KM,Proper,269,,10,10,,Yes,proper
+Comoros,KM,Landline,269,,10,10,,Yes,landline
 Comoros,KM,Comores Telecom,269,32,10,10,https://www.comorestelecom.km,Yes,mobile
 Comoros,KM,Comores Telecom,269,33,10,10,https://www.comorestelecom.km,Yes,mobile
 Comoros,KM,Comores Telecom,269,34,10,10,https://www.comorestelecom.km,Yes,mobile
 Comoros,KM,Yas Comoros,269,35,10,10,https://www.yas.km,Yes,mobile
 Comoros,KM,Yas Comoros,269,36,10,10,https://www.yas.km,Yes,mobile
 Comoros,KM,Yas Comoros,269,39,10,10,https://www.yas.km,Yes,mobile
-Congo,CG,Proper,242,,12,12,,Yes,proper
+Congo,CG,Landline,242,,12,12,,Yes,landline
 Congo,CG,Airtel,242,04,12,12,https://www.airtel.cg,Yes,mobile
 Congo,CG,Airtel,242,05,12,12,https://www.airtel.cg,Yes,mobile
 Congo,CG,MTN,242,06,12,12,https://www.mtn.cg,Yes,mobile
-Cook Islands,CK,Proper,682,,8,8,,Yes,proper
+Cook Islands,CK,Landline,682,,8,8,,Yes,landline
 Cook Islands,CK,Vodafone,682,5,8,8,https://www.vodafone.co.ck,Yes,mobile
 Cook Islands,CK,Vodafone,682,7,8,8,https://www.vodafone.co.ck,Yes,mobile
-Costa Rica,CR,Proper,506,,11,11,,Yes,proper
+Costa Rica,CR,Landline,506,,11,11,,Yes,landline
 Costa Rica,CR,Claro,506,7,11,11,https://www.claro.cr,Yes,mobile
 Costa Rica,CR,Kölbi,506,8,11,11,https://www.kolbi.cr,Yes,mobile
 Costa Rica,CR,Liberty,506,6,11,11,https://www.libertycr.com,Yes,mobile
 Costa Rica,CR,Mobile,506,5,11,11,,Yes,mobile
-Croatia,HR,Proper,385,,11,11,,Yes,proper
+Croatia,HR,Landline,385,,11,11,,Yes,landline
 Croatia,HR,A1,385,91,12,12,https://www.a1.hr,Yes,mobile
 Croatia,HR,Bonbon,385,976,12,12,https://www.bonbon.hr,Yes,mobile
 Croatia,HR,Bonbon,385,977,12,12,https://www.bonbon.hr,Yes,mobile
@@ -744,15 +744,15 @@ Croatia,HR,Hrvatski Telekom,385,98,12,12,https://www.hrvatskitelekom.hr,Yes,mobi
 Croatia,HR,Hrvatski Telekom,385,99,12,12,https://www.hrvatskitelekom.hr,Yes,mobile
 Croatia,HR,Telemach,385,95,12,12,https://telemach.hr,Yes,mobile
 Croatia,HR,Tomato,385,92,12,12,https://www.tomato.com.hr,Yes,mobile
-Cuba,CU,Proper,53,,10,10,,Yes,proper
+Cuba,CU,Landline,53,,10,10,,Yes,landline
 Cuba,CU,Cubacel,53,5,10,10,https://www.etecsa.cu,Yes,mobile
-Cyprus,CY,Proper,357,,11,11,,Yes,proper
+Cyprus,CY,Landline,357,,11,11,,Yes,landline
 Cyprus,CY,Cablenet,357,94,11,11,https://www.cablenet.com.cy,Yes,mobile
 Cyprus,CY,Cyta,357,97,11,11,https://www.cyta.com.cy,Yes,mobile
 Cyprus,CY,Cyta,357,99,11,11,https://www.cyta.com.cy,Yes,mobile
 Cyprus,CY,Epic,357,96,11,11,https://www.epic.com.cy,Yes,mobile
 Cyprus,CY,PrimeTel,357,95,11,11,https://www.primetel.com.cy,Yes,mobile
-Czech Republic,CZ,Proper,420,,12,12,,Yes,proper
+Czech Republic,CZ,Landline,420,,12,12,,Yes,landline
 Czech Republic,CZ,O2,420,601,12,12,https://www.o2.cz,Yes,mobile
 Czech Republic,CZ,O2,420,602,12,12,https://www.o2.cz,Yes,mobile
 Czech Republic,CZ,O2,420,606,12,12,https://www.o2.cz,Yes,mobile
@@ -791,7 +791,7 @@ Czech Republic,CZ,Vodafone,420,775,12,12,https://www.vodafone.cz,Yes,mobile
 Czech Republic,CZ,Vodafone,420,776,12,12,https://www.vodafone.cz,Yes,mobile
 Czech Republic,CZ,Vodafone,420,777,12,12,https://www.vodafone.cz,Yes,mobile
 Czech Republic,CZ,Vodafone,420,778,12,12,https://www.vodafone.cz,Yes,mobile
-Democratic Republic of the Congo,CD,Proper,243,,12,12,,Yes,proper
+Democratic Republic of the Congo,CD,Landline,243,,12,12,,Yes,landline
 Democratic Republic of the Congo,CD,Africell,243,90,12,12,https://www.africell.cd,Yes,mobile
 Democratic Republic of the Congo,CD,Africell,243,91,12,12,https://www.africell.cd,Yes,mobile
 Democratic Republic of the Congo,CD,Airtel,243,97,12,12,https://www.airtel.cd,Yes,mobile
@@ -803,7 +803,7 @@ Democratic Republic of the Congo,CD,Orange,243,85,12,12,https://www.orange.cd,Ye
 Democratic Republic of the Congo,CD,Orange,243,89,12,12,https://www.orange.cd,Yes,mobile
 Democratic Republic of the Congo,CD,Vodacom,243,81,12,12,https://www.vodacom.cd,Yes,mobile
 Democratic Republic of the Congo,CD,Vodacom,243,82,12,12,https://www.vodacom.cd,Yes,mobile
-Denmark,DK,Proper,45,,10,10,,Yes,proper
+Denmark,DK,Landline,45,,10,10,,Yes,landline
 Denmark,DK,3,45,92,10,10,https://www.3.dk,Yes,mobile
 Denmark,DK,Mobile,45,20,10,10,,Yes,mobile
 Denmark,DK,Mobile,45,31,10,10,,Yes,mobile
@@ -826,11 +826,11 @@ Denmark,DK,Telenor,45,22,10,10,https://www.telenor.dk,Yes,mobile
 Denmark,DK,Telenor,45,25,10,10,https://www.telenor.dk,Yes,mobile
 Denmark,DK,Telenor,45,41,10,10,https://www.telenor.dk,Yes,mobile
 Denmark,DK,Telenor,45,52,10,10,https://www.telenor.dk,Yes,mobile
-Diego Garcia,DG,Proper,246,,10,10,,Yes,proper
+Diego Garcia,DG,Landline,246,,10,10,,Yes,landline
 Diego Garcia,DG,Sure,246,370,10,10,https://www.sure.io,Yes,mobile
-Djibouti,DJ,Proper,253,,11,11,,Yes,proper
+Djibouti,DJ,Landline,253,,11,11,,Yes,landline
 Djibouti,DJ,Djibouti Telecom,253,77,11,11,https://www.djiboutitelecom.dj,Yes,mobile
-Dominica,DM,Proper,1767,,11,11,,Yes,proper
+Dominica,DM,Landline,1767,,11,11,,Yes,landline
 Dominica,DM,Digicel,1767,612,11,11,https://www.digicelgroup.com/dm,Yes,mobile
 Dominica,DM,Digicel,1767,613,11,11,https://www.digicelgroup.com/dm,Yes,mobile
 Dominica,DM,Digicel,1767,614,11,11,https://www.digicelgroup.com/dm,Yes,mobile
@@ -844,13 +844,13 @@ Dominica,DM,Flow,1767,265,11,11,https://discoverflow.co/dominica,Yes,mobile
 Dominica,DM,Flow,1767,275,11,11,https://discoverflow.co/dominica,Yes,mobile
 Dominica,DM,Flow,1767,276,11,11,https://discoverflow.co/dominica,Yes,mobile
 Dominica,DM,Flow,1767,277,11,11,https://discoverflow.co/dominica,Yes,mobile
-Dominican Republic,DO,Proper,1809,,11,11,,Yes,proper
-Dominican Republic,DO,Proper,1829,,11,11,,Yes,proper
-Dominican Republic,DO,Proper,1849,,11,11,,Yes,proper
+Dominican Republic,DO,Landline,1809,,11,11,,Yes,landline
+Dominican Republic,DO,Landline,1829,,11,11,,Yes,landline
+Dominican Republic,DO,Landline,1849,,11,11,,Yes,landline
 Dominican Republic,DO,Mobile,1809,,11,11,,Yes,mobile
 Dominican Republic,DO,Mobile,1829,,11,11,,Yes,mobile
 Dominican Republic,DO,Mobile,1849,,11,11,,Yes,mobile
-Ecuador,EC,Proper,593,,12,12,,Yes,proper
+Ecuador,EC,Landline,593,,12,12,,Yes,landline
 Ecuador,EC,Claro,593,93,12,12,https://claro.com.ec,Yes,mobile
 Ecuador,EC,Claro,593,96,12,12,https://claro.com.ec,Yes,mobile
 Ecuador,EC,Claro,593,99,12,12,https://claro.com.ec,Yes,mobile
@@ -859,39 +859,39 @@ Ecuador,EC,Movistar,593,92,12,12,https://movistar.com.ec,Yes,mobile
 Ecuador,EC,Movistar,593,95,12,12,https://movistar.com.ec,Yes,mobile
 Ecuador,EC,Movistar,593,97,12,12,https://movistar.com.ec,Yes,mobile
 Ecuador,EC,Movistar,593,98,12,12,https://movistar.com.ec,Yes,mobile
-Egypt,EG,Proper,20,,12,12,,Yes,proper
+Egypt,EG,Landline,20,,12,12,,Yes,landline
 Egypt,EG,e&,20,11,12,12,https://www.etisalat.eg,Yes,mobile
 Egypt,EG,Orange,20,12,12,12,https://www.orange.eg,Yes,mobile
 Egypt,EG,Vodafone,20,10,12,12,https://web.vodafone.com.eg,Yes,mobile
 Egypt,EG,WE,20,15,12,12,https://www.te.eg,Yes,mobile
-El Salvador,SV,Proper,503,,11,11,,Yes,proper
+El Salvador,SV,Landline,503,,11,11,,Yes,landline
 El Salvador,SV,Mobile,503,6,11,11,,Yes,mobile
 El Salvador,SV,Mobile,503,7,11,11,,Yes,mobile
-Equatorial Guinea,GQ,Proper,240,,12,12,,Yes,proper
+Equatorial Guinea,GQ,Landline,240,,12,12,,Yes,landline
 Equatorial Guinea,GQ,Getesa,240,222,12,12,https://www.getesa.gq,Yes,mobile
 Equatorial Guinea,GQ,Getesa,240,555,12,12,https://www.getesa.gq,Yes,mobile
 Equatorial Guinea,GQ,Muni,240,666,12,12,https://www.muni.gq,Yes,mobile
-Eritrea,ER,Proper,291,,10,10,,Yes,proper
+Eritrea,ER,Landline,291,,10,10,,Yes,landline
 Eritrea,ER,Eritel,291,7,10,10,https://eritel.com.er,Yes,mobile
-Estonia,EE,Proper,372,,10,11,,Yes,proper
+Estonia,EE,Landline,372,,10,11,,Yes,landline
 Estonia,EE,Mobile,372,5,10,11,,Yes,mobile
 Estonia,EE,Mobile,372,8,10,11,,Yes,mobile
-Ethiopia,ET,Proper,251,,12,12,,Yes,proper
+Ethiopia,ET,Landline,251,,12,12,,Yes,landline
 Ethiopia,ET,Ethio Telecom,251,9,12,12,https://www.ethiotelecom.et,Yes,mobile
 Ethiopia,ET,Safaricom,251,7,12,12,https://www.safaricom.et,Yes,mobile
-Falkland Islands,FK,Proper,500,,8,8,,Yes,proper
+Falkland Islands,FK,Landline,500,,8,8,,Yes,landline
 Falkland Islands,FK,Sure,500,5,8,8,https://www.sure.co.fk,Yes,mobile
 Falkland Islands,FK,Sure,500,6,8,8,https://www.sure.co.fk,Yes,mobile
-Faroe Islands,FO,Proper,298,,9,9,,Yes,proper
+Faroe Islands,FO,Landline,298,,9,9,,Yes,landline
 Faroe Islands,FO,Foroya Tele,298,2,9,9,https://www.tele.fo,Yes,mobile
 Faroe Islands,FO,Mobile,298,7,9,9,,Yes,mobile
 Faroe Islands,FO,Mobile,298,8,9,9,,Yes,mobile
 Faroe Islands,FO,Mobile,298,9,9,9,,Yes,mobile
-Fiji,FJ,Proper,679,,10,10,,Yes,proper
+Fiji,FJ,Landline,679,,10,10,,Yes,landline
 Fiji,FJ,Digicel,679,7,10,10,https://www.digicelpacific.com/mobile/fj,Yes,mobile
 Fiji,FJ,Vodafone,679,8,10,10,https://www.vodafone.com.fj,Yes,mobile
 Fiji,FJ,Vodafone,679,9,10,10,https://www.vodafone.com.fj,Yes,mobile
-Finland,FI,Proper,358,,9,12,,Yes,proper
+Finland,FI,Landline,358,,9,12,,Yes,landline
 Finland,FI,Ålcom,358,457,9,12,https://www.alcom.ax,Yes,mobile
 Finland,FI,DNA,358,41,9,12,https://www.dna.fi,Yes,mobile
 Finland,FI,DNA,358,44,9,12,https://www.dna.fi,Yes,mobile
@@ -908,15 +908,45 @@ Finland,FI,Elisa,358,50,9,12,https://elisa.fi,Yes,mobile
 Finland,FI,Telia,358,40,9,12,https://www.telia.fi,Yes,mobile
 Finland,FI,Telia,358,42,9,12,https://www.telia.fi,Yes,mobile
 Finland,FI,Telia,358,450,9,12,https://www.telia.fi,Yes,mobile
-France,FR,Proper,33,,11,11,,Yes,proper
+France,FR,Landline,33,,11,11,,Yes,landline
 France,FR,Mobile,33,6,11,11,,Yes,mobile
 France,FR,Mobile,33,7,11,11,,Yes,mobile
-French Guiana,GF,Proper,594,,12,12,,Yes,proper
+French Guiana,GF,Landline,594,,12,12,,Yes,landline
 French Guiana,GF,Mobile,594,694,12,12,,Yes,mobile
-French Polynesia,PF,Proper,689,,11,11,,,proper
+French Polynesia,PF,Landline,689,,11,11,,,landline
 French Polynesia,PF,Vini,689,87,11,11,https://www.vini.pf,,mobile
 French Polynesia,PF,Vodafone,689,89,11,11,https://www.vodafone.pf,,mobile
-Germany,DE,Proper,49,,12,12,,Yes,proper
+Gabon,GA,Landline,241,,12,12,,Yes,landline
+Gabon,GA,Airtel,241,074,12,12,https://www.airtel.ga,Yes,mobile
+Gabon,GA,Airtel,241,077,12,12,https://www.airtel.ga,Yes,mobile
+Gabon,GA,Moov Africa,241,062,12,12,https://www.moov-africa.ga,Yes,mobile
+Gabon,GA,Moov Africa,241,065,12,12,https://www.moov-africa.ga,Yes,mobile
+Gabon,GA,Moov Africa,241,066,12,12,https://www.moov-africa.ga,Yes,mobile
+Gambia,GM,Landline,220,,10,10,,Yes,landline
+Gambia,GM,Africell,220,2,10,10,https://www.africell.gm,Yes,mobile
+Gambia,GM,Africell,220,7,10,10,https://www.africell.gm,Yes,mobile
+Gambia,GM,Comium,220,6,10,10,https://www.comium.gm,Yes,mobile
+Gambia,GM,Gamcel,220,9,10,10,https://www.gamcel.gm,Yes,mobile
+Gambia,GM,QCell,220,3,10,10,https://www.qcell.gm,Yes,mobile
+Gambia,GM,QCell,220,5,10,10,https://www.qcell.gm,Yes,mobile
+Georgia,GE,Landline,995,,12,12,,Yes,landline
+Georgia,GE,Cellfie,995,571,12,12,https://cellfie.ge,Yes,mobile
+Georgia,GE,Cellfie,995,574,12,12,https://cellfie.ge,Yes,mobile
+Georgia,GE,Cellfie,995,579,12,12,https://cellfie.ge,Yes,mobile
+Georgia,GE,Cellfie,995,592,12,12,https://cellfie.ge,Yes,mobile
+Georgia,GE,Cellfie,995,597,12,12,https://cellfie.ge,Yes,mobile
+Georgia,GE,MagtiCom,995,590,12,12,https://www.magticom.ge,Yes,mobile
+Georgia,GE,MagtiCom,995,591,12,12,https://www.magticom.ge,Yes,mobile
+Georgia,GE,MagtiCom,995,595,12,12,https://www.magticom.ge,Yes,mobile
+Georgia,GE,MagtiCom,995,596,12,12,https://www.magticom.ge,Yes,mobile
+Georgia,GE,MagtiCom,995,598,12,12,https://www.magticom.ge,Yes,mobile
+Georgia,GE,MagtiCom,995,599,12,12,https://www.magticom.ge,Yes,mobile
+Georgia,GE,Silknet,995,555,12,12,https://www.silknet.com,Yes,mobile
+Georgia,GE,Silknet,995,557,12,12,https://www.silknet.com,Yes,mobile
+Georgia,GE,Silknet,995,558,12,12,https://www.silknet.com,Yes,mobile
+Georgia,GE,Silknet,995,577,12,12,https://www.silknet.com,Yes,mobile
+Georgia,GE,Silknet,995,593,12,12,https://www.silknet.com,Yes,mobile
+Germany,DE,Landline,49,,12,12,,Yes,landline
 Germany,DE,1&1,49,156,12,13,https://www.1und1.de,Yes,mobile
 Germany,DE,1&1,49,1555,12,13,https://www.1und1.de,Yes,mobile
 Germany,DE,1&1,49,1556,12,13,https://www.1und1.de,Yes,mobile
@@ -938,23 +968,139 @@ Germany,DE,Vodafone,49,162,12,13,https://www.vodafone.de,Yes,mobile
 Germany,DE,Vodafone,49,172,12,13,https://www.vodafone.de,Yes,mobile
 Germany,DE,Vodafone,49,173,12,13,https://www.vodafone.de,Yes,mobile
 Germany,DE,Vodafone,49,174,12,13,https://www.vodafone.de,Yes,mobile
-Greece,GR,Proper,30,,12,12,,Yes,proper
+Ghana,GH,Landline,233,,12,12,,Yes,landline
+Ghana,GH,AirtelTigo,233,26,12,12,https://airteltigo.com.gh,Yes,mobile
+Ghana,GH,AirtelTigo,233,27,12,12,https://airteltigo.com.gh,Yes,mobile
+Ghana,GH,AirtelTigo,233,56,12,12,https://airteltigo.com.gh,Yes,mobile
+Ghana,GH,AirtelTigo,233,57,12,12,https://airteltigo.com.gh,Yes,mobile
+Ghana,GH,Glo,233,23,12,12,https://gloworld.com,Yes,mobile
+Ghana,GH,MTN,233,24,12,12,https://mtn.com.gh,Yes,mobile
+Ghana,GH,MTN,233,25,12,12,https://mtn.com.gh,Yes,mobile
+Ghana,GH,MTN,233,54,12,12,https://mtn.com.gh,Yes,mobile
+Ghana,GH,MTN,233,55,12,12,https://mtn.com.gh,Yes,mobile
+Ghana,GH,MTN,233,59,12,12,https://mtn.com.gh,Yes,mobile
+Ghana,GH,Telecel,233,20,12,12,https://telecel.com.gh,Yes,mobile
+Ghana,GH,Telecel,233,50,12,12,https://telecel.com.gh,Yes,mobile
+Gibraltar,GI,Landline,350,,11,11,,Yes,landline
+Gibraltar,GI,Gibtelecom,350,5,11,11,https://www.gibtele.com,Yes,mobile
+Greece,GR,Landline,30,,12,12,,Yes,landline
 Greece,GR,Cosmote,30,697,12,12,https://www.cosmote.gr,Yes,mobile
 Greece,GR,Cosmote,30,698,12,12,https://www.cosmote.gr,Yes,mobile
 Greece,GR,Nova,30,690,12,12,https://www.nova.gr,Yes,mobile
 Greece,GR,Nova,30,693,12,12,https://www.nova.gr,Yes,mobile
 Greece,GR,Vodafone,30,694,12,12,https://www.vodafone.gr,Yes,mobile
 Greece,GR,Vodafone,30,695,12,12,https://www.vodafone.gr,Yes,mobile
-Hungary,HU,Proper,36,,11,11,,Yes,proper
+Greenland,GL,Landline,299,,9,9,,Yes,landline
+Greenland,GL,Tusass,299,2,9,9,https://www.tusass.gl,Yes,mobile
+Greenland,GL,Tusass,299,4,9,9,https://www.tusass.gl,Yes,mobile
+Greenland,GL,Tusass,299,5,9,9,https://www.tusass.gl,Yes,mobile
+Grenada,GD,Landline,1473,,11,11,,Yes,landline
+Grenada,GD,Digicel,1473,403,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,404,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,405,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,406,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,407,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,409,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,410,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,414,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,415,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,416,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,417,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,418,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,419,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,420,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,421,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,422,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,533,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,534,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,535,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,536,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,537,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Digicel,1473,538,11,11,https://www.digicelgroup.com/gd,Yes,mobile
+Grenada,GD,Flow,1473,435,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,436,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,437,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,438,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,439,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,440,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,441,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,442,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,443,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,444,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,445,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,446,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,447,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,448,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,449,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,450,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,451,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,452,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,453,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,454,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,455,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,456,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,457,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,458,11,11,https://discoverflow.co/grenada,Yes,mobile
+Grenada,GD,Flow,1473,459,11,11,https://discoverflow.co/grenada,Yes,mobile
+Guadeloupe,GP,Landline,590,,12,12,,Yes,landline
+Guadeloupe,GP,Mobile,590,690,12,12,,Yes,mobile
+Guadeloupe,GP,Mobile,590,691,12,12,,Yes,mobile
+Guam,GU,Landline,1671,,11,11,,Yes,landline
+Guam,GU,Mobile,1671,,11,11,,Yes,mobile
+Guatemala,GT,Landline,502,,11,11,,Yes,landline
+Guatemala,GT,Mobile,502,3,11,11,,Yes,mobile
+Guatemala,GT,Mobile,502,4,11,11,,Yes,mobile
+Guatemala,GT,Mobile,502,5,11,11,,Yes,mobile
+Guinea,GN,Landline,224,,12,12,,Yes,landline
+Guinea,GN,Cellcom,224,65,12,12,https://cellcom.com.gn,Yes,mobile
+Guinea,GN,MTN,224,66,12,12,https://www.mtn.com.gn,Yes,mobile
+Guinea,GN,Orange,224,61,12,12,https://orange-guinee.com,Yes,mobile
+Guinea,GN,Orange,224,62,12,12,https://orange-guinee.com,Yes,mobile
+Guinea-Bissau,GW,Landline,245,,12,12,,Yes,landline
+Guinea-Bissau,GW,MTN,245,96,12,12,https://www.mtn.gw,Yes,mobile
+Guinea-Bissau,GW,Orange,245,95,12,12,https://www.orange.gw,Yes,mobile
+Guyana,GY,Landline,592,,10,10,,Yes,landline
+Guyana,GY,Mobile,592,6,10,10,,Yes,mobile
+Haiti,HT,Landline,509,,11,11,,Yes,landline
+Haiti,HT,Digicel,509,34,11,11,https://digicelgroup.com,Yes,mobile
+Haiti,HT,Digicel,509,36,11,11,https://digicelgroup.com,Yes,mobile
+Haiti,HT,Digicel,509,37,11,11,https://digicelgroup.com,Yes,mobile
+Haiti,HT,Digicel,509,38,11,11,https://digicelgroup.com,Yes,mobile
+Haiti,HT,Digicel,509,44,11,11,https://digicelgroup.com,Yes,mobile
+Haiti,HT,Digicel,509,46,11,11,https://digicelgroup.com,Yes,mobile
+Haiti,HT,Digicel,509,47,11,11,https://digicelgroup.com,Yes,mobile
+Haiti,HT,Digicel,509,48,11,11,https://digicelgroup.com,Yes,mobile
+Haiti,HT,Natcom,509,22,11,11,https://natcom.com.ht,Yes,mobile
+Haiti,HT,Natcom,509,30,11,11,https://natcom.com.ht,Yes,mobile
+Haiti,HT,Natcom,509,31,11,11,https://natcom.com.ht,Yes,mobile
+Haiti,HT,Natcom,509,32,11,11,https://natcom.com.ht,Yes,mobile
+Haiti,HT,Natcom,509,33,11,11,https://natcom.com.ht,Yes,mobile
+Haiti,HT,Natcom,509,35,11,11,https://natcom.com.ht,Yes,mobile
+Haiti,HT,Natcom,509,40,11,11,https://natcom.com.ht,Yes,mobile
+Haiti,HT,Natcom,509,41,11,11,https://natcom.com.ht,Yes,mobile
+Haiti,HT,Natcom,509,42,11,11,https://natcom.com.ht,Yes,mobile
+Honduras,HN,Landline,504,,11,11,,Yes,landline
+Honduras,HN,Claro,504,3,11,11,https://www.claro.com.hn,Yes,mobile
+Honduras,HN,Claro,504,8,11,11,https://www.claro.com.hn,Yes,mobile
+Honduras,HN,Hondutel,504,7,11,11,https://www.hondutel.hn,Yes,mobile
+Honduras,HN,Tigo,504,9,11,11,https://tigo.com.hn,Yes,mobile
+Hong Kong,HK,Landline,852,,11,11,,Yes,landline
+Hong Kong,HK,Mobile,852,4,11,11,,Yes,mobile
+Hong Kong,HK,Mobile,852,5,11,11,,Yes,mobile
+Hong Kong,HK,Mobile,852,6,11,11,,Yes,mobile
+Hong Kong,HK,Mobile,852,7,11,11,,Yes,mobile
+Hong Kong,HK,Mobile,852,8,11,11,,Yes,mobile
+Hong Kong,HK,Mobile,852,9,11,11,,Yes,mobile
+Hungary,HU,Landline,36,,11,11,,Yes,landline
 Hungary,HU,Magyar Telekom,36,30,11,11,https://www.telekom.hu,Yes,mobile
 Hungary,HU,One,36,50,11,11,https://www.one.hu,Yes,mobile
 Hungary,HU,One,36,70,11,11,https://www.one.hu,Yes,mobile
 Hungary,HU,Yettel,36,20,11,11,https://www.yettel.hu,Yes,mobile
-Iceland,IS,Proper,354,,10,10,,Yes,proper
+Iceland,IS,Landline,354,,10,10,,Yes,landline
 Iceland,IS,Mobile,354,6,10,10,,Yes,mobile
 Iceland,IS,Mobile,354,8,10,10,,Yes,mobile
 Iceland,IS,Nova,354,7,10,10,https://www.nova.is,Yes,mobile
-India,IN,Proper,91,,12,12,,Yes,proper
+India,IN,Landline,91,,12,12,,Yes,landline
 India,IN,Airtel,91,800,12,12,https://www.airtel.in,Yes,mobile
 India,IN,Airtel,91,810,12,12,https://www.airtel.in,Yes,mobile
 India,IN,Airtel,91,981,12,12,https://www.airtel.in,Yes,mobile
@@ -974,7 +1120,7 @@ India,IN,Vi,91,970,12,12,https://www.myvi.in,Yes,mobile
 India,IN,Vi,91,982,12,12,https://www.myvi.in,Yes,mobile
 India,IN,Vi,91,983,12,12,https://www.myvi.in,Yes,mobile
 India,IN,Vi,91,988,12,12,https://www.myvi.in,Yes,mobile
-Indonesia,ID,Proper,62,,11,13,,Yes,proper
+Indonesia,ID,Landline,62,,11,13,,Yes,landline
 Indonesia,ID,AXIS,62,831,11,13,https://www.axis.co.id,Yes,mobile
 Indonesia,ID,AXIS,62,832,11,13,https://www.axis.co.id,Yes,mobile
 Indonesia,ID,AXIS,62,833,11,13,https://www.axis.co.id,Yes,mobile
@@ -1015,13 +1161,38 @@ Indonesia,ID,XL,62,819,11,13,https://www.xl.co.id,Yes,mobile
 Indonesia,ID,XL,62,859,11,13,https://www.xl.co.id,Yes,mobile
 Indonesia,ID,XL,62,877,11,13,https://www.xl.co.id,Yes,mobile
 Indonesia,ID,XL,62,878,11,13,https://www.xl.co.id,Yes,mobile
-Ireland,IE,Proper,353,,12,12,,Yes,proper
+Iran,IR,Landline,98,,12,12,,Yes,landline
+Iran,IR,MCI,98,91,12,12,https://mci.ir,Yes,mobile
+Iran,IR,MCI,98,990,12,12,https://mci.ir,Yes,mobile
+Iran,IR,MCI,98,991,12,12,https://mci.ir,Yes,mobile
+Iran,IR,MCI,98,992,12,12,https://mci.ir,Yes,mobile
+Iran,IR,MCI,98,993,12,12,https://mci.ir,Yes,mobile
+Iran,IR,MCI,98,994,12,12,https://mci.ir,Yes,mobile
+Iran,IR,MTN Irancell,98,93,12,12,https://irancell.ir,Yes,mobile
+Iran,IR,MTN Irancell,98,901,12,12,https://irancell.ir,Yes,mobile
+Iran,IR,MTN Irancell,98,902,12,12,https://irancell.ir,Yes,mobile
+Iran,IR,MTN Irancell,98,903,12,12,https://irancell.ir,Yes,mobile
+Iran,IR,MTN Irancell,98,904,12,12,https://irancell.ir,Yes,mobile
+Iran,IR,MTN Irancell,98,905,12,12,https://irancell.ir,Yes,mobile
+Iran,IR,MTN Irancell,98,941,12,12,https://irancell.ir,Yes,mobile
+Iran,IR,RighTel,98,920,12,12,https://www.rightel.ir,Yes,mobile
+Iran,IR,RighTel,98,921,12,12,https://www.rightel.ir,Yes,mobile
+Iran,IR,RighTel,98,922,12,12,https://www.rightel.ir,Yes,mobile
+Iran,IR,RighTel,98,923,12,12,https://www.rightel.ir,Yes,mobile
+Iraq,IQ,Landline,964,,13,13,,Yes,landline
+Iraq,IQ,Asiacell,964,77,13,13,https://www.asiacell.com,Yes,mobile
+Iraq,IQ,Korek,964,75,13,13,https://korektel.com,Yes,mobile
+Iraq,IQ,Zain,964,78,13,13,https://www.iq.zain.com,Yes,mobile
+Iraq,IQ,Zain,964,79,13,13,https://www.iq.zain.com,Yes,mobile
+Ireland,IE,Landline,353,,12,12,,Yes,landline
 Ireland,IE,Eir,353,85,12,12,https://www.eir.ie,Yes,mobile
 Ireland,IE,Mobile,353,86,12,12,,Yes,mobile
 Ireland,IE,Three,353,83,12,12,https://www.three.ie,Yes,mobile
 Ireland,IE,Virgin Media,353,89,12,12,https://www.virginmedia.ie,Yes,mobile
 Ireland,IE,Vodafone,353,87,12,12,https://www.vodafone.ie,Yes,mobile
-Israel,IL,Proper,972,,12,12,,Yes,proper
+Isle of Man,IM,Landline,44,,12,12,,Yes,landline
+Isle of Man,IM,Mobile,44,7624,12,12,,Yes,mobile
+Israel,IL,Landline,972,,12,12,,Yes,landline
 Israel,IL,Cellcom,972,52,12,12,https://www.cellcom.co.il,Yes,mobile
 Israel,IL,Golan,972,58,12,12,https://www.golantelecom.co.il,Yes,mobile
 Israel,IL,Hot Mobile,972,53,12,12,https://www.hotmobile.co.il,Yes,mobile
@@ -1029,7 +1200,7 @@ Israel,IL,Mobile,972,55,12,12,,Yes,mobile
 Israel,IL,Partner,972,54,12,12,https://www.partner.co.il,Yes,mobile
 Israel,IL,WeCom,972,51,12,12,https://www.wecom.co.il,Yes,mobile
 Israel,IL,Pelephone,972,50,12,12,https://www.pelephone.co.il,Yes,mobile
-Italy,IT,Proper,39,,12,12,,Yes,proper
+Italy,IT,Landline,39,,12,12,,Yes,landline
 Italy,IT,CoopVoce,39,353,12,12,https://www.coopvoce.it,Yes,mobile
 Italy,IT,CoopVoce,39,370,12,12,https://www.coopvoce.it,Yes,mobile
 Italy,IT,Fastweb,39,373,12,12,https://www.fastweb.it,Yes,mobile
@@ -1072,11 +1243,23 @@ Italy,IT,WindTre,39,389,12,12,https://www.windtre.it,Yes,mobile
 Italy,IT,WindTre,39,391,12,12,https://www.windtre.it,Yes,mobile
 Italy,IT,WindTre,39,392,12,12,https://www.windtre.it,Yes,mobile
 Italy,IT,WindTre,39,393,12,12,https://www.windtre.it,Yes,mobile
-Japan,JP,Proper,81,,12,12,,Yes,proper
+Ivory Coast,CI,Landline,225,,13,13,,Yes,landline
+Ivory Coast,CI,Moov Africa,225,01,13,13,https://www.moov-africa.ci,Yes,mobile
+Ivory Coast,CI,MTN,225,05,13,13,https://www.mtn.ci,Yes,mobile
+Ivory Coast,CI,Orange,225,07,13,13,https://www.orange.ci,Yes,mobile
+Jamaica,JM,Landline,1876,,11,11,,Yes,landline
+Jamaica,JM,Landline,1658,,11,11,,Yes,landline
+Jamaica,JM,Mobile,1876,,11,11,,Yes,mobile
+Jamaica,JM,Mobile,1658,,11,11,,Yes,mobile
+Japan,JP,Landline,81,,12,12,,Yes,landline
 Japan,JP,Mobile,81,70,12,12,,Yes,mobile
 Japan,JP,Mobile,81,80,12,12,,Yes,mobile
 Japan,JP,Mobile,81,90,12,12,,Yes,mobile
-Kenya,KE,Proper,254,,12,12,,Yes,proper
+Jordan,JO,Landline,962,,12,12,,Yes,landline
+Jordan,JO,Orange,962,77,12,12,https://www.orange.jo,Yes,mobile
+Jordan,JO,Umniah,962,78,12,12,https://www.umniah.com,Yes,mobile
+Jordan,JO,Zain,962,79,12,12,https://www.jo.zain.com,Yes,mobile
+Kenya,KE,Landline,254,,12,12,,Yes,landline
 Kenya,KE,Airtel,254,100,12,12,https://www.airtelkenya.com,Yes,mobile
 Kenya,KE,Airtel,254,101,12,12,https://www.airtelkenya.com,Yes,mobile
 Kenya,KE,Airtel,254,102,12,12,https://www.airtelkenya.com,Yes,mobile
@@ -1182,7 +1365,98 @@ Kenya,KE,Telkom,254,776,12,12,https://www.telkom.co.ke,Yes,mobile
 Kenya,KE,Telkom,254,777,12,12,https://www.telkom.co.ke,Yes,mobile
 Kenya,KE,Telkom,254,778,12,12,https://www.telkom.co.ke,Yes,mobile
 Kenya,KE,Telkom,254,779,12,12,https://www.telkom.co.ke,Yes,mobile
-Malaysia,MY,Proper,60,,11,12,,Yes,proper
+Kazakhstan,KZ,Landline,7,,11,11,,Yes,landline
+Kazakhstan,KZ,Beeline,7,705,11,11,https://beeline.kz,Yes,mobile
+Kazakhstan,KZ,Beeline,7,771,11,11,https://beeline.kz,Yes,mobile
+Kazakhstan,KZ,Beeline,7,776,11,11,https://beeline.kz,Yes,mobile
+Kazakhstan,KZ,Beeline,7,777,11,11,https://beeline.kz,Yes,mobile
+Kazakhstan,KZ,Kcell,7,701,11,11,https://www.kcell.kz,Yes,mobile
+Kazakhstan,KZ,Kcell,7,702,11,11,https://www.kcell.kz,Yes,mobile
+Kazakhstan,KZ,Kcell,7,775,11,11,https://www.kcell.kz,Yes,mobile
+Kazakhstan,KZ,Kcell,7,778,11,11,https://www.kcell.kz,Yes,mobile
+Kazakhstan,KZ,Tele2,7,700,11,11,https://www.tele2.kz,Yes,mobile
+Kazakhstan,KZ,Tele2,7,707,11,11,https://www.tele2.kz,Yes,mobile
+Kazakhstan,KZ,Tele2,7,708,11,11,https://www.tele2.kz,Yes,mobile
+Kazakhstan,KZ,Tele2,7,747,11,11,https://www.tele2.kz,Yes,mobile
+Kiribati,KI,Landline,686,,11,11,,Yes,landline
+Kiribati,KI,Vodafone,686,7,11,11,https://vodafone.com.ki,Yes,mobile
+Kosovo,XK,Landline,383,,11,11,,Yes,landline
+Kosovo,XK,IPKO,383,43,11,11,https://ipko.com,Yes,mobile
+Kosovo,XK,IPKO,383,48,11,11,https://ipko.com,Yes,mobile
+Kosovo,XK,IPKO,383,49,11,11,https://ipko.com,Yes,mobile
+Kosovo,XK,Vala,383,44,11,11,https://kosovotelecom.com,Yes,mobile
+Kosovo,XK,Vala,383,45,11,11,https://kosovotelecom.com,Yes,mobile
+Kuwait,KW,Landline,965,,11,11,,Yes,landline
+Kuwait,KW,Mobile,965,5,11,11,,Yes,mobile
+Kuwait,KW,Mobile,965,6,11,11,,Yes,mobile
+Kuwait,KW,Mobile,965,9,11,11,,Yes,mobile
+Kyrgyzstan,KG,Landline,996,,12,12,,Yes,landline
+Kyrgyzstan,KG,Beeline,996,22,12,12,https://beeline.kg,Yes,mobile
+Kyrgyzstan,KG,Beeline,996,77,12,12,https://beeline.kg,Yes,mobile
+Kyrgyzstan,KG,Mega,996,55,12,12,https://mega.kg,Yes,mobile
+Kyrgyzstan,KG,Mega,996,755,12,12,https://mega.kg,Yes,mobile
+Kyrgyzstan,KG,Mega,996,999,12,12,https://mega.kg,Yes,mobile
+Kyrgyzstan,KG,O!,996,50,12,12,https://o.kg,Yes,mobile
+Kyrgyzstan,KG,O!,996,70,12,12,https://o.kg,Yes,mobile
+Laos,LA,Landline,856,,13,13,,Yes,landline
+Laos,LA,Lao Telecom,856,202,13,13,https://laotel.com,Yes,mobile
+Laos,LA,Mobile,856,205,13,13,,Yes,mobile
+Laos,LA,Tplus,856,207,13,13,https://tplus.la,Yes,mobile
+Laos,LA,Unitel,856,209,13,13,https://unitel.com.la,Yes,mobile
+Latvia,LV,Landline,371,,11,11,,Yes,landline
+Latvia,LV,Mobile,371,2,11,11,,Yes,mobile
+Lebanon,LB,Landline,961,,11,11,,Yes,landline
+Lebanon,LB,Alfa,961,71,11,11,https://alfa.com.lb,Yes,mobile
+Lebanon,LB,Mobile,961,3,11,11,,Yes,mobile
+Lebanon,LB,Mobile,961,70,11,11,,Yes,mobile
+Lebanon,LB,Mobile,961,76,11,11,,Yes,mobile
+Lebanon,LB,Touch,961,78,11,11,https://touch.com.lb,Yes,mobile
+Lebanon,LB,Touch,961,79,11,11,https://touch.com.lb,Yes,mobile
+Lesotho,LS,Landline,266,,11,11,,Yes,landline
+Lesotho,LS,Econet,266,2,11,11,https://www.etl.co.ls,Yes,mobile
+Lesotho,LS,Vodacom,266,5,11,11,https://www.vodacom.co.ls,Yes,mobile
+Lesotho,LS,Vodacom,266,6,11,11,https://www.vodacom.co.ls,Yes,mobile
+Liberia,LR,Landline,231,,10,12,,Yes,landline
+Liberia,LR,Lonestar,231,55,10,12,https://lonestarcell.com,Yes,mobile
+Liberia,LR,Lonestar,231,88,10,12,https://lonestarcell.com,Yes,mobile
+Liberia,LR,Orange,231,77,10,12,https://orange.com.lr,Yes,mobile
+Libya,LY,Landline,218,,12,12,,Yes,landline
+Libya,LY,Almadar,218,91,12,12,https://www.almadar.ly,Yes,mobile
+Libya,LY,Almadar,218,96,12,12,https://www.almadar.ly,Yes,mobile
+Libya,LY,Libyana,218,92,12,12,https://www.libyana.ly,Yes,mobile
+Libya,LY,Libyana,218,94,12,12,https://www.libyana.ly,Yes,mobile
+Libya,LY,Libyana,218,95,12,12,https://www.libyana.ly,Yes,mobile
+Liechtenstein,LI,Landline,423,,10,10,,Yes,landline
+Liechtenstein,LI,Mobile,423,7,10,10,,Yes,mobile
+Lithuania,LT,Landline,370,,11,11,,Yes,landline
+Lithuania,LT,Mobile,370,6,11,11,,Yes,mobile
+Luxembourg,LU,Landline,352,,12,12,,Yes,landline
+Luxembourg,LU,Orange,352,661,12,12,https://www.orange.lu,Yes,mobile
+Luxembourg,LU,POST,352,621,12,12,https://www.post.lu,Yes,mobile
+Luxembourg,LU,Tango,352,691,12,12,https://www.tango.lu,Yes,mobile
+Macau,MO,Landline,853,,11,11,,Yes,landline
+Macau,MO,China Telecom,853,63,11,11,https://chinatelecom.com.mo,Yes,mobile
+Macau,MO,China Telecom,853,65,11,11,https://chinatelecom.com.mo,Yes,mobile
+Macau,MO,CTM,853,68,11,11,https://www.ctm.net,Yes,mobile
+Macau,MO,Mobile,853,62,11,11,,Yes,mobile
+Macau,MO,Mobile,853,66,11,11,,Yes,mobile
+Madagascar,MG,Landline,261,,12,12,,Yes,landline
+Madagascar,MG,Airtel,261,33,12,12,https://www.airtel.mg,Yes,mobile
+Madagascar,MG,Orange,261,32,12,12,https://www.orange.mg,Yes,mobile
+Madagascar,MG,Telma,261,34,12,12,https://www.telma.mg,Yes,mobile
+Malawi,MW,Landline,265,,12,12,,Yes,landline
+Malawi,MW,Airtel,265,99,12,12,https://www.airtel.mw,Yes,mobile
+Malawi,MW,TNM,265,88,12,12,https://www.tnm.mw,Yes,mobile
+Maldives,MV,Landline,960,,10,10,,Yes,landline
+Maldives,MV,Dhiraagu,960,7,10,10,https://dhiraagu.com.mv,Yes,mobile
+Maldives,MV,Mobile,960,9,10,10,,Yes,mobile
+Mali,ML,Landline,223,,11,11,,Yes,landline
+Mali,ML,Malitel,223,6,11,11,https://www.malitel.ml,Yes,mobile
+Mali,ML,Orange,223,7,11,11,https://www.orange.ml,Yes,mobile
+Mali,ML,Orange,223,8,11,11,https://www.orange.ml,Yes,mobile
+Mali,ML,Orange,223,9,11,11,https://www.orange.ml,Yes,mobile
+Mali,ML,Telecel,223,5,11,11,https://www.telecel.ml,Yes,mobile
+Malaysia,MY,Landline,60,,11,12,,Yes,landline
 Malaysia,MY,CelcomDigi,60,13,11,12,https://celcomdigi.com,Yes,mobile
 Malaysia,MY,CelcomDigi,60,16,11,12,https://celcomdigi.com,Yes,mobile
 Malaysia,MY,CelcomDigi,60,19,11,12,https://celcomdigi.com,Yes,mobile
@@ -1192,8 +1466,16 @@ Malaysia,MY,Mobile,60,11,11,12,,Yes,mobile
 Malaysia,MY,Mobile,60,12,11,12,,Yes,mobile
 Malaysia,MY,Mobile,60,14,11,12,,Yes,mobile
 Malaysia,MY,Mobile,60,18,11,12,,Yes,mobile
-Mexico,MX,Proper,52,,12,12,,Yes,proper
-Morocco,MA,Proper,212,,12,12,,Yes,proper
+Malta,MT,Landline,356,,11,11,,Yes,landline
+Malta,MT,Epic,356,99,11,11,https://epic.com.mt,Yes,mobile
+Malta,MT,GO,356,79,11,11,https://go.com.mt,Yes,mobile
+Malta,MT,Melita,356,77,11,11,https://melita.com,Yes,mobile
+Marshall Islands,MH,Landline,692,,10,10,,Yes,landline
+Marshall Islands,MH,MINTA,692,45,10,10,https://www.nta.rm,Yes,mobile
+Martinique,MQ,Landline,596,,12,12,,Yes,landline
+Martinique,MQ,Mobile,596,696,12,12,,Yes,mobile
+Mexico,MX,Landline,52,,12,12,,Yes,landline
+Morocco,MA,Landline,212,,12,12,,Yes,landline
 Morocco,MA,Inwi,212,600,12,12,https://www.inwi.ma,Yes,mobile
 Morocco,MA,Inwi,212,601,12,12,https://www.inwi.ma,Yes,mobile
 Morocco,MA,Inwi,212,602,12,12,https://www.inwi.ma,Yes,mobile
@@ -1282,17 +1564,58 @@ Morocco,MA,Orange,212,776,12,12,https://www.orange.ma,Yes,mobile
 Morocco,MA,Orange,212,777,12,12,https://www.orange.ma,Yes,mobile
 Morocco,MA,Orange,212,778,12,12,https://www.orange.ma,Yes,mobile
 Morocco,MA,Orange,212,779,12,12,https://www.orange.ma,Yes,mobile
-Netherlands,NL,Proper,31,,11,11,,Yes,proper
+Namibia,NA,Landline,264,,11,11,,Yes,landline
+Namibia,NA,MTC,264,81,11,11,https://mtc.com.na,Yes,mobile
+Namibia,NA,MTN,264,84,11,11,https://mtn.com.na,Yes,mobile
+Namibia,NA,Paratus,264,83,11,11,https://paratus.africa/namibia,Yes,mobile
+Namibia,NA,TN Mobile,264,60,11,11,https://www.telecom.na,Yes,mobile
+Namibia,NA,TN Mobile,264,85,11,11,https://www.telecom.na,Yes,mobile
+Nauru,NR,Landline,674,,10,10,,Yes,landline
+Nauru,NR,Digicel,674,555,10,10,https://digicelgroup.com,Yes,mobile
+Nauru,NR,Digicel,674,556,10,10,https://digicelgroup.com,Yes,mobile
+Nauru,NR,Digicel,674,557,10,10,https://digicelgroup.com,Yes,mobile
+Nauru,NR,Digicel,674,558,10,10,https://digicelgroup.com,Yes,mobile
+Nauru,NR,Digicel,674,559,10,10,https://digicelgroup.com,Yes,mobile
+Nepal,NP,Landline,977,,13,13,,Yes,landline
+Nepal,NP,Ncell,977,970,13,13,https://axiata.com,Yes,mobile
+Nepal,NP,Ncell,977,980,13,13,https://axiata.com,Yes,mobile
+Nepal,NP,Ncell,977,981,13,13,https://axiata.com,Yes,mobile
+Nepal,NP,Ncell,977,982,13,13,https://axiata.com,Yes,mobile
+Nepal,NP,Nepal Telecom,977,974,13,13,https://www.ntc.net.np,Yes,mobile
+Nepal,NP,Nepal Telecom,977,975,13,13,https://www.ntc.net.np,Yes,mobile
+Nepal,NP,Nepal Telecom,977,984,13,13,https://www.ntc.net.np,Yes,mobile
+Nepal,NP,Nepal Telecom,977,985,13,13,https://www.ntc.net.np,Yes,mobile
+Nepal,NP,Nepal Telecom,977,986,13,13,https://www.ntc.net.np,Yes,mobile
+Netherlands,NL,Landline,31,,11,11,,Yes,landline
 Netherlands,NL,M2M,31,97,13,13,,Yes,mobile
 Netherlands,NL,Mobile,31,6,11,11,,Yes,mobile
-New Zealand,NZ,Proper,64,,11,12,,Yes,proper
+New Caledonia,NC,Landline,687,,9,9,,Yes,landline
+New Caledonia,NC,Mobilis,687,7,9,9,https://www.opt.nc,Yes,mobile
+New Caledonia,NC,Mobilis,687,8,9,9,https://www.opt.nc,Yes,mobile
+New Caledonia,NC,Mobilis,687,9,9,9,https://www.opt.nc,Yes,mobile
+New Zealand,NZ,Landline,64,,11,12,,Yes,landline
 New Zealand,NZ,2degrees,64,22,11,12,https://www.2degrees.nz,Yes,mobile
 New Zealand,NZ,Mobile,64,20,11,12,,Yes,mobile
 New Zealand,NZ,Mobile,64,28,11,12,,Yes,mobile
 New Zealand,NZ,One NZ,64,21,11,12,https://one.nz,Yes,mobile
 New Zealand,NZ,One NZ,64,29,11,12,https://one.nz,Yes,mobile
 New Zealand,NZ,Spark,64,27,11,12,https://www.spark.co.nz,Yes,mobile
-Nigeria,NG,Proper,234,,13,13,,Yes,proper
+Nicaragua,NI,Landline,505,,11,11,,Yes,landline
+Nicaragua,NI,Claro,505,5,11,11,https://claro.com.ni,Yes,mobile
+Nicaragua,NI,Claro,505,7,11,11,https://claro.com.ni,Yes,mobile
+Nicaragua,NI,Tigo,505,8,11,11,https://tigo.com.ni,Yes,mobile
+Niger,NE,Landline,227,,11,11,,Yes,landline
+Niger,NE,Airtel,227,90,11,11,https://www.airtel.ne,Yes,mobile
+Niger,NE,Airtel,227,91,11,11,https://www.airtel.ne,Yes,mobile
+Niger,NE,Airtel,227,92,11,11,https://www.airtel.ne,Yes,mobile
+Niger,NE,Airtel,227,96,11,11,https://www.airtel.ne,Yes,mobile
+Niger,NE,Airtel,227,97,11,11,https://www.airtel.ne,Yes,mobile
+Niger,NE,Airtel,227,98,11,11,https://www.airtel.ne,Yes,mobile
+Niger,NE,Airtel,227,99,11,11,https://www.airtel.ne,Yes,mobile
+Niger,NE,Moov Africa,227,94,11,11,https://www.moov-africa.ne,Yes,mobile
+Niger,NE,Moov Africa,227,95,11,11,https://www.moov-africa.ne,Yes,mobile
+Niger,NE,Niger Telecoms,227,93,11,11,https://www.nigertelecoms.ne,Yes,mobile
+Nigeria,NG,Landline,234,,13,13,,Yes,landline
 Nigeria,NG,9mobile,234,809,13,13,https://9mobile.com.ng,Yes,mobile
 Nigeria,NG,9mobile,234,817,13,13,https://9mobile.com.ng,Yes,mobile
 Nigeria,NG,9mobile,234,818,13,13,https://9mobile.com.ng,Yes,mobile
@@ -1331,17 +1654,42 @@ Nigeria,NG,MTN,234,913,13,13,https://www.mtn.ng,Yes,mobile
 Nigeria,NG,MTN,234,916,13,13,https://www.mtn.ng,Yes,mobile
 Nigeria,NG,Smile,234,702,13,13,https://www.smile.com.ng,Yes,mobile
 Nigeria,NG,Vitel Wireless,234,712,13,13,https://vitelwireless.com,Yes,mobile
-North Korea,KP,Proper,850,,11,13,,Yes,proper
+Niue,NU,Landline,683,,7,7,,Yes,landline
+Niue,NU,Mobile,683,4,7,7,,Yes,mobile
+Niue,NU,Mobile,683,5,7,7,,Yes,mobile
+Niue,NU,Mobile,683,6,7,7,,Yes,mobile
+North Korea,KP,Landline,850,,11,13,,Yes,landline
 North Korea,KP,Kangsong NET,850,195,11,13,,Yes,mobile
 North Korea,KP,Koryolink,850,191,11,13,,Yes,mobile
 North Korea,KP,Koryolink,850,1912,11,13,,Yes,mobile
 North Korea,KP,Koryolink,850,192,11,13,,Yes,mobile
-Norway,NO,Proper,47,,10,10,,Yes,proper
+North Macedonia,MK,Landline,389,,11,11,,Yes,landline
+North Macedonia,MK,A1,389,75,11,11,https://www.a1.mk,Yes,mobile
+North Macedonia,MK,A1,389,76,11,11,https://www.a1.mk,Yes,mobile
+North Macedonia,MK,A1,389,77,11,11,https://www.a1.mk,Yes,mobile
+North Macedonia,MK,A1,389,78,11,11,https://www.a1.mk,Yes,mobile
+North Macedonia,MK,Makedonski Telekom,389,70,11,11,https://www.telekom.mk,Yes,mobile
+North Macedonia,MK,Makedonski Telekom,389,71,11,11,https://www.telekom.mk,Yes,mobile
+North Macedonia,MK,Makedonski Telekom,389,72,11,11,https://www.telekom.mk,Yes,mobile
+Northern Mariana Islands,MP,Landline,1670,,11,11,,Yes,landline
+Northern Mariana Islands,MP,Mobile,1670,,11,11,,Yes,mobile
+Norway,NO,Landline,47,,10,10,,Yes,landline
 Norway,NO,Mobile,47,4,10,10,,Yes,mobile
 Norway,NO,Mobile,47,9,10,10,,Yes,mobile
 Norway,NO,M2M,47,58,14,14,,Yes,mobile
 Norway,NO,M2M,47,59,10,10,,Yes,mobile
-Pakistan,PK,Proper,92,,12,12,,Yes,proper
+Oman,OM,Landline,968,,11,11,,Yes,landline
+Oman,OM,Omantel,968,91,11,11,https://www.omantel.om,Yes,mobile
+Oman,OM,Omantel,968,92,11,11,https://www.omantel.om,Yes,mobile
+Oman,OM,Omantel,968,93,11,11,https://www.omantel.om,Yes,mobile
+Oman,OM,Omantel,968,98,11,11,https://www.omantel.om,Yes,mobile
+Oman,OM,Omantel,968,99,11,11,https://www.omantel.om,Yes,mobile
+Oman,OM,Ooredoo,968,94,11,11,https://www.ooredoo.om,Yes,mobile
+Oman,OM,Ooredoo,968,95,11,11,https://www.ooredoo.om,Yes,mobile
+Oman,OM,Ooredoo,968,96,11,11,https://www.ooredoo.om,Yes,mobile
+Oman,OM,Ooredoo,968,97,11,11,https://www.ooredoo.om,Yes,mobile
+Oman,OM,Vodafone,968,77,11,11,https://www.vodafone.om,Yes,mobile
+Pakistan,PK,Landline,92,,12,12,,Yes,landline
 Pakistan,PK,Jazz,92,300,12,12,https://jazz.com.pk,Yes,mobile
 Pakistan,PK,Jazz,92,301,12,12,https://jazz.com.pk,Yes,mobile
 Pakistan,PK,Jazz,92,302,12,12,https://jazz.com.pk,Yes,mobile
@@ -1395,9 +1743,9 @@ Pakistan,PK,Zong,92,318,12,12,https://www.zong.com.pk,Yes,mobile
 Pakistan,PK,Zong,92,319,12,12,https://www.zong.com.pk,Yes,mobile
 Pakistan,PK,Zong,92,370,12,12,https://www.zong.com.pk,Yes,mobile
 Pakistan,PK,Zong,92,371,12,12,https://www.zong.com.pk,Yes,mobile
-Peru,PE,Proper,51,,11,11,,Yes,proper
+Peru,PE,Landline,51,,11,11,,Yes,landline
 Peru,PE,Mobile,51,9,11,11,,Yes,mobile
-Philippines,PH,Proper,63,,12,12,,Yes,proper
+Philippines,PH,Landline,63,,12,12,,Yes,landline
 Philippines,PH,DITO,63,895,12,12,https://dito.ph,Yes,mobile
 Philippines,PH,DITO,63,896,12,12,https://dito.ph,Yes,mobile
 Philippines,PH,DITO,63,897,12,12,https://dito.ph,Yes,mobile
@@ -1464,12 +1812,12 @@ Philippines,PH,Smart,63,981,12,12,https://www.smart.com.ph,Yes,mobile
 Philippines,PH,Smart,63,985,12,12,https://www.smart.com.ph,Yes,mobile
 Philippines,PH,Smart,63,998,12,12,https://www.smart.com.ph,Yes,mobile
 Philippines,PH,Smart,63,999,12,12,https://www.smart.com.ph,Yes,mobile
-Portugal,PT,Proper,351,,12,12,,Yes,proper
+Portugal,PT,Landline,351,,12,12,,Yes,landline
 Portugal,PT,MEO,351,92,12,12,https://www.meo.pt,Yes,mobile
 Portugal,PT,Mobile,351,96,12,12,,Yes,mobile
 Portugal,PT,NOS,351,93,12,12,https://www.nos.pt,Yes,mobile
 Portugal,PT,Vodafone,351,91,12,12,https://www.vodafone.pt,Yes,mobile
-Russia,RU,Proper,7,,11,11,,Yes,proper
+Russia,RU,Landline,7,,11,11,,Yes,landline
 Russia,RU,Beeline,7,903,11,11,https://www.beeline.ru,Yes,mobile
 Russia,RU,Beeline,7,905,11,11,https://www.beeline.ru,Yes,mobile
 Russia,RU,Beeline,7,906,11,11,https://www.beeline.ru,Yes,mobile
@@ -1551,7 +1899,7 @@ Russia,RU,T2,7,996,11,11,https://t2.ru,Yes,mobile
 Russia,RU,T2,7,997,11,11,https://t2.ru,Yes,mobile
 Russia,RU,T2,7,998,11,11,https://t2.ru,Yes,mobile
 Russia,RU,T2,7,999,11,11,https://t2.ru,Yes,mobile
-Saudi Arabia,SA,Proper,966,,12,12,,Yes,proper
+Saudi Arabia,SA,Landline,966,,12,12,,Yes,landline
 Saudi Arabia,SA,Lebara,966,576,12,12,https://lebaraksa.com,Yes,mobile
 Saudi Arabia,SA,Lebara,966,577,12,12,https://lebaraksa.com,Yes,mobile
 Saudi Arabia,SA,Lebara,966,578,12,12,https://lebaraksa.com,Yes,mobile
@@ -1568,10 +1916,10 @@ Saudi Arabia,SA,Virgin Mobile,966,571,12,12,https://virginmobile.sa,Yes,mobile
 Saudi Arabia,SA,Virgin Mobile,966,572,12,12,https://virginmobile.sa,Yes,mobile
 Saudi Arabia,SA,Zain,966,58,12,12,https://sa.zain.com,Yes,mobile
 Saudi Arabia,SA,Zain,966,59,12,12,https://sa.zain.com,Yes,mobile
-South Korea,KR,Proper,82,,12,12,,Yes,proper
+South Korea,KR,Landline,82,,12,12,,Yes,landline
 South Korea,KR,Mobile,82,10,12,12,,Yes,mobile
 South Korea,KR,VoIP,82,70,12,12,,Yes,mobile
-Spain,ES,Proper,34,,11,11,,Yes,proper
+Spain,ES,Landline,34,,11,11,,Yes,landline
 Spain,ES,MasOrange,34,605,11,11,https://www.masorange.es,Yes,mobile
 Spain,ES,MasOrange,34,615,11,11,https://www.masorange.es,Yes,mobile
 Spain,ES,MasOrange,34,625,11,11,https://www.masorange.es,Yes,mobile
@@ -1623,13 +1971,13 @@ Spain,ES,Vodafone,34,671,11,11,https://www.vodafone.es,Yes,mobile
 Spain,ES,Vodafone,34,678,11,11,https://www.vodafone.es,Yes,mobile
 Spain,ES,Vodafone,34,687,11,11,https://www.vodafone.es,Yes,mobile
 Spain,ES,Vodafone,34,697,11,11,https://www.vodafone.es,Yes,mobile
-Switzerland,CH,Proper,41,,11,11,,Yes,proper
+Switzerland,CH,Landline,41,,11,11,,Yes,landline
 Switzerland,CH,Mobile,41,77,11,11,,Yes,mobile
 Switzerland,CH,Salt,41,78,11,11,https://www.salt.ch,Yes,mobile
 Switzerland,CH,Sunrise,41,76,11,11,https://www.sunrise.ch,Yes,mobile
 Switzerland,CH,Swisscom,41,75,11,11,https://www.swisscom.ch,Yes,mobile
 Switzerland,CH,Swisscom,41,79,11,11,https://www.swisscom.ch,Yes,mobile
-Thailand,TH,Proper,66,,11,11,,Yes,proper
+Thailand,TH,Landline,66,,11,11,,Yes,landline
 Thailand,TH,AIS,66,62,11,11,https://www.ais.th,Yes,mobile
 Thailand,TH,AIS,66,80,11,11,https://www.ais.th,Yes,mobile
 Thailand,TH,AIS,66,84,11,11,https://www.ais.th,Yes,mobile
@@ -1655,7 +2003,7 @@ Thailand,TH,True,66,94,11,11,https://www.true.th,Yes,mobile
 Thailand,TH,True,66,95,11,11,https://www.true.th,Yes,mobile
 Thailand,TH,True,66,96,11,11,https://www.true.th,Yes,mobile
 Thailand,TH,True,66,99,11,11,https://www.true.th,Yes,mobile
-Turkey,TR,Proper,90,,12,12,,Yes,proper
+Turkey,TR,Landline,90,,12,12,,Yes,landline
 Turkey,TR,Netgsm,90,510,12,12,https://www.netgsm.com.tr,Yes,mobile
 Turkey,TR,Turkcell,90,516,12,12,https://www.turkcell.com.tr,Yes,mobile
 Turkey,TR,Turkcell,90,530,12,12,https://www.turkcell.com.tr,Yes,mobile
@@ -1695,7 +2043,7 @@ Turkey,TR,Vodafone,90,546,12,12,https://www.vodafone.com.tr,Yes,mobile
 Turkey,TR,Vodafone,90,547,12,12,https://www.vodafone.com.tr,Yes,mobile
 Turkey,TR,Vodafone,90,548,12,12,https://www.vodafone.com.tr,Yes,mobile
 Turkey,TR,Vodafone,90,549,12,12,https://www.vodafone.com.tr,Yes,mobile
-Ukraine,UA,Proper,380,,12,12,,Yes,proper
+Ukraine,UA,Landline,380,,12,12,,Yes,landline
 Ukraine,UA,Intertelecom,380,94,12,12,https://intertelecom.ua,Yes,mobile
 Ukraine,UA,Kyivstar,380,67,12,12,https://kyivstar.ua,Yes,mobile
 Ukraine,UA,Kyivstar,380,68,12,12,https://kyivstar.ua,Yes,mobile
@@ -1711,7 +2059,7 @@ Ukraine,UA,Vodafone,380,50,12,12,https://vodafone.ua,Yes,mobile
 Ukraine,UA,Vodafone,380,66,12,12,https://vodafone.ua,Yes,mobile
 Ukraine,UA,Vodafone,380,95,12,12,https://vodafone.ua,Yes,mobile
 Ukraine,UA,Vodafone,380,99,12,12,https://vodafone.ua,Yes,mobile
-United Kingdom,GB,Proper,44,,12,12,,Yes,proper
+United Kingdom,GB,Landline,44,,12,12,,Yes,landline
 United Kingdom,GB,Mobile,44,74,12,12,,Yes,mobile
 United Kingdom,GB,Mobile,44,75,12,12,,Yes,mobile
 United Kingdom,GB,Mobile,44,77,12,12,,Yes,mobile
@@ -1721,14 +2069,14 @@ United Kingdom,GB,Mobile,44,73,12,12,,Yes,mobile
 United Kingdom,GB,O2,44,71,12,12,https://www.o2.co.uk,Yes,mobile
 United Kingdom,GB,Pager,44,76,12,12,,Yes,mobile
 United Kingdom,GB,Personal,44,70,12,12,,Yes,mobile
-Venezuela,VE,Proper,58,,12,12,,Yes,proper
+Venezuela,VE,Landline,58,,12,12,,Yes,landline
 Venezuela,VE,Digitel,58,412,12,12,https://www.digitel.com.ve,Yes,mobile
 Venezuela,VE,Digitel,58,422,12,12,https://www.digitel.com.ve,Yes,mobile
 Venezuela,VE,Movilnet,58,416,12,12,https://www.movilnet.com.ve,Yes,mobile
 Venezuela,VE,Movilnet,58,426,12,12,https://www.movilnet.com.ve,Yes,mobile
 Venezuela,VE,Movistar,58,414,12,12,https://www.movistar.com.ve,Yes,mobile
 Venezuela,VE,Movistar,58,424,12,12,https://www.movistar.com.ve,Yes,mobile
-Vietnam,VN,Proper,84,,12,12,,Yes,proper
+Vietnam,VN,Landline,84,,12,12,,Yes,landline
 Vietnam,VN,Gmobile,84,59,12,12,https://gmobile.vn,Yes,mobile
 Vietnam,VN,Gmobile,84,99,12,12,https://gmobile.vn,Yes,mobile
 Vietnam,VN,ITEL,84,87,12,12,,Yes,mobile

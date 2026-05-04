@@ -15,6 +15,7 @@
     "db:migrate": "pnpm --filter @audiotext/db db:migrate",
     "db:studio": "pnpm --filter @audiotext/db db:studio",
     "db:seed": "pnpm --filter @audiotext/db db:seed",
+    "db:reset": "pnpm --filter @audiotext/db db:reset",
     "format": "prettier --write ."
   },
   "devDependencies": {

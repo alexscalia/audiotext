@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1777744643367,
-      "tag": "0000_calm_epoch",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1777744760896,
-      "tag": "0001_windy_dark_beast",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1777744847509,
-      "tag": "0002_many_felicia_hardy",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1777877835658,
-      "tag": "0003_overconfident_silvermane",
+      "when": 1777879849499,
+      "tag": "0000_perpetual_payback",
       "breakpoints": true
     }
   ]

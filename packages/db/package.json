@@ -16,7 +16,8 @@
     "db:migrate": "tsx --env-file=../../.env src/migrate.ts",
     "db:studio": "drizzle-kit studio",
     "db:push": "drizzle-kit push",
-    "db:seed": "tsx --env-file=../../.env src/seed.ts"
+    "db:seed": "tsx --env-file=../../.env src/seed.ts",
+    "db:reset": "tsx --env-file=../../.env src/reset.ts && pnpm db:migrate && pnpm db:seed"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",

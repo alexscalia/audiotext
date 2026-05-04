@@ -1,5 +1,5 @@
 {
-  "id": "951b3818-bca4-42fe-98b4-a30618b45e1d",
+  "id": "bbca7097-31c3-4807-a74f-20e16a2fdeee",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -811,8 +811,8 @@
       },
       "isRLSEnabled": false
     },
-    "public.numbering_plan_destinations": {
-      "name": "numbering_plan_destinations",
+    "public.voice_numbering_plan_codes": {
+      "name": "voice_numbering_plan_codes",
       "schema": "",
       "columns": {
         "id": {
@@ -822,8 +822,147 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "numbering_plan_id": {
-          "name": "numbering_plan_id",
+        "voice_numbering_plan_destination_id": {
+          "name": "voice_numbering_plan_destination_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "voice_numbering_plan_codes_destination_code_unique_active": {
+          "name": "voice_numbering_plan_codes_destination_code_unique_active",
+          "columns": [
+            {
+              "expression": "voice_numbering_plan_destination_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "code",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"voice_numbering_plan_codes\".\"deleted_at\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "voice_numbering_plan_codes_destination_idx": {
+          "name": "voice_numbering_plan_codes_destination_idx",
+          "columns": [
+            {
+              "expression": "voice_numbering_plan_destination_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "voice_numbering_plan_codes_code_idx": {
+          "name": "voice_numbering_plan_codes_code_idx",
+          "columns": [
+            {
+              "expression": "code",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "voice_numbering_plan_codes_deleted_at_idx": {
+          "name": "voice_numbering_plan_codes_deleted_at_idx",
+          "columns": [
+            {
+              "expression": "deleted_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "voice_numbering_plan_codes_voice_numbering_plan_destination_id_voice_numbering_plan_destinations_id_fk": {
+          "name": "voice_numbering_plan_codes_voice_numbering_plan_destination_id_voice_numbering_plan_destinations_id_fk",
+          "tableFrom": "voice_numbering_plan_codes",
+          "tableTo": "voice_numbering_plan_destinations",
+          "columnsFrom": [
+            "voice_numbering_plan_destination_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "voice_numbering_plan_codes_code_digits": {
+          "name": "voice_numbering_plan_codes_code_digits",
+          "value": "\"voice_numbering_plan_codes\".\"code\" ~ '^[0-9]+$'"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.voice_numbering_plan_destinations": {
+      "name": "voice_numbering_plan_destinations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "voice_numbering_plan_id": {
+          "name": "voice_numbering_plan_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -839,6 +978,19 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "numbering_plan_destination_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "website": {
+          "name": "website",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "min_digits": {
           "name": "min_digits",
@@ -874,11 +1026,11 @@
         }
       },
       "indexes": {
-        "numbering_plan_destinations_plan_country_name_unique_active": {
-          "name": "numbering_plan_destinations_plan_country_name_unique_active",
+        "voice_numbering_plan_destinations_plan_country_name_unique_active": {
+          "name": "voice_numbering_plan_destinations_plan_country_name_unique_active",
           "columns": [
             {
-              "expression": "numbering_plan_id",
+              "expression": "voice_numbering_plan_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -897,16 +1049,16 @@
             }
           ],
           "isUnique": true,
-          "where": "\"numbering_plan_destinations\".\"deleted_at\" IS NULL",
+          "where": "\"voice_numbering_plan_destinations\".\"deleted_at\" IS NULL",
           "concurrently": false,
           "method": "btree",
           "with": {}
         },
-        "numbering_plan_destinations_plan_idx": {
-          "name": "numbering_plan_destinations_plan_idx",
+        "voice_numbering_plan_destinations_plan_idx": {
+          "name": "voice_numbering_plan_destinations_plan_idx",
           "columns": [
             {
-              "expression": "numbering_plan_id",
+              "expression": "voice_numbering_plan_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -917,8 +1069,8 @@
           "method": "btree",
           "with": {}
         },
-        "numbering_plan_destinations_country_idx": {
-          "name": "numbering_plan_destinations_country_idx",
+        "voice_numbering_plan_destinations_country_idx": {
+          "name": "voice_numbering_plan_destinations_country_idx",
           "columns": [
             {
               "expression": "country_code",
@@ -932,8 +1084,8 @@
           "method": "btree",
           "with": {}
         },
-        "numbering_plan_destinations_deleted_at_idx": {
-          "name": "numbering_plan_destinations_deleted_at_idx",
+        "voice_numbering_plan_destinations_deleted_at_idx": {
+          "name": "voice_numbering_plan_destinations_deleted_at_idx",
           "columns": [
             {
               "expression": "deleted_at",
@@ -949,12 +1101,12 @@
         }
       },
       "foreignKeys": {
-        "numbering_plan_destinations_numbering_plan_id_numbering_plans_id_fk": {
-          "name": "numbering_plan_destinations_numbering_plan_id_numbering_plans_id_fk",
-          "tableFrom": "numbering_plan_destinations",
-          "tableTo": "numbering_plans",
+        "voice_numbering_plan_destinations_voice_numbering_plan_id_voice_numbering_plans_id_fk": {
+          "name": "voice_numbering_plan_destinations_voice_numbering_plan_id_voice_numbering_plans_id_fk",
+          "tableFrom": "voice_numbering_plan_destinations",
+          "tableTo": "voice_numbering_plans",
           "columnsFrom": [
-            "numbering_plan_id"
+            "voice_numbering_plan_id"
           ],
           "columnsTo": [
             "id"
@@ -967,235 +1119,27 @@
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {
-        "numbering_plan_destinations_country_code_iso2": {
-          "name": "numbering_plan_destinations_country_code_iso2",
-          "value": "\"numbering_plan_destinations\".\"country_code\" ~ '^[A-Z]{2}$'"
+        "voice_numbering_plan_destinations_country_code_iso2": {
+          "name": "voice_numbering_plan_destinations_country_code_iso2",
+          "value": "\"voice_numbering_plan_destinations\".\"country_code\" ~ '^[A-Z]{2}$'"
         },
-        "numbering_plan_destinations_min_digits_positive": {
-          "name": "numbering_plan_destinations_min_digits_positive",
-          "value": "\"numbering_plan_destinations\".\"min_digits\" > 0"
+        "voice_numbering_plan_destinations_min_digits_positive": {
+          "name": "voice_numbering_plan_destinations_min_digits_positive",
+          "value": "\"voice_numbering_plan_destinations\".\"min_digits\" > 0"
         },
-        "numbering_plan_destinations_max_digits_positive": {
-          "name": "numbering_plan_destinations_max_digits_positive",
-          "value": "\"numbering_plan_destinations\".\"max_digits\" > 0"
+        "voice_numbering_plan_destinations_max_digits_positive": {
+          "name": "voice_numbering_plan_destinations_max_digits_positive",
+          "value": "\"voice_numbering_plan_destinations\".\"max_digits\" > 0"
         },
-        "numbering_plan_destinations_digits_range": {
-          "name": "numbering_plan_destinations_digits_range",
-          "value": "\"numbering_plan_destinations\".\"min_digits\" <= \"numbering_plan_destinations\".\"max_digits\""
+        "voice_numbering_plan_destinations_digits_range": {
+          "name": "voice_numbering_plan_destinations_digits_range",
+          "value": "\"voice_numbering_plan_destinations\".\"min_digits\" <= \"voice_numbering_plan_destinations\".\"max_digits\""
         }
       },
       "isRLSEnabled": false
     },
-    "public.numbering_plan_lines": {
-      "name": "numbering_plan_lines",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "numbering_plan_id": {
-          "name": "numbering_plan_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "country_code": {
-          "name": "country_code",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "area_code": {
-          "name": "area_code",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "operator_name": {
-          "name": "operator_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "min_digits": {
-          "name": "min_digits",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "max_digits": {
-          "name": "max_digits",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "deleted_at": {
-          "name": "deleted_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "numbering_plan_lines_plan_country_area_operator_unique_active": {
-          "name": "numbering_plan_lines_plan_country_area_operator_unique_active",
-          "columns": [
-            {
-              "expression": "numbering_plan_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "country_code",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "area_code",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "operator_name",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "where": "\"numbering_plan_lines\".\"deleted_at\" IS NULL",
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "numbering_plan_lines_plan_idx": {
-          "name": "numbering_plan_lines_plan_idx",
-          "columns": [
-            {
-              "expression": "numbering_plan_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "numbering_plan_lines_country_idx": {
-          "name": "numbering_plan_lines_country_idx",
-          "columns": [
-            {
-              "expression": "country_code",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "numbering_plan_lines_country_area_idx": {
-          "name": "numbering_plan_lines_country_area_idx",
-          "columns": [
-            {
-              "expression": "country_code",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "area_code",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "numbering_plan_lines_deleted_at_idx": {
-          "name": "numbering_plan_lines_deleted_at_idx",
-          "columns": [
-            {
-              "expression": "deleted_at",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "numbering_plan_lines_numbering_plan_id_numbering_plans_id_fk": {
-          "name": "numbering_plan_lines_numbering_plan_id_numbering_plans_id_fk",
-          "tableFrom": "numbering_plan_lines",
-          "tableTo": "numbering_plans",
-          "columnsFrom": [
-            "numbering_plan_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {
-        "numbering_plan_lines_country_code_iso2": {
-          "name": "numbering_plan_lines_country_code_iso2",
-          "value": "\"numbering_plan_lines\".\"country_code\" ~ '^[A-Z]{2}$'"
-        },
-        "numbering_plan_lines_min_digits_positive": {
-          "name": "numbering_plan_lines_min_digits_positive",
-          "value": "\"numbering_plan_lines\".\"min_digits\" > 0"
-        },
-        "numbering_plan_lines_max_digits_positive": {
-          "name": "numbering_plan_lines_max_digits_positive",
-          "value": "\"numbering_plan_lines\".\"max_digits\" > 0"
-        },
-        "numbering_plan_lines_digits_range": {
-          "name": "numbering_plan_lines_digits_range",
-          "value": "\"numbering_plan_lines\".\"min_digits\" <= \"numbering_plan_lines\".\"max_digits\""
-        }
-      },
-      "isRLSEnabled": false
-    },
-    "public.numbering_plans": {
-      "name": "numbering_plans",
+    "public.voice_numbering_plans": {
+      "name": "voice_numbering_plans",
       "schema": "",
       "columns": {
         "id": {
@@ -1241,8 +1185,8 @@
         }
       },
       "indexes": {
-        "numbering_plans_name_unique_active": {
-          "name": "numbering_plans_name_unique_active",
+        "voice_numbering_plans_name_unique_active": {
+          "name": "voice_numbering_plans_name_unique_active",
           "columns": [
             {
               "expression": "name",
@@ -1252,13 +1196,13 @@
             }
           ],
           "isUnique": true,
-          "where": "\"numbering_plans\".\"deleted_at\" IS NULL",
+          "where": "\"voice_numbering_plans\".\"deleted_at\" IS NULL",
           "concurrently": false,
           "method": "btree",
           "with": {}
         },
-        "numbering_plans_status_idx": {
-          "name": "numbering_plans_status_idx",
+        "voice_numbering_plans_status_idx": {
+          "name": "voice_numbering_plans_status_idx",
           "columns": [
             {
               "expression": "status",
@@ -1272,8 +1216,8 @@
           "method": "btree",
           "with": {}
         },
-        "numbering_plans_deleted_at_idx": {
-          "name": "numbering_plans_deleted_at_idx",
+        "voice_numbering_plans_deleted_at_idx": {
+          "name": "voice_numbering_plans_deleted_at_idx",
           "columns": [
             {
               "expression": "deleted_at",
@@ -2633,6 +2577,23 @@
         "usd",
         "eur",
         "gbp"
+      ]
+    },
+    "public.numbering_plan_destination_type": {
+      "name": "numbering_plan_destination_type",
+      "schema": "public",
+      "values": [
+        "landline",
+        "mobile",
+        "premium",
+        "special",
+        "toll_free",
+        "shared_cost",
+        "satellite",
+        "personal",
+        "paging",
+        "voip",
+        "ngn"
       ]
     },
     "public.numbering_plan_status": {
