@@ -631,15 +631,15 @@ export const voiceTrunksRelations = relations(voiceTrunks, ({ one }) => ({
   }),
 }));
 
-export const numberingPlanStatus = pgEnum("numbering_plan_status", [
+export const voiceNumberingPlanStatus = pgEnum("voice_numbering_plan_status", [
   "active",
   "inactive",
 ]);
-export type NumberingPlanStatus =
-  (typeof numberingPlanStatus.enumValues)[number];
+export type VoiceNumberingPlanStatus =
+  (typeof voiceNumberingPlanStatus.enumValues)[number];
 
-export const numberingPlanDestinationType = pgEnum(
-  "numbering_plan_destination_type",
+export const voiceNumberingPlanDestinationType = pgEnum(
+  "voice_numbering_plan_destination_type",
   [
     "landline",
     "mobile",
@@ -654,15 +654,15 @@ export const numberingPlanDestinationType = pgEnum(
     "ngn",
   ],
 );
-export type NumberingPlanDestinationType =
-  (typeof numberingPlanDestinationType.enumValues)[number];
+export type VoiceNumberingPlanDestinationType =
+  (typeof voiceNumberingPlanDestinationType.enumValues)[number];
 
-export const numberingPlans = pgTable(
+export const voiceNumberingPlans = pgTable(
   "voice_numbering_plans",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     name: text("name").notNull(),
-    status: numberingPlanStatus("status").notNull().default("active"),
+    status: voiceNumberingPlanStatus("status").notNull().default("active"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -681,26 +681,26 @@ export const numberingPlans = pgTable(
   ],
 );
 
-export type NumberingPlanRow = typeof numberingPlans.$inferSelect;
-export type NewNumberingPlanRow = typeof numberingPlans.$inferInsert;
+export type VoiceNumberingPlanRow = typeof voiceNumberingPlans.$inferSelect;
+export type NewVoiceNumberingPlanRow = typeof voiceNumberingPlans.$inferInsert;
 
-export const numberingPlansRelations = relations(
-  numberingPlans,
+export const voiceNumberingPlansRelations = relations(
+  voiceNumberingPlans,
   ({ many }) => ({
-    destinations: many(numberingPlanDestinations),
+    destinations: many(voiceNumberingPlanDestinations),
   }),
 );
 
-export const numberingPlanDestinations = pgTable(
+export const voiceNumberingPlanDestinations = pgTable(
   "voice_numbering_plan_destinations",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    numberingPlanId: uuid("voice_numbering_plan_id")
+    voiceNumberingPlanId: uuid("voice_numbering_plan_id")
       .notNull()
-      .references(() => numberingPlans.id, { onDelete: "cascade" }),
+      .references(() => voiceNumberingPlans.id, { onDelete: "cascade" }),
     countryCode: text("country_code").notNull(),
     name: text("name").notNull(),
-    type: numberingPlanDestinationType("type"),
+    type: voiceNumberingPlanDestinationType("type"),
     website: text("website"),
     minDigits: integer("min_digits").notNull(),
     maxDigits: integer("max_digits").notNull(),
@@ -717,9 +717,9 @@ export const numberingPlanDestinations = pgTable(
     uniqueIndex(
       "voice_numbering_plan_destinations_plan_country_name_unique_active",
     )
-      .on(t.numberingPlanId, t.countryCode, t.name)
+      .on(t.voiceNumberingPlanId, t.countryCode, t.name)
       .where(sql`${t.deletedAt} IS NULL`),
-    index("voice_numbering_plan_destinations_plan_idx").on(t.numberingPlanId),
+    index("voice_numbering_plan_destinations_plan_idx").on(t.voiceNumberingPlanId),
     index("voice_numbering_plan_destinations_country_idx").on(t.countryCode),
     index("voice_numbering_plan_destinations_deleted_at_idx").on(t.deletedAt),
     check(
@@ -741,29 +741,29 @@ export const numberingPlanDestinations = pgTable(
   ],
 );
 
-export type NumberingPlanDestinationRow =
-  typeof numberingPlanDestinations.$inferSelect;
-export type NewNumberingPlanDestinationRow =
-  typeof numberingPlanDestinations.$inferInsert;
+export type VoiceNumberingPlanDestinationRow =
+  typeof voiceNumberingPlanDestinations.$inferSelect;
+export type NewVoiceNumberingPlanDestinationRow =
+  typeof voiceNumberingPlanDestinations.$inferInsert;
 
-export const numberingPlanDestinationsRelations = relations(
-  numberingPlanDestinations,
+export const voiceNumberingPlanDestinationsRelations = relations(
+  voiceNumberingPlanDestinations,
   ({ many, one }) => ({
-    plan: one(numberingPlans, {
-      fields: [numberingPlanDestinations.numberingPlanId],
-      references: [numberingPlans.id],
+    plan: one(voiceNumberingPlans, {
+      fields: [voiceNumberingPlanDestinations.voiceNumberingPlanId],
+      references: [voiceNumberingPlans.id],
     }),
-    codes: many(numberingPlanCodes),
+    codes: many(voiceNumberingPlanCodes),
   }),
 );
 
-export const numberingPlanCodes = pgTable(
+export const voiceNumberingPlanCodes = pgTable(
   "voice_numbering_plan_codes",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    numberingPlanDestinationId: uuid("voice_numbering_plan_destination_id")
+    voiceNumberingPlanDestinationId: uuid("voice_numbering_plan_destination_id")
       .notNull()
-      .references(() => numberingPlanDestinations.id, { onDelete: "cascade" }),
+      .references(() => voiceNumberingPlanDestinations.id, { onDelete: "cascade" }),
     code: text("code").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
@@ -776,10 +776,10 @@ export const numberingPlanCodes = pgTable(
   },
   (t) => [
     uniqueIndex("voice_numbering_plan_codes_destination_code_unique_active")
-      .on(t.numberingPlanDestinationId, t.code)
+      .on(t.voiceNumberingPlanDestinationId, t.code)
       .where(sql`${t.deletedAt} IS NULL`),
     index("voice_numbering_plan_codes_destination_idx").on(
-      t.numberingPlanDestinationId,
+      t.voiceNumberingPlanDestinationId,
     ),
     index("voice_numbering_plan_codes_code_idx").on(t.code),
     index("voice_numbering_plan_codes_deleted_at_idx").on(t.deletedAt),
@@ -790,15 +790,15 @@ export const numberingPlanCodes = pgTable(
   ],
 );
 
-export type NumberingPlanCodeRow = typeof numberingPlanCodes.$inferSelect;
-export type NewNumberingPlanCodeRow = typeof numberingPlanCodes.$inferInsert;
+export type VoiceNumberingPlanCodeRow = typeof voiceNumberingPlanCodes.$inferSelect;
+export type NewVoiceNumberingPlanCodeRow = typeof voiceNumberingPlanCodes.$inferInsert;
 
-export const numberingPlanCodesRelations = relations(
-  numberingPlanCodes,
+export const voiceNumberingPlanCodesRelations = relations(
+  voiceNumberingPlanCodes,
   ({ one }) => ({
-    destination: one(numberingPlanDestinations, {
-      fields: [numberingPlanCodes.numberingPlanDestinationId],
-      references: [numberingPlanDestinations.id],
+    destination: one(voiceNumberingPlanDestinations, {
+      fields: [voiceNumberingPlanCodes.voiceNumberingPlanDestinationId],
+      references: [voiceNumberingPlanDestinations.id],
     }),
   }),
 );

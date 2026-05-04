@@ -2,12 +2,12 @@ import { readFileSync } from "node:fs";
 import { and, eq, isNull } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "./schema.js";
-import type { NumberingPlanDestinationType } from "./schema.js";
+import type { VoiceNumberingPlanDestinationType } from "./schema.js";
 
 const PLAN_NAME = "Main";
 
-const DESTINATION_TYPES = new Set<NumberingPlanDestinationType>(
-  schema.numberingPlanDestinationType.enumValues,
+const DESTINATION_TYPES = new Set<VoiceNumberingPlanDestinationType>(
+  schema.voiceNumberingPlanDestinationType.enumValues,
 );
 
 type Fixture = {
@@ -15,7 +15,7 @@ type Fixture = {
   name: string;
   minDigits: number;
   maxDigits: number;
-  type: NumberingPlanDestinationType | null;
+  type: VoiceNumberingPlanDestinationType | null;
   website: string | null;
   codes: Set<string>;
 };
@@ -46,8 +46,8 @@ function parseRows(): Fixture[] {
     const code = (e164 + sub).replace(/\s+/g, "");
     if (code.length === 0 || !/^[0-9]+$/.test(code)) continue;
 
-    const type = DESTINATION_TYPES.has(typeRaw as NumberingPlanDestinationType)
-      ? (typeRaw as NumberingPlanDestinationType)
+    const type = DESTINATION_TYPES.has(typeRaw as VoiceNumberingPlanDestinationType)
+      ? (typeRaw as VoiceNumberingPlanDestinationType)
       : null;
 
     const key = `${iso2}|${name}`;
@@ -75,20 +75,20 @@ async function ensurePlanId(
 ): Promise<string> {
   const existing = await db
     .select()
-    .from(schema.numberingPlans)
+    .from(schema.voiceNumberingPlans)
     .where(
       and(
-        eq(schema.numberingPlans.name, PLAN_NAME),
-        isNull(schema.numberingPlans.deletedAt),
+        eq(schema.voiceNumberingPlans.name, PLAN_NAME),
+        isNull(schema.voiceNumberingPlans.deletedAt),
       ),
     )
     .limit(1);
   if (existing[0]) return existing[0].id;
 
   const [created] = await db
-    .insert(schema.numberingPlans)
+    .insert(schema.voiceNumberingPlans)
     .values({ name: PLAN_NAME, status: "active" })
-    .returning({ id: schema.numberingPlans.id });
+    .returning({ id: schema.voiceNumberingPlans.id });
   if (!created) throw new Error("failed to create numbering plan");
   return created.id;
 }
@@ -100,22 +100,22 @@ async function ensureDestinationId(
 ): Promise<string> {
   const existing = await db
     .select()
-    .from(schema.numberingPlanDestinations)
+    .from(schema.voiceNumberingPlanDestinations)
     .where(
       and(
-        eq(schema.numberingPlanDestinations.numberingPlanId, planId),
-        eq(schema.numberingPlanDestinations.countryCode, fixture.countryCode),
-        eq(schema.numberingPlanDestinations.name, fixture.name),
-        isNull(schema.numberingPlanDestinations.deletedAt),
+        eq(schema.voiceNumberingPlanDestinations.voiceNumberingPlanId, planId),
+        eq(schema.voiceNumberingPlanDestinations.countryCode, fixture.countryCode),
+        eq(schema.voiceNumberingPlanDestinations.name, fixture.name),
+        isNull(schema.voiceNumberingPlanDestinations.deletedAt),
       ),
     )
     .limit(1);
   if (existing[0]) return existing[0].id;
 
   const [created] = await db
-    .insert(schema.numberingPlanDestinations)
+    .insert(schema.voiceNumberingPlanDestinations)
     .values({
-      numberingPlanId: planId,
+      voiceNumberingPlanId: planId,
       countryCode: fixture.countryCode,
       name: fixture.name,
       type: fixture.type,
@@ -123,7 +123,7 @@ async function ensureDestinationId(
       minDigits: fixture.minDigits,
       maxDigits: fixture.maxDigits,
     })
-    .returning({ id: schema.numberingPlanDestinations.id });
+    .returning({ id: schema.voiceNumberingPlanDestinations.id });
   if (!created)
     throw new Error(
       `failed to create destination ${fixture.countryCode}/${fixture.name}`,
@@ -138,24 +138,24 @@ async function ensureCode(
 ): Promise<boolean> {
   const existing = await db
     .select()
-    .from(schema.numberingPlanCodes)
+    .from(schema.voiceNumberingPlanCodes)
     .where(
       and(
-        eq(schema.numberingPlanCodes.numberingPlanDestinationId, destinationId),
-        eq(schema.numberingPlanCodes.code, code),
-        isNull(schema.numberingPlanCodes.deletedAt),
+        eq(schema.voiceNumberingPlanCodes.voiceNumberingPlanDestinationId, destinationId),
+        eq(schema.voiceNumberingPlanCodes.code, code),
+        isNull(schema.voiceNumberingPlanCodes.deletedAt),
       ),
     )
     .limit(1);
   if (existing[0]) return false;
 
   await db
-    .insert(schema.numberingPlanCodes)
-    .values({ numberingPlanDestinationId: destinationId, code });
+    .insert(schema.voiceNumberingPlanCodes)
+    .values({ voiceNumberingPlanDestinationId: destinationId, code });
   return true;
 }
 
-export async function seedNumberingPlan(
+export async function seedVoiceNumberingPlan(
   db: NodePgDatabase<typeof schema>,
 ): Promise<void> {
   const fixtures = parseRows();
