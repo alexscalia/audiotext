@@ -1,6 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
   type ColumnDef,
@@ -11,29 +13,30 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import type {
-  CarrierListItem,
-  CarrierListResponse,
-  CarrierListSortBy,
-  CarrierStatus,
+  VoiceNumberingPlanDestinationListItem,
+  VoiceNumberingPlanDestinationListResponse,
+  VoiceNumberingPlanDestinationSortBy,
+  VoiceNumberingPlanDestinationType,
+  VoiceNumberingPlanDetail,
+  VoiceNumberingPlanStatus,
 } from "@audiotext/shared";
-import { CarrierFormModal } from "@/components/admin/carrier-form-modal";
 
-type Carrier = CarrierListItem;
+type Destination = VoiceNumberingPlanDestinationListItem;
 
-const SORTABLE_COLUMNS: readonly CarrierListSortBy[] = [
+const SORTABLE_COLUMNS: readonly VoiceNumberingPlanDestinationSortBy[] = [
+  "countryIso2",
   "name",
-  "businessName",
-  "status",
-  "trunkCount",
-  "createdAt",
+  "type",
+  "codeCount",
 ];
 
-function isSortableColumn(id: string): id is CarrierListSortBy {
+function isSortableColumn(
+  id: string,
+): id is VoiceNumberingPlanDestinationSortBy {
   return (SORTABLE_COLUMNS as readonly string[]).includes(id);
 }
 
-function StatusBadge({ status }: { status: CarrierStatus }) {
-  const t = useTranslations("Carriers.status");
+function StatusBadge({ status }: { status: VoiceNumberingPlanStatus }) {
   const isActive = status === "active";
   return (
     <span
@@ -49,97 +52,80 @@ function StatusBadge({ status }: { status: CarrierStatus }) {
           isActive ? "bg-green-500" : "bg-gray-400"
         }`}
       />
-      {isActive ? t("active") : t("inactive")}
+      {isActive ? "active" : "inactive"}
     </span>
   );
 }
 
-function ActionsCell({ carrier }: { carrier: Carrier }) {
-  const t = useTranslations("Carriers.actions");
+function TypeChip({
+  type,
+}: {
+  type: VoiceNumberingPlanDestinationType | null;
+}) {
+  const t = useTranslations("NumberingPlans.types");
+  if (!type) return <span className="text-gray-400">—</span>;
   return (
-    <div className="flex items-center justify-end gap-1">
-      <button
-        type="button"
-        aria-label={`${t("view")} ${carrier.name}`}
-        className="cursor-pointer rounded-md p-2 text-gray-500 transition-colors duration-150 hover:bg-gray-100 hover:text-black focus:outline-none focus:ring-1 focus:ring-black motion-reduce:transition-none"
-      >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={1.8}
-          className="h-4 w-4"
-          aria-hidden="true"
-        >
-          <path
-            d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <circle cx="12" cy="12" r="3" />
-        </svg>
-      </button>
-      <button
-        type="button"
-        aria-label={`${t("edit")} ${carrier.name}`}
-        className="cursor-pointer rounded-md p-2 text-gray-500 transition-colors duration-150 hover:bg-gray-100 hover:text-black focus:outline-none focus:ring-1 focus:ring-black motion-reduce:transition-none"
-      >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={1.8}
-          className="h-4 w-4"
-          aria-hidden="true"
-        >
-          <path
-            d="M4 20h4l10-10-4-4L4 16v4ZM14 6l4 4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </button>
-      <button
-        type="button"
-        aria-label={`${t("delete")} ${carrier.name}`}
-        className="cursor-pointer rounded-md p-2 text-gray-500 transition-colors duration-150 hover:bg-red-50 hover:text-red-600 focus:outline-none focus:ring-1 focus:ring-red-500 motion-reduce:transition-none"
-      >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={1.8}
-          className="h-4 w-4"
-          aria-hidden="true"
-        >
-          <path
-            d="M5 7h14M10 7V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M10 11v6M14 11v6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </button>
-    </div>
+    <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700 ring-1 ring-inset ring-gray-200">
+      {t(type)}
+    </span>
   );
 }
 
-export default function CarriersPage() {
-  const t = useTranslations("Carriers");
+export default function NumberingPlanDetailPage() {
+  const params = useParams<{ id: string }>();
+  const id = params?.id ?? "";
+
+  const t = useTranslations("NumberingPlans");
   const [sorting, setSorting] = useState<SortingState>([
-    { id: "name", desc: false },
+    { id: "countryIso2", desc: false },
   ]);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: 25,
   });
-  const [carriers, setCarriers] = useState<Carrier[]>([]);
+
+  const [plan, setPlan] = useState<VoiceNumberingPlanDetail | null>(null);
+  const [planError, setPlanError] = useState<string | null>(null);
+  const [planLoading, setPlanLoading] = useState(true);
+
+  const [destinations, setDestinations] = useState<Destination[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [modalOpen, setModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (!id) return;
+    const controller = new AbortController();
+    setPlanLoading(true);
+    setPlanError(null);
+    fetch(`/api/admin/voice-numbering-plans/${id}`, {
+      credentials: "include",
+      signal: controller.signal,
+    })
+      .then(async (res) => {
+        if (res.status === 404) throw new Error("not_found");
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return (await res.json()) as VoiceNumberingPlanDetail;
+      })
+      .then((json) => {
+        setPlan(json);
+      })
+      .catch((err: unknown) => {
+        if (controller.signal.aborted) return;
+        if (err instanceof Error && err.message === "not_found") {
+          setPlanError(t("detail.notFound"));
+        } else {
+          setPlanError(t("loadError"));
+        }
+      })
+      .finally(() => {
+        if (controller.signal.aborted) return;
+        setPlanLoading(false);
+      });
+    return () => controller.abort();
+  }, [id, t]);
 
   useEffect(() => {
     const handle = setTimeout(() => {
@@ -149,10 +135,10 @@ export default function CarriersPage() {
     return () => clearTimeout(handle);
   }, [searchInput]);
 
-  const sortBy: CarrierListSortBy = useMemo(() => {
+  const sortBy: VoiceNumberingPlanDestinationSortBy = useMemo(() => {
     const first = sorting[0];
     if (first && isSortableColumn(first.id)) return first.id;
-    return "name";
+    return "countryIso2";
   }, [sorting]);
   const sortDir: "asc" | "desc" = useMemo(() => {
     const first = sorting[0];
@@ -163,6 +149,7 @@ export default function CarriersPage() {
   const requestIdRef = useRef(0);
 
   useEffect(() => {
+    if (!id) return;
     const requestId = ++requestIdRef.current;
     const controller = new AbortController();
     setLoading(true);
@@ -176,17 +163,17 @@ export default function CarriersPage() {
     });
     if (search) params.set("search", search);
 
-    fetch(`/api/admin/carriers?${params.toString()}`, {
-      credentials: "include",
-      signal: controller.signal,
-    })
+    fetch(
+      `/api/admin/voice-numbering-plans/${id}/destinations?${params.toString()}`,
+      { credentials: "include", signal: controller.signal },
+    )
       .then(async (res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return (await res.json()) as CarrierListResponse;
+        return (await res.json()) as VoiceNumberingPlanDestinationListResponse;
       })
       .then((json) => {
         if (requestId !== requestIdRef.current) return;
-        setCarriers(json.carriers);
+        setDestinations(json.destinations);
         setTotal(json.total);
       })
       .catch((err) => {
@@ -202,53 +189,108 @@ export default function CarriersPage() {
 
     return () => controller.abort();
   }, [
+    id,
     pagination.pageIndex,
     pagination.pageSize,
     sortBy,
     sortDir,
     search,
-    refreshKey,
     t,
   ]);
 
-  const refresh = useCallback(() => setRefreshKey((k) => k + 1), []);
-
-  const handleCreate = useCallback(() => {
-    refresh();
-  }, [refresh]);
-
-  const columns = useMemo<ColumnDef<Carrier>[]>(
+  const columns = useMemo<ColumnDef<Destination>[]>(
     () => [
       {
-        accessorKey: "name",
-        header: t("columns.name"),
+        accessorKey: "countryIso2",
+        header: t("columns.country"),
         cell: ({ row }) => (
-          <span className="font-medium text-black">{row.original.name}</span>
-        ),
-      },
-      {
-        accessorKey: "status",
-        header: t("columns.status"),
-        cell: ({ row }) => <StatusBadge status={row.original.status} />,
-      },
-      {
-        accessorKey: "trunkCount",
-        header: () => (
-          <span className="block text-right">{t("columns.trunks")}</span>
-        ),
-        cell: ({ row }) => (
-          <span className="block text-right tabular-nums">
-            {row.original.trunkCount.toLocaleString()}
+          <span className="font-mono text-sm text-gray-700">
+            {row.original.countryIso2}
           </span>
         ),
       },
       {
-        id: "actions",
+        accessorKey: "name",
+        header: t("columns.code"),
+        cell: ({ row }) => {
+          const { name, website } = row.original;
+          return (
+            <span className="inline-flex items-center gap-1.5">
+              <span className="font-medium text-black">{name}</span>
+              {website && (
+                <a
+                  href={website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={t("actions.openWebsite", { name })}
+                  title={website}
+                  className="cursor-pointer rounded p-0.5 text-gray-400 transition-colors duration-150 hover:bg-gray-100 hover:text-black focus:outline-none focus:ring-1 focus:ring-black motion-reduce:transition-none"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.8}
+                    className="h-3.5 w-3.5"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M14 4h6v6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M20 4 10 14"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </a>
+              )}
+            </span>
+          );
+        },
+      },
+      {
+        accessorKey: "countryCode",
         header: () => (
-          <span className="block text-right">{t("columns.actions")}</span>
+          <span className="block text-right">{t("columns.countryCode")}</span>
         ),
-        cell: ({ row }) => <ActionsCell carrier={row.original} />,
+        cell: ({ row }) => (
+          <span className="block text-right tabular-nums text-gray-700">
+            {row.original.countryCode ? `+${row.original.countryCode}` : "—"}
+          </span>
+        ),
+      },
+      {
+        id: "destinationCodes",
+        header: t("columns.destinationCodes"),
         enableSorting: false,
+        cell: ({ row }) => {
+          const codes = row.original.destinationCodes;
+          if (codes.length === 0) {
+            return <span className="text-gray-400">—</span>;
+          }
+          const joined = codes.join(", ");
+          return (
+            <span
+              className="line-clamp-1 max-w-[28rem] tabular-nums text-gray-700"
+              title={joined}
+            >
+              {joined}
+            </span>
+          );
+        },
+      },
+      {
+        accessorKey: "type",
+        header: t("columns.type"),
+        cell: ({ row }) => <TypeChip type={row.original.type} />,
       },
     ],
     [t],
@@ -257,7 +299,7 @@ export default function CarriersPage() {
   const pageCount = Math.max(1, Math.ceil(total / pagination.pageSize));
 
   const table = useReactTable({
-    data: carriers,
+    data: destinations,
     columns,
     pageCount,
     state: { sorting, pagination },
@@ -278,36 +320,54 @@ export default function CarriersPage() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-black">
-            {t("title")}
-          </h1>
-          <p className="mt-2 text-sm text-gray-600">{t("subtitle")}</p>
-        </div>
-        <button
-          type="button"
-          onClick={() => setModalOpen(true)}
-          className="inline-flex cursor-pointer items-center gap-2 self-start rounded-md bg-black px-4 py-2 text-sm font-semibold text-white transition-colors duration-150 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 motion-reduce:transition-none sm:self-auto"
+      <div className="flex flex-col gap-1">
+        <Link
+          href="/admin/numbering-plans/voice"
+          className="inline-flex w-fit items-center gap-1 text-sm text-gray-600 hover:text-black"
         >
           <svg
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth={2}
+            strokeWidth={1.8}
             className="h-4 w-4"
             aria-hidden="true"
           >
-            <path d="M12 5v14M5 12h14" strokeLinecap="round" />
+            <path
+              d="M15 18l-6-6 6-6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
-          {t("newCarrier")}
-        </button>
+          {t("backToPlans")}
+        </Link>
+        <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-black">
+              {planLoading ? "—" : (plan?.name ?? t("detail.notFound"))}
+            </h1>
+            <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-gray-600">
+              {plan && <StatusBadge status={plan.status} />}
+              {plan && (
+                <span>
+                  {t("detail.summary", {
+                    destinations: plan.destinationCount,
+                    codes: plan.codeCount,
+                  })}
+                </span>
+              )}
+              {planError && !planLoading && (
+                <span className="text-red-600">{planError}</span>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="mt-6 rounded-md border border-gray-200 bg-white">
         <div className="border-b border-gray-200 p-4">
           <label className="relative block">
-            <span className="sr-only">{t("search")}</span>
+            <span className="sr-only">{t("detail.search")}</span>
             <span
               aria-hidden="true"
               className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-gray-400"
@@ -327,7 +387,7 @@ export default function CarriersPage() {
               type="search"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              placeholder={t("search")}
+              placeholder={t("detail.search")}
               className="w-full rounded-md border border-gray-200 bg-white py-2 pl-9 pr-3 text-sm text-black placeholder:text-gray-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:max-w-xs"
             />
           </label>
@@ -341,6 +401,7 @@ export default function CarriersPage() {
                   {headerGroup.headers.map((header) => {
                     const canSort = header.column.getCanSort();
                     const sortDirHeader = header.column.getIsSorted();
+                    const isNumeric = header.column.id === "countryCode";
                     return (
                       <th
                         key={header.id}
@@ -352,18 +413,15 @@ export default function CarriersPage() {
                               ? "descending"
                               : "none"
                         }
-                        className={`px-4 py-3 ${
-                          header.column.id === "actions" ||
-                          header.column.id === "trunkCount"
-                            ? "text-right"
-                            : ""
-                        }`}
+                        className={`px-4 py-3 ${isNumeric ? "text-right" : ""}`}
                       >
                         {header.isPlaceholder ? null : canSort ? (
                           <button
                             type="button"
                             onClick={header.column.getToggleSortingHandler()}
-                            className="inline-flex cursor-pointer items-center gap-1 text-xs font-semibold uppercase tracking-wide text-gray-600 hover:text-black focus:outline-none focus:ring-1 focus:ring-black"
+                            className={`inline-flex cursor-pointer items-center gap-1 text-xs font-semibold uppercase tracking-wide text-gray-600 hover:text-black focus:outline-none focus:ring-1 focus:ring-black ${
+                              isNumeric ? "ml-auto" : ""
+                            }`}
                           >
                             {flexRender(
                               header.column.columnDef.header,
@@ -414,22 +472,22 @@ export default function CarriersPage() {
                     key={row.id}
                     className="transition-colors duration-150 hover:bg-gray-50 motion-reduce:transition-none"
                   >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className={`px-4 py-3 align-middle text-sm text-gray-700 ${
-                          cell.column.id === "actions" ||
-                          cell.column.id === "trunkCount"
-                            ? "text-right"
-                            : ""
-                        }`}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </td>
-                    ))}
+                    {row.getVisibleCells().map((cell) => {
+                      const isNumeric = cell.column.id === "countryCode";
+                      return (
+                        <td
+                          key={cell.id}
+                          className={`px-4 py-3 align-middle text-sm text-gray-700 ${
+                            isNumeric ? "text-right" : ""
+                          }`}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </td>
+                      );
+                    })}
                   </tr>
                 ))
               ) : (
@@ -438,7 +496,7 @@ export default function CarriersPage() {
                     colSpan={columns.length}
                     className="px-4 py-12 text-center text-sm text-gray-500"
                   >
-                    {search ? t("noResults") : t("empty")}
+                    {search ? t("noResults") : t("detail.empty")}
                   </td>
                 </tr>
               )}
@@ -450,13 +508,13 @@ export default function CarriersPage() {
           <div className="flex flex-col gap-3 border-t border-gray-200 px-4 py-3 text-sm text-gray-600 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2">
               <label
-                htmlFor="carriers-page-size"
+                htmlFor="destinations-page-size"
                 className="text-xs uppercase tracking-wide text-gray-500"
               >
                 {t("pagination.rowsPerPage")}
               </label>
               <select
-                id="carriers-page-size"
+                id="destinations-page-size"
                 value={pagination.pageSize}
                 onChange={(e) =>
                   setPagination({
@@ -507,14 +565,6 @@ export default function CarriersPage() {
           </div>
         )}
       </div>
-
-      {modalOpen && (
-        <CarrierFormModal
-          open
-          onClose={() => setModalOpen(false)}
-          onCreate={handleCreate}
-        />
-      )}
     </div>
   );
 }

@@ -151,15 +151,131 @@ export const CarrierListItemSchema = z.object({
   name: z.string(),
   businessName: z.string(),
   status: CarrierStatusEnum,
+  trunkCount: z.number().int().nonnegative(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 });
 export type CarrierListItem = z.infer<typeof CarrierListItemSchema>;
 
+export const CarrierListSortByEnum = z.enum([
+  "name",
+  "businessName",
+  "status",
+  "trunkCount",
+  "createdAt",
+]);
+export type CarrierListSortBy = z.infer<typeof CarrierListSortByEnum>;
+
+export const CarrierListSortDirEnum = z.enum(["asc", "desc"]);
+export type CarrierListSortDir = z.infer<typeof CarrierListSortDirEnum>;
+
+export const CarrierListQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(10),
+  search: z.string().trim().max(200).optional(),
+  sortBy: CarrierListSortByEnum.default("name"),
+  sortDir: CarrierListSortDirEnum.default("asc"),
+});
+export type CarrierListQuery = z.infer<typeof CarrierListQuerySchema>;
+
 export const CarrierListResponseSchema = z.object({
   carriers: z.array(CarrierListItemSchema),
+  total: z.number().int().nonnegative(),
+  page: z.number().int().min(1),
+  pageSize: z.number().int().min(1),
 });
 export type CarrierListResponse = z.infer<typeof CarrierListResponseSchema>;
+
+export const VoiceNumberingPlanStatusEnum = z.enum(["active", "inactive"]);
+export type VoiceNumberingPlanStatus = z.infer<typeof VoiceNumberingPlanStatusEnum>;
+
+export const VoiceNumberingPlanListItemSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  status: VoiceNumberingPlanStatusEnum,
+  destinationCount: z.number().int().nonnegative(),
+  codeCount: z.number().int().nonnegative(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+});
+export type VoiceNumberingPlanListItem = z.infer<
+  typeof VoiceNumberingPlanListItemSchema
+>;
+
+export const VoiceNumberingPlanListResponseSchema = z.object({
+  plans: z.array(VoiceNumberingPlanListItemSchema),
+});
+export type VoiceNumberingPlanListResponse = z.infer<
+  typeof VoiceNumberingPlanListResponseSchema
+>;
+
+export const VoiceNumberingPlanDetailSchema = VoiceNumberingPlanListItemSchema;
+export type VoiceNumberingPlanDetail = z.infer<
+  typeof VoiceNumberingPlanDetailSchema
+>;
+
+export const VoiceNumberingPlanDestinationTypeEnum = z.enum([
+  "all",
+  "landline",
+  "mobile",
+  "premium",
+  "special",
+  "toll_free",
+  "shared_cost",
+  "satellite",
+  "personal",
+  "paging",
+  "voip",
+  "ngn",
+]);
+export type VoiceNumberingPlanDestinationType = z.infer<
+  typeof VoiceNumberingPlanDestinationTypeEnum
+>;
+
+export const VoiceNumberingPlanDestinationListItemSchema = z.object({
+  id: z.string().uuid(),
+  countryIso2: z.string(),
+  name: z.string(),
+  type: VoiceNumberingPlanDestinationTypeEnum.nullable(),
+  countryCode: z.string().nullable(),
+  destinationCodes: z.array(z.string()),
+  codeCount: z.number().int().nonnegative(),
+  website: z.string().url().nullable(),
+});
+export type VoiceNumberingPlanDestinationListItem = z.infer<
+  typeof VoiceNumberingPlanDestinationListItemSchema
+>;
+
+export const VoiceNumberingPlanDestinationSortByEnum = z.enum([
+  "countryIso2",
+  "name",
+  "type",
+  "codeCount",
+]);
+export type VoiceNumberingPlanDestinationSortBy = z.infer<
+  typeof VoiceNumberingPlanDestinationSortByEnum
+>;
+
+export const VoiceNumberingPlanDestinationListQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(25),
+  search: z.string().trim().max(200).optional(),
+  sortBy: VoiceNumberingPlanDestinationSortByEnum.default("countryIso2"),
+  sortDir: CarrierListSortDirEnum.default("asc"),
+});
+export type VoiceNumberingPlanDestinationListQuery = z.infer<
+  typeof VoiceNumberingPlanDestinationListQuerySchema
+>;
+
+export const VoiceNumberingPlanDestinationListResponseSchema = z.object({
+  destinations: z.array(VoiceNumberingPlanDestinationListItemSchema),
+  total: z.number().int().nonnegative(),
+  page: z.number().int().min(1),
+  pageSize: z.number().int().min(1),
+});
+export type VoiceNumberingPlanDestinationListResponse = z.infer<
+  typeof VoiceNumberingPlanDestinationListResponseSchema
+>;
 
 export const ChatAppEnum = z.enum(["whatsapp", "telegram", "signal"]);
 export type ChatApp = z.infer<typeof ChatAppEnum>;

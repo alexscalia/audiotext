@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -10,18 +10,32 @@ type NavKey =
   | "users"
   | "calls"
   | "numbering"
+  | "numberingVoice"
+  | "numberingSms"
   | "trunks"
   | "carriers"
   | "settings";
 
-type NavItem = {
+type LeafItem = {
+  type: "link";
   href: string;
   key: NavKey;
   icon: React.ReactNode;
 };
 
+type GroupItem = {
+  type: "group";
+  key: NavKey;
+  basePath: string;
+  icon: React.ReactNode;
+  children: { href: string; key: NavKey }[];
+};
+
+type NavItem = LeafItem | GroupItem;
+
 const NAV: NavItem[] = [
   {
+    type: "link",
     href: "/admin/dashboard",
     key: "dashboard",
     icon: (
@@ -32,6 +46,7 @@ const NAV: NavItem[] = [
     ),
   },
   {
+    type: "link",
     href: "/admin/users",
     key: "users",
     icon: (
@@ -42,6 +57,7 @@ const NAV: NavItem[] = [
     ),
   },
   {
+    type: "link",
     href: "/admin/calls",
     key: "calls",
     icon: (
@@ -51,16 +67,22 @@ const NAV: NavItem[] = [
     ),
   },
   {
-    href: "/admin/numbering",
+    type: "group",
     key: "numbering",
+    basePath: "/admin/numbering-plans",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-5 w-5">
         <rect x="4" y="4" width="16" height="16" rx="2" />
         <path d="M9 8v8M15 8v8M4 12h16" />
       </svg>
     ),
+    children: [
+      { href: "/admin/numbering-plans/voice", key: "numberingVoice" },
+      { href: "/admin/numbering-plans/sms", key: "numberingSms" },
+    ],
   },
   {
+    type: "link",
     href: "/admin/trunks",
     key: "trunks",
     icon: (
@@ -70,6 +92,7 @@ const NAV: NavItem[] = [
     ),
   },
   {
+    type: "link",
     href: "/admin/carriers",
     key: "carriers",
     icon: (
@@ -81,6 +104,7 @@ const NAV: NavItem[] = [
     ),
   },
   {
+    type: "link",
     href: "/admin/settings",
     key: "settings",
     icon: (
@@ -107,31 +131,134 @@ function NavList({
 }) {
   const pathname = usePathname();
   const t = useTranslations("Nav");
+
+  const isPathActive = (href: string) =>
+    pathname === href || pathname.startsWith(href + "/");
+
+  const initialOpen: Record<string, boolean> = {};
+  for (const item of NAV) {
+    if (item.type === "group") {
+      initialOpen[item.key] = isPathActive(item.basePath);
+    }
+  }
+  const [openGroups, setOpenGroups] =
+    useState<Record<string, boolean>>(initialOpen);
+
   return (
     <nav className={`flex-1 py-6 space-y-1 ${collapsed ? "px-2" : "px-4"}`}>
       {NAV.map((item) => {
-        const active =
-          pathname === item.href || pathname.startsWith(item.href + "/");
+        if (item.type === "link") {
+          const active = isPathActive(item.href);
+          const label = t(item.key);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              title={collapsed ? label : undefined}
+              onClick={onItemClick}
+              className={`group relative flex cursor-pointer items-center gap-3 rounded-md text-sm font-medium transition-colors duration-150 motion-reduce:transition-none ${
+                collapsed ? "justify-center px-0 py-2" : "px-3 py-2"
+              } ${
+                active
+                  ? "bg-black text-white"
+                  : "text-gray-700 hover:bg-gray-100 hover:text-black"
+              }`}
+            >
+              <span className={active ? "text-white" : "text-gray-500"}>
+                {item.icon}
+              </span>
+              {!collapsed && <span>{label}</span>}
+            </Link>
+          );
+        }
+
+        const groupActive = isPathActive(item.basePath);
         const label = t(item.key);
+
+        if (collapsed) {
+          const firstChild = item.children[0];
+          if (!firstChild) return null;
+          return (
+            <Link
+              key={item.key}
+              href={firstChild.href}
+              title={label}
+              onClick={onItemClick}
+              className={`group relative flex cursor-pointer items-center justify-center gap-3 rounded-md px-0 py-2 text-sm font-medium transition-colors duration-150 motion-reduce:transition-none ${
+                groupActive
+                  ? "bg-black text-white"
+                  : "text-gray-700 hover:bg-gray-100 hover:text-black"
+              }`}
+            >
+              <span className={groupActive ? "text-white" : "text-gray-500"}>
+                {item.icon}
+              </span>
+            </Link>
+          );
+        }
+
+        const open = openGroups[item.key] ?? false;
         return (
-          <Link
-            key={item.href}
-            href={item.href}
-            title={collapsed ? label : undefined}
-            onClick={onItemClick}
-            className={`group relative flex cursor-pointer items-center gap-3 rounded-md text-sm font-medium transition-colors duration-150 motion-reduce:transition-none ${
-              collapsed ? "justify-center px-0 py-2" : "px-3 py-2"
-            } ${
-              active
-                ? "bg-black text-white"
-                : "text-gray-700 hover:bg-gray-100 hover:text-black"
-            }`}
-          >
-            <span className={active ? "text-white" : "text-gray-500"}>
-              {item.icon}
-            </span>
-            {!collapsed && <span>{label}</span>}
-          </Link>
+          <div key={item.key}>
+            <button
+              type="button"
+              aria-expanded={open}
+              onClick={() =>
+                setOpenGroups((s) => ({ ...s, [item.key]: !open }))
+              }
+              className={`flex w-full cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors duration-150 motion-reduce:transition-none ${
+                groupActive && !open
+                  ? "bg-black text-white"
+                  : "text-gray-700 hover:bg-gray-100 hover:text-black"
+              }`}
+            >
+              <span
+                className={
+                  groupActive && !open ? "text-white" : "text-gray-500"
+                }
+              >
+                {item.icon}
+              </span>
+              <span className="flex-1 text-left">{label}</span>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.8}
+                className={`h-4 w-4 transition-transform duration-150 motion-reduce:transition-none ${
+                  open ? "rotate-90" : ""
+                }`}
+                aria-hidden="true"
+              >
+                <path
+                  d="M9 6l6 6-6 6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+            {open && (
+              <div className="mt-1 space-y-1 pl-9">
+                {item.children.map((child) => {
+                  const childActive = isPathActive(child.href);
+                  return (
+                    <Link
+                      key={child.href}
+                      href={child.href}
+                      onClick={onItemClick}
+                      className={`flex cursor-pointer items-center rounded-md px-3 py-1.5 text-sm font-medium transition-colors duration-150 motion-reduce:transition-none ${
+                        childActive
+                          ? "bg-black text-white"
+                          : "text-gray-700 hover:bg-gray-100 hover:text-black"
+                      }`}
+                    >
+                      {t(child.key)}
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         );
       })}
     </nav>

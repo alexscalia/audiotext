@@ -5,6 +5,7 @@ import { logger } from "hono/logger";
 import { pool } from "@audiotext/db";
 import { auth } from "./lib/auth";
 import { carriersRoutes } from "./routes/carriers";
+import { voiceNumberingPlansRoutes } from "./routes/voice-numbering-plans";
 
 const PORT = Number(process.env.PORT ?? 3001);
 
@@ -30,6 +31,7 @@ const routes = app
     c.json({ ok: true, ts: new Date().toISOString() }),
   )
   .route("/admin/carriers", carriersRoutes)
+  .route("/admin/voice-numbering-plans", voiceNumberingPlansRoutes)
   .get("/:slug", (c) => c.json({ message: `Hello ${c.req.param("slug")}!` }));
 
 const server = serve({ fetch: app.fetch, port: PORT }, ({ port }) => {

@@ -8,7 +8,7 @@ import type {
   ChatApp,
   NewCarrierRow,
 } from "./schema.js";
-import { seedVoiceNumberingPlan } from "./seed-numbering-plan.js";
+import { seedVoiceNumberingPlan } from "./seed-voice-numbering-plan.js";
 
 const url = process.env.DATABASE_URL;
 if (!url) throw new Error("DATABASE_URL is required");

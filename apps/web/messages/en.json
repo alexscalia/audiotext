@@ -39,6 +39,8 @@
     "users": "Users",
     "calls": "Calls",
     "numbering": "Numbering plans",
+    "numberingVoice": "Voice",
+    "numberingSms": "SMS",
     "trunks": "Trunks",
     "carriers": "Carriers",
     "settings": "Settings"
@@ -64,6 +66,60 @@
     "recentActivity": "Recent activity",
     "noActivity": "No activity yet."
   },
+  "NumberingPlans": {
+    "title": "Voice numbering plans",
+    "subtitle": "Voice routing destinations and codes by plan",
+    "search": "Search plans",
+    "empty": "No numbering plans yet.",
+    "noResults": "No matches found.",
+    "loading": "Loading...",
+    "loadError": "Failed to load.",
+    "backToPlans": "Back to numbering plans",
+    "detail": {
+      "search": "Search destinations",
+      "summary": "{destinations} destinations · {codes} codes",
+      "empty": "No destinations in this plan.",
+      "notFound": "Plan not found."
+    },
+    "columns": {
+      "name": "Name",
+      "destinations": "Destinations",
+      "codes": "Codes",
+      "actions": "Actions",
+      "country": "Country",
+      "code": "Code",
+      "countryCode": "Country code",
+      "destinationCodes": "Destination codes",
+      "type": "Type"
+    },
+    "actions": {
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete",
+      "openWebsite": "Open {name} website"
+    },
+    "types": {
+      "all": "All",
+      "landline": "Landline",
+      "mobile": "Mobile",
+      "premium": "Premium",
+      "special": "Special",
+      "toll_free": "Toll-free",
+      "shared_cost": "Shared cost",
+      "satellite": "Satellite",
+      "personal": "Personal",
+      "paging": "Paging",
+      "voip": "VoIP",
+      "ngn": "NGN"
+    },
+    "pagination": {
+      "prev": "Previous",
+      "next": "Next",
+      "rowsPerPage": "Rows per page",
+      "pageOf": "Page {page} of {total}",
+      "showing": "Showing {from}–{to} of {total}"
+    }
+  },
   "Carriers": {
     "title": "Carriers",
     "subtitle": "Manage your interconnection carriers",
@@ -71,9 +127,12 @@
     "search": "Search carriers",
     "empty": "No carriers yet.",
     "noResults": "No carriers match your search.",
+    "loading": "Loading carriers...",
+    "loadError": "Could not load carriers.",
     "columns": {
       "name": "Name",
       "status": "Status",
+      "trunks": "Trunks",
       "actions": "Actions"
     },
     "status": {
@@ -87,6 +146,13 @@
       "open": "Open actions menu",
       "cancel": "Cancel",
       "close": "Close"
+    },
+    "pagination": {
+      "prev": "Previous",
+      "next": "Next",
+      "rowsPerPage": "Rows per page",
+      "pageOf": "Page {page} of {total}",
+      "showing": "Showing {from}–{to} of {total}"
     },
     "view": {
       "bankEmpty": "No bank details on file."

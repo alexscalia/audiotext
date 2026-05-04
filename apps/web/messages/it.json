@@ -39,6 +39,8 @@
     "users": "Utenti",
     "calls": "Chiamate",
     "numbering": "Piani di numerazione",
+    "numberingVoice": "Voce",
+    "numberingSms": "SMS",
     "trunks": "Trunk",
     "carriers": "Carrier",
     "settings": "Impostazioni"
@@ -64,6 +66,60 @@
     "recentActivity": "Attività recente",
     "noActivity": "Nessuna attività."
   },
+  "NumberingPlans": {
+    "title": "Piani di numerazione voce",
+    "subtitle": "Destinazioni e codici di instradamento voce per piano",
+    "search": "Cerca piani",
+    "empty": "Nessun piano di numerazione presente.",
+    "noResults": "Nessun risultato.",
+    "loading": "Caricamento...",
+    "loadError": "Impossibile caricare.",
+    "backToPlans": "Torna ai piani di numerazione",
+    "detail": {
+      "search": "Cerca destinazioni",
+      "summary": "{destinations} destinazioni · {codes} codici",
+      "empty": "Nessuna destinazione in questo piano.",
+      "notFound": "Piano non trovato."
+    },
+    "columns": {
+      "name": "Nome",
+      "destinations": "Destinazioni",
+      "codes": "Codici",
+      "actions": "Azioni",
+      "country": "Paese",
+      "code": "Codice",
+      "countryCode": "Prefisso paese",
+      "destinationCodes": "Codici destinazione",
+      "type": "Tipo"
+    },
+    "actions": {
+      "view": "Visualizza",
+      "edit": "Modifica",
+      "delete": "Elimina",
+      "openWebsite": "Apri il sito di {name}"
+    },
+    "types": {
+      "all": "Tutti",
+      "landline": "Fisso",
+      "mobile": "Cellulare",
+      "premium": "Premium",
+      "special": "Speciale",
+      "toll_free": "Numero verde",
+      "shared_cost": "A costo ripartito",
+      "satellite": "Satellitare",
+      "personal": "Personale",
+      "paging": "Paging",
+      "voip": "VoIP",
+      "ngn": "NGN"
+    },
+    "pagination": {
+      "prev": "Precedente",
+      "next": "Successivo",
+      "rowsPerPage": "Righe per pagina",
+      "pageOf": "Pagina {page} di {total}",
+      "showing": "Mostrate {from}–{to} di {total}"
+    }
+  },
   "Carriers": {
     "title": "Carrier",
     "subtitle": "Gestisci i carrier di interconnessione",
@@ -71,9 +127,12 @@
     "search": "Cerca carrier",
     "empty": "Nessun carrier presente.",
     "noResults": "Nessun carrier corrisponde alla ricerca.",
+    "loading": "Caricamento carrier...",
+    "loadError": "Impossibile caricare i carrier.",
     "columns": {
       "name": "Nome",
       "status": "Stato",
+      "trunks": "Trunk",
       "actions": "Azioni"
     },
     "status": {
@@ -87,6 +146,13 @@
       "open": "Apri menu azioni",
       "cancel": "Annulla",
       "close": "Chiudi"
+    },
+    "pagination": {
+      "prev": "Precedente",
+      "next": "Successivo",
+      "rowsPerPage": "Righe per pagina",
+      "pageOf": "Pagina {page} di {total}",
+      "showing": "Mostrate {from}–{to} di {total}"
     },
     "view": {
       "bankEmpty": "Nessun dato bancario disponibile."
