@@ -10,14 +10,20 @@ const DESTINATION_TYPES = new Set<VoiceNumberingPlanDestinationType>(
   schema.voiceNumberingPlanDestinationType.enumValues,
 );
 
-type Fixture = {
+type CodeTriplet = {
+  fullCode: string;
   countryCode: string;
+  destinationCode: string;
+};
+
+type Fixture = {
+  countryIso2: string;
   name: string;
   minDigits: number;
   maxDigits: number;
   type: VoiceNumberingPlanDestinationType | null;
   website: string | null;
-  codes: Set<string>;
+  codes: Map<string, CodeTriplet>;
 };
 
 function parseRows(): Fixture[] {
@@ -43,8 +49,12 @@ function parseRows(): Fixture[] {
     if (!iso2 || !name) continue;
     if (!Number.isFinite(minDigits) || !Number.isFinite(maxDigits)) continue;
 
-    const code = (e164 + sub).replace(/\s+/g, "");
-    if (code.length === 0 || !/^[0-9]+$/.test(code)) continue;
+    const countryCode = e164.replace(/\s+/g, "");
+    const destinationCode = sub.replace(/\s+/g, "");
+    const fullCode = countryCode + destinationCode;
+    if (fullCode.length === 0 || !/^[0-9]+$/.test(fullCode)) continue;
+    if (countryCode.length === 0 || !/^[0-9]+$/.test(countryCode)) continue;
+    if (destinationCode.length === 0 || !/^[0-9]+$/.test(destinationCode)) continue;
 
     const type = DESTINATION_TYPES.has(typeRaw as VoiceNumberingPlanDestinationType)
       ? (typeRaw as VoiceNumberingPlanDestinationType)
@@ -54,17 +64,19 @@ function parseRows(): Fixture[] {
     let fixture = fixtures.get(key);
     if (!fixture) {
       fixture = {
-        countryCode: iso2,
+        countryIso2: iso2,
         name,
         minDigits,
         maxDigits,
         type,
         website,
-        codes: new Set<string>(),
+        codes: new Map<string, CodeTriplet>(),
       };
       fixtures.set(key, fixture);
     }
-    fixture.codes.add(code);
+    if (!fixture.codes.has(fullCode)) {
+      fixture.codes.set(fullCode, { fullCode, countryCode, destinationCode });
+    }
   }
 
   return [...fixtures.values()];
@@ -104,7 +116,7 @@ async function ensureDestinationId(
     .where(
       and(
         eq(schema.voiceNumberingPlanDestinations.voiceNumberingPlanId, planId),
-        eq(schema.voiceNumberingPlanDestinations.countryCode, fixture.countryCode),
+        eq(schema.voiceNumberingPlanDestinations.countryIso2, fixture.countryIso2),
         eq(schema.voiceNumberingPlanDestinations.name, fixture.name),
         isNull(schema.voiceNumberingPlanDestinations.deletedAt),
       ),
@@ -116,7 +128,7 @@ async function ensureDestinationId(
     .insert(schema.voiceNumberingPlanDestinations)
     .values({
       voiceNumberingPlanId: planId,
-      countryCode: fixture.countryCode,
+      countryIso2: fixture.countryIso2,
       name: fixture.name,
       type: fixture.type,
       website: fixture.website,
@@ -126,7 +138,7 @@ async function ensureDestinationId(
     .returning({ id: schema.voiceNumberingPlanDestinations.id });
   if (!created)
     throw new Error(
-      `failed to create destination ${fixture.countryCode}/${fixture.name}`,
+      `failed to create destination ${fixture.countryIso2}/${fixture.name}`,
     );
   return created.id;
 }
@@ -134,7 +146,7 @@ async function ensureDestinationId(
 async function ensureCode(
   db: NodePgDatabase<typeof schema>,
   destinationId: string,
-  code: string,
+  triplet: CodeTriplet,
 ): Promise<boolean> {
   const existing = await db
     .select()
@@ -142,16 +154,19 @@ async function ensureCode(
     .where(
       and(
         eq(schema.voiceNumberingPlanCodes.voiceNumberingPlanDestinationId, destinationId),
-        eq(schema.voiceNumberingPlanCodes.code, code),
+        eq(schema.voiceNumberingPlanCodes.fullCode, triplet.fullCode),
         isNull(schema.voiceNumberingPlanCodes.deletedAt),
       ),
     )
     .limit(1);
   if (existing[0]) return false;
 
-  await db
-    .insert(schema.voiceNumberingPlanCodes)
-    .values({ voiceNumberingPlanDestinationId: destinationId, code });
+  await db.insert(schema.voiceNumberingPlanCodes).values({
+    voiceNumberingPlanDestinationId: destinationId,
+    fullCode: triplet.fullCode,
+    countryCode: triplet.countryCode,
+    destinationCode: triplet.destinationCode,
+  });
   return true;
 }
 
@@ -167,8 +182,8 @@ export async function seedVoiceNumberingPlan(
   for (const fixture of fixtures) {
     const destinationId = await ensureDestinationId(db, planId, fixture);
     destinationsInserted += 1;
-    for (const code of fixture.codes) {
-      if (await ensureCode(db, destinationId, code)) codesInserted += 1;
+    for (const triplet of fixture.codes.values()) {
+      if (await ensureCode(db, destinationId, triplet)) codesInserted += 1;
     }
   }
 

@@ -698,7 +698,7 @@ export const voiceNumberingPlanDestinations = pgTable(
     voiceNumberingPlanId: uuid("voice_numbering_plan_id")
       .notNull()
       .references(() => voiceNumberingPlans.id, { onDelete: "cascade" }),
-    countryCode: text("country_code").notNull(),
+    countryIso2: text("country_iso2").notNull(),
     name: text("name").notNull(),
     type: voiceNumberingPlanDestinationType("type"),
     website: text("website"),
@@ -717,14 +717,14 @@ export const voiceNumberingPlanDestinations = pgTable(
     uniqueIndex(
       "voice_numbering_plan_destinations_plan_country_name_unique_active",
     )
-      .on(t.voiceNumberingPlanId, t.countryCode, t.name)
+      .on(t.voiceNumberingPlanId, t.countryIso2, t.name)
       .where(sql`${t.deletedAt} IS NULL`),
     index("voice_numbering_plan_destinations_plan_idx").on(t.voiceNumberingPlanId),
-    index("voice_numbering_plan_destinations_country_idx").on(t.countryCode),
+    index("voice_numbering_plan_destinations_country_iso2_idx").on(t.countryIso2),
     index("voice_numbering_plan_destinations_deleted_at_idx").on(t.deletedAt),
     check(
-      "voice_numbering_plan_destinations_country_code_iso2",
-      sql`${t.countryCode} ~ '^[A-Z]{2}$'`,
+      "voice_numbering_plan_destinations_country_iso2_format",
+      sql`${t.countryIso2} ~ '^[A-Z]{2}$'`,
     ),
     check(
       "voice_numbering_plan_destinations_min_digits_positive",
@@ -764,7 +764,9 @@ export const voiceNumberingPlanCodes = pgTable(
     voiceNumberingPlanDestinationId: uuid("voice_numbering_plan_destination_id")
       .notNull()
       .references(() => voiceNumberingPlanDestinations.id, { onDelete: "cascade" }),
-    code: text("code").notNull(),
+    fullCode: text("full_code").notNull(),
+    countryCode: text("country_code").notNull(),
+    destinationCode: text("destination_code").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -775,17 +777,27 @@ export const voiceNumberingPlanCodes = pgTable(
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
   (t) => [
-    uniqueIndex("voice_numbering_plan_codes_destination_code_unique_active")
-      .on(t.voiceNumberingPlanDestinationId, t.code)
+    uniqueIndex("voice_numbering_plan_codes_destination_full_code_unique_active")
+      .on(t.voiceNumberingPlanDestinationId, t.fullCode)
       .where(sql`${t.deletedAt} IS NULL`),
     index("voice_numbering_plan_codes_destination_idx").on(
       t.voiceNumberingPlanDestinationId,
     ),
-    index("voice_numbering_plan_codes_code_idx").on(t.code),
+    index("voice_numbering_plan_codes_full_code_idx").on(t.fullCode),
+    index("voice_numbering_plan_codes_country_code_idx").on(t.countryCode),
+    index("voice_numbering_plan_codes_destination_code_idx").on(t.destinationCode),
     index("voice_numbering_plan_codes_deleted_at_idx").on(t.deletedAt),
     check(
-      "voice_numbering_plan_codes_code_digits",
-      sql`${t.code} ~ '^[0-9]+$'`,
+      "voice_numbering_plan_codes_full_code_digits",
+      sql`${t.fullCode} ~ '^[0-9]+$'`,
+    ),
+    check(
+      "voice_numbering_plan_codes_country_code_digits",
+      sql`${t.countryCode} ~ '^[0-9]+$'`,
+    ),
+    check(
+      "voice_numbering_plan_codes_destination_code_digits",
+      sql`${t.destinationCode} ~ '^[0-9]+$'`,
     ),
   ],
 );

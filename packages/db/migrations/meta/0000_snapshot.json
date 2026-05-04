@@ -1,5 +1,5 @@
 {
-  "id": "c270f8eb-506e-4752-b034-497e889a5492",
+  "id": "c081e9e6-f4f7-4bed-ba2b-0c401df9b4b3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1722,8 +1722,20 @@
           "primaryKey": false,
           "notNull": true
         },
-        "code": {
-          "name": "code",
+        "full_code": {
+          "name": "full_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "country_code": {
+          "name": "country_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "destination_code": {
+          "name": "destination_code",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -1750,8 +1762,8 @@
         }
       },
       "indexes": {
-        "voice_numbering_plan_codes_destination_code_unique_active": {
-          "name": "voice_numbering_plan_codes_destination_code_unique_active",
+        "voice_numbering_plan_codes_destination_full_code_unique_active": {
+          "name": "voice_numbering_plan_codes_destination_full_code_unique_active",
           "columns": [
             {
               "expression": "voice_numbering_plan_destination_id",
@@ -1760,7 +1772,7 @@
               "nulls": "last"
             },
             {
-              "expression": "code",
+              "expression": "full_code",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1787,11 +1799,41 @@
           "method": "btree",
           "with": {}
         },
-        "voice_numbering_plan_codes_code_idx": {
-          "name": "voice_numbering_plan_codes_code_idx",
+        "voice_numbering_plan_codes_full_code_idx": {
+          "name": "voice_numbering_plan_codes_full_code_idx",
           "columns": [
             {
-              "expression": "code",
+              "expression": "full_code",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "voice_numbering_plan_codes_country_code_idx": {
+          "name": "voice_numbering_plan_codes_country_code_idx",
+          "columns": [
+            {
+              "expression": "country_code",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "voice_numbering_plan_codes_destination_code_idx": {
+          "name": "voice_numbering_plan_codes_destination_code_idx",
+          "columns": [
+            {
+              "expression": "destination_code",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1837,9 +1879,17 @@
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {
-        "voice_numbering_plan_codes_code_digits": {
-          "name": "voice_numbering_plan_codes_code_digits",
-          "value": "\"voice_numbering_plan_codes\".\"code\" ~ '^[0-9]+$'"
+        "voice_numbering_plan_codes_full_code_digits": {
+          "name": "voice_numbering_plan_codes_full_code_digits",
+          "value": "\"voice_numbering_plan_codes\".\"full_code\" ~ '^[0-9]+$'"
+        },
+        "voice_numbering_plan_codes_country_code_digits": {
+          "name": "voice_numbering_plan_codes_country_code_digits",
+          "value": "\"voice_numbering_plan_codes\".\"country_code\" ~ '^[0-9]+$'"
+        },
+        "voice_numbering_plan_codes_destination_code_digits": {
+          "name": "voice_numbering_plan_codes_destination_code_digits",
+          "value": "\"voice_numbering_plan_codes\".\"destination_code\" ~ '^[0-9]+$'"
         }
       },
       "isRLSEnabled": false
@@ -1861,8 +1911,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "country_code": {
-          "name": "country_code",
+        "country_iso2": {
+          "name": "country_iso2",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -1930,7 +1980,7 @@
               "nulls": "last"
             },
             {
-              "expression": "country_code",
+              "expression": "country_iso2",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1963,11 +2013,11 @@
           "method": "btree",
           "with": {}
         },
-        "voice_numbering_plan_destinations_country_idx": {
-          "name": "voice_numbering_plan_destinations_country_idx",
+        "voice_numbering_plan_destinations_country_iso2_idx": {
+          "name": "voice_numbering_plan_destinations_country_iso2_idx",
           "columns": [
             {
-              "expression": "country_code",
+              "expression": "country_iso2",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -2013,9 +2063,9 @@
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {
-        "voice_numbering_plan_destinations_country_code_iso2": {
-          "name": "voice_numbering_plan_destinations_country_code_iso2",
-          "value": "\"voice_numbering_plan_destinations\".\"country_code\" ~ '^[A-Z]{2}$'"
+        "voice_numbering_plan_destinations_country_iso2_format": {
+          "name": "voice_numbering_plan_destinations_country_iso2_format",
+          "value": "\"voice_numbering_plan_destinations\".\"country_iso2\" ~ '^[A-Z]{2}$'"
         },
         "voice_numbering_plan_destinations_min_digits_positive": {
           "name": "voice_numbering_plan_destinations_min_digits_positive",

@@ -1,4 +1,4 @@
-Country,Country Code,Destination,Country code,Code,Min digits,Max digits,Website,Google AI Verified,Type
+Country,Country iso2,Destination,Country code,Destination Code,Min digits,Max digits,Website,Google AI Verified,Type
 Afghanistan,AF,Landline,93,,11,11,,Yes,landline
 Afghanistan,AF,ATOMA,93,76,11,11,https://www.atoma.com,Yes,mobile
 Afghanistan,AF,ATOMA,93,77,11,11,https://www.atoma.com,Yes,mobile
@@ -367,6 +367,9 @@ Bolivia,BO,Tigo,591,78,11,11,https://tigo.com.bo,Yes,mobile
 Bolivia,BO,Viva,591,70,11,11,https://viva.com.bo,Yes,mobile
 Bolivia,BO,Viva,591,75,11,11,https://viva.com.bo,Yes,mobile
 Bolivia,BO,Viva,591,79,11,11,https://viva.com.bo,Yes,mobile
+Bonaire,BQ,Landline,599,,10,10,,Yes,landline
+Bonaire,BQ,Telbo,599,770,10,10,https://www.telbo.net,Yes,mobile
+Bonaire,BQ,Telbo,599,777,10,10,https://www.telbo.net,Yes,mobile
 Bosnia and Herzegovina,BA,Landline,387,,11,11,,Yes,landline
 Bosnia and Herzegovina,BA,BH Telecom,387,60,11,11,https://www.bhtelecom.ba,Yes,mobile
 Bosnia and Herzegovina,BA,BH Telecom,387,61,11,11,https://www.bhtelecom.ba,Yes,mobile
@@ -696,6 +699,10 @@ China,CN,China Unicom,86,176,13,13,https://10010.com,Yes,mobile
 China,CN,China Unicom,86,185,13,13,https://10010.com,Yes,mobile
 China,CN,China Unicom,86,186,13,13,https://10010.com,Yes,mobile
 China,CN,China Unicom,86,196,13,13,https://10010.com,Yes,mobile
+Christmas Island,CX,Landline,61,,11,11,,Yes,landline
+Christmas Island,CX,Mobile,61,89164,11,11,,Yes,mobile
+Cocos Islands,CC,Landline,61,,11,11,,Yes,landline
+Cocos Islands,CC,Mobile,61,89162,11,11,,Yes,mobile
 Colombia,CO,Landline,57,,10,10,,Yes,landline
 Colombia,CO,Claro,57,310,12,12,https://www.claro.com.co,Yes,mobile
 Colombia,CO,Claro,57,311,12,12,https://www.claro.com.co,Yes,mobile
@@ -746,6 +753,9 @@ Croatia,HR,Telemach,385,95,12,12,https://telemach.hr,Yes,mobile
 Croatia,HR,Tomato,385,92,12,12,https://www.tomato.com.hr,Yes,mobile
 Cuba,CU,Landline,53,,10,10,,Yes,landline
 Cuba,CU,Cubacel,53,5,10,10,https://www.etecsa.cu,Yes,mobile
+Curaçao,CW,Landline,5999,,11,11,,Yes,landline
+Curaçao,CW,Mobile,5999,5,11,11,,Yes,mobile
+Curaçao,CW,Mobile,5999,6,11,11,,Yes,mobile
 Cyprus,CY,Landline,357,,11,11,,Yes,landline
 Cyprus,CY,Cablenet,357,94,11,11,https://www.cablenet.com.cy,Yes,mobile
 Cyprus,CY,Cyta,357,97,11,11,https://www.cyta.com.cy,Yes,mobile
@@ -876,6 +886,11 @@ Eritrea,ER,Eritel,291,7,10,10,https://eritel.com.er,Yes,mobile
 Estonia,EE,Landline,372,,10,11,,Yes,landline
 Estonia,EE,Mobile,372,5,10,11,,Yes,mobile
 Estonia,EE,Mobile,372,8,10,11,,Yes,mobile
+Eswatini,SZ,Landline,268,,11,11,,Yes,landline
+Eswatini,SZ,Eswatini Mobile,268,70,11,11,https://eswatinimobile.com,Yes,mobile
+Eswatini,SZ,MTN,268,76,11,11,https://www.mtn.co.sz,Yes,mobile
+Eswatini,SZ,MTN,268,78,11,11,https://www.mtn.co.sz,Yes,mobile
+Eswatini,SZ,MTN,268,79,11,11,https://www.mtn.co.sz,Yes,mobile
 Ethiopia,ET,Landline,251,,12,12,,Yes,landline
 Ethiopia,ET,Ethio Telecom,251,9,12,12,https://www.ethiotelecom.et,Yes,mobile
 Ethiopia,ET,Safaricom,251,7,12,12,https://www.safaricom.et,Yes,mobile
@@ -1051,6 +1066,10 @@ Guatemala,GT,Landline,502,,11,11,,Yes,landline
 Guatemala,GT,Mobile,502,3,11,11,,Yes,mobile
 Guatemala,GT,Mobile,502,4,11,11,,Yes,mobile
 Guatemala,GT,Mobile,502,5,11,11,,Yes,mobile
+Guernsey,GG,Landline,44,,12,12,,Yes,landline
+Guernsey,GG,Mobile,44,7781,12,12,,Yes,mobile
+Guernsey,GG,Mobile,44,7839,12,12,,Yes,mobile
+Guernsey,GG,Mobile,44,7911,12,12,,Yes,mobile
 Guinea,GN,Landline,224,,12,12,,Yes,landline
 Guinea,GN,Cellcom,224,65,12,12,https://cellcom.com.gn,Yes,mobile
 Guinea,GN,MTN,224,66,12,12,https://www.mtn.com.gn,Yes,mobile
@@ -1255,6 +1274,10 @@ Japan,JP,Landline,81,,12,12,,Yes,landline
 Japan,JP,Mobile,81,70,12,12,,Yes,mobile
 Japan,JP,Mobile,81,80,12,12,,Yes,mobile
 Japan,JP,Mobile,81,90,12,12,,Yes,mobile
+Jersey,JE,Landline,44,,12,12,,Yes,landline
+Jersey,JE,Mobile,44,7700,12,12,,Yes,mobile
+Jersey,JE,Mobile,44,7797,12,12,,Yes,mobile
+Jersey,JE,Mobile,44,7829,12,12,,Yes,mobile
 Jordan,JO,Landline,962,,12,12,,Yes,landline
 Jordan,JO,Orange,962,77,12,12,https://www.orange.jo,Yes,mobile
 Jordan,JO,Umniah,962,78,12,12,https://www.umniah.com,Yes,mobile
@@ -1474,13 +1497,33 @@ Marshall Islands,MH,Landline,692,,10,10,,Yes,landline
 Marshall Islands,MH,MINTA,692,45,10,10,https://www.nta.rm,Yes,mobile
 Martinique,MQ,Landline,596,,12,12,,Yes,landline
 Martinique,MQ,Mobile,596,696,12,12,,Yes,mobile
+Mauritania,MR,Landline,222,,11,11,,Yes,landline
+Mauritania,MR,Mobile,222,2,11,11,,Yes,mobile
+Mauritania,MR,Mobile,222,3,11,11,,Yes,mobile
+Mauritania,MR,Mobile,222,4,11,11,,Yes,mobile
+Mauritius,MU,Landline,230,,11,11,,Yes,landline
+Mauritius,MU,Mobile,230,5,11,11,,Yes,mobile
+Mayotte,YT,Landline,262,,12,12,,Yes,landline
+Mayotte,YT,Mobile,262,639,12,12,,Yes,mobile
 Mexico,MX,Landline,52,,12,12,,Yes,landline
+Micronesia,FM,Landline,691,,10,10,,Yes,landline
+Micronesia,FM,FSMTC,691,,10,10,https://www.fsmtc.fm,Yes,mobile
 Moldova,MD,Landline,373,,11,11,,Yes,landline
 Moldova,MD,Mobile,373,6,11,11,,Yes,mobile
 Moldova,MD,Mobile,373,7,11,11,,Yes,mobile
+Monaco,MC,Landline,377,,11,12,,Yes,landline
+Monaco,MC,Monaco Telecom,377,4,11,12,https://www.monaco-telecom.mc,Yes,mobile
+Monaco,MC,Monaco Telecom,377,6,11,12,https://www.monaco-telecom.mc,Yes,mobile
 Mongolia,MN,Landline,976,,11,11,,Yes,landline
 Mongolia,MN,Mobile,976,8,11,11,,Yes,mobile
 Mongolia,MN,Mobile,976,9,11,11,,Yes,mobile
+Montenegro,ME,Landline,382,,11,12,,Yes,landline
+Montenegro,ME,Mobile,382,63,11,12,,Yes,mobile
+Montenegro,ME,Mobile,382,67,11,12,,Yes,mobile
+Montenegro,ME,Mobile,382,68,11,12,,Yes,mobile
+Montenegro,ME,Mobile,382,69,11,12,,Yes,mobile
+Montserrat,MS,Landline,1664,,11,11,,Yes,landline
+Montserrat,MS,Mobile,1664,,11,11,,Yes,mobile
 Morocco,MA,Landline,212,,12,12,,Yes,landline
 Morocco,MA,Inwi,212,600,12,12,https://www.inwi.ma,Yes,mobile
 Morocco,MA,Inwi,212,601,12,12,https://www.inwi.ma,Yes,mobile
@@ -1671,6 +1714,8 @@ Niue,NU,Landline,683,,7,7,,Yes,landline
 Niue,NU,Mobile,683,4,7,7,,Yes,mobile
 Niue,NU,Mobile,683,5,7,7,,Yes,mobile
 Niue,NU,Mobile,683,6,7,7,,Yes,mobile
+Norfolk Island,NF,Landline,672,,9,9,,Yes,landline
+Norfolk Island,NF,Norfolk Telecom,672,3,9,9,https://www.norfolkisland.gov.nf,Yes,mobile
 North Korea,KP,Landline,850,,11,13,,Yes,landline
 North Korea,KP,Kangsong NET,850,195,11,13,,Yes,mobile
 North Korea,KP,Koryolink,850,191,11,13,,Yes,mobile
@@ -1756,6 +1801,11 @@ Pakistan,PK,Zong,92,318,12,12,https://www.zong.com.pk,Yes,mobile
 Pakistan,PK,Zong,92,319,12,12,https://www.zong.com.pk,Yes,mobile
 Pakistan,PK,Zong,92,370,12,12,https://www.zong.com.pk,Yes,mobile
 Pakistan,PK,Zong,92,371,12,12,https://www.zong.com.pk,Yes,mobile
+Palau,PW,Landline,680,,10,10,,Yes,landline
+Palau,PW,Mobile,680,,10,10,,Yes,mobile
+Palestine,PS,Landline,970,,12,12,,Yes,landline
+Palestine,PS,Jawwal,970,59,12,12,https://www.jawwal.ps,Yes,mobile
+Palestine,PS,Ooredoo,970,56,12,12,https://www.ooredoo.ps,Yes,mobile
 Panama,PA,Landline,507,,11,11,,Yes,landline
 Panama,PA,Mobile,507,6,11,11,,Yes,mobile
 Papua New Guinea,PG,Landline,675,,11,11,,Yes,landline
@@ -1851,11 +1901,20 @@ Portugal,PT,MEO,351,92,12,12,https://www.meo.pt,Yes,mobile
 Portugal,PT,Mobile,351,96,12,12,,Yes,mobile
 Portugal,PT,NOS,351,93,12,12,https://www.nos.pt,Yes,mobile
 Portugal,PT,Vodafone,351,91,12,12,https://www.vodafone.pt,Yes,mobile
+Puerto Rico,PR,Landline,1787,,11,11,,Yes,landline
+Puerto Rico,PR,Landline,1939,,11,11,,Yes,landline
+Puerto Rico,PR,Mobile,1787,,11,11,,Yes,mobile
+Puerto Rico,PR,Mobile,1939,,11,11,,Yes,mobile
 Qatar,QA,Landline,974,,11,11,,Yes,landline
 Qatar,QA,Mobile,974,3,11,11,,Yes,mobile
 Qatar,QA,Mobile,974,5,11,11,,Yes,mobile
 Qatar,QA,Mobile,974,6,11,11,,Yes,mobile
 Qatar,QA,Mobile,974,7,11,11,,Yes,mobile
+Réunion,RE,Landline,262,,12,12,,Yes,landline
+Réunion,RE,Mobile,262,639,12,12,,Yes,mobile
+Réunion,RE,Mobile,262,692,12,12,,Yes,mobile
+Romania,RO,Landline,40,,11,11,,Yes,landline
+Romania,RO,Mobile,40,7,11,11,,Yes,mobile
 Russia,RU,Landline,7,,11,11,,Yes,landline
 Russia,RU,Beeline,7,903,11,11,https://www.beeline.ru,Yes,mobile
 Russia,RU,Beeline,7,905,11,11,https://www.beeline.ru,Yes,mobile
@@ -1943,6 +2002,32 @@ Rwanda,RW,Mobile,250,72,12,12,,Yes,mobile
 Rwanda,RW,Mobile,250,73,12,12,,Yes,mobile
 Rwanda,RW,Mobile,250,78,12,12,,Yes,mobile
 Rwanda,RW,Mobile,250,79,12,12,,Yes,mobile
+Saint Barthélemy,BL,Landline,590,,12,12,,Yes,landline
+Saint Barthélemy,BL,Mobile,590,690,12,12,,Yes,mobile
+Saint Helena,SH,Landline,290,,8,8,,Yes,landline
+Saint Helena,SH,Sure,290,61,8,8,https://www.sure.co.sh,Yes,mobile
+Saint Helena,SH,Sure,290,62,8,8,https://www.sure.co.sh,Yes,mobile
+Saint Helena,SH,Sure,290,63,8,8,https://www.sure.co.sh,Yes,mobile
+Saint Helena,SH,Sure,290,64,8,8,https://www.sure.co.sh,Yes,mobile
+Saint Kitts and Nevis,KN,Landline,1869,,11,11,,Yes,landline
+Saint Kitts and Nevis,KN,Mobile,1869,,11,11,,Yes,mobile
+Saint Lucia,LC,Landline,1758,,11,11,,Yes,landline
+Saint Lucia,LC,Mobile,1758,,11,11,,Yes,mobile
+Saint Martin,MF,Landline,590,,12,12,,Yes,landline
+Saint Martin,MF,Mobile,590,690,12,12,,Yes,mobile
+Saint Martin,MF,Mobile,590,691,12,12,,Yes,mobile
+Saint Pierre and Miquelon,PM,Landline,508,,9,9,,Yes,landline
+Saint Pierre and Miquelon,PM,SPM Telecom,508,55,9,9,https://spmtelecom.com,Yes,mobile
+Saint Vincent and the Grenadines,VC,Landline,1784,,11,11,,Yes,landline
+Saint Vincent and the Grenadines,VC,Mobile,1784,,11,11,,Yes,mobile
+Samoa,WS,Landline,685,,10,10,,Yes,landline
+Samoa,WS,Mobile,685,7,10,10,,Yes,mobile
+Samoa,WS,Mobile,685,84,10,10,,Yes,mobile
+San Marino,SM,Landline,378,,9,13,,Yes,landline
+San Marino,SM,TMS,378,66,9,13,https://www.tms.sm,Yes,mobile
+São Tomé and Príncipe,ST,Landline,239,,10,10,,Yes,landline
+São Tomé and Príncipe,ST,CST,239,98,10,10,https://www.cstome.net,Yes,mobile
+São Tomé and Príncipe,ST,Unitel STP,239,99,10,10,https://www.unitel.st,Yes,mobile
 Saudi Arabia,SA,Landline,966,,12,12,,Yes,landline
 Saudi Arabia,SA,Lebara,966,576,12,12,https://lebaraksa.com,Yes,mobile
 Saudi Arabia,SA,Lebara,966,577,12,12,https://lebaraksa.com,Yes,mobile
@@ -1975,9 +2060,17 @@ Serbia,RS,Mobile,381,64,11,12,,Yes,mobile
 Serbia,RS,Mobile,381,65,11,12,,Yes,mobile
 Serbia,RS,Mobile,381,66,11,12,,Yes,mobile
 Serbia,RS,Mobile,381,69,11,12,,Yes,mobile
+Seychelles,SC,Landline,248,,10,10,,Yes,landline
+Seychelles,SC,Mobile,248,2,10,10,,Yes,mobile
+Sierra Leone,SL,Landline,232,,11,11,,Yes,landline
+Sierra Leone,SL,Mobile,232,7,11,11,,Yes,mobile
+Sierra Leone,SL,Mobile,232,8,11,11,,Yes,mobile
+Sierra Leone,SL,Mobile,232,9,11,11,,Yes,mobile
 Singapore,SG,Landline,65,,10,10,,Yes,landline
 Singapore,SG,Mobile,65,8,10,10,,Yes,mobile
 Singapore,SG,Mobile,65,9,10,10,,Yes,mobile
+Sint Maarten,SX,Landline,1721,,11,11,,Yes,landline
+Sint Maarten,SX,Mobile,1721,,11,11,,Yes,mobile
 Slovakia,SK,Landline,421,,12,12,,Yes,landline
 Slovakia,SK,Mobile,421,9,12,12,,Yes,mobile
 Slovenia,SI,Landline,386,,11,11,,Yes,landline
@@ -1989,6 +2082,15 @@ Slovenia,SI,Mobile,386,51,11,11,,Yes,mobile
 Slovenia,SI,Mobile,386,64,11,11,,Yes,mobile
 Slovenia,SI,Mobile,386,68,11,11,,Yes,mobile
 Slovenia,SI,Mobile,386,70,11,11,,Yes,mobile
+Solomon Islands,SB,Landline,677,,10,10,,Yes,landline
+Solomon Islands,SB,Mobile,677,7,10,10,,Yes,mobile
+Solomon Islands,SB,Mobile,677,8,10,10,,Yes,mobile
+Somalia,SO,Landline,252,,10,12,,Yes,landline
+Somalia,SO,Mobile,252,61,10,12,,Yes,mobile
+Somalia,SO,Mobile,252,62,10,12,,Yes,mobile
+Somalia,SO,Mobile,252,63,10,12,,Yes,mobile
+Somalia,SO,Mobile,252,65,10,12,,Yes,mobile
+Somalia,SO,Mobile,252,90,10,12,,Yes,mobile
 South Africa,ZA,Landline,27,,11,11,,Yes,landline
 South Africa,ZA,Mobile,27,6,11,11,,Yes,mobile
 South Africa,ZA,Mobile,27,7,11,11,,Yes,mobile
@@ -1996,6 +2098,10 @@ South Africa,ZA,Mobile,27,8,11,11,,Yes,mobile
 South Korea,KR,Landline,82,,12,12,,Yes,landline
 South Korea,KR,Mobile,82,10,12,12,,Yes,mobile
 South Korea,KR,VoIP,82,70,12,12,,Yes,mobile
+South Sudan,SS,Landline,211,,12,12,,Yes,landline
+South Sudan,SS,Mobile,211,91,12,12,,Yes,mobile
+South Sudan,SS,Mobile,211,92,12,12,,Yes,mobile
+South Sudan,SS,Mobile,211,98,12,12,,Yes,mobile
 Spain,ES,Landline,34,,11,11,,Yes,landline
 Spain,ES,MasOrange,34,605,11,11,https://www.masorange.es,Yes,mobile
 Spain,ES,MasOrange,34,615,11,11,https://www.masorange.es,Yes,mobile
@@ -2059,6 +2165,12 @@ Sri Lanka,LK,Mobile,94,77,11,11,,Yes,mobile
 Sri Lanka,LK,Mobile,94,78,11,11,,Yes,mobile
 Sudan,SD,Landline,249,,12,12,,Yes,landline
 Sudan,SD,Mobile,249,9,12,12,,Yes,mobile
+Suriname,SR,Landline,597,,10,10,,Yes,landline
+Suriname,SR,Mobile,597,7,10,10,,Yes,mobile
+Suriname,SR,Mobile,597,8,10,10,,Yes,mobile
+Svalbard and Jan Mayen,SJ,Landline,47,,10,10,,Yes,landline
+Svalbard and Jan Mayen,SJ,Mobile,47,4,10,10,,Yes,mobile
+Svalbard and Jan Mayen,SJ,Mobile,47,9,10,10,,Yes,mobile
 Sweden,SE,Landline,46,,11,11,,Yes,landline
 Sweden,SE,Mobile,46,70,11,11,,Yes,mobile
 Sweden,SE,Mobile,46,72,11,11,,Yes,mobile
@@ -2380,3 +2492,5 @@ Zimbabwe,ZW,Econet,263,77,12,13,https://www.econet.co.zw,Yes,mobile
 Zimbabwe,ZW,Econet,263,78,12,13,https://www.econet.co.zw,Yes,mobile
 Zimbabwe,ZW,NetOne,263,71,12,13,https://www.netone.co.zw,Yes,mobile
 Zimbabwe,ZW,Telecel,263,73,12,13,https://www.telecel.co.zw,Yes,mobile
+Åland Islands,AX,Landline,358,,12,13,,Yes,landline
+Åland Islands,AX,ÅMT,358,457,12,13,https://www.amt.ax,Yes,mobile
