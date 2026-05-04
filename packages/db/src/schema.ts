@@ -641,6 +641,7 @@ export type VoiceNumberingPlanStatus =
 export const voiceNumberingPlanDestinationType = pgEnum(
   "voice_numbering_plan_destination_type",
   [
+    "all",
     "landline",
     "mobile",
     "premium",

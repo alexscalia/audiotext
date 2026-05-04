@@ -2,7 +2,7 @@ CREATE TYPE "public"."at_voice_termination_status" AS ENUM('active', 'inactive')
 CREATE TYPE "public"."carrier_status" AS ENUM('active', 'inactive');--> statement-breakpoint
 CREATE TYPE "public"."chat_app" AS ENUM('whatsapp', 'telegram', 'signal');--> statement-breakpoint
 CREATE TYPE "public"."currency" AS ENUM('usd', 'eur', 'gbp');--> statement-breakpoint
-CREATE TYPE "public"."voice_numbering_plan_destination_type" AS ENUM('landline', 'mobile', 'premium', 'special', 'toll_free', 'shared_cost', 'satellite', 'personal', 'paging', 'voip', 'ngn');--> statement-breakpoint
+CREATE TYPE "public"."voice_numbering_plan_destination_type" AS ENUM('all', 'landline', 'mobile', 'premium', 'special', 'toll_free', 'shared_cost', 'satellite', 'personal', 'paging', 'voip', 'ngn');--> statement-breakpoint
 CREATE TYPE "public"."voice_numbering_plan_status" AS ENUM('active', 'inactive');--> statement-breakpoint
 CREATE TYPE "public"."voice_rate_sheet_status" AS ENUM('active', 'inactive');--> statement-breakpoint
 CREATE TYPE "public"."voice_trunk_auth_type" AS ENUM('ip', 'userpass', 'both');--> statement-breakpoint

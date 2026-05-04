@@ -1,5 +1,5 @@
 {
-  "id": "c081e9e6-f4f7-4bed-ba2b-0c401df9b4b3",
+  "id": "33680ce1-c7af-4803-8205-2efa52482b22",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -2633,6 +2633,7 @@
       "name": "voice_numbering_plan_destination_type",
       "schema": "public",
       "values": [
+        "all",
         "landline",
         "mobile",
         "premium",
