@@ -638,6 +638,25 @@ export const numberingPlanStatus = pgEnum("numbering_plan_status", [
 export type NumberingPlanStatus =
   (typeof numberingPlanStatus.enumValues)[number];
 
+export const numberingPlanDestinationType = pgEnum(
+  "numbering_plan_destination_type",
+  [
+    "proper",
+    "mobile",
+    "premium",
+    "special",
+    "toll_free",
+    "shared_cost",
+    "satellite",
+    "personal",
+    "paging",
+    "voip",
+    "ngn",
+  ],
+);
+export type NumberingPlanDestinationType =
+  (typeof numberingPlanDestinationType.enumValues)[number];
+
 export const numberingPlans = pgTable(
   "numbering_plans",
   {
@@ -681,6 +700,8 @@ export const numberingPlanDestinations = pgTable(
       .references(() => numberingPlans.id, { onDelete: "cascade" }),
     countryCode: text("country_code").notNull(),
     name: text("name").notNull(),
+    type: numberingPlanDestinationType("type"),
+    website: text("website"),
     minDigits: integer("min_digits").notNull(),
     maxDigits: integer("max_digits").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
