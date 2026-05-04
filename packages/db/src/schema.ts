@@ -767,7 +767,7 @@ export const voiceNumberingPlanCodes = pgTable(
       .references(() => voiceNumberingPlanDestinations.id, { onDelete: "cascade" }),
     fullCode: text("full_code").notNull(),
     countryCode: text("country_code").notNull(),
-    destinationCode: text("destination_code").notNull(),
+    destinationCode: text("destination_code"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -795,10 +795,6 @@ export const voiceNumberingPlanCodes = pgTable(
     check(
       "voice_numbering_plan_codes_country_code_digits",
       sql`${t.countryCode} ~ '^[0-9]+$'`,
-    ),
-    check(
-      "voice_numbering_plan_codes_destination_code_digits",
-      sql`${t.destinationCode} ~ '^[0-9]+$'`,
     ),
   ],
 );

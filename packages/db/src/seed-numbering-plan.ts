@@ -13,7 +13,7 @@ const DESTINATION_TYPES = new Set<VoiceNumberingPlanDestinationType>(
 type CodeTriplet = {
   fullCode: string;
   countryCode: string;
-  destinationCode: string;
+  destinationCode: string | null;
 };
 
 type Fixture = {
@@ -50,11 +50,12 @@ function parseRows(): Fixture[] {
     if (!Number.isFinite(minDigits) || !Number.isFinite(maxDigits)) continue;
 
     const countryCode = e164.replace(/\s+/g, "");
-    const destinationCode = sub.replace(/\s+/g, "");
-    const fullCode = countryCode + destinationCode;
-    if (fullCode.length === 0 || !/^[0-9]+$/.test(fullCode)) continue;
+    const subTrimmed = sub.replace(/\s+/g, "");
+    const destinationCode = subTrimmed.length === 0 ? null : subTrimmed;
+    const fullCode = destinationCode === null ? countryCode : countryCode + destinationCode;
     if (countryCode.length === 0 || !/^[0-9]+$/.test(countryCode)) continue;
-    if (destinationCode.length === 0 || !/^[0-9]+$/.test(destinationCode)) continue;
+    if (fullCode.length === 0 || !/^[0-9]+$/.test(fullCode)) continue;
+    if (destinationCode !== null && !/^[0-9]+$/.test(destinationCode)) continue;
 
     const type = DESTINATION_TYPES.has(typeRaw as VoiceNumberingPlanDestinationType)
       ? (typeRaw as VoiceNumberingPlanDestinationType)

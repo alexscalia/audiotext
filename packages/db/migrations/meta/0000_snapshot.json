@@ -1,5 +1,5 @@
 {
-  "id": "33680ce1-c7af-4803-8205-2efa52482b22",
+  "id": "9ec4503c-ec86-44fc-a935-bc468d635c7b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1738,7 +1738,7 @@
           "name": "destination_code",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -1886,10 +1886,6 @@
         "voice_numbering_plan_codes_country_code_digits": {
           "name": "voice_numbering_plan_codes_country_code_digits",
           "value": "\"voice_numbering_plan_codes\".\"country_code\" ~ '^[0-9]+$'"
-        },
-        "voice_numbering_plan_codes_destination_code_digits": {
-          "name": "voice_numbering_plan_codes_destination_code_digits",
-          "value": "\"voice_numbering_plan_codes\".\"destination_code\" ~ '^[0-9]+$'"
         }
       },
       "isRLSEnabled": false

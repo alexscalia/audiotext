@@ -177,13 +177,12 @@ CREATE TABLE "voice_numbering_plan_codes" (
 	"voice_numbering_plan_destination_id" uuid NOT NULL,
 	"full_code" text NOT NULL,
 	"country_code" text NOT NULL,
-	"destination_code" text NOT NULL,
+	"destination_code" text,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone,
 	CONSTRAINT "voice_numbering_plan_codes_full_code_digits" CHECK ("voice_numbering_plan_codes"."full_code" ~ '^[0-9]+$'),
-	CONSTRAINT "voice_numbering_plan_codes_country_code_digits" CHECK ("voice_numbering_plan_codes"."country_code" ~ '^[0-9]+$'),
-	CONSTRAINT "voice_numbering_plan_codes_destination_code_digits" CHECK ("voice_numbering_plan_codes"."destination_code" ~ '^[0-9]+$')
+	CONSTRAINT "voice_numbering_plan_codes_country_code_digits" CHECK ("voice_numbering_plan_codes"."country_code" ~ '^[0-9]+$')
 );
 --> statement-breakpoint
 CREATE TABLE "voice_numbering_plan_destinations" (

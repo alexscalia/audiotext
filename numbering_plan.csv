@@ -39,7 +39,7 @@ Anguilla,AI,Mobile,1264,538,11,11,,Yes,mobile
 Anguilla,AI,Mobile,1264,539,11,11,,Yes,mobile
 Anguilla,AI,Mobile,1264,729,11,11,,Yes,mobile
 Anguilla,AI,Mobile,1264,772,11,11,,Yes,mobile
-Antarctica,AQ,Landline,672,,9,9,,,landline
+Antarctica,AQ,All,672,,9,9,,,all
 Antigua and Barbuda,AG,Landline,1268,,11,11,,Yes,landline
 Antigua and Barbuda,AG,APUA,1268,484,11,11,https://www.apua.ag,Yes,mobile
 Antigua and Barbuda,AG,APUA,1268,784,11,11,https://www.apua.ag,Yes,mobile
@@ -95,7 +95,7 @@ Aruba,AW,SETAR,297,995,10,10,https://www.setar.aw,Yes,mobile
 Aruba,AW,SETAR,297,996,10,10,https://www.setar.aw,Yes,mobile
 Aruba,AW,SETAR,297,997,10,10,https://www.setar.aw,Yes,mobile
 Aruba,AW,SETAR,297,998,10,10,https://www.setar.aw,Yes,mobile
-Ascension Island,AC,Landline,247,,8,8,,,landline
+Ascension Island,AC,All,247,,8,8,,,all
 Australia,AU,Landline,61,,11,11,,Yes,landline
 Australia,AU,Optus,61,401,11,11,https://www.optus.com.au,Yes,mobile
 Australia,AU,Optus,61,402,11,11,https://www.optus.com.au,Yes,mobile
@@ -585,8 +585,61 @@ Cameroon,CM,Orange,237,696,12,12,https://orange.cm,Yes,mobile
 Cameroon,CM,Orange,237,697,12,12,https://orange.cm,Yes,mobile
 Cameroon,CM,Orange,237,698,12,12,https://orange.cm,Yes,mobile
 Cameroon,CM,Orange,237,699,12,12,https://orange.cm,Yes,mobile
-Canada,CA,Landline,1,,11,11,,,landline
-Canada,CA,Mobile,1,,11,11,,,mobile
+Canada,CA,All,1,204,11,11,,Yes,all
+Canada,CA,All,1,226,11,11,,Yes,all
+Canada,CA,All,1,236,11,11,,Yes,all
+Canada,CA,All,1,249,11,11,,Yes,all
+Canada,CA,All,1,250,11,11,,Yes,all
+Canada,CA,All,1,257,11,11,,Yes,all
+Canada,CA,All,1,263,11,11,,Yes,all
+Canada,CA,All,1,289,11,11,,Yes,all
+Canada,CA,All,1,306,11,11,,Yes,all
+Canada,CA,All,1,343,11,11,,Yes,all
+Canada,CA,All,1,354,11,11,,Yes,all
+Canada,CA,All,1,365,11,11,,Yes,all
+Canada,CA,All,1,367,11,11,,Yes,all
+Canada,CA,All,1,368,11,11,,Yes,all
+Canada,CA,All,1,382,11,11,,Yes,all
+Canada,CA,All,1,403,11,11,,Yes,all
+Canada,CA,All,1,416,11,11,,Yes,all
+Canada,CA,All,1,418,11,11,,Yes,all
+Canada,CA,All,1,428,11,11,,Yes,all
+Canada,CA,All,1,431,11,11,,Yes,all
+Canada,CA,All,1,437,11,11,,Yes,all
+Canada,CA,All,1,438,11,11,,Yes,all
+Canada,CA,All,1,450,11,11,,Yes,all
+Canada,CA,All,1,468,11,11,,Yes,all
+Canada,CA,All,1,474,11,11,,Yes,all
+Canada,CA,All,1,506,11,11,,Yes,all
+Canada,CA,All,1,514,11,11,,Yes,all
+Canada,CA,All,1,519,11,11,,Yes,all
+Canada,CA,All,1,548,11,11,,Yes,all
+Canada,CA,All,1,579,11,11,,Yes,all
+Canada,CA,All,1,581,11,11,,Yes,all
+Canada,CA,All,1,584,11,11,,Yes,all
+Canada,CA,All,1,587,11,11,,Yes,all
+Canada,CA,All,1,604,11,11,,Yes,all
+Canada,CA,All,1,613,11,11,,Yes,all
+Canada,CA,All,1,639,11,11,,Yes,all
+Canada,CA,All,1,647,11,11,,Yes,all
+Canada,CA,All,1,672,11,11,,Yes,all
+Canada,CA,All,1,683,11,11,,Yes,all
+Canada,CA,All,1,705,11,11,,Yes,all
+Canada,CA,All,1,709,11,11,,Yes,all
+Canada,CA,All,1,742,11,11,,Yes,all
+Canada,CA,All,1,753,11,11,,Yes,all
+Canada,CA,All,1,778,11,11,,Yes,all
+Canada,CA,All,1,780,11,11,,Yes,all
+Canada,CA,All,1,782,11,11,,Yes,all
+Canada,CA,All,1,807,11,11,,Yes,all
+Canada,CA,All,1,819,11,11,,Yes,all
+Canada,CA,All,1,825,11,11,,Yes,all
+Canada,CA,All,1,867,11,11,,Yes,all
+Canada,CA,All,1,873,11,11,,Yes,all
+Canada,CA,All,1,879,11,11,,Yes,all
+Canada,CA,All,1,902,11,11,,Yes,all
+Canada,CA,All,1,905,11,11,,Yes,all
+Canada,CA,All,1,942,11,11,,Yes,all
 Cape Verde,CV,Landline,238,,10,10,,Yes,landline
 Cape Verde,CV,Unitel T+,238,91,10,10,https://www.uniteltmais.cv,Yes,mobile
 Cape Verde,CV,Unitel T+,238,92,10,10,https://www.uniteltmais.cv,Yes,mobile
@@ -1505,7 +1558,7 @@ Mauritius,MU,Landline,230,,11,11,,Yes,landline
 Mauritius,MU,Mobile,230,5,11,11,,Yes,mobile
 Mayotte,YT,Landline,262,,12,12,,Yes,landline
 Mayotte,YT,Mobile,262,639,12,12,,Yes,mobile
-Mexico,MX,Landline,52,,12,12,,Yes,landline
+Mexico,MX,All,52,,12,12,,Yes,all
 Micronesia,FM,Landline,691,,10,10,,Yes,landline
 Micronesia,FM,FSMTC,691,,10,10,https://www.fsmtc.fm,Yes,mobile
 Moldova,MD,Landline,373,,11,11,,Yes,landline
