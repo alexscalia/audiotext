@@ -58,6 +58,7 @@ const carrierFormSchema = z.object({
       countryCode: z
         .string()
         .trim()
+        .min(1, errMsg.required)
         .regex(/^[A-Z]{2}$/, errMsg.iso2),
     }),
     taxId: z.string().max(64, errMsg.tooLong).optional(),
