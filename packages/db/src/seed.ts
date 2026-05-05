@@ -156,7 +156,7 @@ const CARRIERS: CarrierFixture[] = [
           countryCode: "IT",
         },
         taxId: "IT12345678901",
-        paymentTerms: "net30",
+        billingTerms: { cycleDays: 30, dueDays: 30 },
         bank: {
           name: "Intesa Sanpaolo",
           accountNumber: "0001234567",
@@ -190,7 +190,7 @@ const CARRIERS: CarrierFixture[] = [
           countryCode: "GB",
         },
         taxId: "GB123456789",
-        paymentTerms: "net15",
+        billingTerms: { cycleDays: 15, dueDays: 15 },
       } satisfies CarrierBillingDetails,
     },
     contacts: [
@@ -219,7 +219,7 @@ const CARRIERS: CarrierFixture[] = [
           countryCode: "US",
         },
         taxId: "US-EIN-12-3456789",
-        paymentTerms: "net45",
+        billingTerms: { cycleDays: 30, dueDays: 45 },
         notes: "Send invoices PDF only",
       } satisfies CarrierBillingDetails,
     },

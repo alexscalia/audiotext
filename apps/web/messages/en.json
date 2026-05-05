@@ -198,8 +198,12 @@
         "countryPlaceholder": "Select a country",
         "countryLoading": "Loading countries...",
         "taxId": "Tax ID / VAT",
-        "paymentTerms": "Payment terms",
-        "paymentTermsPlaceholder": "e.g. Net 30",
+        "billingTerms": "Billing terms",
+        "billingTermsHint": "Cycle days / due days (e.g. 30/30)",
+        "billingTermsCycle": "Billing cycle days",
+        "billingTermsDue": "Payment due days",
+        "billingTermsCyclePlaceholder": "30",
+        "billingTermsDuePlaceholder": "30",
         "notes": "Notes",
         "bankName": "Bank name",
         "bankAccountNumber": "Account number",
@@ -222,7 +226,11 @@
         "required": "This field is required",
         "emailInvalid": "Enter a valid email",
         "tooLong": "Too long",
-        "countryCodeIso2": "Use a 2-letter country code (e.g. IT, US)"
+        "countryCodeIso2": "Use a 2-letter country code (e.g. IT, US)",
+        "intRequired": "Must be a whole number",
+        "minOne": "Must be at least 1",
+        "minZero": "Must be 0 or greater",
+        "bothRequired": "Fill both cycle and due, or leave both empty"
       }
     }
   }

@@ -22,6 +22,10 @@ const errMsg = {
   email: "emailInvalid",
   tooLong: "tooLong",
   iso2: "countryCodeIso2",
+  intRequired: "intRequired",
+  minOne: "minOne",
+  minZero: "minZero",
+  bothRequired: "bothRequired",
 } as const;
 
 const carrierFormSchema = z.object({
@@ -57,7 +61,26 @@ const carrierFormSchema = z.object({
         .regex(/^[A-Z]{2}$/, errMsg.iso2),
     }),
     taxId: z.string().max(64, errMsg.tooLong).optional(),
-    paymentTerms: z.string().max(128, errMsg.tooLong).optional(),
+    billingTerms: z
+      .object({
+        cycleDays: z
+          .number()
+          .int(errMsg.intRequired)
+          .min(1, errMsg.minOne)
+          .max(365, errMsg.tooLong)
+          .optional(),
+        dueDays: z
+          .number()
+          .int(errMsg.intRequired)
+          .min(0, errMsg.minZero)
+          .max(365, errMsg.tooLong)
+          .optional(),
+      })
+      .refine(
+        (v) => (v.cycleDays !== undefined) === (v.dueDays !== undefined),
+        { message: errMsg.bothRequired, path: ["cycleDays"] },
+      )
+      .optional(),
     notes: z.string().max(2048, errMsg.tooLong).optional(),
     bank: z
       .object({
@@ -151,7 +174,7 @@ const EMPTY_VALUES: CarrierFormValues = {
       countryCode: "",
     },
     taxId: "",
-    paymentTerms: "",
+    billingTerms: undefined,
     notes: "",
     bank: undefined,
   },
@@ -230,7 +253,8 @@ function firstFieldPathInTab(
             "billingDetails.address.postalCode",
             "billingDetails.address.countryCode",
             "billingDetails.taxId",
-            "billingDetails.paymentTerms",
+            "billingDetails.billingTerms.cycleDays",
+            "billingDetails.billingTerms.dueDays",
             "billingDetails.notes",
             "billingDetails.bank.name",
             "billingDetails.bank.accountNumber",
@@ -395,10 +419,18 @@ export function CarrierFormModal({
 
   const onValid = handleSubmit(
     async (values) => {
+      const bt = values.billingDetails.billingTerms;
+      const cleanBt =
+        bt &&
+        typeof bt.cycleDays === "number" &&
+        typeof bt.dueDays === "number"
+          ? { cycleDays: bt.cycleDays, dueDays: bt.dueDays }
+          : undefined;
       const payload: CarrierFormValues = {
         ...values,
         billingDetails: {
           ...values.billingDetails,
+          billingTerms: cleanBt,
           bank: bankEnabled ? values.billingDetails.bank : undefined,
         },
       };
@@ -703,17 +735,61 @@ export function CarrierFormModal({
               </Field>
 
               <Field
-                label={tFields("paymentTerms")}
-                error={translateError(errors.billingDetails?.paymentTerms?.message)}
-                htmlFor="cf-payment-terms"
+                label={tFields("billingTerms")}
+                error={
+                  translateError(
+                    errors.billingDetails?.billingTerms?.cycleDays?.message,
+                  ) ??
+                  translateError(
+                    errors.billingDetails?.billingTerms?.dueDays?.message,
+                  )
+                }
+                htmlFor="cf-billing-terms-cycle"
+                hint={tFields("billingTermsHint")}
               >
-                <TextInput
-                  id="cf-payment-terms"
-                  autoComplete="off"
-                  placeholder={tFields("paymentTermsPlaceholder")}
-                  invalid={!!errors.billingDetails?.paymentTerms}
-                  {...register("billingDetails.paymentTerms")}
-                />
+                <div className="flex items-center gap-2">
+                  <TextInput
+                    id="cf-billing-terms-cycle"
+                    type="number"
+                    inputMode="numeric"
+                    min={1}
+                    max={365}
+                    placeholder={tFields("billingTermsCyclePlaceholder")}
+                    aria-label={tFields("billingTermsCycle")}
+                    invalid={!!errors.billingDetails?.billingTerms?.cycleDays}
+                    className="w-24"
+                    {...register("billingDetails.billingTerms.cycleDays", {
+                      setValueAs: (v) => {
+                        if (v === "" || v === null || v === undefined)
+                          return undefined;
+                        const n = Number(v);
+                        return Number.isNaN(n) ? undefined : n;
+                      },
+                    })}
+                  />
+                  <span aria-hidden="true" className="text-sm text-gray-500">
+                    /
+                  </span>
+                  <TextInput
+                    id="cf-billing-terms-due"
+                    type="number"
+                    inputMode="numeric"
+                    min={0}
+                    max={365}
+                    placeholder={tFields("billingTermsDuePlaceholder")}
+                    aria-label={tFields("billingTermsDue")}
+                    invalid={!!errors.billingDetails?.billingTerms?.dueDays}
+                    className="w-24"
+                    {...register("billingDetails.billingTerms.dueDays", {
+                      setValueAs: (v) => {
+                        if (v === "" || v === null || v === undefined)
+                          return undefined;
+                        const n = Number(v);
+                        return Number.isNaN(n) ? undefined : n;
+                      },
+                    })}
+                  />
+                </div>
               </Field>
             </div>
 

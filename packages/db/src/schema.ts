@@ -26,7 +26,10 @@ export type CarrierBillingDetails = {
     countryCode: string;
   };
   taxId?: string;
-  paymentTerms?: string;
+  billingTerms?: {
+    cycleDays: number;
+    dueDays: number;
+  };
   bank?: {
     name: string;
     accountNumber: string;

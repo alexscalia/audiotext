@@ -196,8 +196,10 @@ export function CarrierViewModal({
             items={[
               { label: tFields("taxId"), value: carrier.billingDetails.taxId },
               {
-                label: tFields("paymentTerms"),
-                value: carrier.billingDetails.paymentTerms,
+                label: tFields("billingTerms"),
+                value: carrier.billingDetails.billingTerms
+                  ? `${carrier.billingDetails.billingTerms.cycleDays}/${carrier.billingDetails.billingTerms.dueDays}`
+                  : undefined,
               },
             ]}
           />

@@ -111,10 +111,16 @@ export const CarrierBankSchema = z.object({
 });
 export type CarrierBank = z.infer<typeof CarrierBankSchema>;
 
+export const BillingTermsSchema = z.object({
+  cycleDays: z.number().int().min(1).max(365),
+  dueDays: z.number().int().min(0).max(365),
+});
+export type BillingTerms = z.infer<typeof BillingTermsSchema>;
+
 export const CarrierBillingDetailsSchema = z.object({
   address: CarrierAddressSchema,
   taxId: z.string().max(64).optional(),
-  paymentTerms: z.string().max(128).optional(),
+  billingTerms: BillingTermsSchema.optional(),
   bank: CarrierBankSchema.optional(),
   notes: z.string().max(2048).optional(),
 });

@@ -198,8 +198,12 @@
         "countryPlaceholder": "Seleziona un paese",
         "countryLoading": "Caricamento paesi...",
         "taxId": "Partita IVA / Codice fiscale",
-        "paymentTerms": "Termini di pagamento",
-        "paymentTermsPlaceholder": "es. 30 giorni",
+        "billingTerms": "Termini di fatturazione",
+        "billingTermsHint": "Giorni ciclo / giorni scadenza (es. 30/30)",
+        "billingTermsCycle": "Giorni ciclo fatturazione",
+        "billingTermsDue": "Giorni scadenza pagamento",
+        "billingTermsCyclePlaceholder": "30",
+        "billingTermsDuePlaceholder": "30",
         "notes": "Note",
         "bankName": "Nome banca",
         "bankAccountNumber": "Numero conto",
@@ -222,7 +226,11 @@
         "required": "Questo campo è obbligatorio",
         "emailInvalid": "Inserisci un'email valida",
         "tooLong": "Troppo lungo",
-        "countryCodeIso2": "Usa un codice paese di 2 lettere (es. IT, US)"
+        "countryCodeIso2": "Usa un codice paese di 2 lettere (es. IT, US)",
+        "intRequired": "Deve essere un numero intero",
+        "minOne": "Minimo 1",
+        "minZero": "Minimo 0",
+        "bothRequired": "Compila sia ciclo che scadenza, o lascia entrambi vuoti"
       }
     }
   }
