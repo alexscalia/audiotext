@@ -76,6 +76,22 @@ export const CountryCode = z
   .regex(/^[A-Z]{2}$/, "ISO 3166-1 alpha-2");
 export type CountryCode = z.infer<typeof CountryCode>;
 
+export const CountryListItemSchema = z.object({
+  iso2: CountryCode,
+  name: z.string().min(1),
+});
+export type CountryListItem = z.infer<typeof CountryListItemSchema>;
+
+export const CountryListQuerySchema = z.object({
+  locale: z.enum(["en", "it"]).default("en"),
+});
+export type CountryListQuery = z.infer<typeof CountryListQuerySchema>;
+
+export const CountryListResponseSchema = z.object({
+  countries: z.array(CountryListItemSchema),
+});
+export type CountryListResponse = z.infer<typeof CountryListResponseSchema>;
+
 export const CarrierAddressSchema = z.object({
   line1: z.string().min(1).max(256),
   line2: z.string().max(256).optional(),

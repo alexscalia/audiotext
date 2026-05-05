@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import {
   useForm,
   type FieldErrors,
@@ -8,8 +8,9 @@ import {
   type UseFormRegisterReturn,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { z } from "zod";
+import type { CountryListItem, CountryListResponse } from "@audiotext/shared";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/form/field";
@@ -284,6 +285,7 @@ export function CarrierFormModal({
   const tErrors = useTranslations("Carriers.form.errors");
   const tTabs = useTranslations("Carriers.tabs");
   const tActions = useTranslations("Carriers.actions");
+  const locale = useLocale();
 
   const formId = useId();
   const tabIdPrefix = useId();
@@ -291,8 +293,34 @@ export function CarrierFormModal({
   const [activeTab, setActiveTab] = useState<TabId>("general");
   const [bankEnabled, setBankEnabled] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [countries, setCountries] = useState<CountryListItem[]>([]);
+  const [countriesLoading, setCountriesLoading] = useState(false);
 
   const nameRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const controller = new AbortController();
+    setCountriesLoading(true);
+    fetch(`/api/admin/countries?locale=${encodeURIComponent(locale)}`, {
+      credentials: "include",
+      signal: controller.signal,
+    })
+      .then(async (res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return (await res.json()) as CountryListResponse;
+      })
+      .then((json) => setCountries(json.countries))
+      .catch((err) => {
+        if (controller.signal.aborted) return;
+        console.error("countries load failed", err);
+      })
+      .finally(() => {
+        if (controller.signal.aborted) return;
+        setCountriesLoading(false);
+      });
+    return () => controller.abort();
+  }, [open, locale]);
 
   const {
     register,
@@ -628,24 +656,29 @@ export function CarrierFormModal({
               </Field>
 
               <Field
-                label={tFields("countryCode")}
+                label={tFields("country")}
                 required
                 error={translateError(errors.billingDetails?.address?.countryCode?.message)}
                 htmlFor="cf-country"
               >
-                <TextInput
+                <Select
                   id="cf-country"
-                  inputMode="text"
                   autoComplete="country"
-                  maxLength={2}
-                  placeholder={tFields("countryCodePlaceholder")}
                   invalid={!!errors.billingDetails?.address?.countryCode}
-                  className="uppercase tracking-widest"
-                  {...register("billingDetails.address.countryCode", {
-                    setValueAs: (v: string) =>
-                      typeof v === "string" ? v.trim().toUpperCase() : v,
-                  })}
-                />
+                  disabled={countriesLoading && countries.length === 0}
+                  {...register("billingDetails.address.countryCode")}
+                >
+                  <option value="">
+                    {countriesLoading && countries.length === 0
+                      ? tFields("countryLoading")
+                      : tFields("countryPlaceholder")}
+                  </option>
+                  {countries.map((c) => (
+                    <option key={c.iso2} value={c.iso2}>
+                      {c.name}
+                    </option>
+                  ))}
+                </Select>
               </Field>
             </div>
           </fieldset>
