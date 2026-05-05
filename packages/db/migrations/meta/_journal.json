@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1777913338264,
-      "tag": "0000_misty_unicorn",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1777948574722,
-      "tag": "0001_melodic_johnny_storm",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1777948706936,
-      "tag": "0002_bouncy_wrecker",
+      "when": 1777979832612,
+      "tag": "0000_spotty_may_parker",
       "breakpoints": true
     }
   ]

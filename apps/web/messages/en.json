@@ -97,7 +97,10 @@
       "view": "View",
       "edit": "Edit",
       "delete": "Delete",
-      "openWebsite": "Open {name} website"
+      "openWebsite": "Open {name} website",
+      "open": "Open actions menu",
+      "cancel": "Cancel",
+      "close": "Close"
     },
     "types": {
       "all": "All",

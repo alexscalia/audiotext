@@ -7,7 +7,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { signIn } from "@/lib/auth-client";
-import { LocaleSwitcher } from "@/components/locale-switcher";
+import { LocaleSwitcher } from "@/components/shell/locale-switcher";
+import { Button } from "@/components/ui/button";
+import { Field } from "@/components/form/field";
+import { TextInput } from "@/components/form/text-input";
+import { ErrorText } from "@/components/form/error-text";
 
 const loginSchema = z.object({
   email: z
@@ -83,49 +87,33 @@ export default function AdminLoginPage() {
           <p className="mt-2 text-sm text-gray-600">{t("subtitle")}</p>
 
           <form onSubmit={onSubmit} className="mt-8 space-y-5" noValidate>
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-black"
-              >
-                {t("email")}
-              </label>
-              <input
+            <Field
+              label={t("email")}
+              htmlFor="email"
+              error={translateError(errors.email?.message)}
+            >
+              <TextInput
                 id="email"
                 type="email"
                 autoComplete="email"
-                aria-invalid={!!errors.email}
+                invalid={!!errors.email}
                 {...register("email")}
-                className="mt-2 block w-full rounded-md border border-gray-300 px-3 py-2.5 text-sm text-black placeholder-gray-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
               />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600" role="alert">
-                  {translateError(errors.email.message)}
-                </p>
-              )}
-            </div>
+            </Field>
 
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-black"
-              >
-                {t("password")}
-              </label>
-              <input
+            <Field
+              label={t("password")}
+              htmlFor="password"
+              error={translateError(errors.password?.message)}
+            >
+              <TextInput
                 id="password"
                 type="password"
                 autoComplete="current-password"
-                aria-invalid={!!errors.password}
+                invalid={!!errors.password}
                 {...register("password")}
-                className="mt-2 block w-full rounded-md border border-gray-300 px-3 py-2.5 text-sm text-black placeholder-gray-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
               />
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-600" role="alert">
-                  {translateError(errors.password.message)}
-                </p>
-              )}
-            </div>
+            </Field>
 
             <div className="flex items-center justify-between">
               <label className="flex cursor-pointer items-center gap-2 text-sm text-black">
@@ -145,19 +133,15 @@ export default function AdminLoginPage() {
               </span>
             </div>
 
-            {submitError && (
-              <p className="text-sm text-red-600" role="alert">
-                {submitError}
-              </p>
-            )}
+            <ErrorText message={submitError} />
 
-            <button
+            <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full cursor-pointer rounded-md bg-black px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full"
             >
               {isSubmitting ? t("submitting") : t("submit")}
-            </button>
+            </Button>
           </form>
         </div>
       </div>

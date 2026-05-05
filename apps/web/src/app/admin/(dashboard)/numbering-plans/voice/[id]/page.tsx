@@ -1,14 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import {
   type ColumnDef,
   type PaginationState,
   type SortingState,
-  flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -20,6 +18,12 @@ import type {
   VoiceNumberingPlanDetail,
   VoiceNumberingPlanStatus,
 } from "@audiotext/shared";
+import { Badge } from "@/components/ui/badge";
+import { SearchInput } from "@/components/ui/search-input";
+import { PageHeader } from "@/components/layout/page-header";
+import { BackLink } from "@/components/layout/breadcrumb";
+import { DataTable } from "@/components/ui/data-table/data-table";
+import { Pagination } from "@/components/ui/data-table/pagination";
 
 type Destination = VoiceNumberingPlanDestinationListItem;
 
@@ -37,24 +41,12 @@ function isSortableColumn(
   return (SORTABLE_COLUMNS as readonly string[]).includes(id);
 }
 
-function StatusBadge({ status }: { status: VoiceNumberingPlanStatus }) {
+function PlanStatusBadge({ status }: { status: VoiceNumberingPlanStatus }) {
   const isActive = status === "active";
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
-        isActive
-          ? "bg-green-50 text-green-700 ring-1 ring-inset ring-green-200"
-          : "bg-gray-100 text-gray-700 ring-1 ring-inset ring-gray-200"
-      }`}
-    >
-      <span
-        aria-hidden="true"
-        className={`h-1.5 w-1.5 rounded-full ${
-          isActive ? "bg-green-500" : "bg-gray-400"
-        }`}
-      />
+    <Badge tone={isActive ? "success" : "neutral"} withDot>
       {isActive ? "active" : "inactive"}
-    </span>
+    </Badge>
   );
 }
 
@@ -271,14 +263,13 @@ export default function NumberingPlanDetailPage() {
       },
       {
         accessorKey: "countryCode",
-        header: () => (
-          <span className="block text-right">{t("columns.countryCode")}</span>
-        ),
+        header: t("columns.countryCode"),
         cell: ({ row }) => (
-          <span className="block text-right tabular-nums text-gray-700">
+          <span className="tabular-nums text-gray-700">
             {row.original.countryCode ? `+${row.original.countryCode}` : "—"}
           </span>
         ),
+        meta: { align: "right" },
       },
       {
         id: "destinationCodes",
@@ -325,257 +316,68 @@ export default function NumberingPlanDetailPage() {
   });
 
   const rows = table.getRowModel().rows;
-  const hasResults = rows.length > 0;
   const hasAnyData = total > 0;
   const showFooter = hasAnyData && !loading && !error;
-  const fromRow = total === 0 ? 0 : pagination.pageIndex * pagination.pageSize + 1;
-  const toRow = pagination.pageIndex * pagination.pageSize + rows.length;
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="flex flex-col gap-1">
-        <Link
-          href="/admin/numbering-plans/voice"
-          className="inline-flex w-fit items-center gap-1 text-sm text-gray-600 hover:text-black"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={1.8}
-            className="h-4 w-4"
-            aria-hidden="true"
-          >
-            <path
-              d="M15 18l-6-6 6-6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          {t("backToPlans")}
-        </Link>
-        <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-black">
-              {planLoading ? "—" : (plan?.name ?? t("detail.notFound"))}
-            </h1>
-            <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-gray-600">
-              {plan && <StatusBadge status={plan.status} />}
-              {plan && (
-                <span>
-                  {t("detail.summary", {
-                    destinations: plan.destinationCount,
-                    codes: plan.codeCount,
-                  })}
-                </span>
-              )}
-              {planError && !planLoading && (
-                <span className="text-red-600">{planError}</span>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow={
+          <BackLink href="/admin/numbering-plans/voice" label={t("backToPlans")} />
+        }
+        title={planLoading ? "—" : (plan?.name ?? t("detail.notFound"))}
+        meta={
+          <>
+            {plan && <PlanStatusBadge status={plan.status} />}
+            {plan && (
+              <span>
+                {t("detail.summary", {
+                  destinations: plan.destinationCount,
+                  codes: plan.codeCount,
+                })}
+              </span>
+            )}
+            {planError && !planLoading && (
+              <span className="text-red-600">{planError}</span>
+            )}
+          </>
+        }
+      />
 
       <div className="mt-6 rounded-md border border-gray-200 bg-white">
         <div className="border-b border-gray-200 p-4">
-          <label className="relative block">
-            <span className="sr-only">{t("detail.search")}</span>
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-gray-400"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.8}
-                className="h-4 w-4"
-              >
-                <circle cx="11" cy="11" r="7" />
-                <path d="m20 20-3.5-3.5" strokeLinecap="round" />
-              </svg>
-            </span>
-            <input
-              type="search"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              placeholder={t("detail.search")}
-              className="w-full rounded-md border border-gray-200 bg-white py-2 pl-9 pr-3 text-sm text-black placeholder:text-gray-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:max-w-xs"
-            />
-          </label>
+          <SearchInput
+            label={t("detail.search")}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+          />
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    const canSort = header.column.getCanSort();
-                    const sortDirHeader = header.column.getIsSorted();
-                    const isNumeric = header.column.id === "countryCode";
-                    return (
-                      <th
-                        key={header.id}
-                        scope="col"
-                        aria-sort={
-                          sortDirHeader === "asc"
-                            ? "ascending"
-                            : sortDirHeader === "desc"
-                              ? "descending"
-                              : "none"
-                        }
-                        className={`px-4 py-3 ${isNumeric ? "text-right" : ""}`}
-                      >
-                        {header.isPlaceholder ? null : canSort ? (
-                          <button
-                            type="button"
-                            onClick={header.column.getToggleSortingHandler()}
-                            className={`inline-flex cursor-pointer items-center gap-1 text-xs font-semibold uppercase tracking-wide text-gray-600 hover:text-black focus:outline-none focus:ring-1 focus:ring-black ${
-                              isNumeric ? "ml-auto" : ""
-                            }`}
-                          >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                            <span aria-hidden="true" className="text-gray-400">
-                              {sortDirHeader === "asc"
-                                ? "↑"
-                                : sortDirHeader === "desc"
-                                  ? "↓"
-                                  : "↕"}
-                            </span>
-                          </button>
-                        ) : (
-                          flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )
-                        )}
-                      </th>
-                    );
-                  })}
-                </tr>
-              ))}
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {loading ? (
-                <tr>
-                  <td
-                    colSpan={columns.length}
-                    className="px-4 py-12 text-center text-sm text-gray-500"
-                  >
-                    {t("loading")}
-                  </td>
-                </tr>
-              ) : error ? (
-                <tr>
-                  <td
-                    colSpan={columns.length}
-                    className="px-4 py-12 text-center text-sm text-red-600"
-                  >
-                    {error}
-                  </td>
-                </tr>
-              ) : hasResults ? (
-                rows.map((row) => (
-                  <tr
-                    key={row.id}
-                    className="transition-colors duration-150 hover:bg-gray-50 motion-reduce:transition-none"
-                  >
-                    {row.getVisibleCells().map((cell) => {
-                      const isNumeric = cell.column.id === "countryCode";
-                      return (
-                        <td
-                          key={cell.id}
-                          className={`px-4 py-3 align-middle text-sm text-gray-700 ${
-                            isNumeric ? "text-right" : ""
-                          }`}
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan={columns.length}
-                    className="px-4 py-12 text-center text-sm text-gray-500"
-                  >
-                    {search ? t("noResults") : t("detail.empty")}
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+        <DataTable
+          table={table}
+          loading={loading}
+          error={error}
+          loadingLabel={t("loading")}
+          emptyLabel={t("detail.empty")}
+          noResultsLabel={t("noResults")}
+          hasActiveFilter={!!search}
+        />
 
         {showFooter && (
-          <div className="flex flex-col gap-3 border-t border-gray-200 px-4 py-3 text-sm text-gray-600 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-2">
-              <label
-                htmlFor="destinations-page-size"
-                className="text-xs uppercase tracking-wide text-gray-500"
-              >
-                {t("pagination.rowsPerPage")}
-              </label>
-              <select
-                id="destinations-page-size"
-                value={pagination.pageSize}
-                onChange={(e) =>
-                  setPagination({
-                    pageIndex: 0,
-                    pageSize: Number(e.target.value),
-                  })
-                }
-                className="cursor-pointer rounded-md border border-gray-200 bg-white py-1 pl-2 pr-7 text-sm text-black focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
-              >
-                {[10, 25, 50, 100].map((size) => (
-                  <option key={size} value={size}>
-                    {size}
-                  </option>
-                ))}
-              </select>
-              <span className="tabular-nums">
-                {t("pagination.showing", {
-                  from: fromRow,
-                  to: toRow,
-                  total,
-                })}
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="tabular-nums">
-                {t("pagination.pageOf", {
-                  page: pagination.pageIndex + 1,
-                  total: pageCount,
-                })}
-              </span>
-              <button
-                type="button"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage() || loading}
-                className="cursor-pointer rounded-md border border-gray-200 bg-white px-3 py-1 text-sm font-medium text-black transition-colors duration-150 hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-black disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none"
-              >
-                {t("pagination.prev")}
-              </button>
-              <button
-                type="button"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage() || loading}
-                className="cursor-pointer rounded-md border border-gray-200 bg-white px-3 py-1 text-sm font-medium text-black transition-colors duration-150 hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-black disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none"
-              >
-                {t("pagination.next")}
-              </button>
-            </div>
-          </div>
+          <Pagination
+            table={table}
+            total={total}
+            rowCount={rows.length}
+            loading={loading}
+            selectId="destinations-page-size"
+            labels={{
+              rowsPerPage: t("pagination.rowsPerPage"),
+              showing: (vars) => t("pagination.showing", vars),
+              pageOf: (vars) => t("pagination.pageOf", vars),
+              prev: t("pagination.prev"),
+              next: t("pagination.next"),
+            }}
+          />
         )}
       </div>
     </div>

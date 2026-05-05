@@ -562,13 +562,15 @@ export const voiceTrunks = pgTable(
     carrierId: uuid("carrier_id")
       .notNull()
       .references(() => carriers.id, { onDelete: "cascade" }),
+    voiceRateSheetId: uuid("voice_rate_sheet_id").references(
+      () => voiceRateSheets.id,
+      { onDelete: "restrict" },
+    ),
     name: text("name").notNull(),
     status: voiceTrunkStatus("status").notNull().default("active"),
     direction: voiceTrunkDirection("direction").notNull().default("both"),
     protocol: voiceTrunkProtocol("protocol").notNull().default("sip"),
     transport: voiceTrunkTransport("transport").notNull().default("udp"),
-    host: text("host").notNull(),
-    port: integer("port").notNull().default(5060),
     authType: voiceTrunkAuthType("auth_type").notNull(),
     username: text("username"),
     passwordEncrypted: text("password_encrypted"),
@@ -603,9 +605,9 @@ export const voiceTrunks = pgTable(
       .on(t.carrierId, t.name)
       .where(sql`${t.deletedAt} IS NULL`),
     index("voice_trunks_carrier_idx").on(t.carrierId),
+    index("voice_trunks_voice_rate_sheet_idx").on(t.voiceRateSheetId),
     index("voice_trunks_status_idx").on(t.status),
     index("voice_trunks_deleted_at_idx").on(t.deletedAt),
-    check("voice_trunks_port_range", sql`${t.port} BETWEEN 1 AND 65535`),
     check(
       "voice_trunks_auth_userpass_complete",
       sql`${t.authType} NOT IN ('userpass','both') OR (${t.username} IS NOT NULL AND ${t.passwordEncrypted} IS NOT NULL)`,
@@ -632,6 +634,10 @@ export const voiceTrunksRelations = relations(voiceTrunks, ({ one }) => ({
   carrier: one(carriers, {
     fields: [voiceTrunks.carrierId],
     references: [carriers.id],
+  }),
+  voiceRateSheet: one(voiceRateSheets, {
+    fields: [voiceTrunks.voiceRateSheetId],
+    references: [voiceRateSheets.id],
   }),
 }));
 

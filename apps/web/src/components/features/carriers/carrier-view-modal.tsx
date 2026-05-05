@@ -3,7 +3,7 @@
 import { useId, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Modal } from "@/components/ui/modal";
-import type { CarrierFormValues } from "@/components/admin/carrier-form-modal";
+import type { CarrierFormValues } from "@/components/features/carriers/carrier-form-modal";
 
 type TabId = "general" | "billing" | "contacts";
 

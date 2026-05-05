@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { signOut, useSession } from "@/lib/auth-client";
-import { LocaleSwitcher } from "@/components/locale-switcher";
+import { LocaleSwitcher } from "@/components/shell/locale-switcher";
 
 type HeaderProps = {
   collapsed?: boolean;

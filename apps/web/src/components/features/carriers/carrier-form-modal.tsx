@@ -1,11 +1,20 @@
 "use client";
 
 import { useId, useMemo, useRef, useState } from "react";
-import { useForm, type FieldErrors, type Path } from "react-hook-form";
+import {
+  useForm,
+  type FieldErrors,
+  type Path,
+  type UseFormRegisterReturn,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { z } from "zod";
 import { Modal } from "@/components/ui/modal";
+import { Button } from "@/components/ui/button";
+import { Field } from "@/components/form/field";
+import { TextInput } from "@/components/form/text-input";
+import { Select } from "@/components/form/select";
 
 const errMsg = {
   required: "required",
@@ -420,33 +429,17 @@ export function CarrierFormModal({
       }
       footer={
         <>
-          <button
-            type="button"
-            onClick={onClose}
-            className="cursor-pointer rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-black transition-colors duration-150 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 motion-reduce:transition-none"
-          >
+          <Button variant="secondary" onClick={onClose}>
             {tActions("cancel")}
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
             form={formId}
             disabled={isSubmitting}
-            className="inline-flex cursor-pointer items-center gap-2 rounded-md bg-black px-4 py-2 text-sm font-semibold text-white transition-colors duration-150 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none"
+            leadingIcon={isSubmitting ? <Spinner /> : undefined}
           >
-            {isSubmitting && (
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2.2}
-                className="h-4 w-4 animate-spin motion-reduce:animate-none"
-                aria-hidden="true"
-              >
-                <path d="M12 3a9 9 0 1 0 9 9" strokeLinecap="round" />
-              </svg>
-            )}
             {isSubmitting ? tForm("submitting") : tForm("submit")}
-          </button>
+          </Button>
         </>
       }
     >
@@ -491,18 +484,16 @@ export function CarrierFormModal({
               error={translateError(errors.name?.message)}
               htmlFor="cf-name"
             >
-              <input
+              <TextInput
                 id="cf-name"
-                type="text"
                 autoComplete="off"
                 placeholder={tFields("namePlaceholder")}
-                aria-invalid={!!errors.name}
+                invalid={!!errors.name}
                 ref={(el) => {
                   nameFieldRef(el);
                   nameRef.current = el;
                 }}
                 {...nameRegister}
-                className={inputCls(!!errors.name)}
               />
             </Field>
 
@@ -512,27 +503,21 @@ export function CarrierFormModal({
               error={translateError(errors.businessName?.message)}
               htmlFor="cf-business-name"
             >
-              <input
+              <TextInput
                 id="cf-business-name"
-                type="text"
                 autoComplete="organization"
                 placeholder={tFields("businessNamePlaceholder")}
-                aria-invalid={!!errors.businessName}
+                invalid={!!errors.businessName}
                 {...register("businessName")}
-                className={inputCls(!!errors.businessName)}
               />
             </Field>
           </div>
 
           <Field label={tFields("status")} htmlFor="cf-status">
-            <select
-              id="cf-status"
-              {...register("status")}
-              className={`${inputCls(false)} sm:max-w-xs`}
-            >
+            <Select id="cf-status" className="sm:max-w-xs" {...register("status")}>
               <option value="active">{tStatus("active")}</option>
               <option value="inactive">{tStatus("inactive")}</option>
-            </select>
+            </Select>
           </Field>
         </div>
 
@@ -555,13 +540,11 @@ export function CarrierFormModal({
               error={translateError(errors.billingDetails?.address?.line1?.message)}
               htmlFor="cf-line1"
             >
-              <input
+              <TextInput
                 id="cf-line1"
-                type="text"
                 autoComplete="address-line1"
-                aria-invalid={!!errors.billingDetails?.address?.line1}
+                invalid={!!errors.billingDetails?.address?.line1}
                 {...register("billingDetails.address.line1")}
-                className={inputCls(!!errors.billingDetails?.address?.line1)}
               />
             </Field>
 
@@ -570,13 +553,11 @@ export function CarrierFormModal({
               error={translateError(errors.billingDetails?.address?.line2?.message)}
               htmlFor="cf-line2"
             >
-              <input
+              <TextInput
                 id="cf-line2"
-                type="text"
                 autoComplete="address-line2"
-                aria-invalid={!!errors.billingDetails?.address?.line2}
+                invalid={!!errors.billingDetails?.address?.line2}
                 {...register("billingDetails.address.line2")}
-                className={inputCls(!!errors.billingDetails?.address?.line2)}
               />
             </Field>
 
@@ -587,13 +568,11 @@ export function CarrierFormModal({
                 error={translateError(errors.billingDetails?.address?.city?.message)}
                 htmlFor="cf-city"
               >
-                <input
+                <TextInput
                   id="cf-city"
-                  type="text"
                   autoComplete="address-level2"
-                  aria-invalid={!!errors.billingDetails?.address?.city}
+                  invalid={!!errors.billingDetails?.address?.city}
                   {...register("billingDetails.address.city")}
-                  className={inputCls(!!errors.billingDetails?.address?.city)}
                 />
               </Field>
 
@@ -602,13 +581,11 @@ export function CarrierFormModal({
                 error={translateError(errors.billingDetails?.address?.state?.message)}
                 htmlFor="cf-state"
               >
-                <input
+                <TextInput
                   id="cf-state"
-                  type="text"
                   autoComplete="address-level1"
-                  aria-invalid={!!errors.billingDetails?.address?.state}
+                  invalid={!!errors.billingDetails?.address?.state}
                   {...register("billingDetails.address.state")}
-                  className={inputCls(!!errors.billingDetails?.address?.state)}
                 />
               </Field>
 
@@ -618,13 +595,11 @@ export function CarrierFormModal({
                 error={translateError(errors.billingDetails?.address?.postalCode?.message)}
                 htmlFor="cf-postal"
               >
-                <input
+                <TextInput
                   id="cf-postal"
-                  type="text"
                   autoComplete="postal-code"
-                  aria-invalid={!!errors.billingDetails?.address?.postalCode}
+                  invalid={!!errors.billingDetails?.address?.postalCode}
                   {...register("billingDetails.address.postalCode")}
-                  className={inputCls(!!errors.billingDetails?.address?.postalCode)}
                 />
               </Field>
 
@@ -634,19 +609,18 @@ export function CarrierFormModal({
                 error={translateError(errors.billingDetails?.address?.countryCode?.message)}
                 htmlFor="cf-country"
               >
-                <input
+                <TextInput
                   id="cf-country"
-                  type="text"
                   inputMode="text"
                   autoComplete="country"
                   maxLength={2}
                   placeholder={tFields("countryCodePlaceholder")}
-                  aria-invalid={!!errors.billingDetails?.address?.countryCode}
+                  invalid={!!errors.billingDetails?.address?.countryCode}
+                  className="uppercase tracking-widest"
                   {...register("billingDetails.address.countryCode", {
                     setValueAs: (v: string) =>
                       typeof v === "string" ? v.trim().toUpperCase() : v,
                   })}
-                  className={`${inputCls(!!errors.billingDetails?.address?.countryCode)} uppercase tracking-widest`}
                 />
               </Field>
             </div>
@@ -663,13 +637,11 @@ export function CarrierFormModal({
                 error={translateError(errors.billingDetails?.taxId?.message)}
                 htmlFor="cf-tax-id"
               >
-                <input
+                <TextInput
                   id="cf-tax-id"
-                  type="text"
                   autoComplete="off"
-                  aria-invalid={!!errors.billingDetails?.taxId}
+                  invalid={!!errors.billingDetails?.taxId}
                   {...register("billingDetails.taxId")}
-                  className={inputCls(!!errors.billingDetails?.taxId)}
                 />
               </Field>
 
@@ -678,14 +650,12 @@ export function CarrierFormModal({
                 error={translateError(errors.billingDetails?.paymentTerms?.message)}
                 htmlFor="cf-payment-terms"
               >
-                <input
+                <TextInput
                   id="cf-payment-terms"
-                  type="text"
                   autoComplete="off"
                   placeholder={tFields("paymentTermsPlaceholder")}
-                  aria-invalid={!!errors.billingDetails?.paymentTerms}
+                  invalid={!!errors.billingDetails?.paymentTerms}
                   {...register("billingDetails.paymentTerms")}
-                  className={inputCls(!!errors.billingDetails?.paymentTerms)}
                 />
               </Field>
             </div>
@@ -698,9 +668,9 @@ export function CarrierFormModal({
               <textarea
                 id="cf-notes"
                 rows={3}
-                aria-invalid={!!errors.billingDetails?.notes}
+                aria-invalid={!!errors.billingDetails?.notes || undefined}
                 {...register("billingDetails.notes")}
-                className={`${inputCls(!!errors.billingDetails?.notes)} resize-y`}
+                className={textareaCls(!!errors.billingDetails?.notes)}
               />
             </Field>
           </fieldset>
@@ -710,27 +680,29 @@ export function CarrierFormModal({
               <legend className="text-sm font-semibold text-black">
                 {tSections("bank")}
               </legend>
-              <button
-                type="button"
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={toggleBank}
-                className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-black transition-colors duration-150 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-black motion-reduce:transition-none"
+                leadingIcon={
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.8}
+                    className="h-3.5 w-3.5"
+                    aria-hidden="true"
+                  >
+                    {bankEnabled ? (
+                      <path d="M5 12h14" strokeLinecap="round" />
+                    ) : (
+                      <path d="M12 5v14M5 12h14" strokeLinecap="round" />
+                    )}
+                  </svg>
+                }
               >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={1.8}
-                  className="h-3.5 w-3.5"
-                  aria-hidden="true"
-                >
-                  {bankEnabled ? (
-                    <path d="M5 12h14" strokeLinecap="round" />
-                  ) : (
-                    <path d="M12 5v14M5 12h14" strokeLinecap="round" />
-                  )}
-                </svg>
                 {bankEnabled ? tBank("removeToggle") : tBank("addToggle")}
-              </button>
+              </Button>
             </div>
 
             {bankEnabled && (
@@ -741,13 +713,11 @@ export function CarrierFormModal({
                   error={translateError(errors.billingDetails?.bank?.name?.message)}
                   htmlFor="cf-bank-name"
                 >
-                  <input
+                  <TextInput
                     id="cf-bank-name"
-                    type="text"
                     autoComplete="off"
-                    aria-invalid={!!errors.billingDetails?.bank?.name}
+                    invalid={!!errors.billingDetails?.bank?.name}
                     {...register("billingDetails.bank.name")}
-                    className={inputCls(!!errors.billingDetails?.bank?.name)}
                   />
                 </Field>
 
@@ -757,13 +727,11 @@ export function CarrierFormModal({
                   error={translateError(errors.billingDetails?.bank?.accountNumber?.message)}
                   htmlFor="cf-bank-account"
                 >
-                  <input
+                  <TextInput
                     id="cf-bank-account"
-                    type="text"
                     autoComplete="off"
-                    aria-invalid={!!errors.billingDetails?.bank?.accountNumber}
+                    invalid={!!errors.billingDetails?.bank?.accountNumber}
                     {...register("billingDetails.bank.accountNumber")}
-                    className={inputCls(!!errors.billingDetails?.bank?.accountNumber)}
                   />
                 </Field>
 
@@ -772,13 +740,11 @@ export function CarrierFormModal({
                   error={translateError(errors.billingDetails?.bank?.routingNumber?.message)}
                   htmlFor="cf-bank-routing"
                 >
-                  <input
+                  <TextInput
                     id="cf-bank-routing"
-                    type="text"
                     autoComplete="off"
-                    aria-invalid={!!errors.billingDetails?.bank?.routingNumber}
+                    invalid={!!errors.billingDetails?.bank?.routingNumber}
                     {...register("billingDetails.bank.routingNumber")}
-                    className={inputCls(!!errors.billingDetails?.bank?.routingNumber)}
                   />
                 </Field>
 
@@ -787,13 +753,11 @@ export function CarrierFormModal({
                   error={translateError(errors.billingDetails?.bank?.iban?.message)}
                   htmlFor="cf-bank-iban"
                 >
-                  <input
+                  <TextInput
                     id="cf-bank-iban"
-                    type="text"
                     autoComplete="off"
-                    aria-invalid={!!errors.billingDetails?.bank?.iban}
+                    invalid={!!errors.billingDetails?.bank?.iban}
                     {...register("billingDetails.bank.iban")}
-                    className={inputCls(!!errors.billingDetails?.bank?.iban)}
                   />
                 </Field>
 
@@ -802,13 +766,11 @@ export function CarrierFormModal({
                   error={translateError(errors.billingDetails?.bank?.swift?.message)}
                   htmlFor="cf-bank-swift"
                 >
-                  <input
+                  <TextInput
                     id="cf-bank-swift"
-                    type="text"
                     autoComplete="off"
-                    aria-invalid={!!errors.billingDetails?.bank?.swift}
+                    invalid={!!errors.billingDetails?.bank?.swift}
                     {...register("billingDetails.bank.swift")}
-                    className={inputCls(!!errors.billingDetails?.bank?.swift)}
                   />
                 </Field>
               </div>
@@ -882,51 +844,30 @@ export function CarrierFormModal({
   );
 }
 
-function inputCls(invalid: boolean): string {
-  return `block w-full rounded-md border bg-white px-3 py-2.5 text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-1 ${
+function textareaCls(invalid: boolean): string {
+  const base =
+    "block w-full resize-y rounded-md border bg-white px-3 py-2.5 text-sm text-black placeholder-gray-400 focus:outline-none focus:ring-1";
+  return `${base} ${
     invalid
       ? "border-red-500 focus:border-red-500 focus:ring-red-500"
       : "border-gray-300 focus:border-black focus:ring-black"
   }`;
 }
 
-function Field({
-  label,
-  required,
-  error,
-  htmlFor,
-  children,
-}: {
-  label: string;
-  required?: boolean;
-  error?: string | null;
-  htmlFor: string;
-  children: React.ReactNode;
-}) {
+function Spinner() {
   return (
-    <div>
-      <label
-        htmlFor={htmlFor}
-        className="block text-sm font-medium text-black"
-      >
-        {label}
-        {required && <span className="ml-0.5 text-red-600">*</span>}
-      </label>
-      <div className="mt-2">{children}</div>
-      {error && (
-        <p
-          id={`${htmlFor}-error`}
-          className="mt-1 text-sm text-red-600"
-          role="alert"
-        >
-          {error}
-        </p>
-      )}
-    </div>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2.2}
+      className="h-4 w-4 animate-spin motion-reduce:animate-none"
+      aria-hidden="true"
+    >
+      <path d="M12 3a9 9 0 1 0 9 9" strokeLinecap="round" />
+    </svg>
   );
 }
-
-type RegisterRet = ReturnType<ReturnType<typeof useForm<CarrierFormValues>>["register"]>;
 
 function ContactRow({
   section,
@@ -948,8 +889,8 @@ function ContactRow({
   emailLabel: string;
   nameError?: string | null;
   emailError?: string | null;
-  nameProps: RegisterRet;
-  emailProps: RegisterRet;
+  nameProps: UseFormRegisterReturn;
+  emailProps: UseFormRegisterReturn;
   hasNameError: boolean;
   hasEmailError: boolean;
 }) {
@@ -957,34 +898,21 @@ function ContactRow({
     <fieldset className="space-y-3">
       <legend className="text-sm font-semibold text-black">{section}</legend>
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field
-          label={nameLabel}
-          required
-          error={nameError}
-          htmlFor={nameId}
-        >
-          <input
+        <Field label={nameLabel} required error={nameError} htmlFor={nameId}>
+          <TextInput
             id={nameId}
-            type="text"
             autoComplete="name"
-            aria-invalid={hasNameError}
+            invalid={hasNameError}
             {...nameProps}
-            className={inputCls(hasNameError)}
           />
         </Field>
-        <Field
-          label={emailLabel}
-          required
-          error={emailError}
-          htmlFor={emailId}
-        >
-          <input
+        <Field label={emailLabel} required error={emailError} htmlFor={emailId}>
+          <TextInput
             id={emailId}
             type="email"
             autoComplete="email"
-            aria-invalid={hasEmailError}
+            invalid={hasEmailError}
             {...emailProps}
-            className={inputCls(hasEmailError)}
           />
         </Field>
       </div>

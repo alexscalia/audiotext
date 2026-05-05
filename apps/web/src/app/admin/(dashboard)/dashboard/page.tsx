@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { PageHeader } from "@/components/layout/page-header";
 
 type StatKey = "activeCalls" | "users" | "trunks" | "numberingPlans";
 
@@ -50,12 +51,7 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-black">
-          {t("title")}
-        </h1>
-        <p className="mt-2 text-sm text-gray-600">{t("subtitle")}</p>
-      </div>
+      <PageHeader title={t("title")} subtitle={t("subtitle")} />
 
       <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {STATS.map((s) => (

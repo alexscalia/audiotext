@@ -97,7 +97,10 @@
       "view": "Visualizza",
       "edit": "Modifica",
       "delete": "Elimina",
-      "openWebsite": "Apri il sito di {name}"
+      "openWebsite": "Apri il sito di {name}",
+      "open": "Apri menu azioni",
+      "cancel": "Annulla",
+      "close": "Chiudi"
     },
     "types": {
       "all": "Tutti",

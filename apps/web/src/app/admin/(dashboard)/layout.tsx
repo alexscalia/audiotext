@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useSession } from "@/lib/auth-client";
-import { Sidebar } from "@/components/admin/sidebar";
-import { Header } from "@/components/admin/header";
+import { Sidebar } from "@/components/shell/sidebar";
+import { Header } from "@/components/shell/header";
 
 export default function AdminDashboardLayout({
   children,

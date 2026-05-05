@@ -1,5 +1,5 @@
 {
-  "id": "9ec4503c-ec86-44fc-a935-bc468d635c7b",
+  "id": "a6d6faa2-bc4f-41b8-8e89-f0727ebda342",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -811,6 +811,116 @@
       },
       "isRLSEnabled": false
     },
+    "public.countries": {
+      "name": "countries",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "iso2": {
+          "name": "iso2",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name_en": {
+          "name": "name_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name_it": {
+          "name": "name_it",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "countries_iso2_unique_active": {
+          "name": "countries_iso2_unique_active",
+          "columns": [
+            {
+              "expression": "iso2",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"countries\".\"deleted_at\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "countries_iso2_idx": {
+          "name": "countries_iso2_idx",
+          "columns": [
+            {
+              "expression": "iso2",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "countries_deleted_at_idx": {
+          "name": "countries_deleted_at_idx",
+          "columns": [
+            {
+              "expression": "deleted_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "countries_iso2_format": {
+          "name": "countries_iso2_format",
+          "value": "\"countries\".\"iso2\" ~ '^[A-Z]{2}$'"
+        }
+      },
+      "isRLSEnabled": false
+    },
     "public.permissions": {
       "name": "permissions",
       "schema": "",
@@ -1017,6 +1127,13 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
+        "scope": {
+          "name": "scope",
+          "type": "role_scope",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
         "name": {
           "name": "name",
           "type": "text",
@@ -1051,9 +1168,15 @@
         }
       },
       "indexes": {
-        "roles_name_unique_active": {
-          "name": "roles_name_unique_active",
+        "roles_scope_name_unique_active": {
+          "name": "roles_scope_name_unique_active",
           "columns": [
+            {
+              "expression": "scope",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
             {
               "expression": "name",
               "isExpression": false,
@@ -1063,6 +1186,21 @@
           ],
           "isUnique": true,
           "where": "\"roles\".\"deleted_at\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "roles_scope_idx": {
+          "name": "roles_scope_idx",
+          "columns": [
+            {
+              "expression": "scope",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -2297,6 +2435,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "voice_rate_sheet_id": {
+          "name": "voice_rate_sheet_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
         "name": {
           "name": "name",
           "type": "text",
@@ -2334,19 +2478,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'udp'"
-        },
-        "host": {
-          "name": "host",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "port": {
-          "name": "port",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 5060
         },
         "auth_type": {
           "name": "auth_type",
@@ -2516,6 +2647,21 @@
           "method": "btree",
           "with": {}
         },
+        "voice_trunks_voice_rate_sheet_idx": {
+          "name": "voice_trunks_voice_rate_sheet_idx",
+          "columns": [
+            {
+              "expression": "voice_rate_sheet_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "voice_trunks_status_idx": {
           "name": "voice_trunks_status_idx",
           "columns": [
@@ -2560,16 +2706,25 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
+        },
+        "voice_trunks_voice_rate_sheet_id_voice_rate_sheets_id_fk": {
+          "name": "voice_trunks_voice_rate_sheet_id_voice_rate_sheets_id_fk",
+          "tableFrom": "voice_trunks",
+          "tableTo": "voice_rate_sheets",
+          "columnsFrom": [
+            "voice_rate_sheet_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {
-        "voice_trunks_port_range": {
-          "name": "voice_trunks_port_range",
-          "value": "\"voice_trunks\".\"port\" BETWEEN 1 AND 65535"
-        },
         "voice_trunks_auth_userpass_complete": {
           "name": "voice_trunks_auth_userpass_complete",
           "value": "\"voice_trunks\".\"auth_type\" NOT IN ('userpass','both') OR (\"voice_trunks\".\"username\" IS NOT NULL AND \"voice_trunks\".\"password_encrypted\" IS NOT NULL)"
@@ -2623,6 +2778,14 @@
         "usd",
         "eur",
         "gbp"
+      ]
+    },
+    "public.role_scope": {
+      "name": "role_scope",
+      "schema": "public",
+      "values": [
+        "admin",
+        "user"
       ]
     },
     "public.voice_numbering_plan_destination_type": {
