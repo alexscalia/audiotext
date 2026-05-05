@@ -9,7 +9,7 @@ All commands run from repo root unless noted. Package manager is **pnpm 10**, or
 ```bash
 # first-time setup
 cp .env.example .env
-docker compose up -d postgres        # postgres:17 on :5432, adminer on :8080
+docker compose up -d postgres        # postgres:17 on :5432
 pnpm install
 pnpm db:generate && pnpm db:migrate
 pnpm db:seed                         # creates admin001@admin.com / admin002@admin.com (pw: "password")

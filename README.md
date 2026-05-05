@@ -48,7 +48,6 @@ pnpm dev
 - api: http://localhost:3001/health
 - api docs (Swagger UI): http://localhost:3001/docs
 - api OpenAPI spec: http://localhost:3001/openapi.json
-- adminer: http://localhost:8080
 
 ## Future Rust port
 

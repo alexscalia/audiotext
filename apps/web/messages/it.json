@@ -87,6 +87,7 @@
       "codes": "Codici",
       "actions": "Azioni",
       "country": "Paese",
+      "iso": "ISO",
       "code": "Codice",
       "countryCode": "Prefisso paese",
       "destinationCodes": "Codici destinazione",

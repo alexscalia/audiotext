@@ -12,6 +12,7 @@ import {
 } from "drizzle-orm";
 import {
   db,
+  countries,
   voiceNumberingPlans,
   voiceNumberingPlanDestinations,
   voiceNumberingPlanCodes,
@@ -209,7 +210,8 @@ export const voiceNumberingPlansRoutes = new OpenAPIHono<{
   })
   .openapi(destinationsRoute, async (c) => {
     const { id } = c.req.valid("param");
-    const { page, pageSize, search, sortBy, sortDir } = c.req.valid("query");
+    const { page, pageSize, search, sortBy, sortDir, locale } =
+      c.req.valid("query");
 
     const planExists = await db
       .select({ id: voiceNumberingPlans.id })
@@ -231,6 +233,23 @@ export const voiceNumberingPlansRoutes = new OpenAPIHono<{
     const destinationCodesExpr = sql<
       string[]
     >`coalesce(array_remove(array_agg(${voiceNumberingPlanCodes.destinationCode}), null), '{}')::text[]`;
+    const countryNameCol = locale === "it" ? countries.nameIt : countries.nameEn;
+    const countryNameExpr = sql<string>`coalesce(${countryNameCol}, ${voiceNumberingPlanDestinations.countryIso2})`;
+    const typePriorityExpr = sql<number>`case ${voiceNumberingPlanDestinations.type}
+      when 'all' then 1
+      when 'landline' then 2
+      when 'mobile' then 3
+      when 'premium' then 4
+      when 'special' then 5
+      when 'toll_free' then 6
+      when 'shared_cost' then 7
+      when 'satellite' then 8
+      when 'personal' then 9
+      when 'paging' then 10
+      when 'voip' then 11
+      when 'ngn' then 12
+      else 99
+    end`;
 
     const filters: SQL[] = [
       eq(voiceNumberingPlanDestinations.voiceNumberingPlanId, id),
@@ -241,6 +260,7 @@ export const voiceNumberingPlansRoutes = new OpenAPIHono<{
       const searchClause = or(
         ilike(voiceNumberingPlanDestinations.name, term),
         ilike(voiceNumberingPlanDestinations.countryIso2, term),
+        ilike(countryNameCol, term),
       );
       if (searchClause) filters.push(searchClause);
     }
@@ -255,19 +275,31 @@ export const voiceNumberingPlansRoutes = new OpenAPIHono<{
         case "codeCount":
           return codeCountExpr;
         case "countryIso2":
-        default:
           return voiceNumberingPlanDestinations.countryIso2;
+        case "countryName":
+        default:
+          return countryNameExpr;
       }
     })();
     const orderBy = sortDir === "asc" ? asc(orderColumn) : desc(orderColumn);
+    const isCountrySort = sortBy === "countryName" || sortBy === "countryIso2";
+    const tieBreakers = isCountrySort
+      ? [asc(typePriorityExpr), asc(voiceNumberingPlanDestinations.name)]
+      : [desc(voiceNumberingPlanDestinations.id)];
 
     const offset = (page - 1) * pageSize;
+
+    const countriesJoinCondition = and(
+      eq(countries.iso2, voiceNumberingPlanDestinations.countryIso2),
+      isNull(countries.deletedAt),
+    );
 
     const [rows, totalRow] = await Promise.all([
       db
         .select({
           id: voiceNumberingPlanDestinations.id,
           countryIso2: voiceNumberingPlanDestinations.countryIso2,
+          countryName: countryNameExpr,
           name: voiceNumberingPlanDestinations.name,
           type: voiceNumberingPlanDestinations.type,
           countryCode: countryCodeExpr,
@@ -276,6 +308,7 @@ export const voiceNumberingPlansRoutes = new OpenAPIHono<{
           website: voiceNumberingPlanDestinations.website,
         })
         .from(voiceNumberingPlanDestinations)
+        .leftJoin(countries, countriesJoinCondition)
         .leftJoin(
           voiceNumberingPlanCodes,
           and(
@@ -287,13 +320,14 @@ export const voiceNumberingPlansRoutes = new OpenAPIHono<{
           ),
         )
         .where(whereClause)
-        .groupBy(voiceNumberingPlanDestinations.id)
-        .orderBy(orderBy, desc(voiceNumberingPlanDestinations.id))
+        .groupBy(voiceNumberingPlanDestinations.id, countries.id)
+        .orderBy(orderBy, ...tieBreakers)
         .limit(pageSize)
         .offset(offset),
       db
         .select({ count: sql<number>`count(*)::int` })
         .from(voiceNumberingPlanDestinations)
+        .leftJoin(countries, countriesJoinCondition)
         .where(whereClause),
     ]);
 
@@ -304,6 +338,7 @@ export const voiceNumberingPlansRoutes = new OpenAPIHono<{
         destinations: rows.map((r) => ({
           id: r.id,
           countryIso2: r.countryIso2,
+          countryName: r.countryName,
           name: r.name,
           type: r.type,
           countryCode: r.countryCode,

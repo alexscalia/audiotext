@@ -87,6 +87,7 @@
       "codes": "Codes",
       "actions": "Actions",
       "country": "Country",
+      "iso": "ISO",
       "code": "Code",
       "countryCode": "Country code",
       "destinationCodes": "Destination codes",

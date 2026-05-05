@@ -235,6 +235,7 @@ export type VoiceNumberingPlanDestinationType = z.infer<
 export const VoiceNumberingPlanDestinationListItemSchema = z.object({
   id: z.string().uuid(),
   countryIso2: z.string(),
+  countryName: z.string(),
   name: z.string(),
   type: VoiceNumberingPlanDestinationTypeEnum.nullable(),
   countryCode: z.string().nullable(),
@@ -247,6 +248,7 @@ export type VoiceNumberingPlanDestinationListItem = z.infer<
 >;
 
 export const VoiceNumberingPlanDestinationSortByEnum = z.enum([
+  "countryName",
   "countryIso2",
   "name",
   "type",
@@ -256,12 +258,18 @@ export type VoiceNumberingPlanDestinationSortBy = z.infer<
   typeof VoiceNumberingPlanDestinationSortByEnum
 >;
 
+export const VoiceNumberingPlanLocaleEnum = z.enum(["en", "it"]);
+export type VoiceNumberingPlanLocale = z.infer<
+  typeof VoiceNumberingPlanLocaleEnum
+>;
+
 export const VoiceNumberingPlanDestinationListQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   pageSize: z.coerce.number().int().min(1).max(100).default(25),
   search: z.string().trim().max(200).optional(),
-  sortBy: VoiceNumberingPlanDestinationSortByEnum.default("countryIso2"),
+  sortBy: VoiceNumberingPlanDestinationSortByEnum.default("countryName"),
   sortDir: CarrierListSortDirEnum.default("asc"),
+  locale: VoiceNumberingPlanLocaleEnum.default("en"),
 });
 export type VoiceNumberingPlanDestinationListQuery = z.infer<
   typeof VoiceNumberingPlanDestinationListQuerySchema

@@ -8,6 +8,7 @@ import type {
   ChatApp,
   NewCarrierRow,
 } from "./schema.js";
+import { seedCountries } from "./seed-countries.js";
 import { seedVoiceNumberingPlan } from "./seed-voice-numbering-plan.js";
 
 const url = process.env.DATABASE_URL;
@@ -29,14 +30,22 @@ async function ensureAdminRole(): Promise<string> {
     .select()
     .from(schema.roles)
     .where(
-      and(eq(schema.roles.name, ADMIN_ROLE_NAME), isNull(schema.roles.deletedAt)),
+      and(
+        eq(schema.roles.scope, "admin"),
+        eq(schema.roles.name, ADMIN_ROLE_NAME),
+        isNull(schema.roles.deletedAt),
+      ),
     )
     .limit(1);
   if (existing[0]) return existing[0].id;
 
   const [created] = await db
     .insert(schema.roles)
-    .values({ name: ADMIN_ROLE_NAME, description: "Administrator" })
+    .values({
+      scope: "admin",
+      name: ADMIN_ROLE_NAME,
+      description: "Administrator",
+    })
     .returning({ id: schema.roles.id });
   if (!created) throw new Error("failed to create admin role");
   return created.id;
@@ -319,6 +328,7 @@ async function main() {
     await seedCarrier(fixture);
   }
   await seedAdminChatContacts();
+  await seedCountries(db);
   await seedVoiceNumberingPlan(db);
   console.log("seed complete");
 }

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   type ColumnDef,
   type PaginationState,
@@ -24,6 +24,7 @@ import type {
 type Destination = VoiceNumberingPlanDestinationListItem;
 
 const SORTABLE_COLUMNS: readonly VoiceNumberingPlanDestinationSortBy[] = [
+  "countryName",
   "countryIso2",
   "name",
   "type",
@@ -76,8 +77,9 @@ export default function NumberingPlanDetailPage() {
   const id = params?.id ?? "";
 
   const t = useTranslations("NumberingPlans");
+  const locale = useLocale();
   const [sorting, setSorting] = useState<SortingState>([
-    { id: "countryIso2", desc: false },
+    { id: "countryName", desc: false },
   ]);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
@@ -138,7 +140,7 @@ export default function NumberingPlanDetailPage() {
   const sortBy: VoiceNumberingPlanDestinationSortBy = useMemo(() => {
     const first = sorting[0];
     if (first && isSortableColumn(first.id)) return first.id;
-    return "countryIso2";
+    return "countryName";
   }, [sorting]);
   const sortDir: "asc" | "desc" = useMemo(() => {
     const first = sorting[0];
@@ -160,6 +162,7 @@ export default function NumberingPlanDetailPage() {
       pageSize: String(pagination.pageSize),
       sortBy,
       sortDir,
+      locale,
     });
     if (search) params.set("search", search);
 
@@ -195,14 +198,24 @@ export default function NumberingPlanDetailPage() {
     sortBy,
     sortDir,
     search,
+    locale,
     t,
   ]);
 
   const columns = useMemo<ColumnDef<Destination>[]>(
     () => [
       {
-        accessorKey: "countryIso2",
+        accessorKey: "countryName",
         header: t("columns.country"),
+        cell: ({ row }) => (
+          <span className="font-medium text-black">
+            {row.original.countryName}
+          </span>
+        ),
+      },
+      {
+        accessorKey: "countryIso2",
+        header: t("columns.iso"),
         cell: ({ row }) => (
           <span className="font-mono text-sm text-gray-700">
             {row.original.countryIso2}

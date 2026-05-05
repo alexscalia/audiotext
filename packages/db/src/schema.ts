@@ -160,10 +160,13 @@ export type NewAccountRow = typeof accounts.$inferInsert;
 export type VerificationRow = typeof verifications.$inferSelect;
 export type NewVerificationRow = typeof verifications.$inferInsert;
 
+export const roleScope = pgEnum("role_scope", ["admin", "user"]);
+
 export const roles = pgTable(
   "roles",
   {
     id: uuid("id").primaryKey().defaultRandom(),
+    scope: roleScope("scope").notNull(),
     name: text("name").notNull(),
     description: text("description"),
     createdAt: timestamp("created_at", { withTimezone: true })
@@ -176,9 +179,10 @@ export const roles = pgTable(
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
   (t) => [
-    uniqueIndex("roles_name_unique_active")
-      .on(t.name)
+    uniqueIndex("roles_scope_name_unique_active")
+      .on(t.scope, t.name)
       .where(sql`${t.deletedAt} IS NULL`),
+    index("roles_scope_idx").on(t.scope),
     index("roles_deleted_at_idx").on(t.deletedAt),
   ],
 );
@@ -691,6 +695,35 @@ export const voiceNumberingPlansRelations = relations(
     destinations: many(voiceNumberingPlanDestinations),
   }),
 );
+
+export const countries = pgTable(
+  "countries",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    iso2: text("iso2").notNull(),
+    nameEn: text("name_en").notNull(),
+    nameIt: text("name_it").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("countries_iso2_unique_active")
+      .on(t.iso2)
+      .where(sql`${t.deletedAt} IS NULL`),
+    index("countries_iso2_idx").on(t.iso2),
+    index("countries_deleted_at_idx").on(t.deletedAt),
+    check("countries_iso2_format", sql`${t.iso2} ~ '^[A-Z]{2}$'`),
+  ],
+);
+
+export type CountryRow = typeof countries.$inferSelect;
+export type NewCountryRow = typeof countries.$inferInsert;
 
 export const voiceNumberingPlanDestinations = pgTable(
   "voice_numbering_plan_destinations",
