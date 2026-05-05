@@ -1,5 +1,5 @@
 {
-  "id": "a6d6faa2-bc4f-41b8-8e89-f0727ebda342",
+  "id": "ec7b7db0-e161-453a-99fe-36b4add2795b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -535,6 +535,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "rates_phone": {
+          "name": "rates_phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "billing_name": {
           "name": "billing_name",
           "type": "text",
@@ -546,6 +552,12 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "billing_phone": {
+          "name": "billing_phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "noc_name": {
           "name": "noc_name",
@@ -559,6 +571,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "noc_phone": {
+          "name": "noc_phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "sales_name": {
           "name": "sales_name",
           "type": "text",
@@ -570,6 +588,12 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "sales_phone": {
+          "name": "sales_phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
