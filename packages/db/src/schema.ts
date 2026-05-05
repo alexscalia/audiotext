@@ -317,12 +317,16 @@ export const carriers = pgTable(
       .notNull(),
     ratesName: text("rates_name").notNull(),
     ratesEmail: text("rates_email").notNull(),
+    ratesPhone: text("rates_phone"),
     billingName: text("billing_name").notNull(),
     billingEmail: text("billing_email").notNull(),
+    billingPhone: text("billing_phone"),
     nocName: text("noc_name").notNull(),
     nocEmail: text("noc_email").notNull(),
+    nocPhone: text("noc_phone"),
     salesName: text("sales_name").notNull(),
     salesEmail: text("sales_email").notNull(),
+    salesPhone: text("sales_phone"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),

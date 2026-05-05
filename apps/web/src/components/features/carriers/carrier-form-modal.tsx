@@ -87,6 +87,7 @@ const carrierFormSchema = z.object({
     .min(1, errMsg.required)
     .email(errMsg.email)
     .max(256, errMsg.tooLong),
+  ratesPhone: z.string().max(32, errMsg.tooLong).optional(),
   billingName: z
     .string()
     .trim()
@@ -98,6 +99,7 @@ const carrierFormSchema = z.object({
     .min(1, errMsg.required)
     .email(errMsg.email)
     .max(256, errMsg.tooLong),
+  billingPhone: z.string().max(32, errMsg.tooLong).optional(),
   nocName: z
     .string()
     .trim()
@@ -109,6 +111,7 @@ const carrierFormSchema = z.object({
     .min(1, errMsg.required)
     .email(errMsg.email)
     .max(256, errMsg.tooLong),
+  nocPhone: z.string().max(32, errMsg.tooLong).optional(),
   salesName: z
     .string()
     .trim()
@@ -120,6 +123,7 @@ const carrierFormSchema = z.object({
     .min(1, errMsg.required)
     .email(errMsg.email)
     .max(256, errMsg.tooLong),
+  salesPhone: z.string().max(32, errMsg.tooLong).optional(),
 });
 
 export type CarrierFormValues = z.infer<typeof carrierFormSchema>;
@@ -152,12 +156,16 @@ const EMPTY_VALUES: CarrierFormValues = {
   },
   ratesName: "",
   ratesEmail: "",
+  ratesPhone: "",
   billingName: "",
   billingEmail: "",
+  billingPhone: "",
   nocName: "",
   nocEmail: "",
+  nocPhone: "",
   salesName: "",
   salesEmail: "",
+  salesPhone: "",
 };
 
 const EMPTY_BANK = {
@@ -184,14 +192,18 @@ function countErrors(node: unknown): number {
 
 const GENERAL_KEYS = ["name", "businessName", "status"] as const;
 const CONTACT_KEYS = [
-  "ratesName",
-  "ratesEmail",
-  "billingName",
-  "billingEmail",
-  "nocName",
-  "nocEmail",
   "salesName",
   "salesEmail",
+  "salesPhone",
+  "ratesName",
+  "ratesEmail",
+  "ratesPhone",
+  "billingName",
+  "billingEmail",
+  "billingPhone",
+  "nocName",
+  "nocEmail",
+  "nocPhone",
 ] as const;
 
 function firstTabWithErrors(errors: FieldErrors<CarrierFormValues>): TabId | null {
@@ -226,14 +238,18 @@ function firstFieldPathInTab(
             "billingDetails.bank.swift",
           ]
         : [
-            "ratesName",
-            "ratesEmail",
-            "billingName",
-            "billingEmail",
-            "nocName",
-            "nocEmail",
             "salesName",
             "salesEmail",
+            "salesPhone",
+            "ratesName",
+            "ratesEmail",
+            "ratesPhone",
+            "billingName",
+            "billingEmail",
+            "billingPhone",
+            "nocName",
+            "nocEmail",
+            "nocPhone",
           ];
   for (const path of order) {
     if (resolveError(errors, path)) return path;
@@ -321,22 +337,30 @@ export function CarrierFormModal({
       countErrors({
         ratesName: errors.ratesName,
         ratesEmail: errors.ratesEmail,
+        ratesPhone: errors.ratesPhone,
         billingName: errors.billingName,
         billingEmail: errors.billingEmail,
+        billingPhone: errors.billingPhone,
         nocName: errors.nocName,
         nocEmail: errors.nocEmail,
+        nocPhone: errors.nocPhone,
         salesName: errors.salesName,
         salesEmail: errors.salesEmail,
+        salesPhone: errors.salesPhone,
       }),
     [
       errors.ratesName,
       errors.ratesEmail,
+      errors.ratesPhone,
       errors.billingName,
       errors.billingEmail,
+      errors.billingPhone,
       errors.nocName,
       errors.nocEmail,
+      errors.nocPhone,
       errors.salesName,
       errors.salesEmail,
+      errors.salesPhone,
     ],
   );
   const totalErrors = generalErrors + billingErrors + contactsErrors;
@@ -787,56 +811,76 @@ export function CarrierFormModal({
           className="space-y-6"
         >
           <ContactRow
+            section={tSections("sales")}
+            nameId="cf-sales-name"
+            emailId="cf-sales-email"
+            phoneId="cf-sales-phone"
+            nameLabel={tFields("contactName")}
+            emailLabel={tFields("contactEmail")}
+            phoneLabel={tFields("contactPhone")}
+            nameError={translateError(errors.salesName?.message)}
+            emailError={translateError(errors.salesEmail?.message)}
+            phoneError={translateError(errors.salesPhone?.message)}
+            nameProps={register("salesName")}
+            emailProps={register("salesEmail")}
+            phoneProps={register("salesPhone")}
+            hasNameError={!!errors.salesName}
+            hasEmailError={!!errors.salesEmail}
+            hasPhoneError={!!errors.salesPhone}
+          />
+          <ContactRow
             section={tSections("rates")}
             nameId="cf-rates-name"
             emailId="cf-rates-email"
+            phoneId="cf-rates-phone"
             nameLabel={tFields("contactName")}
             emailLabel={tFields("contactEmail")}
+            phoneLabel={tFields("contactPhone")}
             nameError={translateError(errors.ratesName?.message)}
             emailError={translateError(errors.ratesEmail?.message)}
+            phoneError={translateError(errors.ratesPhone?.message)}
             nameProps={register("ratesName")}
             emailProps={register("ratesEmail")}
+            phoneProps={register("ratesPhone")}
             hasNameError={!!errors.ratesName}
             hasEmailError={!!errors.ratesEmail}
+            hasPhoneError={!!errors.ratesPhone}
           />
           <ContactRow
             section={tSections("billing")}
             nameId="cf-billing-name"
             emailId="cf-billing-email"
+            phoneId="cf-billing-phone"
             nameLabel={tFields("contactName")}
             emailLabel={tFields("contactEmail")}
+            phoneLabel={tFields("contactPhone")}
             nameError={translateError(errors.billingName?.message)}
             emailError={translateError(errors.billingEmail?.message)}
+            phoneError={translateError(errors.billingPhone?.message)}
             nameProps={register("billingName")}
             emailProps={register("billingEmail")}
+            phoneProps={register("billingPhone")}
             hasNameError={!!errors.billingName}
             hasEmailError={!!errors.billingEmail}
+            hasPhoneError={!!errors.billingPhone}
           />
           <ContactRow
             section={tSections("noc")}
             nameId="cf-noc-name"
             emailId="cf-noc-email"
+            phoneId="cf-noc-phone"
             nameLabel={tFields("contactName")}
             emailLabel={tFields("contactEmail")}
+            phoneLabel={tFields("contactPhone")}
             nameError={translateError(errors.nocName?.message)}
             emailError={translateError(errors.nocEmail?.message)}
+            phoneError={translateError(errors.nocPhone?.message)}
             nameProps={register("nocName")}
             emailProps={register("nocEmail")}
+            phoneProps={register("nocPhone")}
             hasNameError={!!errors.nocName}
             hasEmailError={!!errors.nocEmail}
-          />
-          <ContactRow
-            section={tSections("sales")}
-            nameId="cf-sales-name"
-            emailId="cf-sales-email"
-            nameLabel={tFields("contactName")}
-            emailLabel={tFields("contactEmail")}
-            nameError={translateError(errors.salesName?.message)}
-            emailError={translateError(errors.salesEmail?.message)}
-            nameProps={register("salesName")}
-            emailProps={register("salesEmail")}
-            hasNameError={!!errors.salesName}
-            hasEmailError={!!errors.salesEmail}
+            hasPhoneError={!!errors.nocPhone}
           />
         </div>
       </form>
@@ -873,26 +917,36 @@ function ContactRow({
   section,
   nameId,
   emailId,
+  phoneId,
   nameLabel,
   emailLabel,
+  phoneLabel,
   nameError,
   emailError,
+  phoneError,
   nameProps,
   emailProps,
+  phoneProps,
   hasNameError,
   hasEmailError,
+  hasPhoneError,
 }: {
   section: string;
   nameId: string;
   emailId: string;
+  phoneId: string;
   nameLabel: string;
   emailLabel: string;
+  phoneLabel: string;
   nameError?: string | null;
   emailError?: string | null;
+  phoneError?: string | null;
   nameProps: UseFormRegisterReturn;
   emailProps: UseFormRegisterReturn;
+  phoneProps: UseFormRegisterReturn;
   hasNameError: boolean;
   hasEmailError: boolean;
+  hasPhoneError: boolean;
 }) {
   return (
     <fieldset className="space-y-3">
@@ -913,6 +967,15 @@ function ContactRow({
             autoComplete="email"
             invalid={hasEmailError}
             {...emailProps}
+          />
+        </Field>
+        <Field label={phoneLabel} error={phoneError} htmlFor={phoneId}>
+          <TextInput
+            id={phoneId}
+            type="tel"
+            autoComplete="tel"
+            invalid={hasPhoneError}
+            {...phoneProps}
           />
         </Field>
       </div>

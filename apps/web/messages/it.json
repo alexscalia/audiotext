@@ -204,7 +204,8 @@
         "bankIban": "IBAN",
         "bankSwift": "SWIFT / BIC",
         "contactName": "Nome",
-        "contactEmail": "Email"
+        "contactEmail": "Email",
+        "contactPhone": "Telefono"
       },
       "bank": {
         "addToggle": "Aggiungi dati bancari",

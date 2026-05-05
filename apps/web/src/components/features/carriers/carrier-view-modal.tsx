@@ -245,32 +245,40 @@ export function CarrierViewModal({
         className="space-y-6"
       >
         <ContactBlock
+          section={tSections("sales")}
+          name={carrier.salesName}
+          email={carrier.salesEmail}
+          phone={carrier.salesPhone}
+          nameLabel={tFields("contactName")}
+          emailLabel={tFields("contactEmail")}
+          phoneLabel={tFields("contactPhone")}
+        />
+        <ContactBlock
           section={tSections("rates")}
           name={carrier.ratesName}
           email={carrier.ratesEmail}
+          phone={carrier.ratesPhone}
           nameLabel={tFields("contactName")}
           emailLabel={tFields("contactEmail")}
+          phoneLabel={tFields("contactPhone")}
         />
         <ContactBlock
           section={tSections("billing")}
           name={carrier.billingName}
           email={carrier.billingEmail}
+          phone={carrier.billingPhone}
           nameLabel={tFields("contactName")}
           emailLabel={tFields("contactEmail")}
+          phoneLabel={tFields("contactPhone")}
         />
         <ContactBlock
           section={tSections("noc")}
           name={carrier.nocName}
           email={carrier.nocEmail}
+          phone={carrier.nocPhone}
           nameLabel={tFields("contactName")}
           emailLabel={tFields("contactEmail")}
-        />
-        <ContactBlock
-          section={tSections("sales")}
-          name={carrier.salesName}
-          email={carrier.salesEmail}
-          nameLabel={tFields("contactName")}
-          emailLabel={tFields("contactEmail")}
+          phoneLabel={tFields("contactPhone")}
         />
       </div>
 
@@ -328,14 +336,18 @@ function ContactBlock({
   section,
   name,
   email,
+  phone,
   nameLabel,
   emailLabel,
+  phoneLabel,
 }: {
   section: string;
   name: string;
   email: string;
+  phone?: string;
   nameLabel: string;
   emailLabel: string;
+  phoneLabel: string;
 }) {
   return (
     <Section title={section}>
@@ -343,27 +355,52 @@ function ContactBlock({
         items={[
           { label: nameLabel, value: name },
           { label: emailLabel, value: email },
+          { label: phoneLabel, value: phone },
         ]}
       />
-      {email && (
-        <a
-          href={`mailto:${email}`}
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-600 underline-offset-2 hover:text-black hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-black"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={1.8}
-            className="h-3.5 w-3.5"
-            aria-hidden="true"
+      <div className="flex flex-wrap gap-x-4 gap-y-1">
+        {email && (
+          <a
+            href={`mailto:${email}`}
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-600 underline-offset-2 hover:text-black hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-black"
           >
-            <rect x="3" y="5" width="18" height="14" rx="2" />
-            <path d="m4 7 8 6 8-6" strokeLinecap="round" />
-          </svg>
-          {email}
-        </a>
-      )}
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.8}
+              className="h-3.5 w-3.5"
+              aria-hidden="true"
+            >
+              <rect x="3" y="5" width="18" height="14" rx="2" />
+              <path d="m4 7 8 6 8-6" strokeLinecap="round" />
+            </svg>
+            {email}
+          </a>
+        )}
+        {phone && (
+          <a
+            href={`tel:${phone}`}
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-600 underline-offset-2 hover:text-black hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-black"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.8}
+              className="h-3.5 w-3.5"
+              aria-hidden="true"
+            >
+              <path
+                d="M5 4h3l2 5-2 1a11 11 0 0 0 6 6l1-2 5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            {phone}
+          </a>
+        )}
+      </div>
     </Section>
   );
 }
