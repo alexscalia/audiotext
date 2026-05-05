@@ -4,8 +4,8 @@ import { swaggerUI } from "@hono/swagger-ui";
 import { logger } from "hono/logger";
 import { pool } from "@audiotext/db";
 import { auth } from "./lib/auth";
-import { carriersRoutes } from "./routes/carriers";
-import { voiceNumberingPlansRoutes } from "./routes/voice-numbering-plans";
+import { carriersRoutes } from "./routes/admin/carriers";
+import { voiceNumberingPlansRoutes } from "./routes/admin/voice-numbering-plans";
 
 const PORT = Number(process.env.PORT ?? 3001);
 
@@ -30,8 +30,8 @@ const routes = app
   .get("/health", (c) =>
     c.json({ ok: true, ts: new Date().toISOString() }),
   )
-  .route("/admin/carriers", carriersRoutes)
-  .route("/admin/voice-numbering-plans", voiceNumberingPlansRoutes)
+  .route("/api/admin/carriers", carriersRoutes)
+  .route("/api/admin/voice-numbering-plans", voiceNumberingPlansRoutes)
   .get("/:slug", (c) => c.json({ message: `Hello ${c.req.param("slug")}!` }));
 
 const server = serve({ fetch: app.fetch, port: PORT }, ({ port }) => {

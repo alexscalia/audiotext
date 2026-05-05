@@ -22,7 +22,7 @@ import {
   VoiceNumberingPlanDetailSchema,
   VoiceNumberingPlanListResponseSchema,
 } from "@audiotext/shared";
-import { requireAuth, type AuthVariables } from "../lib/require-auth";
+import { requireAuth, type AuthVariables } from "../../lib/require-auth";
 
 const listVoiceNumberingPlansRoute = createRoute({
   method: "get",
