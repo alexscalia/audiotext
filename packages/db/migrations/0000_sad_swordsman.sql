@@ -229,13 +229,34 @@ CREATE TABLE "voice_numbering_plans" (
 	"deleted_at" timestamp with time zone
 );
 --> statement-breakpoint
+CREATE TABLE "voice_rate_sheet_lines" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"voice_rate_sheet_id" uuid NOT NULL,
+	"voice_numbering_plan_destination_id" uuid NOT NULL,
+	"rate" numeric(18, 6) NOT NULL,
+	"billing_initial_increment" integer NOT NULL,
+	"billing_subsequent_increment" integer NOT NULL,
+	"valid_from" timestamp with time zone DEFAULT now() NOT NULL,
+	"valid_to" timestamp with time zone,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"deleted_at" timestamp with time zone,
+	CONSTRAINT "voice_rate_sheet_lines_rate_non_negative" CHECK ("voice_rate_sheet_lines"."rate" >= 0),
+	CONSTRAINT "voice_rate_sheet_lines_initial_increment_positive" CHECK ("voice_rate_sheet_lines"."billing_initial_increment" > 0),
+	CONSTRAINT "voice_rate_sheet_lines_subsequent_increment_positive" CHECK ("voice_rate_sheet_lines"."billing_subsequent_increment" > 0),
+	CONSTRAINT "voice_rate_sheet_lines_valid_range" CHECK ("voice_rate_sheet_lines"."valid_to" IS NULL OR "voice_rate_sheet_lines"."valid_to" > "voice_rate_sheet_lines"."valid_from")
+);
+--> statement-breakpoint
 CREATE TABLE "voice_rate_sheets" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL,
 	"status" "voice_rate_sheet_status" DEFAULT 'active' NOT NULL,
+	"voice_numbering_plan_id" uuid NOT NULL,
+	"currency_iso" text NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"deleted_at" timestamp with time zone
+	"deleted_at" timestamp with time zone,
+	CONSTRAINT "voice_rate_sheets_currency_iso_format" CHECK ("voice_rate_sheets"."currency_iso" ~ '^[A-Z]{3}$')
 );
 --> statement-breakpoint
 CREATE TABLE "voice_trunks" (
@@ -285,6 +306,9 @@ ALTER TABLE "user_roles" ADD CONSTRAINT "user_roles_user_id_users_id_fk" FOREIGN
 ALTER TABLE "user_roles" ADD CONSTRAINT "user_roles_role_id_roles_id_fk" FOREIGN KEY ("role_id") REFERENCES "public"."roles"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "voice_numbering_plan_codes" ADD CONSTRAINT "voice_numbering_plan_codes_voice_numbering_plan_destination_id_voice_numbering_plan_destinations_id_fk" FOREIGN KEY ("voice_numbering_plan_destination_id") REFERENCES "public"."voice_numbering_plan_destinations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "voice_numbering_plan_destinations" ADD CONSTRAINT "voice_numbering_plan_destinations_voice_numbering_plan_id_voice_numbering_plans_id_fk" FOREIGN KEY ("voice_numbering_plan_id") REFERENCES "public"."voice_numbering_plans"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "voice_rate_sheet_lines" ADD CONSTRAINT "voice_rate_sheet_lines_voice_rate_sheet_id_voice_rate_sheets_id_fk" FOREIGN KEY ("voice_rate_sheet_id") REFERENCES "public"."voice_rate_sheets"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "voice_rate_sheet_lines" ADD CONSTRAINT "voice_rate_sheet_lines_voice_numbering_plan_destination_id_voice_numbering_plan_destinations_id_fk" FOREIGN KEY ("voice_numbering_plan_destination_id") REFERENCES "public"."voice_numbering_plan_destinations"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "voice_rate_sheets" ADD CONSTRAINT "voice_rate_sheets_voice_numbering_plan_id_voice_numbering_plans_id_fk" FOREIGN KEY ("voice_numbering_plan_id") REFERENCES "public"."voice_numbering_plans"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "voice_trunks" ADD CONSTRAINT "voice_trunks_carrier_id_carriers_id_fk" FOREIGN KEY ("carrier_id") REFERENCES "public"."carriers"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "voice_trunks" ADD CONSTRAINT "voice_trunks_voice_rate_sheet_id_voice_rate_sheets_id_fk" FOREIGN KEY ("voice_rate_sheet_id") REFERENCES "public"."voice_rate_sheets"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 CREATE UNIQUE INDEX "accounts_provider_account_unique_active" ON "accounts" USING btree ("provider_id","account_id") WHERE "accounts"."deleted_at" IS NULL;--> statement-breakpoint
@@ -343,8 +367,14 @@ CREATE INDEX "voice_numbering_plan_destinations_deleted_at_idx" ON "voice_number
 CREATE UNIQUE INDEX "voice_numbering_plans_name_unique_active" ON "voice_numbering_plans" USING btree ("name") WHERE "voice_numbering_plans"."deleted_at" IS NULL;--> statement-breakpoint
 CREATE INDEX "voice_numbering_plans_status_idx" ON "voice_numbering_plans" USING btree ("status");--> statement-breakpoint
 CREATE INDEX "voice_numbering_plans_deleted_at_idx" ON "voice_numbering_plans" USING btree ("deleted_at");--> statement-breakpoint
+CREATE INDEX "voice_rate_sheet_lines_voice_rate_sheet_idx" ON "voice_rate_sheet_lines" USING btree ("voice_rate_sheet_id");--> statement-breakpoint
+CREATE INDEX "voice_rate_sheet_lines_destination_idx" ON "voice_rate_sheet_lines" USING btree ("voice_numbering_plan_destination_id");--> statement-breakpoint
+CREATE INDEX "voice_rate_sheet_lines_valid_from_idx" ON "voice_rate_sheet_lines" USING btree ("valid_from");--> statement-breakpoint
+CREATE INDEX "voice_rate_sheet_lines_valid_to_idx" ON "voice_rate_sheet_lines" USING btree ("valid_to");--> statement-breakpoint
+CREATE INDEX "voice_rate_sheet_lines_deleted_at_idx" ON "voice_rate_sheet_lines" USING btree ("deleted_at");--> statement-breakpoint
 CREATE UNIQUE INDEX "voice_rate_sheets_name_unique_active" ON "voice_rate_sheets" USING btree ("name") WHERE "voice_rate_sheets"."deleted_at" IS NULL;--> statement-breakpoint
 CREATE INDEX "voice_rate_sheets_status_idx" ON "voice_rate_sheets" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "voice_rate_sheets_voice_numbering_plan_idx" ON "voice_rate_sheets" USING btree ("voice_numbering_plan_id");--> statement-breakpoint
 CREATE INDEX "voice_rate_sheets_deleted_at_idx" ON "voice_rate_sheets" USING btree ("deleted_at");--> statement-breakpoint
 CREATE UNIQUE INDEX "voice_trunks_carrier_name_unique_active" ON "voice_trunks" USING btree ("carrier_id","name") WHERE "voice_trunks"."deleted_at" IS NULL;--> statement-breakpoint
 CREATE INDEX "voice_trunks_carrier_idx" ON "voice_trunks" USING btree ("carrier_id");--> statement-breakpoint
