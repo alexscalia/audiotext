@@ -909,6 +909,10 @@ export const voiceRateSheets = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     name: text("name").notNull(),
     status: voiceRateSheetStatus("status").notNull().default("active"),
+    voiceNumberingPlanId: uuid("voice_numbering_plan_id")
+      .notNull()
+      .references(() => voiceNumberingPlans.id, { onDelete: "restrict" }),
+    currencyIso: text("currency_iso").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -923,12 +927,104 @@ export const voiceRateSheets = pgTable(
       .on(t.name)
       .where(sql`${t.deletedAt} IS NULL`),
     index("voice_rate_sheets_status_idx").on(t.status),
+    index("voice_rate_sheets_voice_numbering_plan_idx").on(
+      t.voiceNumberingPlanId,
+    ),
     index("voice_rate_sheets_deleted_at_idx").on(t.deletedAt),
+    check(
+      "voice_rate_sheets_currency_iso_format",
+      sql`${t.currencyIso} ~ '^[A-Z]{3}$'`,
+    ),
   ],
 );
 
 export type VoiceRateSheetRow = typeof voiceRateSheets.$inferSelect;
 export type NewVoiceRateSheetRow = typeof voiceRateSheets.$inferInsert;
+
+export const voiceRateSheetsRelations = relations(
+  voiceRateSheets,
+  ({ one, many }) => ({
+    voiceNumberingPlan: one(voiceNumberingPlans, {
+      fields: [voiceRateSheets.voiceNumberingPlanId],
+      references: [voiceNumberingPlans.id],
+    }),
+    lines: many(voiceRateSheetLines),
+  }),
+);
+
+export const voiceRateSheetLines = pgTable(
+  "voice_rate_sheet_lines",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    voiceRateSheetId: uuid("voice_rate_sheet_id")
+      .notNull()
+      .references(() => voiceRateSheets.id, { onDelete: "cascade" }),
+    voiceNumberingPlanDestinationId: uuid("voice_numbering_plan_destination_id")
+      .notNull()
+      .references(() => voiceNumberingPlanDestinations.id, {
+        onDelete: "restrict",
+      }),
+    rate: numeric("rate", { precision: 18, scale: 6 }).notNull(),
+    billingInitialIncrement: integer("billing_initial_increment").notNull(),
+    billingSubsequentIncrement: integer(
+      "billing_subsequent_increment",
+    ).notNull(),
+    validFrom: timestamp("valid_from", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    validTo: timestamp("valid_to", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    index("voice_rate_sheet_lines_voice_rate_sheet_idx").on(
+      t.voiceRateSheetId,
+    ),
+    index("voice_rate_sheet_lines_destination_idx").on(
+      t.voiceNumberingPlanDestinationId,
+    ),
+    index("voice_rate_sheet_lines_valid_from_idx").on(t.validFrom),
+    index("voice_rate_sheet_lines_valid_to_idx").on(t.validTo),
+    index("voice_rate_sheet_lines_deleted_at_idx").on(t.deletedAt),
+    check("voice_rate_sheet_lines_rate_non_negative", sql`${t.rate} >= 0`),
+    check(
+      "voice_rate_sheet_lines_initial_increment_positive",
+      sql`${t.billingInitialIncrement} > 0`,
+    ),
+    check(
+      "voice_rate_sheet_lines_subsequent_increment_positive",
+      sql`${t.billingSubsequentIncrement} > 0`,
+    ),
+    check(
+      "voice_rate_sheet_lines_valid_range",
+      sql`${t.validTo} IS NULL OR ${t.validTo} > ${t.validFrom}`,
+    ),
+  ],
+);
+
+export type VoiceRateSheetLineRow = typeof voiceRateSheetLines.$inferSelect;
+export type NewVoiceRateSheetLineRow =
+  typeof voiceRateSheetLines.$inferInsert;
+
+export const voiceRateSheetLinesRelations = relations(
+  voiceRateSheetLines,
+  ({ one }) => ({
+    voiceRateSheet: one(voiceRateSheets, {
+      fields: [voiceRateSheetLines.voiceRateSheetId],
+      references: [voiceRateSheets.id],
+    }),
+    destination: one(voiceNumberingPlanDestinations, {
+      fields: [voiceRateSheetLines.voiceNumberingPlanDestinationId],
+      references: [voiceNumberingPlanDestinations.id],
+    }),
+  }),
+);
 
 export type UserRow = typeof users.$inferSelect;
 export type NewUserRow = typeof users.$inferInsert;
