@@ -8,7 +8,7 @@ import { carriersRoutes } from "./routes/admin/carriers";
 import { countriesRoutes } from "./routes/admin/countries";
 import { voiceNumberingPlansRoutes } from "./routes/admin/voice-numbering-plans";
 
-const PORT = Number(process.env.PORT ?? 3001);
+const PORT = Number(process.env.PORT ?? 3101);
 
 const app = new OpenAPIHono();
 

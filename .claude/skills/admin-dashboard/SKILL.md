@@ -41,7 +41,7 @@ Pinned versions (match audiotext exactly unless user overrides):
 ```
 apps/
   web/      Next.js (port 3000) — App Router, "use client" admin pages
-  api/      Hono (port 3001) — Better Auth at /api/auth/*, OpenAPI at /docs
+  api/      Hono (port 3101) — Better Auth at /api/auth/*, OpenAPI at /docs
 packages/
   db/       Drizzle schema + pg Pool (@<scope>/db, main: ./src/index.ts)
   shared/   Zod contracts shared web↔api (@<scope>/shared, main: ./src/index.ts)
@@ -259,10 +259,10 @@ Scripts (all use `tsx --env-file=../../.env`):
 <API_Verification>
 Smoke-test the API independently of the web app:
 
-- `curl http://localhost:3001/health` → `{ ok: true, ts: "..." }`
-- `curl http://localhost:3001/openapi.json | jq '.paths | keys'` — every mounted route appears.
-- Visit `http://localhost:3001/docs` — swagger lists routes grouped by tag, protected routes show 401 example.
-- Auth probe: `curl -i http://localhost:3001/api/admin/<resource>` without cookie → 401. With session cookie from logged-in browser → 200.
+- `curl http://localhost:3101/health` → `{ ok: true, ts: "..." }`
+- `curl http://localhost:3101/openapi.json | jq '.paths | keys'` — every mounted route appears.
+- Visit `http://localhost:3101/docs` — swagger lists routes grouped by tag, protected routes show 401 example.
+- Auth probe: `curl -i http://localhost:3101/api/admin/<resource>` without cookie → 401. With session cookie from logged-in browser → 200.
 - Shutdown: `kill -TERM <pid>` prints `SIGTERM received, shutting down` and exits 0 (proves `pool.end()` ran).
   </API_Verification>
 
@@ -285,7 +285,7 @@ All workspaces extend `packages/tsconfig/{base,nextjs,node}.json`. `noUncheckedI
 6. **Verify**:
    - `pnpm install`, `docker compose up -d postgres`, `pnpm db:generate && pnpm db:migrate && pnpm db:seed`.
    - `pnpm typecheck` clean across all workspaces.
-   - `pnpm dev` boots web :3000 + api :3001.
+   - `pnpm dev` boots web :3000 + api :3101.
    - Manually (or via Playwright if available) sign in at `/admin/login`, hit dashboard, hit the list page, create one row, confirm it appears.
 7. **Document**: write `CLAUDE.md` mirroring audiotext's structure (Workflow Orchestration, Commands, Architecture sections).
 </Steps>
@@ -314,5 +314,5 @@ Before declaring done:
 - [ ] Locale switcher toggles `en`↔`it` and content updates after revalidation.
 - [ ] Sample list page paginates, sorts, searches, and creates a row through the form modal.
 - [ ] Soft-delete: deleting a row hides it from the list but row remains in DB with `deleted_at` set.
-- [ ] OpenAPI doc reachable at `http://localhost:3001/docs`.
+- [ ] OpenAPI doc reachable at `http://localhost:3101/docs`.
       </Verification_Checklist>

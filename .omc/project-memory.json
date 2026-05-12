@@ -96,6 +96,18 @@
       "type": "file"
     },
     {
+      "path": ".env",
+      "accessCount": 4,
+      "lastAccessed": 1778595865351,
+      "type": "file"
+    },
+    {
+      "path": ".env.example",
+      "accessCount": 4,
+      "lastAccessed": 1778595868703,
+      "type": "file"
+    },
+    {
       "path": "packages/db/src/seed-voice-numbering-plan.ts",
       "accessCount": 3,
       "lastAccessed": 1778550470486,
@@ -108,27 +120,39 @@
       "type": "file"
     },
     {
-      "path": ".env",
-      "accessCount": 2,
-      "lastAccessed": 1778548684363,
-      "type": "file"
-    },
-    {
-      "path": ".env.example",
-      "accessCount": 2,
-      "lastAccessed": 1778548689391,
-      "type": "file"
-    },
-    {
       "path": "packages/db/src/seed-countries.ts",
       "accessCount": 2,
       "lastAccessed": 1778550430708,
       "type": "file"
     },
     {
+      "path": "apps/api/src/index.ts",
+      "accessCount": 2,
+      "lastAccessed": 1778595872584,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/next.config.ts",
+      "accessCount": 2,
+      "lastAccessed": 1778595876338,
+      "type": "file"
+    },
+    {
+      "path": "README.md",
+      "accessCount": 2,
+      "lastAccessed": 1778595884915,
+      "type": "file"
+    },
+    {
       "path": "CLAUDE.md",
-      "accessCount": 1,
-      "lastAccessed": 1778548697387,
+      "accessCount": 2,
+      "lastAccessed": 1778595885653,
+      "type": "file"
+    },
+    {
+      "path": ".claude/skills/admin-dashboard/SKILL.md",
+      "accessCount": 2,
+      "lastAccessed": 1778596195701,
       "type": "file"
     },
     {

@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"kill 7069 7090 7096 7101 7126 7163 2>/dev/null; sleep 2; pkill -f \\\"turbo run dev\\\" 2>/dev/null; pkill -f \\\"next dev\\\" 2>/dev/null; sleep 1; lsof -i :3000 -i :3101 -sTCP:LISTEN 2>/dev/null...",
+  "error": "Exit code 1",
+  "timestamp": "2026-05-12T14:32:49.997Z",
+  "retry_count": 2
+}

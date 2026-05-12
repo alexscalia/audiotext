@@ -18,7 +18,7 @@ Monorepo. Next.js 16 frontend, Hono backend, Postgres 17. Future: Rust backend p
 ```
 apps/
   web/      Next.js frontend (port 3000)
-  api/      Hono backend, RPC + route handlers (port 3001)
+  api/      Hono backend, RPC + route handlers (port 3101)
 packages/
   db/       Drizzle schema + client
   shared/   Zod contracts shared across web + api (Hono RPC types)
@@ -45,9 +45,9 @@ pnpm dev
 - `pnpm db:reset` — **dev only**, drops `public` schema, re-runs migrate + seed (refuses if `NODE_ENV=production`)
 
 - web: http://localhost:3000
-- api: http://localhost:3001/health
-- api docs (Swagger UI): http://localhost:3001/docs
-- api OpenAPI spec: http://localhost:3001/openapi.json
+- api: http://localhost:3101/health
+- api docs (Swagger UI): http://localhost:3101/docs
+- api OpenAPI spec: http://localhost:3101/openapi.json
 
 ## Future Rust port
 

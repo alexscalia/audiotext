@@ -74,7 +74,7 @@ pnpm db:generate && pnpm db:migrate
 pnpm db:seed                         # creates admin001@admin.com / admin002@admin.com (pw: "password")
 
 # everyday
-pnpm dev                             # web :3000 + api :3001 in parallel via turbo
+pnpm dev                             # web :3000 + api :3101 in parallel via turbo
 pnpm build
 pnpm lint                            # ESLint via next lint (web only — api/db/shared have no lint)
 pnpm typecheck                       # tsc --noEmit across all workspaces
@@ -105,7 +105,7 @@ There is **no test runner wired up yet** — `turbo run test` will no-op. Don't 
 ```
 apps/
   web/      Next.js 16.2 frontend (port 3000) — App Router, React 19.2, Tailwind 4, next-intl
-  api/      Hono backend (port 3001) — @hono/node-server runtime, Better Auth mounted at /api/auth/*
+  api/      Hono backend (port 3101) — @hono/node-server runtime, Better Auth mounted at /api/auth/*
 packages/
   db/       Drizzle ORM schema + pg Pool client (@audiotext/db)
   shared/   Zod contracts shared between web + api (@audiotext/shared)
