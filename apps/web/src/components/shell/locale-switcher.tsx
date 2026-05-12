@@ -62,7 +62,13 @@ export function LocaleSwitcher({
         className="flex cursor-pointer items-center gap-1.5 rounded-md border border-gray-200 px-2.5 py-1.5 text-xs font-semibold text-black hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-black disabled:opacity-60"
       >
         <span>{LABELS[current].flag}</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-3 w-3 text-gray-500">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          className="h-3 w-3 text-gray-500"
+        >
           <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
@@ -92,8 +98,18 @@ export function LocaleSwitcher({
                   {LABELS[l].native}
                 </span>
                 {active && (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4 text-black">
-                    <path d="M5 12l5 5L20 7" strokeLinecap="round" strokeLinejoin="round" />
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    className="h-4 w-4 text-black"
+                  >
+                    <path
+                      d="M5 12l5 5L20 7"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 )}
               </button>

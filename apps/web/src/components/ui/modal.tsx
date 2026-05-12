@@ -54,7 +54,7 @@ export function Modal({
       const target =
         initialFocusRef?.current ??
         dialogRef.current?.querySelector<HTMLElement>(
-          "input, select, textarea, button"
+          "input, select, textarea, button",
         );
       target?.focus();
     });

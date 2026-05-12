@@ -17,6 +17,7 @@ Transform your LLM's online research capabilities by connecting Claude Code dire
 Most built-in web research is mediocre. This skill gives Claude Code **professional-grade research** by tapping into Google's AI Mode—the same technology that synthesizes information from dozens of websites into one cited answer.
 
 **Example Use Cases:**
+
 ```
 "Next.js 15 App Router best practices 2026 with server components examples"
 → AI-synthesized coding guide with inline citations [1][2][3]
@@ -100,12 +101,14 @@ Claude receives final answer
 **The key difference:**
 
 Traditional web research:
+
 - Claude searches Google → gets 10 links
 - Claude reads 5-10 full pages → thousands of tokens consumed
 - Claude synthesizes manually → risks missing details or hallucinating
 - You pay for all those tokens
 
 With this skill:
+
 - Google AI Mode searches + synthesizes → one request
 - Claude receives one clean, cited answer → minimal tokens
 - Google's sources are preserved → verifiable, grounded
@@ -116,6 +119,7 @@ With this skill:
 ## Why This Matters
 
 Google AI Mode (the `udm=50` parameter) makes Google search work like a research assistant. It:
+
 - Reads and analyzes dozens of websites automatically
 - Synthesizes findings into structured answers
 - Cites every claim with source links
@@ -142,6 +146,7 @@ git clone https://github.com/PleasePrompto/google-ai-mode-skill google-ai-mode
 ```
 
 When you first use the skill, it automatically:
+
 - Creates an isolated Python environment (`.venv`)
 - Installs all dependencies including **Google Chrome**
 - Sets up browser automation with persistent profile
@@ -156,6 +161,7 @@ When you first use the skill, it automatically:
 ### 1. Check your skills
 
 Say in Claude Code:
+
 ```
 "What skills do I have?"
 ```
@@ -195,6 +201,7 @@ Be specific with your queries:
 On your first query, Google may show a CAPTCHA to verify you're human. This is normal when the browser profile is created.
 
 **If Claude reports a CAPTCHA error:**
+
 1. Tell Claude: "Run that search with visible browser"
 2. The browser will open visibly
 3. Solve the CAPTCHA manually
@@ -211,14 +218,14 @@ This is a **Claude Code Skill**—a local folder containing instructions and scr
 
 ### Key Differences from MCP Server
 
-| Feature | This Skill | MCP Server |
-|---------|------------|------------|
-| **Protocol** | Claude Skills | Model Context Protocol |
-| **Installation** | Clone to `~/.claude/skills` | `claude mcp add ...` |
-| **Compatibility** | Claude Code only (local) | Claude Code, Codex, Cursor, Cline, etc. |
-| **Language** | Python | TypeScript |
-| **Browser Profile** | Persistent (eliminates CAPTCHAs) | Per-request context |
-| **Distribution** | Git clone | npm package |
+| Feature             | This Skill                       | MCP Server                              |
+| ------------------- | -------------------------------- | --------------------------------------- |
+| **Protocol**        | Claude Skills                    | Model Context Protocol                  |
+| **Installation**    | Clone to `~/.claude/skills`      | `claude mcp add ...`                    |
+| **Compatibility**   | Claude Code only (local)         | Claude Code, Codex, Cursor, Cline, etc. |
+| **Language**        | Python                           | TypeScript                              |
+| **Browser Profile** | Persistent (eliminates CAPTCHAs) | Per-request context                     |
+| **Distribution**    | Git clone                        | npm package                             |
 
 ### Architecture
 
@@ -235,6 +242,7 @@ This is a **Claude Code Skill**—a local folder containing instructions and scr
 ```
 
 When Claude needs web research:
+
 1. Loads the skill instructions from SKILL.md
 2. Runs the Python search script via run.py wrapper
 3. Opens browser with persistent profile (Chrome)
@@ -269,6 +277,7 @@ One query returns one synthesized answer instead of Claude reading 5-10 full pag
 ## Troubleshooting
 
 **Skill not found:**
+
 ```bash
 # Make sure it's in the right location
 ls ~/.claude/skills/google-ai-mode/
@@ -278,6 +287,7 @@ ls ~/.claude/skills/google-ai-mode/
 **Repeated CAPTCHAs:**
 
 If Google keeps showing CAPTCHAs:
+
 - Tell Claude: "Use visible browser for this search"
 - Add 10-30 second delays between searches
 - Make sure the persistent profile isn't corrupted
@@ -285,6 +295,7 @@ If Google keeps showing CAPTCHAs:
 **Browser won't launch:**
 
 Clear the browser profile:
+
 ```bash
 # Linux/macOS
 rm -rf ~/.cache/google-ai-mode-skill/chrome_profile
@@ -294,6 +305,7 @@ rmdir /s "%LOCALAPPDATA%\google-ai-mode-skill\chrome_profile"
 ```
 
 **Dependencies issues:**
+
 ```bash
 # Manual reinstall if needed
 cd ~/.claude/skills/google-ai-mode
@@ -343,12 +355,14 @@ Try: "Next.js 15 new features and breaking changes"
 You need to implement OAuth2 in a framework you've never used before.
 
 **Traditional approach:**
+
 - Claude searches Google, gets 10 links
 - Reads multiple documentation pages and blog posts
 - Consumes thousands of tokens
 - May miss important details or synthesize incorrectly
 
 **With this skill:**
+
 ```
 "Search Google AI Mode for: Hono OAuth2 implementation guide"
 ```
@@ -365,12 +379,14 @@ Claude can then use this grounded information to write the actual implementation
 ## Technical Details
 
 **Core Technology:**
+
 - **Patchright**: Browser automation library (Playwright-based)
 - **Python 3.8+**: Implementation language
 - **Real Chrome**: Uses Google Chrome (not Chromium) for better reliability
 - **Persistent Context**: Saves browser profile to eliminate CAPTCHAs
 
 **Dependencies:**
+
 - `patchright==1.57.2` - Browser automation
 - `beautifulsoup4==4.14.3` - HTML parsing
 - `html-to-markdown==2.19.6` - HTML conversion
@@ -389,11 +405,13 @@ All data is stored locally within the skill directory:
 ## Limitations
 
 **Skill-Specific:**
+
 - **Local Claude Code only** - Does not work in web UI (sandbox restrictions)
 - **Manual CAPTCHA solving** - First query may require human verification
 - **Python dependency** - Requires Python 3.8+ on your system
 
 **Google AI Mode:**
+
 - **Rate limits** - Frequent searches may trigger CAPTCHAs
 - **Public search only** - No authentication required or supported
 - **Query quality matters** - Vague queries may not trigger AI overviews
@@ -444,6 +462,7 @@ There's a full **MCP server version** of this tool that works with any MCP-compa
 **Check it out:** [google-ai-mode-mcp](https://github.com/PleasePrompto/google-ai-mode-mcp)
 
 The MCP version offers:
+
 - Works with Claude Code, Codex, Cursor, Cline, Windsurf, Zed, etc.
 - TypeScript implementation
 - npm package distribution
@@ -472,11 +491,13 @@ MIT License - see LICENSE file for details
 ## Credits
 
 This skill is inspired by the [**Google AI Mode MCP Server**](https://github.com/PleasePrompto/google-ai-mode-mcp) and provides an alternative implementation as a Claude Code Skill:
+
 - Both use Patchright for browser automation (MCP uses TypeScript, Skill uses Python)
 - Skill version runs directly in Claude Code without MCP protocol
 - Optimized for Claude Code's skill architecture
 
 If you need:
+
 - **Multi-agent support** (Cursor, Cline, etc.) → Use the [MCP Server](https://github.com/PleasePrompto/google-ai-mode-mcp)
 - **Claude Code only** → Use this skill
 - **npm distribution** → Use the [MCP Server](https://github.com/PleasePrompto/google-ai-mode-mcp)

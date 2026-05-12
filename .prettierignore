@@ -1,0 +1,7 @@
+*.csv
+node_modules
+.next
+.turbo
+dist
+build
+packages/db/migrations

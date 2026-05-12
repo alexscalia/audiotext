@@ -25,9 +25,7 @@ export function Field({
         {required && <span className="ml-0.5 text-red-600">*</span>}
       </label>
       <div className="mt-2">{children}</div>
-      {hint && !error && (
-        <p className="mt-1 text-xs text-gray-500">{hint}</p>
-      )}
+      {hint && !error && <p className="mt-1 text-xs text-gray-500">{hint}</p>}
       <ErrorText id={`${htmlFor}-error`} message={error} />
     </div>
   );

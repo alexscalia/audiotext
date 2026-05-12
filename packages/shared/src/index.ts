@@ -40,7 +40,10 @@ export const PermissionKey = z
   .string()
   .min(1)
   .max(128)
-  .regex(/^[a-z0-9_]+(\.[a-z0-9_]+)+$/, "use dot.notation, e.g. transcript.create");
+  .regex(
+    /^[a-z0-9_]+(\.[a-z0-9_]+)+$/,
+    "use dot.notation, e.g. transcript.create",
+  );
 
 export const PermissionSchema = z.object({
   id: z.string().uuid(),
@@ -217,7 +220,9 @@ export const CarrierListResponseSchema = z.object({
 export type CarrierListResponse = z.infer<typeof CarrierListResponseSchema>;
 
 export const VoiceNumberingPlanStatusEnum = z.enum(["active", "inactive"]);
-export type VoiceNumberingPlanStatus = z.infer<typeof VoiceNumberingPlanStatusEnum>;
+export type VoiceNumberingPlanStatus = z.infer<
+  typeof VoiceNumberingPlanStatusEnum
+>;
 
 export const VoiceNumberingPlanListItemSchema = z.object({
   id: z.string().uuid(),
@@ -332,11 +337,9 @@ export const ChatContactSchema = z
     updatedAt: z.string().datetime(),
     deletedAt: z.string().datetime().nullable(),
   })
-  .refine(
-    (v) =>
-      (v.userId === null) !== (v.carrierId === null),
-    { message: "exactly one of userId/carrierId must be set" },
-  );
+  .refine((v) => (v.userId === null) !== (v.carrierId === null), {
+    message: "exactly one of userId/carrierId must be set",
+  });
 export type ChatContact = z.infer<typeof ChatContactSchema>;
 
 const chatContactBase = z.object({
@@ -360,7 +363,9 @@ export const UpdateChatContactInput = chatContactBase.partial();
 export type UpdateChatContactInput = z.infer<typeof UpdateChatContactInput>;
 
 export const AtVoiceTerminationStatusEnum = z.enum(["active", "inactive"]);
-export type AtVoiceTerminationStatus = z.infer<typeof AtVoiceTerminationStatusEnum>;
+export type AtVoiceTerminationStatus = z.infer<
+  typeof AtVoiceTerminationStatusEnum
+>;
 
 export const CurrencyEnum = z.enum(["usd", "eur", "gbp"]);
 export type Currency = z.infer<typeof CurrencyEnum>;
@@ -387,10 +392,15 @@ export const CreateAtVoiceTerminationInput = z.object({
   currency: CurrencyEnum,
   countryCode: CountryCode,
 });
-export type CreateAtVoiceTerminationInput = z.infer<typeof CreateAtVoiceTerminationInput>;
+export type CreateAtVoiceTerminationInput = z.infer<
+  typeof CreateAtVoiceTerminationInput
+>;
 
-export const UpdateAtVoiceTerminationInput = CreateAtVoiceTerminationInput.partial();
-export type UpdateAtVoiceTerminationInput = z.infer<typeof UpdateAtVoiceTerminationInput>;
+export const UpdateAtVoiceTerminationInput =
+  CreateAtVoiceTerminationInput.partial();
+export type UpdateAtVoiceTerminationInput = z.infer<
+  typeof UpdateAtVoiceTerminationInput
+>;
 
 export const VoiceTrunkStatusEnum = z.enum(["active", "inactive", "testing"]);
 export type VoiceTrunkStatus = z.infer<typeof VoiceTrunkStatusEnum>;
@@ -410,7 +420,12 @@ export type VoiceTrunkAuthType = z.infer<typeof VoiceTrunkAuthTypeEnum>;
 export const VoiceTrunkDtmfModeEnum = z.enum(["rfc2833", "inband", "info"]);
 export type VoiceTrunkDtmfMode = z.infer<typeof VoiceTrunkDtmfModeEnum>;
 
-export const VoiceTrunkNatModeEnum = z.enum(["no", "yes", "force_rport", "comedia"]);
+export const VoiceTrunkNatModeEnum = z.enum([
+  "no",
+  "yes",
+  "force_rport",
+  "comedia",
+]);
 export type VoiceTrunkNatMode = z.infer<typeof VoiceTrunkNatModeEnum>;
 
 export const IpOrCidr = z
@@ -556,9 +571,7 @@ export const UpdateAtVoiceNumberInput = z.object({
 });
 export type UpdateAtVoiceNumberInput = z.infer<typeof UpdateAtVoiceNumberInput>;
 
-export const MoneyRate = z
-  .string()
-  .regex(/^-?\d+(\.\d+)?$/, "decimal string");
+export const MoneyRate = z.string().regex(/^-?\d+(\.\d+)?$/, "decimal string");
 export type MoneyRate = z.infer<typeof MoneyRate>;
 
 export const VoiceCdrSchema = z.object({

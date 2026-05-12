@@ -28,9 +28,7 @@ app.get("/docs", swaggerUI({ url: "/openapi.json" }));
 
 const routes = app
   .get("/", (c) => c.json({ message: "Hello world!" }))
-  .get("/health", (c) =>
-    c.json({ ok: true, ts: new Date().toISOString() }),
-  )
+  .get("/health", (c) => c.json({ ok: true, ts: new Date().toISOString() }))
   .route("/api/admin/carriers", carriersRoutes)
   .route("/api/admin/countries", countriesRoutes)
   .route("/api/admin/voice-numbering-plans", voiceNumberingPlansRoutes)

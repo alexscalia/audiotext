@@ -29,29 +29,31 @@ const SIZE: Record<Size, string> = {
 const BASE =
   "inline-flex cursor-pointer items-center justify-center gap-2 rounded-md font-semibold transition-colors duration-150 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none";
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  {
-    variant = "primary",
-    size = "md",
-    leadingIcon,
-    trailingIcon,
-    className = "",
-    type = "button",
-    children,
-    ...rest
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  function Button(
+    {
+      variant = "primary",
+      size = "md",
+      leadingIcon,
+      trailingIcon,
+      className = "",
+      type = "button",
+      children,
+      ...rest
+    },
+    ref,
+  ) {
+    return (
+      <button
+        ref={ref}
+        type={type}
+        className={`${BASE} ${VARIANT[variant]} ${SIZE[size]} ${className}`}
+        {...rest}
+      >
+        {leadingIcon}
+        {children}
+        {trailingIcon}
+      </button>
+    );
   },
-  ref,
-) {
-  return (
-    <button
-      ref={ref}
-      type={type}
-      className={`${BASE} ${VARIANT[variant]} ${SIZE[size]} ${className}`}
-      {...rest}
-    >
-      {leadingIcon}
-      {children}
-      {trailingIcon}
-    </button>
-  );
-});
+);

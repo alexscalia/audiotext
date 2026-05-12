@@ -10,6 +10,7 @@ Query Google's AI Search mode to retrieve comprehensive, source-grounded answers
 ## When to Use This Skill
 
 Trigger this skill when the user:
+
 - Requests current information beyond the knowledge cutoff (post-January 2025)
 - Needs documentation or API references for libraries and frameworks
 - Asks for coding examples or implementation patterns
@@ -22,24 +23,29 @@ Trigger this skill when the user:
 ### Essential Flags
 
 **`--debug`** - Enable comprehensive logging
+
 ```bash
 python scripts/run.py search.py --query "..." --debug
 ```
+
 - Saves detailed logs to `logs/search_YYYY-MM-DD_HH-MM-SS.log`
 - Logs every step: browser launch, CAPTCHA detection, AI content waiting, citation extraction
 - Essential for troubleshooting CAPTCHA issues or failed searches
 - Log file path printed at completion
 
 **`--save`** - Save results to skill folder
+
 ```bash
 python scripts/run.py search.py --query "..." --save
 ```
+
 - Saves markdown to `results/YYYY-MM-DD_HH-MM-SS_Query_Name.md`
 - Timestamped filename for organized storage
 - Results preserved in skill directory for future reference
 - Use instead of `--output` for automatic naming
 
 **Combined usage** (recommended for debugging):
+
 ```bash
 python scripts/run.py search.py --query "..." --debug --save
 ```
@@ -47,16 +53,19 @@ python scripts/run.py search.py --query "..." --debug --save
 ### Other Flags
 
 **`--show-browser`** - Show browser window (for CAPTCHA solving)
+
 ```bash
 python scripts/run.py search.py --query "..." --show-browser
 ```
 
 **`--output <path>`** - Custom output file path
+
 ```bash
 python scripts/run.py search.py --query "..." --output result.md
 ```
 
 **`--json`** - Include JSON metadata in output
+
 ```bash
 python scripts/run.py search.py --query "..." --output result.md --json
 ```
@@ -80,13 +89,13 @@ python scripts/run.py search.py --query "..." --output result.md --json
 
 ### Examples
 
-| User Query | Optimized Query |
-|-----------|----------------|
-| "React hooks" | "React hooks best practices 2026 (useState, useEffect, custom hooks, common pitfalls). Provide code examples." |
-| "What's new in Rust?" | "Rust 1.75 new features 2026 (async traits, impl Trait improvements, const generics, stabilized APIs). Include migration guide and code examples." |
+| User Query                         | Optimized Query                                                                                                                                                                                       |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| "React hooks"                      | "React hooks best practices 2026 (useState, useEffect, custom hooks, common pitfalls). Provide code examples."                                                                                        |
+| "What's new in Rust?"              | "Rust 1.75 new features 2026 (async traits, impl Trait improvements, const generics, stabilized APIs). Include migration guide and code examples."                                                    |
 | "PostgreSQL vs MySQL performance?" | "PostgreSQL vs MySQL performance comparison 2026 (query optimization, indexing strategies, concurrent writes, JSON handling, scaling patterns). Provide benchmark data and use case recommendations." |
-| "How to handle errors in Go?" | "Go error handling patterns 2026 (error wrapping, custom errors, sentinel errors, panic vs error, testing error cases). Provide code examples and best practices comparison." |
-| "Learn FastAPI basics" | "FastAPI tutorial 2026 (routing, dependency injection, async endpoints, request validation with Pydantic, OpenAPI documentation, testing). Include step-by-step implementation guide." |
+| "How to handle errors in Go?"      | "Go error handling patterns 2026 (error wrapping, custom errors, sentinel errors, panic vs error, testing error cases). Provide code examples and best practices comparison."                         |
+| "Learn FastAPI basics"             | "FastAPI tutorial 2026 (routing, dependency injection, async endpoints, request validation with Pydantic, OpenAPI documentation, testing). Include step-by-step implementation guide."                |
 
 **Note:** If user provides an already detailed query with version numbers and requirements, use it as-is.
 
@@ -115,6 +124,7 @@ python scripts/run.py search.py --query "..." --save --debug
 ```
 
 The `run.py` wrapper automatically:
+
 - Creates `.venv` on first run
 - Installs dependencies (patchright, beautifulsoup4, html-to-markdown)
 - Activates virtual environment
@@ -165,37 +175,42 @@ https://react.dev/reference/react/useTransition
 ## Common Use Cases
 
 ### Finding Library Documentation
+
 ```bash
 python scripts/run.py search.py --query "Prisma ORM 2026 (schema definition, migrations, client API, relation queries, transactions). Include TypeScript examples." --save --debug
 ```
 
 ### Getting Coding Examples
+
 ```bash
 python scripts/run.py search.py --query "WebSocket implementation Node.js 2026 (server setup, client connection, message handling, authentication, reconnection logic). Production-ready code examples." --save
 ```
 
 ### Technical Comparisons
+
 ```bash
 python scripts/run.py search.py --query "GraphQL vs REST API 2026 (performance, caching, tooling, type safety, learning curve). Comparison table with use case recommendations." --save
 ```
 
 ### Best Practices Research
+
 ```bash
 python scripts/run.py search.py --query "Microservices security patterns 2026 (API gateway authentication, service mesh, mutual TLS, secret management, observability). Architecture diagrams and implementation guide." --save --debug
 ```
 
 ## Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
-| `ModuleNotFoundError` | Use `run.py` wrapper, never execute scripts directly |
-| CAPTCHA every time | First-time setup: solve CAPTCHA once with `--show-browser`, then persistent context preserves session |
-| No AI overview found | Rephrase query with more specificity using optimization template |
-| Browser fails to start | Verify internet connection and Chrome installation |
-| Need detailed logs | Use `--debug` flag - log saved to `logs/` folder |
-| AI Mode not available | Your region/country doesn't support Google AI Mode. Use a proxy/VPN to access from supported regions (US, UK, Germany, etc.) |
+| Issue                  | Solution                                                                                                                     |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `ModuleNotFoundError`  | Use `run.py` wrapper, never execute scripts directly                                                                         |
+| CAPTCHA every time     | First-time setup: solve CAPTCHA once with `--show-browser`, then persistent context preserves session                        |
+| No AI overview found   | Rephrase query with more specificity using optimization template                                                             |
+| Browser fails to start | Verify internet connection and Chrome installation                                                                           |
+| Need detailed logs     | Use `--debug` flag - log saved to `logs/` folder                                                                             |
+| AI Mode not available  | Your region/country doesn't support Google AI Mode. Use a proxy/VPN to access from supported regions (US, UK, Germany, etc.) |
 
 **Exit Codes:**
+
 - `0` - Success
 - `1` - General error
 - `2` - CAPTCHA required (retry with `--show-browser`)

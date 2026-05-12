@@ -1,5 +1,15 @@
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
-import { isNull, desc, asc, sql, and, eq, ilike, or, type SQL } from "drizzle-orm";
+import {
+  isNull,
+  desc,
+  asc,
+  sql,
+  and,
+  eq,
+  ilike,
+  or,
+  type SQL,
+} from "drizzle-orm";
 import { db, carriers, voiceTrunks } from "@audiotext/db";
 import {
   CarrierListQuerySchema,
@@ -78,10 +88,7 @@ export const carriersRoutes = new OpenAPIHono<{
         trunkCount: trunkCountExpr,
       })
       .from(carriers)
-      .leftJoin(
-        voiceTrunks,
-        and(eq(voiceTrunks.carrierId, carriers.id)),
-      )
+      .leftJoin(voiceTrunks, and(eq(voiceTrunks.carrierId, carriers.id)))
       .where(whereClause)
       .groupBy(carriers.id)
       .orderBy(orderBy, desc(carriers.id))

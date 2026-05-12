@@ -10,8 +10,17 @@ const STATS: { key: StatKey; value: string; icon: React.ReactNode }[] = [
     key: "activeCalls",
     value: "0",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-5 w-5">
-        <path d="M5 4h3l2 5-2 1a11 11 0 0 0 6 6l1-2 5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" strokeLinejoin="round" />
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.8}
+        className="h-5 w-5"
+      >
+        <path
+          d="M5 4h3l2 5-2 1a11 11 0 0 0 6 6l1-2 5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"
+          strokeLinejoin="round"
+        />
       </svg>
     ),
   },
@@ -19,7 +28,13 @@ const STATS: { key: StatKey; value: string; icon: React.ReactNode }[] = [
     key: "users",
     value: "0",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-5 w-5">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.8}
+        className="h-5 w-5"
+      >
         <circle cx="12" cy="8" r="3.5" />
         <path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6" strokeLinecap="round" />
       </svg>
@@ -29,7 +44,13 @@ const STATS: { key: StatKey; value: string; icon: React.ReactNode }[] = [
     key: "trunks",
     value: "0",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-5 w-5">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.8}
+        className="h-5 w-5"
+      >
         <path d="M4 7h16M4 12h16M4 17h16" strokeLinecap="round" />
       </svg>
     ),
@@ -38,7 +59,13 @@ const STATS: { key: StatKey; value: string; icon: React.ReactNode }[] = [
     key: "numberingPlans",
     value: "0",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-5 w-5">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.8}
+        className="h-5 w-5"
+      >
         <rect x="4" y="4" width="16" height="16" rx="2" />
         <path d="M9 8v8M15 8v8M4 12h16" />
       </svg>

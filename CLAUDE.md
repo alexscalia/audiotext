@@ -68,7 +68,7 @@ All commands run from repo root unless noted. Package manager is **pnpm 10**, or
 ```bash
 # first-time setup
 cp .env.example .env
-docker compose up -d postgres        # postgres:17 on :5432
+docker compose up -d postgres        # postgres:17 on :5433
 pnpm install
 pnpm db:generate && pnpm db:migrate
 pnpm db:seed                         # creates admin001@admin.com / admin002@admin.com (pw: "password")
@@ -136,7 +136,7 @@ Single mode: **same-origin via Next.js rewrite**.
 The schema is the source of truth. Key conventions baked in across nearly every table — follow them when adding new tables:
 
 - **UUID PKs**: `id: uuid("id").primaryKey().defaultRandom()`.
-- **Soft delete everywhere**: every table has `deletedAt: timestamp(...).withTimezone`. Active-record uniqueness is enforced via *partial* unique indexes (`uniqueIndex(...).where(sql`${t.deletedAt} IS NULL`)`), not plain unique constraints. When you add new tables or query existing ones, filter on `isNull(deletedAt)` — see `packages/db/src/seed.ts` for the pattern.
+- **Soft delete everywhere**: every table has `deletedAt: timestamp(...).withTimezone`. Active-record uniqueness is enforced via _partial_ unique indexes (`uniqueIndex(...).where(sql`${t.deletedAt} IS NULL`)`), not plain unique constraints. When you add new tables or query existing ones, filter on `isNull(deletedAt)` — see `packages/db/src/seed.ts` for the pattern.
 - **Timestamps**: `createdAt` / `updatedAt` use `withTimezone: true`, with `$onUpdate(() => new Date())` on `updatedAt`.
 - **Indexes on `deletedAt`** are present for query planner — add the same when creating new soft-deletable tables.
 - Better Auth tables are pluralized (`users`, `sessions`, `accounts`, `verifications`) to match `usePlural: true` in the adapter config.
@@ -162,6 +162,7 @@ When adding strings, add to **both** `en.json` and `it.json` — there is no fal
 ### Admin shell
 
 `apps/web/src/app/admin/` has two segments:
+
 - `login/page.tsx` — public, calls `signIn.email()` from `@/lib/auth-client`, redirects to `/admin/dashboard`.
 - `(dashboard)/` — route group with shared `layout.tsx` wrapping pages in `<Sidebar />` + `<Header />` (`src/components/admin/`).
 

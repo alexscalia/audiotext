@@ -29,7 +29,10 @@ function parseRows(): Fixture[] {
     new URL("../../../numbering_plan.csv", import.meta.url),
     "utf8",
   );
-  const lines = text.split("\n").map((l) => l.trim()).filter((l) => l.length > 0);
+  const lines = text
+    .split("\n")
+    .map((l) => l.trim())
+    .filter((l) => l.length > 0);
   if (lines.length === 0) return [];
   const fixtures = new Map<string, Fixture>();
 
@@ -50,12 +53,15 @@ function parseRows(): Fixture[] {
     const countryCode = e164.replace(/\s+/g, "");
     const subTrimmed = sub.replace(/\s+/g, "");
     const destinationCode = subTrimmed.length === 0 ? null : subTrimmed;
-    const fullCode = destinationCode === null ? countryCode : countryCode + destinationCode;
+    const fullCode =
+      destinationCode === null ? countryCode : countryCode + destinationCode;
     if (countryCode.length === 0 || !/^[0-9]+$/.test(countryCode)) continue;
     if (fullCode.length === 0 || !/^[0-9]+$/.test(fullCode)) continue;
     if (destinationCode !== null && !/^[0-9]+$/.test(destinationCode)) continue;
 
-    const type = DESTINATION_TYPES.has(typeRaw as VoiceNumberingPlanDestinationType)
+    const type = DESTINATION_TYPES.has(
+      typeRaw as VoiceNumberingPlanDestinationType,
+    )
       ? (typeRaw as VoiceNumberingPlanDestinationType)
       : null;
 
@@ -150,7 +156,10 @@ async function ensureDestinationId(
     .where(
       and(
         eq(schema.voiceNumberingPlanDestinations.voiceNumberingPlanId, planId),
-        eq(schema.voiceNumberingPlanDestinations.countryIso2, fixture.countryIso2),
+        eq(
+          schema.voiceNumberingPlanDestinations.countryIso2,
+          fixture.countryIso2,
+        ),
         eq(schema.voiceNumberingPlanDestinations.name, fixture.name),
         isNull(schema.voiceNumberingPlanDestinations.deletedAt),
       ),
@@ -187,7 +196,10 @@ async function ensureCode(
     .from(schema.voiceNumberingPlanCodes)
     .where(
       and(
-        eq(schema.voiceNumberingPlanCodes.voiceNumberingPlanDestinationId, destinationId),
+        eq(
+          schema.voiceNumberingPlanCodes.voiceNumberingPlanDestinationId,
+          destinationId,
+        ),
         eq(schema.voiceNumberingPlanCodes.fullCode, triplet.fullCode),
         isNull(schema.voiceNumberingPlanCodes.deletedAt),
       ),

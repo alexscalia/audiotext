@@ -9,16 +9,18 @@ Scaffold a new admin dashboard that mirrors the audiotext project's stack, layou
 </Purpose>
 
 <Use_When>
+
 - User wants a new admin app with the same look-and-feel as audiotext.
 - User says "scaffold admin", "audiotext-style", "new admin dashboard", "set up admin shell".
 - User asks to add a feature to an admin app and wants the existing patterns reused (list + form modal + zod contract).
-</Use_When>
+  </Use_When>
 
 <Do_Not_Use_When>
+
 - User wants a public marketing site, mobile app, or non-admin SaaS surface.
 - User wants shadcn/ui, MUI, Chakra, or any prebuilt component library — this stack is hand-rolled Tailwind.
 - User asks for SSR data fetching with React Server Components throughout — current pattern is `"use client"` admin pages calling `/api/*` via fetch.
-</Do_Not_Use_When>
+  </Do_Not_Use_When>
 
 <Stack>
 Pinned versions (match audiotext exactly unless user overrides):
@@ -32,9 +34,10 @@ Pinned versions (match audiotext exactly unless user overrides):
 - Zod 4, react-hook-form 7 + `@hookform/resolvers`
 - `@tanstack/react-table` 8 (manual pagination/sorting/filtering)
 - Geist + Geist Mono via `next/font/google`
-</Stack>
+  </Stack>
 
 <Workspace_Layout>
+
 ```
 apps/
   web/      Next.js (port 3000) — App Router, "use client" admin pages
@@ -70,14 +73,15 @@ Apply uniformly to every table:
 - Better Auth tables pluralized: `users`, `sessions`, `accounts`, `verifications`
 - Schema-first: edit `schema.ts` → `pnpm db:generate` → review SQL → `pnpm db:migrate`. Never hand-author SQL unless drizzle-kit can't express it.
 - Queries filter `isNull(deletedAt)` everywhere.
-</DB_Conventions>
+  </DB_Conventions>
 
 <I18n_Convention>
+
 - Locales: `["en", "it"]`, default `"en"`, cookie `NEXT_LOCALE`, no URL prefix.
 - `apps/web/src/i18n/{config,request,actions}.ts` — `setLocale` server action revalidates `/` layout.
 - `apps/web/messages/{en,it}.json` — add every string to BOTH files. No fallback chain.
 - Root layout wraps `<NextIntlClientProvider>`.
-</I18n_Convention>
+  </I18n_Convention>
 
 <Visual_System>
 Strict monochrome — black/white/gray. No accent color.
@@ -94,7 +98,7 @@ Strict monochrome — black/white/gray. No accent color.
 - Always include `transition-colors duration-150 motion-reduce:transition-none`. Globals.css has a `prefers-reduced-motion` reset.
 - Cursor: `cursor-pointer` on every interactive button/link.
 - Icons: inline `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>` — no icon library.
-</Visual_System>
+  </Visual_System>
 
 <Component_Vocabulary>
 Reuse these primitives — do NOT replace with shadcn or alternatives:
@@ -109,7 +113,7 @@ Reuse these primitives — do NOT replace with shadcn or alternatives:
 - `components/form/{field,text-input,error-text,select}.tsx` — `Field` wraps label + control + error; controls use `forwardRef` for RHF.
 - `components/shell/{sidebar,header,locale-switcher}.tsx` — sidebar collapse persisted to `localStorage["admin-sidebar-collapsed"]`, mobile drawer with backdrop, body-scroll lock, ESC close. Header has hamburger (mobile) + collapse toggle (desktop) + locale + avatar menu with sign-out.
 - `components/layout/{page-header,breadcrumb}.tsx` — `PageHeader` with title/subtitle/eyebrow/actions/meta slots; `Breadcrumb` + `BackLink`.
-</Component_Vocabulary>
+  </Component_Vocabulary>
 
 <Page_Patterns>
 **Login** (`apps/web/src/app/admin/login/page.tsx`): `"use client"`, react-hook-form + zodResolver, `signIn.email()`, error codes mapped via `Login.serverErrors.<CODE>`, redirect to `/admin/dashboard`.
@@ -123,6 +127,7 @@ Reuse these primitives — do NOT replace with shadcn or alternatives:
 
 <API_Patterns>
 **Layout** (mirror audiotext):
+
 ```
 apps/api/src/
   index.ts                     OpenAPIHono root, logger, swagger, route mounts, graceful shutdown
@@ -135,6 +140,7 @@ apps/api/src/
 ```
 
 **Root file** (`apps/api/src/index.ts`):
+
 - `const app = new OpenAPIHono()` (NOT plain `Hono` — needed for OpenAPI doc generation).
 - `app.use("*", logger())` first.
 - Better Auth handler before resource routes: `app.on(["GET","POST"], "/api/auth/*", c => auth.handler(c.req.raw))`.
@@ -144,6 +150,7 @@ apps/api/src/
 - Capture server handle: `const server = serve({ fetch: app.fetch, port: PORT }, ...)`. SIGTERM/SIGINT → `server.close()` + `await pool.end()` + `process.exit(0)`.
 
 **Auth middleware** (`apps/api/src/lib/require-auth.ts`):
+
 ```ts
 import { createMiddleware } from "hono/factory";
 import { auth } from "./auth";
@@ -161,9 +168,11 @@ export const requireAuth = createMiddleware<{ Variables: AuthVariables }>(
   },
 );
 ```
+
 Every protected route attaches this via `middleware: [requireAuth] as const` in its `createRoute` definition. Do NOT call `getSession` inside handlers — middleware-only.
 
 **Resource route shape** (`apps/api/src/routes/admin/<resource>.ts`):
+
 - Use `@hono/zod-openapi`'s `OpenAPIHono` + `createRoute` — NOT `@hono/zod-validator` for new code. Schemas defined as `createRoute` `request`/`responses` are auto-validated AND auto-documented in OpenAPI.
 - Import Zod schemas from `@<scope>/shared` (single source of truth web↔api). Use `*Schema` exports for `request.query` / `request.body` / `request.params` / `responses.200.content["application/json"].schema`.
 - Tag each route (`tags: ["Carriers"]`) so swagger groups them.
@@ -173,13 +182,17 @@ Every protected route attaches this via `middleware: [requireAuth] as const` in 
 - User from middleware: `c.var.user.id`.
 
 **Drizzle query conventions**:
+
 - Always filter `isNull(<table>.deletedAt)` in list/get/update.
 - Build dynamic filters with `SQL[]` array + `and(...filters)`:
   ```ts
   const filters: SQL[] = [isNull(carriers.deletedAt)];
   if (search) {
     const term = `%${search}%`;
-    const clause = or(ilike(carriers.name, term), ilike(carriers.businessName, term));
+    const clause = or(
+      ilike(carriers.name, term),
+      ilike(carriers.businessName, term),
+    );
     if (clause) filters.push(clause);
   }
   ```
@@ -189,13 +202,16 @@ Every protected route attaches this via `middleware: [requireAuth] as const` in 
 - Convert `Date` columns to ISO strings before returning: `r.createdAt.toISOString()` — Zod response schema expects `z.string().datetime()`.
 
 **Pagination response shape** (Zod-locked):
+
 ```ts
 { <items>: T[], total: number, page: number, pageSize: number }
 ```
+
 Plural key matches the resource (`carriers`, `plans`, etc.).
 
 **Shared Zod contract pattern** (`packages/shared/src/index.ts`):
 For each list endpoint, export:
+
 - `<X>ListSortByEnum = z.enum([...])` + `<X>ListSortBy` type
 - `<X>ListSortDirEnum = z.enum(["asc","desc"])`
 - `<X>ListQuerySchema` — `page: z.coerce.number().int().min(1).default(1)`, `pageSize: z.coerce.number().int().min(1).max(100).default(10)`, `search: z.string().trim().max(200).optional()`, `sortBy/sortDir` with defaults.
@@ -213,6 +229,7 @@ For each list endpoint, export:
 
 <DB_Package>
 `packages/db/` ships raw TS. Layout:
+
 ```
 packages/db/
   drizzle.config.ts           dialect: "postgresql", schema: "./src/schema.ts", out: "./migrations", strict: true
@@ -228,6 +245,7 @@ packages/db/
 ```
 
 Scripts (all use `tsx --env-file=../../.env`):
+
 - `db:generate` → drizzle-kit generate (diff schema → new SQL file in `migrations/`)
 - `db:migrate` → applies pending migrations
 - `db:studio` → drizzle-kit studio
@@ -240,12 +258,13 @@ Scripts (all use `tsx --env-file=../../.env`):
 
 <API_Verification>
 Smoke-test the API independently of the web app:
+
 - `curl http://localhost:3001/health` → `{ ok: true, ts: "..." }`
 - `curl http://localhost:3001/openapi.json | jq '.paths | keys'` — every mounted route appears.
 - Visit `http://localhost:3001/docs` — swagger lists routes grouped by tag, protected routes show 401 example.
 - Auth probe: `curl -i http://localhost:3001/api/admin/<resource>` without cookie → 401. With session cookie from logged-in browser → 200.
 - Shutdown: `kill -TERM <pid>` prints `SIGTERM received, shutting down` and exits 0 (proves `pool.end()` ran).
-</API_Verification>
+  </API_Verification>
 
 <TS_Strict>
 All workspaces extend `packages/tsconfig/{base,nextjs,node}.json`. `noUncheckedIndexedAccess` is on — destructured `[first] = await db.select()...` is `T | undefined`; guard explicitly.
@@ -273,6 +292,7 @@ All workspaces extend `packages/tsconfig/{base,nextjs,node}.json`. `noUncheckedI
 
 <Anti_Patterns>
 Do not:
+
 - Use `baseURL` on `createAuthClient()` or add CORS — kills the same-origin design.
 - Compile `packages/db`/`packages/shared` to JS — both apps run TS via `tsx` directly.
 - Skip `--env-file=../../.env` on new api scripts — `tsx` will not load `.env` otherwise.
@@ -282,10 +302,11 @@ Do not:
 - Use plain `unique()` for active-record uniqueness on soft-deletable tables — must be partial unique index `WHERE deleted_at IS NULL`.
 - Rely on URL-based locale routing — locale lives in the `NEXT_LOCALE` cookie.
 - Add tests claiming feature verification — there's no runner wired up; say so explicitly.
-</Anti_Patterns>
+  </Anti_Patterns>
 
 <Verification_Checklist>
 Before declaring done:
+
 - [ ] `pnpm typecheck` passes on every workspace.
 - [ ] `pnpm dev` brings up web + api with no console errors.
 - [ ] `/admin/login` accepts seeded admin and redirects to `/admin/dashboard`.
@@ -294,4 +315,4 @@ Before declaring done:
 - [ ] Sample list page paginates, sorts, searches, and creates a row through the form modal.
 - [ ] Soft-delete: deleting a row hides it from the list but row remains in DB with `deleted_at` set.
 - [ ] OpenAPI doc reachable at `http://localhost:3001/docs`.
-</Verification_Checklist>
+      </Verification_Checklist>

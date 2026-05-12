@@ -140,7 +140,10 @@ export function ActionsMenuItem(props: ActionsMenuItemProps) {
   if ("href" in props && props.href) {
     return (
       <Link role="menuitem" href={props.href} className={className}>
-        <span aria-hidden="true" className="flex h-4 w-4 items-center justify-center">
+        <span
+          aria-hidden="true"
+          className="flex h-4 w-4 items-center justify-center"
+        >
           {icon}
         </span>
         <span>{label}</span>
@@ -155,7 +158,10 @@ export function ActionsMenuItem(props: ActionsMenuItemProps) {
       onClick={props.onSelect}
       className={className}
     >
-      <span aria-hidden="true" className="flex h-4 w-4 items-center justify-center">
+      <span
+        aria-hidden="true"
+        className="flex h-4 w-4 items-center justify-center"
+      >
         {icon}
       </span>
       <span>{label}</span>

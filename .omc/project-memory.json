@@ -1,0 +1,166 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1778547528502,
+  "projectRoot": "/Users/alexscalia/Coding/audiotext",
+  "techStack": {
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": ">=25.6.0",
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      }
+    ],
+    "frameworks": [],
+    "packageManager": "pnpm",
+    "runtime": "Node.js 25.6.0"
+  },
+  "build": {
+    "buildCommand": "pnpm --filter @audiotext/db exec tsc --noEmit",
+    "testCommand": null,
+    "lintCommand": "pnpm lint",
+    "devCommand": "pnpm dev",
+    "scripts": {
+      "dev": "turbo run dev",
+      "build": "turbo run build",
+      "lint": "turbo run lint",
+      "typecheck": "turbo run typecheck",
+      "db:generate": "pnpm --filter @audiotext/db db:generate",
+      "db:migrate": "pnpm --filter @audiotext/db db:migrate",
+      "db:studio": "pnpm --filter @audiotext/db db:studio",
+      "db:seed": "pnpm --filter @audiotext/db db:seed",
+      "db:reset": "pnpm --filter @audiotext/db db:reset",
+      "format": "prettier --write ."
+    }
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": true,
+    "workspaces": [],
+    "mainDirectories": [],
+    "gitBranches": null
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "apps": {
+      "path": "apps",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1778547528377,
+      "keyFiles": []
+    },
+    "crates": {
+      "path": "crates",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1778547528381,
+      "keyFiles": []
+    },
+    "packages": {
+      "path": "packages",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1778547528384,
+      "keyFiles": []
+    },
+    "apps/api": {
+      "path": "apps/api",
+      "purpose": "API routes",
+      "fileCount": 5,
+      "lastAccessed": 1778547528407,
+      "keyFiles": [
+        "package.json",
+        "tsconfig.json",
+        "tsconfig.tsbuildinfo"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "packages/db/src/schema.ts",
+      "accessCount": 5,
+      "lastAccessed": 1778550421401,
+      "type": "file"
+    },
+    {
+      "path": "packages/db/src/seed-voice-numbering-plan.ts",
+      "accessCount": 3,
+      "lastAccessed": 1778550470486,
+      "type": "file"
+    },
+    {
+      "path": "docker-compose.yml",
+      "accessCount": 2,
+      "lastAccessed": 1778548680893,
+      "type": "file"
+    },
+    {
+      "path": ".env",
+      "accessCount": 2,
+      "lastAccessed": 1778548684363,
+      "type": "file"
+    },
+    {
+      "path": ".env.example",
+      "accessCount": 2,
+      "lastAccessed": 1778548689391,
+      "type": "file"
+    },
+    {
+      "path": "packages/db/src/seed-countries.ts",
+      "accessCount": 2,
+      "lastAccessed": 1778550430708,
+      "type": "file"
+    },
+    {
+      "path": "CLAUDE.md",
+      "accessCount": 1,
+      "lastAccessed": 1778548697387,
+      "type": "file"
+    },
+    {
+      "path": "numbering_plan.csv",
+      "accessCount": 1,
+      "lastAccessed": 1778550347297,
+      "type": "file"
+    },
+    {
+      "path": "packages/db/src/seed.ts",
+      "accessCount": 1,
+      "lastAccessed": 1778550420853,
+      "type": "file"
+    },
+    {
+      "path": "packages/db/package.json",
+      "accessCount": 1,
+      "lastAccessed": 1778550421276,
+      "type": "file"
+    },
+    {
+      "path": ".prettierignore",
+      "accessCount": 1,
+      "lastAccessed": 1778550431405,
+      "type": "file"
+    },
+    {
+      "path": "apps/api/src/routes/admin/voice-numbering-plans.ts",
+      "accessCount": 1,
+      "lastAccessed": 1778550433336,
+      "type": "file"
+    },
+    {
+      "path": "packages/shared/src/index.ts",
+      "accessCount": 1,
+      "lastAccessed": 1778550436899,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}

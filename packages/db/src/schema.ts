@@ -450,13 +450,16 @@ export const atVoiceTerminations = pgTable(
 export type AtVoiceTerminationRow = typeof atVoiceTerminations.$inferSelect;
 export type NewAtVoiceTerminationRow = typeof atVoiceTerminations.$inferInsert;
 
-export const atVoiceTerminationsRelations = relations(atVoiceTerminations, ({ one, many }) => ({
-  carrier: one(carriers, {
-    fields: [atVoiceTerminations.carrierId],
-    references: [carriers.id],
+export const atVoiceTerminationsRelations = relations(
+  atVoiceTerminations,
+  ({ one, many }) => ({
+    carrier: one(carriers, {
+      fields: [atVoiceTerminations.carrierId],
+      references: [carriers.id],
+    }),
+    atVoiceNumbers: many(atVoiceNumbers),
   }),
-  atVoiceNumbers: many(atVoiceNumbers),
-}));
+);
 
 export const atVoiceNumbers = pgTable(
   "at_voice_numbers",
@@ -480,7 +483,9 @@ export const atVoiceNumbers = pgTable(
     uniqueIndex("at_voice_numbers_number_unique_active")
       .on(t.number)
       .where(sql`${t.deletedAt} IS NULL`),
-    index("at_voice_numbers_at_voice_termination_idx").on(t.atVoiceTerminationId),
+    index("at_voice_numbers_at_voice_termination_idx").on(
+      t.atVoiceTerminationId,
+    ),
     index("at_voice_numbers_last_success_idx").on(t.lastSuccessfulAttemptAt),
     index("at_voice_numbers_deleted_at_idx").on(t.deletedAt),
     foreignKey({
@@ -526,8 +531,7 @@ export const voiceTrunkProtocol = pgEnum("voice_trunk_protocol", [
   "sip",
   "sips",
 ]);
-export type VoiceTrunkProtocol =
-  (typeof voiceTrunkProtocol.enumValues)[number];
+export type VoiceTrunkProtocol = (typeof voiceTrunkProtocol.enumValues)[number];
 
 export const voiceTrunkTransport = pgEnum("voice_trunk_transport", [
   "udp",
@@ -542,16 +546,14 @@ export const voiceTrunkAuthType = pgEnum("voice_trunk_auth_type", [
   "userpass",
   "both",
 ]);
-export type VoiceTrunkAuthType =
-  (typeof voiceTrunkAuthType.enumValues)[number];
+export type VoiceTrunkAuthType = (typeof voiceTrunkAuthType.enumValues)[number];
 
 export const voiceTrunkDtmfMode = pgEnum("voice_trunk_dtmf_mode", [
   "rfc2833",
   "inband",
   "info",
 ]);
-export type VoiceTrunkDtmfMode =
-  (typeof voiceTrunkDtmfMode.enumValues)[number];
+export type VoiceTrunkDtmfMode = (typeof voiceTrunkDtmfMode.enumValues)[number];
 
 export const voiceTrunkNatMode = pgEnum("voice_trunk_nat_mode", [
   "no",
@@ -559,8 +561,7 @@ export const voiceTrunkNatMode = pgEnum("voice_trunk_nat_mode", [
   "force_rport",
   "comedia",
 ]);
-export type VoiceTrunkNatMode =
-  (typeof voiceTrunkNatMode.enumValues)[number];
+export type VoiceTrunkNatMode = (typeof voiceTrunkNatMode.enumValues)[number];
 
 export const voiceTrunks = pgTable(
   "voice_trunks",
@@ -766,8 +767,12 @@ export const voiceNumberingPlanDestinations = pgTable(
     )
       .on(t.voiceNumberingPlanId, t.countryIso2, t.name)
       .where(sql`${t.deletedAt} IS NULL`),
-    index("voice_numbering_plan_destinations_plan_idx").on(t.voiceNumberingPlanId),
-    index("voice_numbering_plan_destinations_country_iso2_idx").on(t.countryIso2),
+    index("voice_numbering_plan_destinations_plan_idx").on(
+      t.voiceNumberingPlanId,
+    ),
+    index("voice_numbering_plan_destinations_country_iso2_idx").on(
+      t.countryIso2,
+    ),
     index("voice_numbering_plan_destinations_deleted_at_idx").on(t.deletedAt),
     check(
       "voice_numbering_plan_destinations_country_iso2_format",
@@ -810,7 +815,9 @@ export const voiceNumberingPlanCodes = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     voiceNumberingPlanDestinationId: uuid("voice_numbering_plan_destination_id")
       .notNull()
-      .references(() => voiceNumberingPlanDestinations.id, { onDelete: "cascade" }),
+      .references(() => voiceNumberingPlanDestinations.id, {
+        onDelete: "cascade",
+      }),
     fullCode: text("full_code").notNull(),
     countryCode: text("country_code").notNull(),
     destinationCode: text("destination_code"),
@@ -824,7 +831,9 @@ export const voiceNumberingPlanCodes = pgTable(
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
   (t) => [
-    uniqueIndex("voice_numbering_plan_codes_destination_full_code_unique_active")
+    uniqueIndex(
+      "voice_numbering_plan_codes_destination_full_code_unique_active",
+    )
       .on(t.voiceNumberingPlanDestinationId, t.fullCode)
       .where(sql`${t.deletedAt} IS NULL`),
     index("voice_numbering_plan_codes_destination_idx").on(
@@ -832,7 +841,9 @@ export const voiceNumberingPlanCodes = pgTable(
     ),
     index("voice_numbering_plan_codes_full_code_idx").on(t.fullCode),
     index("voice_numbering_plan_codes_country_code_idx").on(t.countryCode),
-    index("voice_numbering_plan_codes_destination_code_idx").on(t.destinationCode),
+    index("voice_numbering_plan_codes_destination_code_idx").on(
+      t.destinationCode,
+    ),
     index("voice_numbering_plan_codes_deleted_at_idx").on(t.deletedAt),
     check(
       "voice_numbering_plan_codes_full_code_digits",
@@ -845,8 +856,10 @@ export const voiceNumberingPlanCodes = pgTable(
   ],
 );
 
-export type VoiceNumberingPlanCodeRow = typeof voiceNumberingPlanCodes.$inferSelect;
-export type NewVoiceNumberingPlanCodeRow = typeof voiceNumberingPlanCodes.$inferInsert;
+export type VoiceNumberingPlanCodeRow =
+  typeof voiceNumberingPlanCodes.$inferSelect;
+export type NewVoiceNumberingPlanCodeRow =
+  typeof voiceNumberingPlanCodes.$inferInsert;
 
 export const voiceNumberingPlanCodesRelations = relations(
   voiceNumberingPlanCodes,
@@ -964,11 +977,10 @@ export const voiceRateSheetLines = pgTable(
       .references(() => voiceNumberingPlanDestinations.id, {
         onDelete: "restrict",
       }),
-    rate: numeric("rate", { precision: 18, scale: 6 }).notNull(),
-    billingInitialIncrement: integer("billing_initial_increment").notNull(),
-    billingSubsequentIncrement: integer(
-      "billing_subsequent_increment",
-    ).notNull(),
+    minDurationSec: integer("min_duration_sec").notNull(),
+    incrementSec: integer("increment_sec").notNull(),
+    setupFee: numeric("setup_fee", { precision: 18, scale: 6 }),
+    ratePerMin: numeric("rate_per_min", { precision: 18, scale: 6 }).notNull(),
     validFrom: timestamp("valid_from", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -983,23 +995,28 @@ export const voiceRateSheetLines = pgTable(
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
   (t) => [
-    index("voice_rate_sheet_lines_voice_rate_sheet_idx").on(
-      t.voiceRateSheetId,
-    ),
+    index("voice_rate_sheet_lines_voice_rate_sheet_idx").on(t.voiceRateSheetId),
     index("voice_rate_sheet_lines_destination_idx").on(
       t.voiceNumberingPlanDestinationId,
     ),
     index("voice_rate_sheet_lines_valid_from_idx").on(t.validFrom),
     index("voice_rate_sheet_lines_valid_to_idx").on(t.validTo),
     index("voice_rate_sheet_lines_deleted_at_idx").on(t.deletedAt),
-    check("voice_rate_sheet_lines_rate_non_negative", sql`${t.rate} >= 0`),
     check(
-      "voice_rate_sheet_lines_initial_increment_positive",
-      sql`${t.billingInitialIncrement} > 0`,
+      "voice_rate_sheet_lines_rate_per_min_non_negative",
+      sql`${t.ratePerMin} >= 0`,
     ),
     check(
-      "voice_rate_sheet_lines_subsequent_increment_positive",
-      sql`${t.billingSubsequentIncrement} > 0`,
+      "voice_rate_sheet_lines_setup_fee_non_negative",
+      sql`${t.setupFee} IS NULL OR ${t.setupFee} >= 0`,
+    ),
+    check(
+      "voice_rate_sheet_lines_min_duration_non_negative",
+      sql`${t.minDurationSec} >= 0`,
+    ),
+    check(
+      "voice_rate_sheet_lines_increment_positive",
+      sql`${t.incrementSec} > 0`,
     ),
     check(
       "voice_rate_sheet_lines_valid_range",
@@ -1009,8 +1026,7 @@ export const voiceRateSheetLines = pgTable(
 );
 
 export type VoiceRateSheetLineRow = typeof voiceRateSheetLines.$inferSelect;
-export type NewVoiceRateSheetLineRow =
-  typeof voiceRateSheetLines.$inferInsert;
+export type NewVoiceRateSheetLineRow = typeof voiceRateSheetLines.$inferInsert;
 
 export const voiceRateSheetLinesRelations = relations(
   voiceRateSheetLines,

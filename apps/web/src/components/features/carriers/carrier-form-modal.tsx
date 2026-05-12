@@ -38,17 +38,9 @@ const carrierFormSchema = z.object({
   status: z.enum(["active", "inactive"]),
   billingDetails: z.object({
     address: z.object({
-      line1: z
-        .string()
-        .trim()
-        .min(1, errMsg.required)
-        .max(256, errMsg.tooLong),
+      line1: z.string().trim().min(1, errMsg.required).max(256, errMsg.tooLong),
       line2: z.string().max(256, errMsg.tooLong).optional(),
-      city: z
-        .string()
-        .trim()
-        .min(1, errMsg.required)
-        .max(128, errMsg.tooLong),
+      city: z.string().trim().min(1, errMsg.required).max(128, errMsg.tooLong),
       state: z.string().max(128, errMsg.tooLong).optional(),
       postalCode: z
         .string()
@@ -101,11 +93,7 @@ const carrierFormSchema = z.object({
       })
       .optional(),
   }),
-  ratesName: z
-    .string()
-    .trim()
-    .min(1, errMsg.required)
-    .max(128, errMsg.tooLong),
+  ratesName: z.string().trim().min(1, errMsg.required).max(128, errMsg.tooLong),
   ratesEmail: z
     .string()
     .trim()
@@ -125,11 +113,7 @@ const carrierFormSchema = z.object({
     .email(errMsg.email)
     .max(256, errMsg.tooLong),
   billingPhone: z.string().max(32, errMsg.tooLong).optional(),
-  nocName: z
-    .string()
-    .trim()
-    .min(1, errMsg.required)
-    .max(128, errMsg.tooLong),
+  nocName: z.string().trim().min(1, errMsg.required).max(128, errMsg.tooLong),
   nocEmail: z
     .string()
     .trim()
@@ -137,11 +121,7 @@ const carrierFormSchema = z.object({
     .email(errMsg.email)
     .max(256, errMsg.tooLong),
   nocPhone: z.string().max(32, errMsg.tooLong).optional(),
-  salesName: z
-    .string()
-    .trim()
-    .min(1, errMsg.required)
-    .max(128, errMsg.tooLong),
+  salesName: z.string().trim().min(1, errMsg.required).max(128, errMsg.tooLong),
   salesEmail: z
     .string()
     .trim()
@@ -231,7 +211,9 @@ const CONTACT_KEYS = [
   "nocPhone",
 ] as const;
 
-function firstTabWithErrors(errors: FieldErrors<CarrierFormValues>): TabId | null {
+function firstTabWithErrors(
+  errors: FieldErrors<CarrierFormValues>,
+): TabId | null {
   if (GENERAL_KEYS.some((k) => errors[k])) return "general";
   if (errors.billingDetails) return "billing";
   if (CONTACT_KEYS.some((k) => errors[k])) return "contacts";
@@ -287,13 +269,15 @@ function resolveError(
   errors: FieldErrors<CarrierFormValues>,
   path: Path<CarrierFormValues>,
 ): unknown {
-  return path.split(".").reduce<unknown>(
-    (node, key) =>
-      node && typeof node === "object"
-        ? (node as Record<string, unknown>)[key]
-        : undefined,
-    errors,
-  );
+  return path
+    .split(".")
+    .reduce<unknown>(
+      (node, key) =>
+        node && typeof node === "object"
+          ? (node as Record<string, unknown>)[key]
+          : undefined,
+      errors,
+    );
 }
 
 export function CarrierFormModal({
@@ -378,7 +362,12 @@ export function CarrierFormModal({
   }
 
   const generalErrors = useMemo(
-    () => countErrors({ name: errors.name, businessName: errors.businessName, status: errors.status }),
+    () =>
+      countErrors({
+        name: errors.name,
+        businessName: errors.businessName,
+        status: errors.status,
+      }),
     [errors.name, errors.businessName, errors.status],
   );
   const billingErrors = useMemo(
@@ -422,9 +411,7 @@ export function CarrierFormModal({
     async (values) => {
       const bt = values.billingDetails.billingTerms;
       const cleanBt =
-        bt &&
-        typeof bt.cycleDays === "number" &&
-        typeof bt.dueDays === "number"
+        bt && typeof bt.cycleDays === "number" && typeof bt.dueDays === "number"
           ? { cycleDays: bt.cycleDays, dueDays: bt.dueDays }
           : undefined;
       const payload: CarrierFormValues = {
@@ -472,11 +459,7 @@ export function CarrierFormModal({
       initialFocusRef={nameRef}
       size="3xl"
       subheader={
-        <div
-          role="tablist"
-          aria-label={t("title")}
-          className="flex gap-1 px-6"
-        >
+        <div role="tablist" aria-label={t("title")} className="flex gap-1 px-6">
           {tabs.map((tab) => {
             const selected = activeTab === tab.id;
             const showBadge = submitAttempted && tab.count > 0;
@@ -548,12 +531,7 @@ export function CarrierFormModal({
         </div>
       )}
 
-      <form
-        id={formId}
-        onSubmit={onValid}
-        className="space-y-6"
-        noValidate
-      >
+      <form id={formId} onSubmit={onValid} className="space-y-6" noValidate>
         {/* GENERAL */}
         <div
           role="tabpanel"
@@ -599,7 +577,11 @@ export function CarrierFormModal({
           </div>
 
           <Field label={tFields("status")} htmlFor="cf-status">
-            <Select id="cf-status" className="sm:max-w-xs" {...register("status")}>
+            <Select
+              id="cf-status"
+              className="sm:max-w-xs"
+              {...register("status")}
+            >
               <option value="active">{tStatus("active")}</option>
               <option value="inactive">{tStatus("inactive")}</option>
             </Select>
@@ -622,7 +604,9 @@ export function CarrierFormModal({
             <Field
               label={tFields("addressLine1")}
               required
-              error={translateError(errors.billingDetails?.address?.line1?.message)}
+              error={translateError(
+                errors.billingDetails?.address?.line1?.message,
+              )}
               htmlFor="cf-line1"
             >
               <TextInput
@@ -635,7 +619,9 @@ export function CarrierFormModal({
 
             <Field
               label={tFields("addressLine2")}
-              error={translateError(errors.billingDetails?.address?.line2?.message)}
+              error={translateError(
+                errors.billingDetails?.address?.line2?.message,
+              )}
               htmlFor="cf-line2"
             >
               <TextInput
@@ -650,7 +636,9 @@ export function CarrierFormModal({
               <Field
                 label={tFields("city")}
                 required
-                error={translateError(errors.billingDetails?.address?.city?.message)}
+                error={translateError(
+                  errors.billingDetails?.address?.city?.message,
+                )}
                 htmlFor="cf-city"
               >
                 <TextInput
@@ -663,7 +651,9 @@ export function CarrierFormModal({
 
               <Field
                 label={tFields("state")}
-                error={translateError(errors.billingDetails?.address?.state?.message)}
+                error={translateError(
+                  errors.billingDetails?.address?.state?.message,
+                )}
                 htmlFor="cf-state"
               >
                 <TextInput
@@ -677,7 +667,9 @@ export function CarrierFormModal({
               <Field
                 label={tFields("postalCode")}
                 required
-                error={translateError(errors.billingDetails?.address?.postalCode?.message)}
+                error={translateError(
+                  errors.billingDetails?.address?.postalCode?.message,
+                )}
                 htmlFor="cf-postal"
               >
                 <TextInput
@@ -691,7 +683,9 @@ export function CarrierFormModal({
               <Field
                 label={tFields("country")}
                 required
-                error={translateError(errors.billingDetails?.address?.countryCode?.message)}
+                error={translateError(
+                  errors.billingDetails?.address?.countryCode?.message,
+                )}
                 htmlFor="cf-country"
               >
                 <Select
@@ -844,7 +838,9 @@ export function CarrierFormModal({
                 <Field
                   label={tFields("bankName")}
                   required
-                  error={translateError(errors.billingDetails?.bank?.name?.message)}
+                  error={translateError(
+                    errors.billingDetails?.bank?.name?.message,
+                  )}
                   htmlFor="cf-bank-name"
                 >
                   <TextInput
@@ -858,7 +854,9 @@ export function CarrierFormModal({
                 <Field
                   label={tFields("bankAccountNumber")}
                   required
-                  error={translateError(errors.billingDetails?.bank?.accountNumber?.message)}
+                  error={translateError(
+                    errors.billingDetails?.bank?.accountNumber?.message,
+                  )}
                   htmlFor="cf-bank-account"
                 >
                   <TextInput
@@ -871,7 +869,9 @@ export function CarrierFormModal({
 
                 <Field
                   label={tFields("bankRoutingNumber")}
-                  error={translateError(errors.billingDetails?.bank?.routingNumber?.message)}
+                  error={translateError(
+                    errors.billingDetails?.bank?.routingNumber?.message,
+                  )}
                   htmlFor="cf-bank-routing"
                 >
                   <TextInput
@@ -884,7 +884,9 @@ export function CarrierFormModal({
 
                 <Field
                   label={tFields("bankIban")}
-                  error={translateError(errors.billingDetails?.bank?.iban?.message)}
+                  error={translateError(
+                    errors.billingDetails?.bank?.iban?.message,
+                  )}
                   htmlFor="cf-bank-iban"
                 >
                   <TextInput
@@ -897,7 +899,9 @@ export function CarrierFormModal({
 
                 <Field
                   label={tFields("bankSwift")}
-                  error={translateError(errors.billingDetails?.bank?.swift?.message)}
+                  error={translateError(
+                    errors.billingDetails?.bank?.swift?.message,
+                  )}
                   htmlFor="cf-bank-swift"
                 >
                   <TextInput

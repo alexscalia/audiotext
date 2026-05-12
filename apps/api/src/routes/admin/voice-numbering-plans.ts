@@ -229,11 +229,14 @@ export const voiceNumberingPlansRoutes = new OpenAPIHono<{
     }
 
     const codeCountExpr = sql<number>`count(${voiceNumberingPlanCodes.id})::int`;
-    const countryCodeExpr = sql<string | null>`(array_agg(${voiceNumberingPlanCodes.countryCode}) filter (where ${voiceNumberingPlanCodes.id} is not null))[1]`;
+    const countryCodeExpr = sql<
+      string | null
+    >`(array_agg(${voiceNumberingPlanCodes.countryCode}) filter (where ${voiceNumberingPlanCodes.id} is not null))[1]`;
     const destinationCodesExpr = sql<
       string[]
     >`coalesce(array_remove(array_agg(${voiceNumberingPlanCodes.destinationCode}), null), '{}')::text[]`;
-    const countryNameCol = locale === "it" ? countries.nameIt : countries.nameEn;
+    const countryNameCol =
+      locale === "it" ? countries.nameIt : countries.nameEn;
     const countryNameExpr = sql<string>`coalesce(${countryNameCol}, ${voiceNumberingPlanDestinations.countryIso2})`;
     const typePriorityExpr = sql<number>`case ${voiceNumberingPlanDestinations.type}
       when 'all' then 1

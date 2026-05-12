@@ -123,7 +123,10 @@ async function seedAdmin(
   }
 }
 
-type CarrierSeed = Omit<NewCarrierRow, "id" | "createdAt" | "updatedAt" | "deletedAt">;
+type CarrierSeed = Omit<
+  NewCarrierRow,
+  "id" | "createdAt" | "updatedAt" | "deletedAt"
+>;
 
 type ChatContactSeed = {
   chatApp: ChatApp;

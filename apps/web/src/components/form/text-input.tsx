@@ -11,7 +11,10 @@ const VALID = "border-gray-300 focus:border-black focus:ring-black";
 const INVALID = "border-red-500 focus:border-red-500 focus:ring-red-500";
 
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
-  function TextInput({ invalid = false, className = "", type = "text", ...rest }, ref) {
+  function TextInput(
+    { invalid = false, className = "", type = "text", ...rest },
+    ref,
+  ) {
     return (
       <input
         ref={ref}

@@ -10,18 +10,17 @@ const BASE =
 const VALID = "border-gray-300 focus:border-black focus:ring-black";
 const INVALID = "border-red-500 focus:border-red-500 focus:ring-red-500";
 
-export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select(
-  { invalid = false, className = "", children, ...rest },
-  ref,
-) {
-  return (
-    <select
-      ref={ref}
-      className={`${BASE} ${invalid ? INVALID : VALID} ${className}`}
-      aria-invalid={invalid || undefined}
-      {...rest}
-    >
-      {children}
-    </select>
-  );
-});
+export const Select = forwardRef<HTMLSelectElement, SelectProps>(
+  function Select({ invalid = false, className = "", children, ...rest }, ref) {
+    return (
+      <select
+        ref={ref}
+        className={`${BASE} ${invalid ? INVALID : VALID} ${className}`}
+        aria-invalid={invalid || undefined}
+        {...rest}
+      >
+        {children}
+      </select>
+    );
+  },
+);

@@ -135,11 +135,7 @@ export default function AdminLoginPage() {
 
             <ErrorText message={submitError} />
 
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full"
-            >
+            <Button type="submit" disabled={isSubmitting} className="w-full">
               {isSubmitting ? t("submitting") : t("submit")}
             </Button>
           </form>

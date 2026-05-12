@@ -16,11 +16,13 @@ import type {
 } from "@audiotext/shared";
 import { CarrierFormModal } from "@/components/features/carriers/carrier-form-modal";
 import { StatusBadge } from "@/components/features/carriers/status-badge";
+import { ActionsMenu, ActionsMenuItem } from "@/components/ui/actions-menu";
 import {
-  ActionsMenu,
-  ActionsMenuItem,
-} from "@/components/ui/actions-menu";
-import { EyeIcon, PencilIcon, PlusIcon, TrashIcon } from "@/components/ui/icons";
+  EyeIcon,
+  PencilIcon,
+  PlusIcon,
+  TrashIcon,
+} from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
 import { PageHeader } from "@/components/layout/page-header";
@@ -221,10 +223,7 @@ export default function CarriersPage() {
         title={t("title")}
         subtitle={t("subtitle")}
         actions={
-          <Button
-            onClick={() => setModalOpen(true)}
-            leadingIcon={<PlusIcon />}
-          >
+          <Button onClick={() => setModalOpen(true)} leadingIcon={<PlusIcon />}>
             {t("newCarrier")}
           </Button>
         }

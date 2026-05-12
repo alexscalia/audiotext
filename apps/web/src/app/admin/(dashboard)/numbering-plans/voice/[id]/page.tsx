@@ -323,7 +323,10 @@ export default function NumberingPlanDetailPage() {
     <div className="mx-auto max-w-6xl">
       <PageHeader
         eyebrow={
-          <BackLink href="/admin/numbering-plans/voice" label={t("backToPlans")} />
+          <BackLink
+            href="/admin/numbering-plans/voice"
+            label={t("backToPlans")}
+          />
         }
         title={planLoading ? "—" : (plan?.name ?? t("detail.notFound"))}
         meta={

@@ -50,11 +50,7 @@ export function CarrierViewModal({
       closeLabel={tActions("close")}
       size="3xl"
       subheader={
-        <div
-          role="tablist"
-          aria-label={t("title")}
-          className="flex gap-1 px-6"
-        >
+        <div role="tablist" aria-label={t("title")} className="flex gap-1 px-6">
           {tabs.map((tab) => {
             const selected = activeTab === tab.id;
             return (
@@ -313,7 +309,8 @@ function DefList({
     <dl className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
       {items.map((item) => {
         const isString = typeof item.value === "string";
-        const stringEmpty = isString && (item.value as string).trim().length === 0;
+        const stringEmpty =
+          isString && (item.value as string).trim().length === 0;
         const isEmpty = item.value == null || stringEmpty;
         return (
           <div key={item.label} className="min-w-0">

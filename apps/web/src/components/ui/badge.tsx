@@ -31,14 +31,21 @@ const TONE: Record<Tone, { wrapper: string; dot: string }> = {
   },
 };
 
-export function Badge({ tone = "neutral", withDot = false, children }: BadgeProps) {
+export function Badge({
+  tone = "neutral",
+  withDot = false,
+  children,
+}: BadgeProps) {
   const t = TONE[tone];
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${t.wrapper}`}
     >
       {withDot && (
-        <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${t.dot}`} />
+        <span
+          aria-hidden="true"
+          className={`h-1.5 w-1.5 rounded-full ${t.dot}`}
+        />
       )}
       {children}
     </span>

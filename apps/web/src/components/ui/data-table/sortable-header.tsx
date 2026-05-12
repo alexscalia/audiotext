@@ -9,7 +9,11 @@ export function SortableHeader<T>({ header }: SortableHeaderProps<T>) {
   const canSort = header.column.getCanSort();
   const sortDir = header.column.getIsSorted();
   const ariaSort =
-    sortDir === "asc" ? "ascending" : sortDir === "desc" ? "descending" : "none";
+    sortDir === "asc"
+      ? "ascending"
+      : sortDir === "desc"
+        ? "descending"
+        : "none";
 
   return (
     <th

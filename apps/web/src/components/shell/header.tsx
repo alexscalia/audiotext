@@ -93,7 +93,11 @@ export function Header({
             }`}
             aria-hidden="true"
           >
-            <path d="m9 6 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              d="m9 6 6 6-6 6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </button>
       </div>
@@ -119,7 +123,9 @@ export function Header({
               className="absolute right-0 mt-2 w-56 rounded-md border border-gray-200 bg-white shadow-lg z-50"
             >
               <div className="border-b border-gray-100 px-4 py-3">
-                <p className="text-sm font-medium text-black truncate">{name}</p>
+                <p className="text-sm font-medium text-black truncate">
+                  {name}
+                </p>
                 {email && (
                   <p className="text-xs text-gray-600 truncate">{email}</p>
                 )}
@@ -129,8 +135,18 @@ export function Header({
                 onClick={onSignOut}
                 className="flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-sm text-gray-700 transition-colors duration-150 hover:bg-gray-100 hover:text-black motion-reduce:transition-none"
               >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="h-4 w-4 text-gray-500">
-                  <path d="M15 17l5-5-5-5M20 12H9M12 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" strokeLinecap="round" strokeLinejoin="round" />
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.8}
+                  className="h-4 w-4 text-gray-500"
+                >
+                  <path
+                    d="M15 17l5-5-5-5M20 12H9M12 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
                 {t("signOut")}
               </button>

@@ -23,23 +23,43 @@ def get_venv_python():
     return venv_python
 
 
+def venv_is_healthy(venv_python: Path) -> bool:
+    """Verify venv interpreter actually runs (catches stale symlinks after Python upgrade)."""
+    if not venv_python.exists():
+        return False
+    try:
+        result = subprocess.run(
+            [str(venv_python), "--version"],
+            capture_output=True,
+            timeout=10,
+        )
+        return result.returncode == 0
+    except (subprocess.TimeoutExpired, OSError):
+        return False
+
+
 def ensure_venv():
-    """Ensure virtual environment exists"""
+    """Ensure virtual environment exists and is healthy."""
+    import shutil
+
     skill_dir = Path(__file__).parent.parent
     venv_dir = skill_dir / ".venv"
     setup_script = skill_dir / "scripts" / "setup_environment.py"
+    venv_python = get_venv_python()
 
-    # Check if venv exists
-    if not venv_dir.exists():
-        print("🔧 First-time setup: Creating virtual environment...")
-        print("   This may take a minute...")
+    needs_setup = not venv_dir.exists()
+    if not needs_setup and not venv_is_healthy(venv_python):
+        print("⚠️  Existing .venv is broken (likely after a system Python upgrade).")
+        print("   Rebuilding...")
+        shutil.rmtree(venv_dir, ignore_errors=True)
+        needs_setup = True
 
-        # Run setup with system Python
+    if needs_setup:
+        print("🔧 Setting up virtual environment...")
         result = subprocess.run([sys.executable, str(setup_script)])
         if result.returncode != 0:
             print("❌ Failed to set up environment")
             sys.exit(1)
-
         print("✅ Environment ready!")
 
     return get_venv_python()

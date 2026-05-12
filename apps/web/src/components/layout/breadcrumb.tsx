@@ -25,7 +25,10 @@ type BreadcrumbProps = {
   ariaLabel?: string;
 };
 
-export function Breadcrumb({ items, ariaLabel = "Breadcrumb" }: BreadcrumbProps) {
+export function Breadcrumb({
+  items,
+  ariaLabel = "Breadcrumb",
+}: BreadcrumbProps) {
   return (
     <nav aria-label={ariaLabel}>
       <ol className="flex flex-wrap items-center gap-1 text-sm text-gray-600">
@@ -38,7 +41,10 @@ export function Breadcrumb({ items, ariaLabel = "Breadcrumb" }: BreadcrumbProps)
                   {item.label}
                 </Link>
               ) : (
-                <span className={last ? "text-black" : ""} aria-current={last ? "page" : undefined}>
+                <span
+                  className={last ? "text-black" : ""}
+                  aria-current={last ? "page" : undefined}
+                >
                   {item.label}
                 </span>
               )}
