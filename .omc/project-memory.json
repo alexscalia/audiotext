@@ -18,7 +18,7 @@
     "runtime": "Node.js 25.6.0"
   },
   "build": {
-    "buildCommand": "pnpm --filter @audiotext/db exec tsc --noEmit",
+    "buildCommand": "pnpm --filter @audiotext/db exec tsc --noEmit 2>&1 | tail -40",
     "testCommand": null,
     "lintCommand": "pnpm lint",
     "devCommand": "pnpm dev",
@@ -90,6 +90,12 @@
       "type": "file"
     },
     {
+      "path": "packages/db/src/seed.ts",
+      "accessCount": 4,
+      "lastAccessed": 1778550851412,
+      "type": "file"
+    },
+    {
       "path": "packages/db/src/seed-voice-numbering-plan.ts",
       "accessCount": 3,
       "lastAccessed": 1778550470486,
@@ -132,12 +138,6 @@
       "type": "file"
     },
     {
-      "path": "packages/db/src/seed.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778550420853,
-      "type": "file"
-    },
-    {
       "path": "packages/db/package.json",
       "accessCount": 1,
       "lastAccessed": 1778550421276,
@@ -159,6 +159,12 @@
       "path": "packages/shared/src/index.ts",
       "accessCount": 1,
       "lastAccessed": 1778550436899,
+      "type": "file"
+    },
+    {
+      "path": "packages/db/src/seed-voice-rate-sheets.ts",
+      "accessCount": 1,
+      "lastAccessed": 1778550842055,
       "type": "file"
     }
   ],

@@ -10,6 +10,7 @@ import type {
 } from "./schema.js";
 import { seedCountries } from "./seed-countries.js";
 import { seedVoiceNumberingPlan } from "./seed-voice-numbering-plan.js";
+import { seedVoiceRateSheets } from "./seed-voice-rate-sheets.js";
 
 const url = process.env.DATABASE_URL;
 if (!url) throw new Error("DATABASE_URL is required");
@@ -333,6 +334,7 @@ async function main() {
   await seedAdminChatContacts();
   await seedCountries(db);
   await seedVoiceNumberingPlan(db);
+  await seedVoiceRateSheets(db);
   console.log("seed complete");
 }
 
