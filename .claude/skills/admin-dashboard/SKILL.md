@@ -25,7 +25,7 @@ Scaffold a new admin dashboard that mirrors the audiotext project's stack, layou
 <Stack>
 Pinned versions (match audiotext exactly unless user overrides):
 
-- pnpm 10, Turborepo 2, Node ≥ 25.6.0
+- pnpm 11, Turborepo 2, Node ≥ 25.6.0
 - Next.js 16.2 (App Router), React 19.2, Tailwind 4 (`@tailwindcss/postcss`)
 - next-intl 4.x (cookie-based, no URL routing)
 - Hono + `@hono/node-server` + `@hono/zod-openapi` + `@hono/swagger-ui` + `@hono/zod-validator`
@@ -274,7 +274,7 @@ All workspaces extend `packages/tsconfig/{base,nextjs,node}.json`. `noUncheckedI
 1. **Confirm scope**: ask user for project name (workspace `@<scope>/*`), DB name, port overrides if any, and which features beyond the auth shell + a sample resource list page.
 2. **Plan first** (project CLAUDE.md mandates plan mode for 3+ steps): write `tasks/todo.md` with checkable steps and confirm before generating files.
 3. **Scaffold**:
-   - Root: `package.json` (pnpm 10, turbo 2, scripts mirror audiotext), `pnpm-workspace.yaml`, `turbo.json`, `tsconfig.json`, `.env.example`, `docker-compose.yml` (postgres:17), `.gitignore`.
+   - Root: `package.json` (pnpm 11, turbo 2, scripts mirror audiotext), `pnpm-workspace.yaml`, `turbo.json`, `tsconfig.json`, `.env.example`, `docker-compose.yml` (postgres:17), `.gitignore`.
    - `packages/tsconfig` (base/nextjs/node).
    - `packages/db`: `src/{index,schema,migrate,seed}.ts`, `drizzle.config.ts`, scripts (`db:generate`, `db:migrate`, `db:studio`, `db:seed`, `db:reset` with `NODE_ENV=production` refusal).
    - `packages/shared`: `src/index.ts` with Zod schemas for the resources requested.

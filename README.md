@@ -4,7 +4,7 @@ Monorepo. Next.js 16 frontend, Hono backend, Postgres 17. Future: Rust backend p
 
 ## Stack
 
-- pnpm 10 + Turborepo 2
+- pnpm 11 + Turborepo 2
 - **Frontend:** Next.js 16.2 (App Router, Turbopack, TS) + Tailwind + Radix UI
 - **Data tables:** TanStack Table (logic) + TanStack Virtual (perf)
 - **Analytics:** Tremor (high-density charts)

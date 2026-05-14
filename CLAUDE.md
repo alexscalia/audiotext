@@ -63,7 +63,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-All commands run from repo root unless noted. Package manager is **pnpm 10**, orchestrated by **Turborepo 2**. Node ≥ 25.6.0.
+All commands run from repo root unless noted. Package manager is **pnpm 11**, orchestrated by **Turborepo 2**. Node ≥ 25.6.0.
 
 ```bash
 # first-time setup

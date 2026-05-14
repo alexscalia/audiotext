@@ -186,6 +186,36 @@
       "type": "file"
     },
     {
+      "path": "package.json",
+      "accessCount": 2,
+      "lastAccessed": 1778764446525,
+      "type": "file"
+    },
+    {
+      "path": "README.md",
+      "accessCount": 2,
+      "lastAccessed": 1778764458968,
+      "type": "file"
+    },
+    {
+      "path": "CLAUDE.md",
+      "accessCount": 2,
+      "lastAccessed": 1778764467525,
+      "type": "file"
+    },
+    {
+      "path": ".claude/skills/admin-dashboard/SKILL.md",
+      "accessCount": 2,
+      "lastAccessed": 1778764474658,
+      "type": "file"
+    },
+    {
+      "path": "pnpm-workspace.yaml",
+      "accessCount": 2,
+      "lastAccessed": 1778764565563,
+      "type": "file"
+    },
+    {
       "path": "packages/db/src/seed-voice-rate-sheets.ts",
       "accessCount": 1,
       "lastAccessed": 1778724458044,
