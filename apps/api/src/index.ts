@@ -3,7 +3,10 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import { swaggerUI } from "@hono/swagger-ui";
 import { logger } from "hono/logger";
 import { pool } from "@audiotext/db";
+import { APP_TIMEZONE } from "@audiotext/shared";
 import { auth } from "./lib/auth";
+
+process.env.TZ = APP_TIMEZONE;
 import { carriersRoutes } from "./routes/admin/carriers";
 import { countriesRoutes } from "./routes/admin/countries";
 import { voiceNumberingPlansRoutes } from "./routes/admin/voice-numbering-plans";

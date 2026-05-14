@@ -1,6 +1,6 @@
 {
   "Common": {
-    "appName": "audiotext",
+    "appName": "Audiotext Panel",
     "language": "Lingua",
     "english": "Inglese",
     "italian": "Italiano"
@@ -43,7 +43,8 @@
     "numberingSms": "SMS",
     "rateSheets": "Listini",
     "rateSheetsVoice": "Voce",
-    "trunks": "Trunk",
+    "interconnections": "Interconnessioni",
+    "trunks": "Trunk voce",
     "carriers": "Carrier",
     "settings": "Impostazioni"
   },
@@ -145,6 +146,7 @@
     },
     "columns": {
       "name": "Nome",
+      "currency": "Valuta",
       "numberingPlan": "Piano di numerazione",
       "status": "Stato",
       "actions": "Azioni",
@@ -186,6 +188,7 @@
     "loadError": "Impossibile caricare i carrier.",
     "columns": {
       "name": "Nome",
+      "businessName": "Ragione sociale",
       "status": "Stato",
       "trunks": "Trunk",
       "actions": "Azioni"

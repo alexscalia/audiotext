@@ -648,7 +648,7 @@ export const voiceTrunks = pgTable(
 export type VoiceTrunkRow = typeof voiceTrunks.$inferSelect;
 export type NewVoiceTrunkRow = typeof voiceTrunks.$inferInsert;
 
-export const voiceTrunksRelations = relations(voiceTrunks, ({ one }) => ({
+export const voiceTrunksRelations = relations(voiceTrunks, ({ one, many }) => ({
   carrier: one(carriers, {
     fields: [voiceTrunks.carrierId],
     references: [carriers.id],
@@ -656,6 +656,52 @@ export const voiceTrunksRelations = relations(voiceTrunks, ({ one }) => ({
   voiceRateSheet: one(voiceRateSheets, {
     fields: [voiceTrunks.voiceRateSheetId],
     references: [voiceRateSheets.id],
+  }),
+  ips: many(voiceTrunkIps),
+}));
+
+export const voiceTrunkIpStatus = pgEnum("voice_trunk_ip_status", [
+  "active",
+  "inactive",
+]);
+export type VoiceTrunkIpStatus = (typeof voiceTrunkIpStatus.enumValues)[number];
+
+export const voiceTrunkIps = pgTable(
+  "voice_trunk_ips",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    voiceTrunkId: uuid("voice_trunk_id")
+      .notNull()
+      .references(() => voiceTrunks.id, { onDelete: "cascade" }),
+    ip: text("ip").notNull(),
+    prefix: text("prefix"),
+    status: voiceTrunkIpStatus("status").notNull().default("active"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("voice_trunk_ips_trunk_ip_prefix_unique_active")
+      .on(t.voiceTrunkId, t.ip, t.prefix)
+      .where(sql`${t.deletedAt} IS NULL`),
+    index("voice_trunk_ips_trunk_idx").on(t.voiceTrunkId),
+    index("voice_trunk_ips_status_idx").on(t.status),
+    index("voice_trunk_ips_deleted_at_idx").on(t.deletedAt),
+  ],
+);
+
+export type VoiceTrunkIpRow = typeof voiceTrunkIps.$inferSelect;
+export type NewVoiceTrunkIpRow = typeof voiceTrunkIps.$inferInsert;
+
+export const voiceTrunkIpsRelations = relations(voiceTrunkIps, ({ one }) => ({
+  voiceTrunk: one(voiceTrunks, {
+    fields: [voiceTrunkIps.voiceTrunkId],
+    references: [voiceTrunks.id],
   }),
 }));
 

@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"cat pnpm-workspace.yaml 2>&1; echo \\\"---\\\"; ls .npmrc 2>&1; cat .npmrc 2>/dev/null\",\"description\":\"Check pnpm config files\"}",
-  "error": "Exit code 1\npackages:\n  - \"apps/*\"\n  - \"packages/*\"\nallowBuilds:\n  '@parcel/watcher': set this to true or false\n  '@swc/core': set this to true or false\n  esbuild: set this to true or false\n  sharp: set this to true or false\n  unrs-resolver: set this to true or false\n---\nls: .npmrc: No such file or directory",
-  "timestamp": "2026-05-14T13:15:53.219Z",
+  "tool_input_preview": "{\"command\":\"ls /Users/alexscalia/Coding/audiotext/apps/web/src/app/admin/\\\\(dashboard\\\\)/trunks/ 2>/dev/null\",\"description\":\"List trunks dir\"}",
+  "error": "Exit code 1",
+  "timestamp": "2026-05-14T16:36:49.252Z",
   "retry_count": 1
 }

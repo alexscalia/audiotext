@@ -32,6 +32,7 @@ export default function AdminLoginPage() {
   const t = useTranslations("Login");
   const tErrors = useTranslations("Login.errors");
   const tServer = useTranslations("Login.serverErrors");
+  const tCommon = useTranslations("Common");
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
@@ -73,7 +74,7 @@ export default function AdminLoginPage() {
             <div className="h-3 w-3 rounded-full bg-black" />
           </div>
           <span className="text-lg font-bold tracking-tight text-black">
-            audiotext
+            {tCommon("appName")}
           </span>
         </div>
         <LocaleSwitcher />

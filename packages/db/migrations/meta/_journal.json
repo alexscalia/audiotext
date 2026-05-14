@@ -22,6 +22,13 @@
       "when": 1778768556485,
       "tag": "0002_yummy_mysterio",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1778774708119,
+      "tag": "0003_smart_mandarin",
+      "breakpoints": true
     }
   ]
 }

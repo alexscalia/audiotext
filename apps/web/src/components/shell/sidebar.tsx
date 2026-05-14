@@ -14,6 +14,7 @@ type NavKey =
   | "numberingSms"
   | "rateSheets"
   | "rateSheetsVoice"
+  | "interconnections"
   | "trunks"
   | "carriers"
   | "settings";
@@ -131,9 +132,9 @@ const NAV: NavItem[] = [
     ],
   },
   {
-    type: "link",
-    href: "/admin/trunks",
-    key: "trunks",
+    type: "group",
+    key: "interconnections",
+    basePath: "/admin/interconnections",
     icon: (
       <svg
         viewBox="0 0 24 24"
@@ -142,27 +143,17 @@ const NAV: NavItem[] = [
         strokeWidth={1.8}
         className="h-5 w-5"
       >
-        <path d="M4 7h16M4 12h16M4 17h16" strokeLinecap="round" />
+        <circle cx="6" cy="6" r="2.2" />
+        <circle cx="18" cy="6" r="2.2" />
+        <circle cx="6" cy="18" r="2.2" />
+        <circle cx="18" cy="18" r="2.2" />
+        <path d="M8 6h8M6 8v8M18 8v8M8 18h8" strokeLinecap="round" />
       </svg>
     ),
-  },
-  {
-    type: "link",
-    href: "/admin/carriers",
-    key: "carriers",
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={1.8}
-        className="h-5 w-5"
-      >
-        <path d="M3 7h11v9H3zM14 10h4l3 3v3h-7" strokeLinejoin="round" />
-        <circle cx="7" cy="17" r="1.6" />
-        <circle cx="17" cy="17" r="1.6" />
-      </svg>
-    ),
+    children: [
+      { href: "/admin/carriers", key: "carriers" },
+      { href: "/admin/trunks", key: "trunks" },
+    ],
   },
   {
     type: "link",
@@ -205,10 +196,14 @@ function NavList({
   const isPathActive = (href: string) =>
     pathname === href || pathname.startsWith(href + "/");
 
+  const isGroupActive = (item: GroupItem) =>
+    isPathActive(item.basePath) ||
+    item.children.some((c) => isPathActive(c.href));
+
   const initialOpen: Record<string, boolean> = {};
   for (const item of NAV) {
     if (item.type === "group") {
-      initialOpen[item.key] = isPathActive(item.basePath);
+      initialOpen[item.key] = isGroupActive(item);
     }
   }
   const [openGroups, setOpenGroups] =
@@ -242,7 +237,7 @@ function NavList({
           );
         }
 
-        const groupActive = isPathActive(item.basePath);
+        const groupActive = isGroupActive(item);
         const label = t(item.key);
 
         if (collapsed) {
@@ -336,6 +331,7 @@ function NavList({
 }
 
 function Brand({ collapsed }: { collapsed: boolean }) {
+  const t = useTranslations("Common");
   return (
     <div
       className={`flex h-16 items-center gap-2 border-b border-gray-200 ${
@@ -347,7 +343,7 @@ function Brand({ collapsed }: { collapsed: boolean }) {
       </div>
       {!collapsed && (
         <span className="text-lg font-bold tracking-tight text-black">
-          audiotext
+          {t("appName")}
         </span>
       )}
     </div>
@@ -360,6 +356,7 @@ export function Sidebar({
   onCloseMobile,
 }: SidebarProps) {
   const tHeader = useTranslations("Header");
+  const tCommon = useTranslations("Common");
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -406,7 +403,7 @@ export function Sidebar({
                   <div className="h-3 w-3 rounded-full bg-black" />
                 </div>
                 <span className="text-lg font-bold tracking-tight text-black">
-                  audiotext
+                  {tCommon("appName")}
                 </span>
               </div>
               <button

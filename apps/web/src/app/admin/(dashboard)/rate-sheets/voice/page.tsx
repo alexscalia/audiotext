@@ -167,6 +167,13 @@ export default function VoiceRateSheetsPage() {
         ),
       },
       {
+        accessorKey: "currencyIso",
+        header: t("columns.currency"),
+        cell: ({ row }) => (
+          <span className="text-gray-700">{row.original.currencyIso}</span>
+        ),
+      },
+      {
         accessorKey: "voiceNumberingPlanName",
         header: t("columns.numberingPlan"),
         cell: ({ row }) => (

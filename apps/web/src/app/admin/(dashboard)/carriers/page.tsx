@@ -173,6 +173,13 @@ export default function CarriersPage() {
         ),
       },
       {
+        accessorKey: "businessName",
+        header: t("columns.businessName"),
+        cell: ({ row }) => (
+          <span className="text-gray-700">{row.original.businessName}</span>
+        ),
+      },
+      {
         accessorKey: "status",
         header: t("columns.status"),
         cell: ({ row }) => <StatusBadge status={row.original.status} />,

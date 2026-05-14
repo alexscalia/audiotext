@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export const APP_TIMEZONE = "Asia/Hong_Kong";
+
 export const HealthSchema = z.object({
   ok: z.boolean(),
   ts: z.string().datetime(),
@@ -686,6 +688,48 @@ export const UpdateVoiceTrunkInput = z.object({
   password: z.string().min(1).max(256).optional(),
 });
 export type UpdateVoiceTrunkInput = z.infer<typeof UpdateVoiceTrunkInput>;
+
+export const VoiceTrunkListItemSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  status: VoiceTrunkStatusEnum,
+  carrierId: z.string().uuid(),
+  carrierName: z.string(),
+  voiceRateSheetId: z.string().uuid().nullable(),
+  voiceRateSheetName: z.string().nullable(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+});
+export type VoiceTrunkListItem = z.infer<typeof VoiceTrunkListItemSchema>;
+
+export const VoiceTrunkListSortByEnum = z.enum([
+  "name",
+  "carrierName",
+  "voiceRateSheetName",
+  "status",
+  "createdAt",
+]);
+export type VoiceTrunkListSortBy = z.infer<typeof VoiceTrunkListSortByEnum>;
+
+export const VoiceTrunkListSortDirEnum = z.enum(["asc", "desc"]);
+export type VoiceTrunkListSortDir = z.infer<typeof VoiceTrunkListSortDirEnum>;
+
+export const VoiceTrunkListQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(10),
+  search: z.string().trim().max(200).optional(),
+  sortBy: VoiceTrunkListSortByEnum.default("name"),
+  sortDir: VoiceTrunkListSortDirEnum.default("asc"),
+});
+export type VoiceTrunkListQuery = z.infer<typeof VoiceTrunkListQuerySchema>;
+
+export const VoiceTrunkListResponseSchema = z.object({
+  trunks: z.array(VoiceTrunkListItemSchema),
+  total: z.number().int().nonnegative(),
+  page: z.number().int().min(1),
+  pageSize: z.number().int().min(1),
+});
+export type VoiceTrunkListResponse = z.infer<typeof VoiceTrunkListResponseSchema>;
 
 export const AtVoiceNumberDigits = z
   .string()

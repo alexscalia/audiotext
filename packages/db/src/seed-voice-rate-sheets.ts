@@ -8,7 +8,7 @@ const DESTINATION_TYPES = new Set<VoiceNumberingPlanDestinationType>(
   schema.voiceNumberingPlanDestinationType.enumValues,
 );
 
-const CURRENCY_ISO = "USD";
+const USD_TO_EUR = 0.86;
 
 type RateBucket = {
   countryIso2: string;
@@ -159,6 +159,7 @@ async function ensureRateSheet(
   db: NodePgDatabase<typeof schema>,
   name: string,
   planId: string,
+  currencyIso: string,
 ): Promise<string> {
   const [existing] = await db
     .select()
@@ -182,7 +183,7 @@ async function ensureRateSheet(
       name,
       status: "active",
       voiceNumberingPlanId: planId,
-      currencyIso: CURRENCY_ISO,
+      currencyIso,
     })
     .returning({ id: schema.voiceRateSheets.id });
   if (!created) throw new Error(`failed to create rate sheet ${name}`);
@@ -216,10 +217,12 @@ async function seedSheet(
   db: NodePgDatabase<typeof schema>,
   sheetName: string,
   planName: string,
+  currencyIso: string,
   buckets: RateBucket[],
+  rateMultiplier: number,
 ): Promise<void> {
   const planId = await getPlanId(db, planName);
-  const sheetId = await ensureRateSheet(db, sheetName, planId);
+  const sheetId = await ensureRateSheet(db, sheetName, planId, currencyIso);
 
   let inserted = 0;
   for (const bucket of buckets) {
@@ -232,10 +235,10 @@ async function seedSheet(
     await db.insert(schema.voiceRateSheetLines).values({
       voiceRateSheetId: sheetId,
       voiceNumberingPlanDestinationId: destinationId,
-      ratePerMin: bucket.ratePerMin.toFixed(6),
+      ratePerMin: (bucket.ratePerMin * rateMultiplier).toFixed(6),
       minDurationSec: bucket.minDurationSec,
       incrementSec: bucket.incrementSec,
-      setupFee: bucket.setupFee.toFixed(6),
+      setupFee: (bucket.setupFee * rateMultiplier).toFixed(6),
     });
     inserted += 1;
   }
@@ -249,6 +252,15 @@ export async function seedVoiceRateSheets(
   const extended = parseRateRows();
   const simplified = buildSimplifiedRateBuckets(extended);
 
-  await seedSheet(db, "Extended", "Extended", extended);
-  await seedSheet(db, "Simplified", "Simplified", simplified);
+  await seedSheet(db, "Extended USD", "Extended", "USD", extended, 1);
+  await seedSheet(db, "Simplified USD", "Simplified", "USD", simplified, 1);
+  await seedSheet(db, "Extended EUR", "Extended", "EUR", extended, USD_TO_EUR);
+  await seedSheet(
+    db,
+    "Simplified EUR",
+    "Simplified",
+    "EUR",
+    simplified,
+    USD_TO_EUR,
+  );
 }
