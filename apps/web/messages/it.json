@@ -79,6 +79,7 @@
     "backToPlans": "Torna ai piani di numerazione",
     "detail": {
       "search": "Cerca destinazioni",
+      "prefixSearch": "Cerca numero",
       "summary": "{destinations} destinazioni · {codes} codici",
       "empty": "Nessuna destinazione in questo piano.",
       "notFound": "Piano non trovato."
@@ -137,6 +138,7 @@
     "backToRateSheets": "Torna ai listini",
     "detail": {
       "search": "Cerca rotte",
+      "prefixSearch": "Cerca numero",
       "summary": "{lines} rotte",
       "empty": "Nessuna rotta in questo listino.",
       "notFound": "Listino non trovato."

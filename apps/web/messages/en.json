@@ -79,6 +79,7 @@
     "backToPlans": "Back to numbering plans",
     "detail": {
       "search": "Search destinations",
+      "prefixSearch": "Match number",
       "summary": "{destinations} destinations · {codes} codes",
       "empty": "No destinations in this plan.",
       "notFound": "Plan not found."
@@ -137,6 +138,7 @@
     "backToRateSheets": "Back to rate sheets",
     "detail": {
       "search": "Search routes",
+      "prefixSearch": "Match number",
       "summary": "{lines} routes",
       "empty": "No routes in this rate sheet.",
       "notFound": "Rate sheet not found."

@@ -75,6 +75,8 @@ export default function NumberingPlanDetailPage() {
   ]);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
+  const [prefixInput, setPrefixInput] = useState("");
+  const [prefix, setPrefix] = useState("");
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 25,
@@ -129,6 +131,14 @@ export default function NumberingPlanDetailPage() {
     return () => clearTimeout(handle);
   }, [searchInput]);
 
+  useEffect(() => {
+    const handle = setTimeout(() => {
+      setPrefix(prefixInput.replace(/[^0-9]/g, ""));
+      setPagination((p) => ({ ...p, pageIndex: 0 }));
+    }, 300);
+    return () => clearTimeout(handle);
+  }, [prefixInput]);
+
   const sortBy: VoiceNumberingPlanDestinationSortBy = useMemo(() => {
     const first = sorting[0];
     if (first && isSortableColumn(first.id)) return first.id;
@@ -157,6 +167,7 @@ export default function NumberingPlanDetailPage() {
       locale,
     });
     if (search) params.set("search", search);
+    if (prefix) params.set("prefix", prefix);
 
     fetch(
       `/api/admin/voice-numbering-plans/${id}/destinations?${params.toString()}`,
@@ -190,6 +201,7 @@ export default function NumberingPlanDetailPage() {
     sortBy,
     sortDir,
     search,
+    prefix,
     locale,
     t,
   ]);
@@ -348,11 +360,18 @@ export default function NumberingPlanDetailPage() {
       />
 
       <div className="mt-6 rounded-md border border-gray-200 bg-white">
-        <div className="border-b border-gray-200 p-4">
+        <div className="flex flex-col gap-3 border-b border-gray-200 p-4 sm:flex-row sm:items-center">
           <SearchInput
             label={t("detail.search")}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
+          />
+          <SearchInput
+            label={t("detail.prefixSearch")}
+            value={prefixInput}
+            onChange={(e) => setPrefixInput(e.target.value)}
+            inputMode="numeric"
+            pattern="[0-9]*"
           />
         </div>
 
@@ -363,7 +382,7 @@ export default function NumberingPlanDetailPage() {
           loadingLabel={t("loading")}
           emptyLabel={t("detail.empty")}
           noResultsLabel={t("noResults")}
-          hasActiveFilter={!!search}
+          hasActiveFilter={!!search || !!prefix}
         />
 
         {showFooter && (

@@ -243,7 +243,7 @@ export const voiceRateSheetsRoutes = new OpenAPIHono<{
   })
   .openapi(linesRoute, async (c) => {
     const { id } = c.req.valid("param");
-    const { page, pageSize, search, sortBy, sortDir, locale } =
+    const { page, pageSize, search, prefix, sortBy, sortDir, locale } =
       c.req.valid("query");
 
     const sheetExists = await db
@@ -292,6 +292,25 @@ export const voiceRateSheetsRoutes = new OpenAPIHono<{
         ilike(countryNameCol, term),
       );
       if (searchClause) filters.push(searchClause);
+    }
+    if (prefix && prefix.length > 0) {
+      filters.push(
+        sql`${voiceNumberingPlanDestinations.id} = (
+          SELECT vnpc.voice_numbering_plan_destination_id
+          FROM voice_numbering_plan_codes vnpc
+          INNER JOIN voice_numbering_plan_destinations vnpd
+            ON vnpd.id = vnpc.voice_numbering_plan_destination_id
+          INNER JOIN voice_rate_sheet_lines vrsl
+            ON vrsl.voice_numbering_plan_destination_id = vnpd.id
+          WHERE vrsl.voice_rate_sheet_id = ${id}
+            AND vnpc.deleted_at IS NULL
+            AND vnpd.deleted_at IS NULL
+            AND vrsl.deleted_at IS NULL
+            AND ${prefix} LIKE vnpc.full_code || '%'
+          ORDER BY length(vnpc.full_code) DESC
+          LIMIT 1
+        )`,
+      );
     }
     const whereClause = and(...filters);
 
