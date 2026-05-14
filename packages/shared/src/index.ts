@@ -237,8 +237,33 @@ export type VoiceNumberingPlanListItem = z.infer<
   typeof VoiceNumberingPlanListItemSchema
 >;
 
+export const VoiceNumberingPlanListSortByEnum = z.enum([
+  "name",
+  "status",
+  "destinationCount",
+  "codeCount",
+  "createdAt",
+]);
+export type VoiceNumberingPlanListSortBy = z.infer<
+  typeof VoiceNumberingPlanListSortByEnum
+>;
+
+export const VoiceNumberingPlanListQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(10),
+  search: z.string().trim().max(200).optional(),
+  sortBy: VoiceNumberingPlanListSortByEnum.default("name"),
+  sortDir: CarrierListSortDirEnum.default("asc"),
+});
+export type VoiceNumberingPlanListQuery = z.infer<
+  typeof VoiceNumberingPlanListQuerySchema
+>;
+
 export const VoiceNumberingPlanListResponseSchema = z.object({
   plans: z.array(VoiceNumberingPlanListItemSchema),
+  total: z.number().int().nonnegative(),
+  page: z.number().int().min(1),
+  pageSize: z.number().int().min(1),
 });
 export type VoiceNumberingPlanListResponse = z.infer<
   typeof VoiceNumberingPlanListResponseSchema
@@ -337,8 +362,33 @@ export type VoiceRateSheetListItem = z.infer<
   typeof VoiceRateSheetListItemSchema
 >;
 
+export const VoiceRateSheetListSortByEnum = z.enum([
+  "name",
+  "voiceNumberingPlanName",
+  "status",
+  "currencyIso",
+  "createdAt",
+]);
+export type VoiceRateSheetListSortBy = z.infer<
+  typeof VoiceRateSheetListSortByEnum
+>;
+
+export const VoiceRateSheetListQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(10),
+  search: z.string().trim().max(200).optional(),
+  sortBy: VoiceRateSheetListSortByEnum.default("name"),
+  sortDir: CarrierListSortDirEnum.default("asc"),
+});
+export type VoiceRateSheetListQuery = z.infer<
+  typeof VoiceRateSheetListQuerySchema
+>;
+
 export const VoiceRateSheetListResponseSchema = z.object({
   rateSheets: z.array(VoiceRateSheetListItemSchema),
+  total: z.number().int().nonnegative(),
+  page: z.number().int().min(1),
+  pageSize: z.number().int().min(1),
 });
 export type VoiceRateSheetListResponse = z.infer<
   typeof VoiceRateSheetListResponseSchema

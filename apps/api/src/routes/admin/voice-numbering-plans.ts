@@ -21,6 +21,7 @@ import {
   VoiceNumberingPlanDestinationListQuerySchema,
   VoiceNumberingPlanDestinationListResponseSchema,
   VoiceNumberingPlanDetailSchema,
+  VoiceNumberingPlanListQuerySchema,
   VoiceNumberingPlanListResponseSchema,
 } from "@audiotext/shared";
 import { requireAuth, type AuthVariables } from "../../lib/require-auth";
@@ -29,14 +30,18 @@ const listVoiceNumberingPlansRoute = createRoute({
   method: "get",
   path: "/",
   tags: ["VoiceNumberingPlans"],
-  summary: "List voice numbering plans with destination + code counts",
+  summary:
+    "List voice numbering plans (paginated, sortable, searchable) with destination + code counts",
   middleware: [requireAuth] as const,
+  request: {
+    query: VoiceNumberingPlanListQuerySchema,
+  },
   responses: {
     200: {
       content: {
         "application/json": { schema: VoiceNumberingPlanListResponseSchema },
       },
-      description: "List of active voice numbering plans",
+      description: "Paginated list of active voice numbering plans",
     },
     401: {
       description: "Unauthorized",
@@ -98,40 +103,82 @@ export const voiceNumberingPlansRoutes = new OpenAPIHono<{
   Variables: AuthVariables;
 }>()
   .openapi(listVoiceNumberingPlansRoute, async (c) => {
-    const rows = await db
-      .select({
-        id: voiceNumberingPlans.id,
-        name: voiceNumberingPlans.name,
-        status: voiceNumberingPlans.status,
-        createdAt: voiceNumberingPlans.createdAt,
-        updatedAt: voiceNumberingPlans.updatedAt,
-        destinationCount: sql<number>`count(distinct ${voiceNumberingPlanDestinations.id})::int`,
-        codeCount: sql<number>`count(${voiceNumberingPlanCodes.id})::int`,
-      })
-      .from(voiceNumberingPlans)
-      .leftJoin(
-        voiceNumberingPlanDestinations,
-        and(
-          eq(
-            voiceNumberingPlanDestinations.voiceNumberingPlanId,
-            voiceNumberingPlans.id,
+    const { page, pageSize, search, sortBy, sortDir } = c.req.valid("query");
+
+    const destinationCountExpr = sql<number>`count(distinct ${voiceNumberingPlanDestinations.id})::int`;
+    const codeCountExpr = sql<number>`count(${voiceNumberingPlanCodes.id})::int`;
+
+    const filters: SQL[] = [isNull(voiceNumberingPlans.deletedAt)];
+    if (search && search.length > 0) {
+      const term = `%${search}%`;
+      const searchClause = ilike(voiceNumberingPlans.name, term);
+      if (searchClause) filters.push(searchClause);
+    }
+    const whereClause = and(...filters);
+
+    const orderColumn = (() => {
+      switch (sortBy) {
+        case "status":
+          return voiceNumberingPlans.status;
+        case "destinationCount":
+          return destinationCountExpr;
+        case "codeCount":
+          return codeCountExpr;
+        case "createdAt":
+          return voiceNumberingPlans.createdAt;
+        case "name":
+        default:
+          return voiceNumberingPlans.name;
+      }
+    })();
+    const orderBy = sortDir === "asc" ? asc(orderColumn) : desc(orderColumn);
+
+    const offset = (page - 1) * pageSize;
+
+    const [rows, totalRow] = await Promise.all([
+      db
+        .select({
+          id: voiceNumberingPlans.id,
+          name: voiceNumberingPlans.name,
+          status: voiceNumberingPlans.status,
+          createdAt: voiceNumberingPlans.createdAt,
+          updatedAt: voiceNumberingPlans.updatedAt,
+          destinationCount: destinationCountExpr,
+          codeCount: codeCountExpr,
+        })
+        .from(voiceNumberingPlans)
+        .leftJoin(
+          voiceNumberingPlanDestinations,
+          and(
+            eq(
+              voiceNumberingPlanDestinations.voiceNumberingPlanId,
+              voiceNumberingPlans.id,
+            ),
+            isNull(voiceNumberingPlanDestinations.deletedAt),
           ),
-          isNull(voiceNumberingPlanDestinations.deletedAt),
-        ),
-      )
-      .leftJoin(
-        voiceNumberingPlanCodes,
-        and(
-          eq(
-            voiceNumberingPlanCodes.voiceNumberingPlanDestinationId,
-            voiceNumberingPlanDestinations.id,
+        )
+        .leftJoin(
+          voiceNumberingPlanCodes,
+          and(
+            eq(
+              voiceNumberingPlanCodes.voiceNumberingPlanDestinationId,
+              voiceNumberingPlanDestinations.id,
+            ),
+            isNull(voiceNumberingPlanCodes.deletedAt),
           ),
-          isNull(voiceNumberingPlanCodes.deletedAt),
-        ),
-      )
-      .where(isNull(voiceNumberingPlans.deletedAt))
-      .groupBy(voiceNumberingPlans.id)
-      .orderBy(desc(voiceNumberingPlans.createdAt));
+        )
+        .where(whereClause)
+        .groupBy(voiceNumberingPlans.id)
+        .orderBy(orderBy, desc(voiceNumberingPlans.id))
+        .limit(pageSize)
+        .offset(offset),
+      db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(voiceNumberingPlans)
+        .where(whereClause),
+    ]);
+
+    const total = totalRow[0]?.count ?? 0;
 
     return c.json(
       {
@@ -144,6 +191,9 @@ export const voiceNumberingPlansRoutes = new OpenAPIHono<{
           createdAt: r.createdAt.toISOString(),
           updatedAt: r.updatedAt.toISOString(),
         })),
+        total,
+        page,
+        pageSize,
       },
       200,
     );

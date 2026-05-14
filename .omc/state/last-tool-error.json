@@ -1,7 +1,0 @@
-{
-  "tool_name": "Read",
-  "tool_input_preview": "{\"file_path\":\"/Users/alexscalia/.bash_profile\"}",
-  "error": "File does not exist. Note: your current working directory is /Users/alexscalia/Coding/audiotext.",
-  "timestamp": "2026-05-14T02:11:36.298Z",
-  "retry_count": 1
-}

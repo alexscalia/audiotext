@@ -23,6 +23,7 @@ import {
   VoiceRateSheetDetailSchema,
   VoiceRateSheetLineListQuerySchema,
   VoiceRateSheetLineListResponseSchema,
+  VoiceRateSheetListQuerySchema,
   VoiceRateSheetListResponseSchema,
 } from "@audiotext/shared";
 import { requireAuth, type AuthVariables } from "../../lib/require-auth";
@@ -31,14 +32,18 @@ const listVoiceRateSheetsRoute = createRoute({
   method: "get",
   path: "/",
   tags: ["VoiceRateSheets"],
-  summary: "List voice rate sheets with associated numbering plan name",
+  summary:
+    "List voice rate sheets (paginated, sortable, searchable) with associated numbering plan name",
   middleware: [requireAuth] as const,
+  request: {
+    query: VoiceRateSheetListQuerySchema,
+  },
   responses: {
     200: {
       content: {
         "application/json": { schema: VoiceRateSheetListResponseSchema },
       },
-      description: "List of active voice rate sheets",
+      description: "Paginated list of active voice rate sheets",
     },
     401: { description: "Unauthorized" },
   },
@@ -94,27 +99,70 @@ export const voiceRateSheetsRoutes = new OpenAPIHono<{
   Variables: AuthVariables;
 }>()
   .openapi(listVoiceRateSheetsRoute, async (c) => {
-    const rows = await db
-      .select({
-        id: voiceRateSheets.id,
-        name: voiceRateSheets.name,
-        status: voiceRateSheets.status,
-        voiceNumberingPlanId: voiceRateSheets.voiceNumberingPlanId,
-        voiceNumberingPlanName: voiceNumberingPlans.name,
-        currencyIso: voiceRateSheets.currencyIso,
-        createdAt: voiceRateSheets.createdAt,
-        updatedAt: voiceRateSheets.updatedAt,
-      })
-      .from(voiceRateSheets)
-      .innerJoin(
-        voiceNumberingPlans,
-        and(
-          eq(voiceNumberingPlans.id, voiceRateSheets.voiceNumberingPlanId),
-          isNull(voiceNumberingPlans.deletedAt),
-        ),
-      )
-      .where(isNull(voiceRateSheets.deletedAt))
-      .orderBy(desc(voiceRateSheets.createdAt));
+    const { page, pageSize, search, sortBy, sortDir } = c.req.valid("query");
+
+    const filters: SQL[] = [isNull(voiceRateSheets.deletedAt)];
+    if (search && search.length > 0) {
+      const term = `%${search}%`;
+      const searchClause = or(
+        ilike(voiceRateSheets.name, term),
+        ilike(voiceNumberingPlans.name, term),
+        ilike(voiceRateSheets.currencyIso, term),
+      );
+      if (searchClause) filters.push(searchClause);
+    }
+    const whereClause = and(...filters);
+
+    const orderColumn = (() => {
+      switch (sortBy) {
+        case "voiceNumberingPlanName":
+          return voiceNumberingPlans.name;
+        case "status":
+          return voiceRateSheets.status;
+        case "currencyIso":
+          return voiceRateSheets.currencyIso;
+        case "createdAt":
+          return voiceRateSheets.createdAt;
+        case "name":
+        default:
+          return voiceRateSheets.name;
+      }
+    })();
+    const orderBy = sortDir === "asc" ? asc(orderColumn) : desc(orderColumn);
+
+    const offset = (page - 1) * pageSize;
+
+    const planJoinCondition = and(
+      eq(voiceNumberingPlans.id, voiceRateSheets.voiceNumberingPlanId),
+      isNull(voiceNumberingPlans.deletedAt),
+    );
+
+    const [rows, totalRow] = await Promise.all([
+      db
+        .select({
+          id: voiceRateSheets.id,
+          name: voiceRateSheets.name,
+          status: voiceRateSheets.status,
+          voiceNumberingPlanId: voiceRateSheets.voiceNumberingPlanId,
+          voiceNumberingPlanName: voiceNumberingPlans.name,
+          currencyIso: voiceRateSheets.currencyIso,
+          createdAt: voiceRateSheets.createdAt,
+          updatedAt: voiceRateSheets.updatedAt,
+        })
+        .from(voiceRateSheets)
+        .innerJoin(voiceNumberingPlans, planJoinCondition)
+        .where(whereClause)
+        .orderBy(orderBy, desc(voiceRateSheets.id))
+        .limit(pageSize)
+        .offset(offset),
+      db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(voiceRateSheets)
+        .innerJoin(voiceNumberingPlans, planJoinCondition)
+        .where(whereClause),
+    ]);
+
+    const total = totalRow[0]?.count ?? 0;
 
     return c.json(
       {
@@ -128,6 +176,9 @@ export const voiceRateSheetsRoutes = new OpenAPIHono<{
           createdAt: r.createdAt.toISOString(),
           updatedAt: r.updatedAt.toISOString(),
         })),
+        total,
+        page,
+        pageSize,
       },
       200,
     );
