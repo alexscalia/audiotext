@@ -10,7 +10,13 @@ import {
   or,
   type SQL,
 } from "drizzle-orm";
-import { db, carriers, voiceTrunks, voiceRateSheets } from "@audiotext/db";
+import {
+  db,
+  carriers,
+  voiceTrunks,
+  voiceTrunkIps,
+  voiceRateSheets,
+} from "@audiotext/db";
 import {
   VoiceTrunkListQuerySchema,
   VoiceTrunkListResponseSchema,
@@ -82,6 +88,19 @@ export const voiceTrunksRoutes = new OpenAPIHono<{
 
   const offset = (page - 1) * pageSize;
 
+  const ipCountSql = sql<number>`(
+    SELECT count(*)::int FROM ${voiceTrunkIps}
+    WHERE ${voiceTrunkIps.voiceTrunkId} = ${voiceTrunks.id}
+      AND ${voiceTrunkIps.deletedAt} IS NULL
+  )`;
+
+  const ipsSql = sql<string[]>`(
+    SELECT COALESCE(array_agg(${voiceTrunkIps.ip} ORDER BY ${voiceTrunkIps.ip}), ARRAY[]::text[])
+    FROM ${voiceTrunkIps}
+    WHERE ${voiceTrunkIps.voiceTrunkId} = ${voiceTrunks.id}
+      AND ${voiceTrunkIps.deletedAt} IS NULL
+  )`;
+
   const [rows, totalRow] = await Promise.all([
     db
       .select({
@@ -92,6 +111,8 @@ export const voiceTrunksRoutes = new OpenAPIHono<{
         carrierName: carriers.name,
         voiceRateSheetId: voiceTrunks.voiceRateSheetId,
         voiceRateSheetName: voiceRateSheets.name,
+        ipCount: ipCountSql,
+        ips: ipsSql,
         createdAt: voiceTrunks.createdAt,
         updatedAt: voiceTrunks.updatedAt,
       })
@@ -122,6 +143,8 @@ export const voiceTrunksRoutes = new OpenAPIHono<{
         carrierName: r.carrierName,
         voiceRateSheetId: r.voiceRateSheetId,
         voiceRateSheetName: r.voiceRateSheetName,
+        ipCount: r.ipCount ?? 0,
+        ips: r.ips ?? [],
         createdAt: r.createdAt.toISOString(),
         updatedAt: r.updatedAt.toISOString(),
       })),

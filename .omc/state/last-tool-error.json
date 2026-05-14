@@ -1,7 +1,0 @@
-{
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"ls /Users/alexscalia/Coding/audiotext/apps/web/src/app/admin/\\\\(dashboard\\\\)/trunks/ 2>/dev/null\",\"description\":\"List trunks dir\"}",
-  "error": "Exit code 1",
-  "timestamp": "2026-05-14T16:36:49.252Z",
-  "retry_count": 1
-}

@@ -697,6 +697,8 @@ export const VoiceTrunkListItemSchema = z.object({
   carrierName: z.string(),
   voiceRateSheetId: z.string().uuid().nullable(),
   voiceRateSheetName: z.string().nullable(),
+  ipCount: z.number().int().nonnegative(),
+  ips: z.array(z.string()),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 });

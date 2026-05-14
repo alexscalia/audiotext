@@ -177,6 +177,42 @@
       "showing": "Showing {from}–{to} of {total}"
     }
   },
+  "VoiceTrunks": {
+    "title": "Voice trunks",
+    "subtitle": "SIP trunks connected to carriers",
+    "search": "Search trunks",
+    "empty": "No voice trunks yet.",
+    "noResults": "No matches found.",
+    "loading": "Loading...",
+    "loadError": "Failed to load.",
+    "columns": {
+      "name": "Name",
+      "carrier": "Carrier",
+      "rateSheet": "Rate Sheet",
+      "ips": "IPs",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "testing": "Testing"
+    },
+    "actions": {
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete",
+      "open": "Open actions menu"
+    },
+    "pagination": {
+      "prev": "Previous",
+      "next": "Next",
+      "rowsPerPage": "Rows per page",
+      "pageOf": "Page {page} of {total}",
+      "showing": "Showing {from}–{to} of {total}"
+    },
+    "noRateSheet": "—"
+  },
   "Carriers": {
     "title": "Carriers",
     "subtitle": "Manage your interconnection carriers",

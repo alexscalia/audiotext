@@ -152,7 +152,7 @@ const NAV: NavItem[] = [
     ),
     children: [
       { href: "/admin/carriers", key: "carriers" },
-      { href: "/admin/trunks", key: "trunks" },
+      { href: "/admin/voice-trunks", key: "trunks" },
     ],
   },
   {

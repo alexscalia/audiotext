@@ -85,20 +85,20 @@
   "hotPaths": [
     {
       "path": "packages/shared/src/index.ts",
-      "accessCount": 31,
-      "lastAccessed": 1778776407839,
+      "accessCount": 35,
+      "lastAccessed": 1778777613472,
       "type": "file"
     },
     {
       "path": "apps/web/messages/en.json",
-      "accessCount": 25,
-      "lastAccessed": 1778776628237,
+      "accessCount": 29,
+      "lastAccessed": 1778777774281,
       "type": "file"
     },
     {
       "path": "apps/web/messages/it.json",
-      "accessCount": 22,
-      "lastAccessed": 1778776635111,
+      "accessCount": 26,
+      "lastAccessed": 1778777780751,
       "type": "file"
     },
     {
@@ -109,8 +109,14 @@
     },
     {
       "path": "packages/db/src/schema.ts",
-      "accessCount": 17,
-      "lastAccessed": 1778775733486,
+      "accessCount": 19,
+      "lastAccessed": 1778777606714,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/components/shell/sidebar.tsx",
+      "accessCount": 16,
+      "lastAccessed": 1778776847486,
       "type": "file"
     },
     {
@@ -120,15 +126,9 @@
       "type": "file"
     },
     {
-      "path": "apps/web/src/components/shell/sidebar.tsx",
-      "accessCount": 14,
-      "lastAccessed": 1778776528355,
-      "type": "file"
-    },
-    {
       "path": "apps/web/src/app/admin/(dashboard)/rate-sheets/voice/[id]/page.tsx",
-      "accessCount": 13,
-      "lastAccessed": 1778749862921,
+      "accessCount": 14,
+      "lastAccessed": 1778777591690,
       "type": "file"
     },
     {
@@ -141,6 +141,18 @@
       "path": "apps/api/src/routes/admin/voice-numbering-plans.ts",
       "accessCount": 10,
       "lastAccessed": 1778747433605,
+      "type": "file"
+    },
+    {
+      "path": "apps/api/src/index.ts",
+      "accessCount": 8,
+      "lastAccessed": 1778777421037,
+      "type": "file"
+    },
+    {
+      "path": "apps/api/src/routes/admin/voice-trunks.ts",
+      "accessCount": 8,
+      "lastAccessed": 1778777646016,
       "type": "file"
     },
     {
@@ -162,9 +174,9 @@
       "type": "file"
     },
     {
-      "path": "apps/api/src/index.ts",
+      "path": "apps/web/src/app/admin/(dashboard)/voice-trunks/page.tsx",
       "accessCount": 5,
-      "lastAccessed": 1778776416034,
+      "lastAccessed": 1778777762287,
       "type": "file"
     },
     {
@@ -175,8 +187,8 @@
     },
     {
       "path": "apps/web/src/components/ui/badge.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1778725357428,
+      "accessCount": 4,
+      "lastAccessed": 1778777752085,
       "type": "file"
     },
     {
@@ -321,12 +333,6 @@
       "path": "packages/db/migrations/0003_smart_mandarin.sql",
       "accessCount": 1,
       "lastAccessed": 1778774723521,
-      "type": "file"
-    },
-    {
-      "path": "apps/api/src/routes/admin/voice-trunks.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778775823388,
       "type": "file"
     },
     {

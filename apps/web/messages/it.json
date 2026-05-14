@@ -177,6 +177,42 @@
       "showing": "Mostrate {from}–{to} di {total}"
     }
   },
+  "VoiceTrunks": {
+    "title": "Trunk voce",
+    "subtitle": "Trunk SIP collegati ai carrier",
+    "search": "Cerca trunk",
+    "empty": "Nessun trunk voce presente.",
+    "noResults": "Nessun risultato.",
+    "loading": "Caricamento...",
+    "loadError": "Impossibile caricare.",
+    "columns": {
+      "name": "Nome",
+      "carrier": "Carrier",
+      "rateSheet": "Listino",
+      "ips": "IP",
+      "status": "Stato",
+      "actions": "Azioni"
+    },
+    "status": {
+      "active": "Attivo",
+      "inactive": "Inattivo",
+      "testing": "In test"
+    },
+    "actions": {
+      "view": "Visualizza",
+      "edit": "Modifica",
+      "delete": "Elimina",
+      "open": "Apri menu azioni"
+    },
+    "pagination": {
+      "prev": "Precedente",
+      "next": "Successivo",
+      "rowsPerPage": "Righe per pagina",
+      "pageOf": "Pagina {page} di {total}",
+      "showing": "Mostrate {from}–{to} di {total}"
+    },
+    "noRateSheet": "—"
+  },
   "Carriers": {
     "title": "Carrier",
     "subtitle": "Gestisci i carrier di interconnessione",
