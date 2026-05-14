@@ -7,6 +7,7 @@ import type {
   CarrierBillingDetails,
   ChatApp,
   NewCarrierRow,
+  NewVoiceTrunkRow,
 } from "./schema.js";
 import { seedCountries } from "./seed-countries.js";
 import { seedVoiceNumberingPlan } from "./seed-voice-numbering-plan.js";
@@ -231,6 +232,161 @@ const CARRIERS: CarrierFixture[] = [
   },
 ];
 
+type CountryProfile = {
+  code: string;
+  city: string;
+  postalCode: string;
+  street: string;
+  state?: string;
+  phonePrefix: string;
+  taxPrefix: string;
+};
+
+const COUNTRY_POOL: CountryProfile[] = [
+  { code: "IT", city: "Milano", postalCode: "20121", street: "Via Roma", phonePrefix: "+3902", taxPrefix: "IT" },
+  { code: "GB", city: "London", postalCode: "EC1A 1BB", street: "High Street", phonePrefix: "+4420", taxPrefix: "GB" },
+  { code: "US", city: "Austin", state: "TX", postalCode: "78701", street: "Congress Ave", phonePrefix: "+1512", taxPrefix: "US-EIN-" },
+  { code: "DE", city: "Berlin", postalCode: "10115", street: "Hauptstrasse", phonePrefix: "+4930", taxPrefix: "DE" },
+  { code: "FR", city: "Paris", postalCode: "75001", street: "Rue de Rivoli", phonePrefix: "+3314", taxPrefix: "FR" },
+  { code: "ES", city: "Madrid", postalCode: "28001", street: "Calle Mayor", phonePrefix: "+3491", taxPrefix: "ES" },
+  { code: "NL", city: "Amsterdam", postalCode: "1011", street: "Damrak", phonePrefix: "+3120", taxPrefix: "NL" },
+  { code: "BR", city: "Sao Paulo", postalCode: "01000-000", street: "Avenida Paulista", phonePrefix: "+5511", taxPrefix: "BR" },
+  { code: "IN", city: "Mumbai", postalCode: "400001", street: "Marine Drive", phonePrefix: "+9122", taxPrefix: "IN" },
+  { code: "JP", city: "Tokyo", postalCode: "100-0001", street: "Chiyoda", phonePrefix: "+8133", taxPrefix: "JP" },
+];
+
+const CHAT_APPS: ChatApp[] = ["whatsapp", "telegram", "signal"];
+
+function pad(n: number, width = 3): string {
+  return String(n).padStart(width, "0");
+}
+
+function generateCarrierFixture(index: number): CarrierFixture {
+  const id = pad(index);
+  const country = COUNTRY_POOL[index % COUNTRY_POOL.length]!;
+  const cycle = [15, 30, 45, 60][index % 4]!;
+  const due = [15, 30, 45][index % 3]!;
+  const slug = `carrier-${id}`;
+  const domain = `carrier${id}.example.com`;
+
+  return {
+    carrier: {
+      name: slug,
+      businessName: `Carrier ${id} Telecom`,
+      ratesName: `Rates Manager ${id}`,
+      ratesEmail: `rates@${domain}`,
+      billingName: `Billing Manager ${id}`,
+      billingEmail: `billing@${domain}`,
+      nocName: `NOC ${id}`,
+      nocEmail: `noc@${domain}`,
+      salesName: `Sales Lead ${id}`,
+      salesEmail: `sales@${domain}`,
+      billingDetails: {
+        address: {
+          line1: `${100 + index} ${country.street}`,
+          city: country.city,
+          ...(country.state ? { state: country.state } : {}),
+          postalCode: country.postalCode,
+          countryCode: country.code,
+        },
+        taxId: `${country.taxPrefix}${1000000000 + index}`,
+        billingTerms: { cycleDays: cycle, dueDays: due },
+      } satisfies CarrierBillingDetails,
+    },
+    contacts: [
+      {
+        chatApp: CHAT_APPS[index % CHAT_APPS.length]!,
+        chatId: `${country.phonePrefix}${pad(1000 + index, 7)}`,
+      },
+    ],
+  };
+}
+
+function buildGeneratedCarriers(target: number, existing: number): CarrierFixture[] {
+  const out: CarrierFixture[] = [];
+  for (let i = existing + 1; i <= target; i += 1) {
+    out.push(generateCarrierFixture(i));
+  }
+  return out;
+}
+
+type TrunkAuthType = "ip" | "userpass" | "both";
+
+function buildCarrierTrunks(
+  carrierId: string,
+  carrierName: string,
+  index: number,
+): NewVoiceTrunkRow[] {
+  const trunkCount = (index % 2) + 1;
+  const trunks: NewVoiceTrunkRow[] = [];
+  for (let t = 1; t <= trunkCount; t += 1) {
+    const authType: TrunkAuthType = ["ip", "userpass", "both"][
+      (index + t) % 3
+    ] as TrunkAuthType;
+    const needsCreds = authType === "userpass" || authType === "both";
+    trunks.push({
+      carrierId,
+      name: `${carrierName}-trunk-${pad(t, 2)}`,
+      status: ["active", "active", "testing", "inactive"][
+        (index + t) % 4
+      ] as schema.VoiceTrunkStatus,
+      direction: ["both", "outbound", "inbound"][
+        (index + t) % 3
+      ] as schema.VoiceTrunkDirection,
+      protocol: t === 2 ? "sips" : "sip",
+      transport: ["udp", "tcp", "tls"][
+        (index + t) % 3
+      ] as schema.VoiceTrunkTransport,
+      authType,
+      username: needsCreds ? `${carrierName}-u${t}` : null,
+      passwordEncrypted: needsCreds ? `seed-encrypted-${carrierName}-${t}` : null,
+      realm: needsCreds ? `${carrierName}.sip` : null,
+      fromUser: `${carrierName}-from`,
+      fromDomain: `${carrierName}.sip`,
+      register: needsCreds && t === 1,
+      proxy: `sip.${carrierName}.example.com:5060`,
+      expiresSeconds: 3600,
+      qualifySeconds: 60,
+      maxChannels: 100 + index,
+      cpsLimit: 10 + (index % 50),
+      maxCallDurationSeconds: 3600 + (index % 4) * 1800,
+      capacityLines: 50 + index,
+      rtpTimeoutSeconds: [30, 60, 90, 120][index % 4]!,
+      codecs: ["PCMA", "PCMU", "G729"],
+      dtmfMode: "rfc2833",
+      natMode: "no",
+      metadata: { seed: true },
+    });
+  }
+  return trunks;
+}
+
+async function seedCarrierTrunks(
+  carrierId: string,
+  carrierName: string,
+  index: number,
+): Promise<void> {
+  for (const trunk of buildCarrierTrunks(carrierId, carrierName, index)) {
+    const existing = await db
+      .select()
+      .from(schema.voiceTrunks)
+      .where(
+        and(
+          eq(schema.voiceTrunks.carrierId, carrierId),
+          eq(schema.voiceTrunks.name, trunk.name),
+          isNull(schema.voiceTrunks.deletedAt),
+        ),
+      )
+      .limit(1);
+    if (existing[0]) {
+      console.log(`voice_trunk exists: ${trunk.name}`);
+      continue;
+    }
+    await db.insert(schema.voiceTrunks).values(trunk);
+    console.log(`voice_trunk created: ${trunk.name}`);
+  }
+}
+
 async function seedCarrier(fixture: CarrierFixture): Promise<string> {
   const existing = await db
     .select()
@@ -328,8 +484,14 @@ async function main() {
   for (const admin of ADMINS) {
     await seedAdmin(admin.email, admin.name, roleId, passwordHash);
   }
-  for (const fixture of CARRIERS) {
-    await seedCarrier(fixture);
+  const allCarriers = [
+    ...CARRIERS,
+    ...buildGeneratedCarriers(100, CARRIERS.length),
+  ];
+  for (let i = 0; i < allCarriers.length; i += 1) {
+    const fixture = allCarriers[i]!;
+    const carrierId = await seedCarrier(fixture);
+    await seedCarrierTrunks(carrierId, fixture.carrier.name, i + 1);
   }
   await seedAdminChatContacts();
   await seedCountries(db);

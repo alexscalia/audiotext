@@ -84,15 +84,15 @@
   },
   "hotPaths": [
     {
-      "path": "apps/web/messages/en.json",
-      "accessCount": 16,
-      "lastAccessed": 1778749868542,
+      "path": "packages/shared/src/index.ts",
+      "accessCount": 24,
+      "lastAccessed": 1778768541220,
       "type": "file"
     },
     {
-      "path": "packages/shared/src/index.ts",
-      "accessCount": 14,
-      "lastAccessed": 1778749806952,
+      "path": "apps/web/messages/en.json",
+      "accessCount": 16,
+      "lastAccessed": 1778749868542,
       "type": "file"
     },
     {
@@ -111,6 +111,18 @@
       "path": "apps/web/messages/it.json",
       "accessCount": 13,
       "lastAccessed": 1778749875051,
+      "type": "file"
+    },
+    {
+      "path": "packages/db/src/seed.ts",
+      "accessCount": 13,
+      "lastAccessed": 1778768547871,
+      "type": "file"
+    },
+    {
+      "path": "packages/db/src/schema.ts",
+      "accessCount": 12,
+      "lastAccessed": 1778768518974,
       "type": "file"
     },
     {
@@ -141,12 +153,6 @@
       "path": "apps/web/src/app/admin/(dashboard)/rate-sheets/voice/page.tsx",
       "accessCount": 4,
       "lastAccessed": 1778746975546,
-      "type": "file"
-    },
-    {
-      "path": "packages/db/src/schema.ts",
-      "accessCount": 4,
-      "lastAccessed": 1778747378666,
       "type": "file"
     },
     {
@@ -216,6 +222,12 @@
       "type": "file"
     },
     {
+      "path": "apps/api/src/routes/admin/carriers.ts",
+      "accessCount": 2,
+      "lastAccessed": 1778768243638,
+      "type": "file"
+    },
+    {
       "path": "packages/db/src/seed-voice-rate-sheets.ts",
       "accessCount": 1,
       "lastAccessed": 1778724458044,
@@ -282,15 +294,15 @@
       "type": "file"
     },
     {
-      "path": "apps/api/src/routes/admin/carriers.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778746859973,
-      "type": "file"
-    },
-    {
       "path": "apps/web/src/app/admin/(dashboard)/carriers/page.tsx",
       "accessCount": 1,
       "lastAccessed": 1778746872011,
+      "type": "file"
+    },
+    {
+      "path": "packages/db/migrations/0001_certain_quasar.sql",
+      "accessCount": 1,
+      "lastAccessed": 1778767523247,
       "type": "file"
     }
   ],

@@ -582,16 +582,6 @@ export const VoiceTrunkNatModeEnum = z.enum([
 ]);
 export type VoiceTrunkNatMode = z.infer<typeof VoiceTrunkNatModeEnum>;
 
-export const IpOrCidr = z
-  .string()
-  .min(2)
-  .max(64)
-  .regex(
-    /^([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(\/(3[0-2]|[12]?[0-9]))?|[0-9a-fA-F:]+(\/(1[01][0-9]|12[0-8]|[1-9]?[0-9]))?)$/,
-    "IPv4/IPv6 address or CIDR",
-  );
-export type IpOrCidr = z.infer<typeof IpOrCidr>;
-
 export const CodecCode = z
   .string()
   .min(2)
@@ -620,6 +610,9 @@ const voiceTrunkBaseFields = {
   qualifySeconds: PositiveInt.optional(),
   maxChannels: PositiveInt.optional(),
   cpsLimit: PositiveInt.optional(),
+  maxCallDurationSeconds: PositiveInt.optional(),
+  capacityLines: PositiveInt.optional(),
+  rtpTimeoutSeconds: PositiveInt.optional(),
   codecs: z.array(CodecCode).default([]),
   dtmfMode: VoiceTrunkDtmfModeEnum.default("rfc2833"),
   natMode: VoiceTrunkNatModeEnum.default("no"),
@@ -648,10 +641,12 @@ export const VoiceTrunkSchema = z.object({
   qualifySeconds: z.number().int().nullable(),
   maxChannels: z.number().int().nullable(),
   cpsLimit: z.number().int().nullable(),
+  maxCallDurationSeconds: z.number().int().nullable(),
+  capacityLines: z.number().int().nullable(),
+  rtpTimeoutSeconds: z.number().int().nullable(),
   codecs: z.array(CodecCode),
   dtmfMode: VoiceTrunkDtmfModeEnum,
   natMode: VoiceTrunkNatModeEnum,
-  ipAcl: z.array(IpOrCidr).nullable(),
   metadata: z.record(z.string(), z.unknown()).nullable(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
@@ -662,7 +657,6 @@ export type VoiceTrunk = z.infer<typeof VoiceTrunkSchema>;
 export const CreateVoiceTrunkInput = z.discriminatedUnion("authType", [
   z.object({
     authType: z.literal("ip"),
-    ipAcl: z.array(IpOrCidr).min(1),
     ...voiceTrunkBaseFields,
   }),
   z.object({
@@ -673,7 +667,6 @@ export const CreateVoiceTrunkInput = z.discriminatedUnion("authType", [
   }),
   z.object({
     authType: z.literal("both"),
-    ipAcl: z.array(IpOrCidr).min(1),
     username: z.string().min(1).max(128),
     password: z.string().min(1).max(256),
     ...voiceTrunkBaseFields,
@@ -691,7 +684,6 @@ export const UpdateVoiceTrunkInput = z.object({
   authType: VoiceTrunkAuthTypeEnum.optional(),
   username: z.string().min(1).max(128).nullable().optional(),
   password: z.string().min(1).max(256).optional(),
-  ipAcl: z.array(IpOrCidr).min(1).nullable().optional(),
 });
 export type UpdateVoiceTrunkInput = z.infer<typeof UpdateVoiceTrunkInput>;
 

@@ -591,13 +591,15 @@ export const voiceTrunks = pgTable(
     qualifySeconds: integer("qualify_seconds"),
     maxChannels: integer("max_channels"),
     cpsLimit: integer("cps_limit"),
+    maxCallDurationSeconds: integer("max_call_duration_seconds"),
+    capacityLines: integer("capacity_lines"),
+    rtpTimeoutSeconds: integer("rtp_timeout_seconds"),
     codecs: jsonb("codecs")
       .$type<string[]>()
       .notNull()
       .default(sql`'[]'::jsonb`),
     dtmfMode: voiceTrunkDtmfMode("dtmf_mode").notNull().default("rfc2833"),
     natMode: voiceTrunkNatMode("nat_mode").notNull().default("no"),
-    ipAcl: jsonb("ip_acl").$type<string[]>(),
     metadata: jsonb("metadata").$type<Record<string, unknown>>(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
@@ -621,16 +623,24 @@ export const voiceTrunks = pgTable(
       sql`${t.authType} NOT IN ('userpass','both') OR (${t.username} IS NOT NULL AND ${t.passwordEncrypted} IS NOT NULL)`,
     ),
     check(
-      "voice_trunks_auth_ip_complete",
-      sql`${t.authType} NOT IN ('ip','both') OR (${t.ipAcl} IS NOT NULL AND jsonb_array_length(${t.ipAcl}) > 0)`,
-    ),
-    check(
       "voice_trunks_max_channels_positive",
       sql`${t.maxChannels} IS NULL OR ${t.maxChannels} > 0`,
     ),
     check(
       "voice_trunks_cps_limit_positive",
       sql`${t.cpsLimit} IS NULL OR ${t.cpsLimit} > 0`,
+    ),
+    check(
+      "voice_trunks_max_call_duration_positive",
+      sql`${t.maxCallDurationSeconds} IS NULL OR ${t.maxCallDurationSeconds} > 0`,
+    ),
+    check(
+      "voice_trunks_capacity_lines_positive",
+      sql`${t.capacityLines} IS NULL OR ${t.capacityLines} > 0`,
+    ),
+    check(
+      "voice_trunks_rtp_timeout_positive",
+      sql`${t.rtpTimeoutSeconds} IS NULL OR ${t.rtpTimeoutSeconds} > 0`,
     ),
   ],
 );
