@@ -344,6 +344,74 @@ export type VoiceRateSheetListResponse = z.infer<
   typeof VoiceRateSheetListResponseSchema
 >;
 
+export const VoiceRateSheetDetailSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  status: VoiceRateSheetStatusEnum,
+  voiceNumberingPlanId: z.string().uuid(),
+  voiceNumberingPlanName: z.string(),
+  currencyIso: z.string(),
+  lineCount: z.number().int().nonnegative(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+});
+export type VoiceRateSheetDetail = z.infer<typeof VoiceRateSheetDetailSchema>;
+
+export const VoiceRateSheetLineListItemSchema = z.object({
+  id: z.string().uuid(),
+  destinationId: z.string().uuid(),
+  countryIso2: z.string(),
+  countryName: z.string(),
+  destinationName: z.string(),
+  minDurationSec: z.number().int().nonnegative(),
+  incrementSec: z.number().int().positive(),
+  setupFee: z.string().nullable(),
+  ratePerMin: z.string(),
+  validFrom: z.string().datetime(),
+  validTo: z.string().datetime().nullable(),
+  countryCode: z.string().nullable(),
+  destinationCodes: z.array(z.string()),
+  codeCount: z.number().int().nonnegative(),
+});
+export type VoiceRateSheetLineListItem = z.infer<
+  typeof VoiceRateSheetLineListItemSchema
+>;
+
+export const VoiceRateSheetLineSortByEnum = z.enum([
+  "countryName",
+  "destinationName",
+  "ratePerMin",
+  "setupFee",
+  "validFrom",
+  "validTo",
+  "codeCount",
+]);
+export type VoiceRateSheetLineSortBy = z.infer<
+  typeof VoiceRateSheetLineSortByEnum
+>;
+
+export const VoiceRateSheetLineListQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(25),
+  search: z.string().trim().max(200).optional(),
+  sortBy: VoiceRateSheetLineSortByEnum.default("countryName"),
+  sortDir: CarrierListSortDirEnum.default("asc"),
+  locale: VoiceNumberingPlanLocaleEnum.default("en"),
+});
+export type VoiceRateSheetLineListQuery = z.infer<
+  typeof VoiceRateSheetLineListQuerySchema
+>;
+
+export const VoiceRateSheetLineListResponseSchema = z.object({
+  lines: z.array(VoiceRateSheetLineListItemSchema),
+  total: z.number().int().nonnegative(),
+  page: z.number().int().min(1),
+  pageSize: z.number().int().min(1),
+});
+export type VoiceRateSheetLineListResponse = z.infer<
+  typeof VoiceRateSheetLineListResponseSchema
+>;
+
 export const ChatAppEnum = z.enum(["whatsapp", "telegram", "signal"]);
 export type ChatApp = z.infer<typeof ChatAppEnum>;
 

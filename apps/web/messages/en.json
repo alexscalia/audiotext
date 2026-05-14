@@ -90,7 +90,7 @@
       "actions": "Actions",
       "country": "Country",
       "iso": "ISO",
-      "code": "Code",
+      "code": "Destination",
       "countryCode": "Country code",
       "destinationCodes": "Destination codes",
       "type": "Type"
@@ -134,11 +134,26 @@
     "noResults": "No matches found.",
     "loading": "Loading...",
     "loadError": "Failed to load.",
+    "backToRateSheets": "Back to rate sheets",
+    "detail": {
+      "search": "Search routes",
+      "summary": "{lines} routes",
+      "empty": "No routes in this rate sheet.",
+      "notFound": "Rate sheet not found."
+    },
     "columns": {
       "name": "Name",
       "numberingPlan": "Numbering plan",
       "status": "Status",
-      "actions": "Actions"
+      "actions": "Actions",
+      "country": "Country",
+      "destination": "Destination",
+      "billing": "Billing (min/inc s)",
+      "setupFee": "Setup fee",
+      "ratePerMin": "Rate / min",
+      "validFrom": "Valid from",
+      "validTo": "Valid to",
+      "codes": "Codes"
     },
     "status": {
       "active": "Active",

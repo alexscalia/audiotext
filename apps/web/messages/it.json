@@ -134,11 +134,26 @@
     "noResults": "Nessun risultato.",
     "loading": "Caricamento...",
     "loadError": "Impossibile caricare.",
+    "backToRateSheets": "Torna ai listini",
+    "detail": {
+      "search": "Cerca rotte",
+      "summary": "{lines} rotte",
+      "empty": "Nessuna rotta in questo listino.",
+      "notFound": "Listino non trovato."
+    },
     "columns": {
       "name": "Nome",
       "numberingPlan": "Piano di numerazione",
       "status": "Stato",
-      "actions": "Azioni"
+      "actions": "Azioni",
+      "country": "Paese",
+      "destination": "Destinazione",
+      "billing": "Fatturazione (min/inc s)",
+      "setupFee": "Costo attivazione",
+      "ratePerMin": "Tariffa / min",
+      "validFrom": "Valido dal",
+      "validTo": "Valido al",
+      "codes": "Codici"
     },
     "status": {
       "active": "Attivo",

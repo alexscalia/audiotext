@@ -85,14 +85,32 @@
   "hotPaths": [
     {
       "path": "apps/web/messages/en.json",
-      "accessCount": 5,
-      "lastAccessed": 1778724884623,
+      "accessCount": 9,
+      "lastAccessed": 1778744079279,
       "type": "file"
     },
     {
       "path": "packages/shared/src/index.ts",
-      "accessCount": 4,
-      "lastAccessed": 1778724822089,
+      "accessCount": 7,
+      "lastAccessed": 1778744261769,
+      "type": "file"
+    },
+    {
+      "path": "apps/api/src/routes/admin/voice-rate-sheets.ts",
+      "accessCount": 7,
+      "lastAccessed": 1778744395757,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/messages/it.json",
+      "accessCount": 6,
+      "lastAccessed": 1778744084694,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/app/admin/(dashboard)/rate-sheets/voice/[id]/page.tsx",
+      "accessCount": 5,
+      "lastAccessed": 1778744408933,
       "type": "file"
     },
     {
@@ -102,9 +120,9 @@
       "type": "file"
     },
     {
-      "path": "apps/web/messages/it.json",
+      "path": "apps/web/src/app/admin/(dashboard)/numbering-plans/voice/[id]/page.tsx",
       "accessCount": 4,
-      "lastAccessed": 1778724897987,
+      "lastAccessed": 1778725424537,
       "type": "file"
     },
     {
@@ -114,33 +132,51 @@
       "type": "file"
     },
     {
-      "path": "apps/web/src/app/admin/(dashboard)/numbering-plans/voice/page.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1778724518154,
+      "path": "packages/db/src/schema.ts",
+      "accessCount": 3,
+      "lastAccessed": 1778725354058,
       "type": "file"
     },
     {
       "path": "apps/api/src/routes/admin/voice-numbering-plans.ts",
-      "accessCount": 2,
-      "lastAccessed": 1778724518948,
-      "type": "file"
-    },
-    {
-      "path": "packages/db/src/schema.ts",
-      "accessCount": 2,
-      "lastAccessed": 1778724526417,
+      "accessCount": 3,
+      "lastAccessed": 1778725357081,
       "type": "file"
     },
     {
       "path": "apps/web/src/components/ui/badge.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1778724526623,
+      "accessCount": 3,
+      "lastAccessed": 1778725357428,
       "type": "file"
     },
     {
-      "path": "apps/web/src/app/admin/(dashboard)/numbering-plans/voice/[id]/page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1778724450853,
+      "path": "apps/web/src/app/admin/(dashboard)/numbering-plans/voice/page.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1778725362834,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/components/layout/page-header.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1778725371628,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/app/admin/(dashboard)/rate-sheets/voice/page.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1778725374280,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/components/ui/data-table/data-table.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1778725376821,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/components/ui/data-table/pagination.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1778725377081,
       "type": "file"
     },
     {
@@ -156,27 +192,9 @@
       "type": "file"
     },
     {
-      "path": "apps/web/src/components/ui/data-table/data-table.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1778724465555,
-      "type": "file"
-    },
-    {
-      "path": "apps/web/src/components/ui/data-table/pagination.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1778724465866,
-      "type": "file"
-    },
-    {
       "path": "apps/web/src/components/ui/search-input.tsx",
       "accessCount": 1,
       "lastAccessed": 1778724476896,
-      "type": "file"
-    },
-    {
-      "path": "apps/web/src/components/layout/page-header.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1778724477091,
       "type": "file"
     },
     {
@@ -186,21 +204,51 @@
       "type": "file"
     },
     {
-      "path": "apps/api/src/routes/admin/voice-rate-sheets.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778724831977,
-      "type": "file"
-    },
-    {
-      "path": "apps/web/src/app/admin/(dashboard)/rate-sheets/voice/page.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1778724860285,
-      "type": "file"
-    },
-    {
       "path": ".screenshots/rate-sheets-voice.png",
       "accessCount": 1,
       "lastAccessed": 1778724959999,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/components/layout/breadcrumb.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1778725357239,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/app/layout.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1778725366674,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/components/ui/data-table/sortable-header.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1778725380385,
+      "type": "file"
+    },
+    {
+      "path": ".screenshots/rate-sheet-detail.png",
+      "accessCount": 1,
+      "lastAccessed": 1778725696053,
+      "type": "file"
+    },
+    {
+      "path": ".screenshots/rate-sheet-codes-tooltip.png",
+      "accessCount": 1,
+      "lastAccessed": 1778744156610,
+      "type": "file"
+    },
+    {
+      "path": ".screenshots/rate-sheet-codes-tooltip-v2.png",
+      "accessCount": 1,
+      "lastAccessed": 1778744198996,
+      "type": "file"
+    },
+    {
+      "path": ".screenshots/rate-sheet-codes-with-country.png",
+      "accessCount": 1,
+      "lastAccessed": 1778744323643,
       "type": "file"
     }
   ],
