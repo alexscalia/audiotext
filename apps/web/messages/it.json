@@ -41,6 +41,8 @@
     "numbering": "Piani di numerazione",
     "numberingVoice": "Voce",
     "numberingSms": "SMS",
+    "rateSheets": "Listini",
+    "rateSheetsVoice": "Voce",
     "trunks": "Trunk",
     "carriers": "Carrier",
     "settings": "Impostazioni"
@@ -115,6 +117,38 @@
       "paging": "Paging",
       "voip": "VoIP",
       "ngn": "NGN"
+    },
+    "pagination": {
+      "prev": "Precedente",
+      "next": "Successivo",
+      "rowsPerPage": "Righe per pagina",
+      "pageOf": "Pagina {page} di {total}",
+      "showing": "Mostrate {from}–{to} di {total}"
+    }
+  },
+  "RateSheets": {
+    "title": "Listini voce",
+    "subtitle": "Listini prezzo per piano di numerazione voce",
+    "search": "Cerca listini",
+    "empty": "Nessun listino presente.",
+    "noResults": "Nessun risultato.",
+    "loading": "Caricamento...",
+    "loadError": "Impossibile caricare.",
+    "columns": {
+      "name": "Nome",
+      "numberingPlan": "Piano di numerazione",
+      "status": "Stato",
+      "actions": "Azioni"
+    },
+    "status": {
+      "active": "Attivo",
+      "inactive": "Inattivo"
+    },
+    "actions": {
+      "view": "Visualizza",
+      "edit": "Modifica",
+      "delete": "Elimina",
+      "open": "Apri menu azioni"
     },
     "pagination": {
       "prev": "Precedente",

@@ -320,6 +320,30 @@ export type VoiceNumberingPlanDestinationListResponse = z.infer<
   typeof VoiceNumberingPlanDestinationListResponseSchema
 >;
 
+export const VoiceRateSheetStatusEnum = z.enum(["active", "inactive"]);
+export type VoiceRateSheetStatus = z.infer<typeof VoiceRateSheetStatusEnum>;
+
+export const VoiceRateSheetListItemSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  status: VoiceRateSheetStatusEnum,
+  voiceNumberingPlanId: z.string().uuid(),
+  voiceNumberingPlanName: z.string(),
+  currencyIso: z.string(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+});
+export type VoiceRateSheetListItem = z.infer<
+  typeof VoiceRateSheetListItemSchema
+>;
+
+export const VoiceRateSheetListResponseSchema = z.object({
+  rateSheets: z.array(VoiceRateSheetListItemSchema),
+});
+export type VoiceRateSheetListResponse = z.infer<
+  typeof VoiceRateSheetListResponseSchema
+>;
+
 export const ChatAppEnum = z.enum(["whatsapp", "telegram", "signal"]);
 export type ChatApp = z.infer<typeof ChatAppEnum>;
 

@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1778547528502,
+  "lastScanned": 1778723455937,
   "projectRoot": "/Users/alexscalia/Coding/audiotext",
   "techStack": {
     "languages": [
@@ -18,7 +18,7 @@
     "runtime": "Node.js 25.6.0"
   },
   "build": {
-    "buildCommand": "pnpm --filter @audiotext/db exec tsc --noEmit 2>&1 | tail -40",
+    "buildCommand": "pnpm build",
     "testCommand": null,
     "lintCommand": "pnpm lint",
     "devCommand": "pnpm dev",
@@ -53,28 +53,28 @@
       "path": "apps",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1778547528377,
+      "lastAccessed": 1778723455838,
       "keyFiles": []
     },
     "crates": {
       "path": "crates",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1778547528381,
+      "lastAccessed": 1778723455838,
       "keyFiles": []
     },
     "packages": {
       "path": "packages",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1778547528384,
+      "lastAccessed": 1778723455858,
       "keyFiles": []
     },
     "apps/api": {
       "path": "apps/api",
       "purpose": "API routes",
       "fileCount": 5,
-      "lastAccessed": 1778547528407,
+      "lastAccessed": 1778723455859,
       "keyFiles": [
         "package.json",
         "tsconfig.json",
@@ -84,111 +84,123 @@
   },
   "hotPaths": [
     {
-      "path": "packages/db/src/schema.ts",
+      "path": "apps/web/messages/en.json",
       "accessCount": 5,
-      "lastAccessed": 1778550421401,
-      "type": "file"
-    },
-    {
-      "path": "packages/db/src/seed.ts",
-      "accessCount": 4,
-      "lastAccessed": 1778550851412,
-      "type": "file"
-    },
-    {
-      "path": ".env",
-      "accessCount": 4,
-      "lastAccessed": 1778595865351,
-      "type": "file"
-    },
-    {
-      "path": ".env.example",
-      "accessCount": 4,
-      "lastAccessed": 1778595868703,
-      "type": "file"
-    },
-    {
-      "path": "packages/db/src/seed-voice-numbering-plan.ts",
-      "accessCount": 3,
-      "lastAccessed": 1778550470486,
-      "type": "file"
-    },
-    {
-      "path": "docker-compose.yml",
-      "accessCount": 2,
-      "lastAccessed": 1778548680893,
-      "type": "file"
-    },
-    {
-      "path": "packages/db/src/seed-countries.ts",
-      "accessCount": 2,
-      "lastAccessed": 1778550430708,
-      "type": "file"
-    },
-    {
-      "path": "apps/api/src/index.ts",
-      "accessCount": 2,
-      "lastAccessed": 1778595872584,
-      "type": "file"
-    },
-    {
-      "path": "apps/web/next.config.ts",
-      "accessCount": 2,
-      "lastAccessed": 1778595876338,
-      "type": "file"
-    },
-    {
-      "path": "README.md",
-      "accessCount": 2,
-      "lastAccessed": 1778595884915,
-      "type": "file"
-    },
-    {
-      "path": "CLAUDE.md",
-      "accessCount": 2,
-      "lastAccessed": 1778595885653,
-      "type": "file"
-    },
-    {
-      "path": ".claude/skills/admin-dashboard/SKILL.md",
-      "accessCount": 2,
-      "lastAccessed": 1778596195701,
-      "type": "file"
-    },
-    {
-      "path": "numbering_plan.csv",
-      "accessCount": 1,
-      "lastAccessed": 1778550347297,
-      "type": "file"
-    },
-    {
-      "path": "packages/db/package.json",
-      "accessCount": 1,
-      "lastAccessed": 1778550421276,
-      "type": "file"
-    },
-    {
-      "path": ".prettierignore",
-      "accessCount": 1,
-      "lastAccessed": 1778550431405,
-      "type": "file"
-    },
-    {
-      "path": "apps/api/src/routes/admin/voice-numbering-plans.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778550433336,
+      "lastAccessed": 1778724884623,
       "type": "file"
     },
     {
       "path": "packages/shared/src/index.ts",
+      "accessCount": 4,
+      "lastAccessed": 1778724822089,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/components/shell/sidebar.tsx",
+      "accessCount": 4,
+      "lastAccessed": 1778724871609,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/messages/it.json",
+      "accessCount": 4,
+      "lastAccessed": 1778724897987,
+      "type": "file"
+    },
+    {
+      "path": "apps/api/src/index.ts",
+      "accessCount": 3,
+      "lastAccessed": 1778724839468,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/app/admin/(dashboard)/numbering-plans/voice/page.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1778724518154,
+      "type": "file"
+    },
+    {
+      "path": "apps/api/src/routes/admin/voice-numbering-plans.ts",
+      "accessCount": 2,
+      "lastAccessed": 1778724518948,
+      "type": "file"
+    },
+    {
+      "path": "packages/db/src/schema.ts",
+      "accessCount": 2,
+      "lastAccessed": 1778724526417,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/components/ui/badge.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1778724526623,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/app/admin/(dashboard)/numbering-plans/voice/[id]/page.tsx",
       "accessCount": 1,
-      "lastAccessed": 1778550436899,
+      "lastAccessed": 1778724450853,
       "type": "file"
     },
     {
       "path": "packages/db/src/seed-voice-rate-sheets.ts",
       "accessCount": 1,
-      "lastAccessed": 1778550842055,
+      "lastAccessed": 1778724458044,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/components/ui/actions-menu.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1778724465351,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/components/ui/data-table/data-table.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1778724465555,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/components/ui/data-table/pagination.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1778724465866,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/components/ui/search-input.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1778724476896,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/components/layout/page-header.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1778724477091,
+      "type": "file"
+    },
+    {
+      "path": "apps/api/src/lib/require-auth.ts",
+      "accessCount": 1,
+      "lastAccessed": 1778724805186,
+      "type": "file"
+    },
+    {
+      "path": "apps/api/src/routes/admin/voice-rate-sheets.ts",
+      "accessCount": 1,
+      "lastAccessed": 1778724831977,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/app/admin/(dashboard)/rate-sheets/voice/page.tsx",
+      "accessCount": 1,
+      "lastAccessed": 1778724860285,
+      "type": "file"
+    },
+    {
+      "path": ".screenshots/rate-sheets-voice.png",
+      "accessCount": 1,
+      "lastAccessed": 1778724959999,
       "type": "file"
     }
   ],

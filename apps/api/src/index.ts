@@ -7,6 +7,7 @@ import { auth } from "./lib/auth";
 import { carriersRoutes } from "./routes/admin/carriers";
 import { countriesRoutes } from "./routes/admin/countries";
 import { voiceNumberingPlansRoutes } from "./routes/admin/voice-numbering-plans";
+import { voiceRateSheetsRoutes } from "./routes/admin/voice-rate-sheets";
 
 const PORT = Number(process.env.PORT ?? 3101);
 
@@ -32,6 +33,7 @@ const routes = app
   .route("/api/admin/carriers", carriersRoutes)
   .route("/api/admin/countries", countriesRoutes)
   .route("/api/admin/voice-numbering-plans", voiceNumberingPlansRoutes)
+  .route("/api/admin/voice-rate-sheets", voiceRateSheetsRoutes)
   .get("/:slug", (c) => c.json({ message: `Hello ${c.req.param("slug")}!` }));
 
 const server = serve({ fetch: app.fetch, port: PORT }, ({ port }) => {

@@ -41,6 +41,8 @@
     "numbering": "Numbering plans",
     "numberingVoice": "Voice",
     "numberingSms": "SMS",
+    "rateSheets": "Rate sheets",
+    "rateSheetsVoice": "Voice",
     "trunks": "Trunks",
     "carriers": "Carriers",
     "settings": "Settings"
@@ -115,6 +117,38 @@
       "paging": "Paging",
       "voip": "VoIP",
       "ngn": "NGN"
+    },
+    "pagination": {
+      "prev": "Previous",
+      "next": "Next",
+      "rowsPerPage": "Rows per page",
+      "pageOf": "Page {page} of {total}",
+      "showing": "Showing {from}–{to} of {total}"
+    }
+  },
+  "RateSheets": {
+    "title": "Voice rate sheets",
+    "subtitle": "Pricing sheets per voice numbering plan",
+    "search": "Search rate sheets",
+    "empty": "No rate sheets yet.",
+    "noResults": "No matches found.",
+    "loading": "Loading...",
+    "loadError": "Failed to load.",
+    "columns": {
+      "name": "Name",
+      "numberingPlan": "Numbering plan",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "actions": {
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete",
+      "open": "Open actions menu"
     },
     "pagination": {
       "prev": "Previous",

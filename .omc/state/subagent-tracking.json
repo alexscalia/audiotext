@@ -1,0 +1,17 @@
+{
+  "agents": [
+    {
+      "agent_id": "adb5509cafe1d8ea1",
+      "agent_type": "statusline-setup",
+      "started_at": "2026-05-14T02:12:27.552Z",
+      "parent_mode": "none",
+      "status": "completed",
+      "completed_at": "2026-05-14T02:12:38.316Z",
+      "duration_ms": 10764
+    }
+  ],
+  "total_spawned": 2,
+  "total_completed": 2,
+  "total_failed": 0,
+  "last_updated": "2026-05-14T02:12:48.545Z"
+}

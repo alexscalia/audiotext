@@ -1,4 +1,133 @@
 {
-  "updatedAt": "2026-05-12T01:59:19.952Z",
-  "missions": []
+  "updatedAt": "2026-05-14T02:12:48.444Z",
+  "missions": [
+    {
+      "id": "session:3feb67e3-ca1f-4c22-96ca-ac5b7b897507:none",
+      "source": "session",
+      "name": "none",
+      "objective": "Session mission",
+      "createdAt": "2026-05-14T02:07:22.219Z",
+      "updatedAt": "2026-05-14T02:08:32.256Z",
+      "status": "done",
+      "workerCount": 1,
+      "taskCounts": {
+        "total": 1,
+        "pending": 0,
+        "blocked": 0,
+        "inProgress": 0,
+        "completed": 1,
+        "failed": 0
+      },
+      "agents": [
+        {
+          "name": "Explore:a062a22",
+          "role": "Explore",
+          "ownership": "a062a22e942d95644",
+          "status": "done",
+          "currentStep": null,
+          "latestUpdate": "completed",
+          "completedSummary": null,
+          "updatedAt": "2026-05-14T02:08:32.256Z"
+        }
+      ],
+      "timeline": [
+        {
+          "id": "session-start:a062a22e942d95644:2026-05-14T02:07:22.219Z",
+          "at": "2026-05-14T02:07:22.219Z",
+          "kind": "update",
+          "agent": "Explore:a062a22",
+          "detail": "started Explore:a062a22",
+          "sourceKey": "session-start:a062a22e942d95644"
+        },
+        {
+          "id": "session-stop:a062a22e942d95644:2026-05-14T02:08:32.256Z",
+          "at": "2026-05-14T02:08:32.256Z",
+          "kind": "completion",
+          "agent": "Explore:a062a22",
+          "detail": "completed",
+          "sourceKey": "session-stop:a062a22e942d95644"
+        }
+      ]
+    },
+    {
+      "id": "session:cbc61a67-a3fb-478e-85cc-fd10e7045ca3:none",
+      "source": "session",
+      "name": "none",
+      "objective": "Session mission",
+      "createdAt": "2026-05-14T02:11:31.061Z",
+      "updatedAt": "2026-05-14T02:12:48.444Z",
+      "status": "done",
+      "workerCount": 1,
+      "taskCounts": {
+        "total": 1,
+        "pending": 0,
+        "blocked": 0,
+        "inProgress": 0,
+        "completed": 1,
+        "failed": 0
+      },
+      "agents": [
+        {
+          "name": "statusline-setup:adb5509",
+          "role": "statusline-setup",
+          "ownership": "adb5509cafe1d8ea1",
+          "status": "done",
+          "currentStep": null,
+          "latestUpdate": "completed",
+          "completedSummary": null,
+          "updatedAt": "2026-05-14T02:12:48.444Z"
+        }
+      ],
+      "timeline": [
+        {
+          "id": "session-stop:adb5509cafe1d8ea1:2026-05-14T02:11:56.909Z",
+          "at": "2026-05-14T02:11:56.909Z",
+          "kind": "completion",
+          "agent": "statusline-setup:adb5509",
+          "detail": "completed",
+          "sourceKey": "session-stop:adb5509cafe1d8ea1"
+        },
+        {
+          "id": "session-stop:a9db6c7ebe7bbd3cd:2026-05-14T02:12:07.082Z",
+          "at": "2026-05-14T02:12:07.082Z",
+          "kind": "completion",
+          "agent": "statusline-setup:adb5509",
+          "detail": "completed",
+          "sourceKey": "session-stop:a9db6c7ebe7bbd3cd"
+        },
+        {
+          "id": "session-start:adb5509cafe1d8ea1:2026-05-14T02:12:27.552Z",
+          "at": "2026-05-14T02:12:27.552Z",
+          "kind": "update",
+          "agent": "statusline-setup:adb5509",
+          "detail": "started statusline-setup:adb5509",
+          "sourceKey": "session-start:adb5509cafe1d8ea1"
+        },
+        {
+          "id": "session-stop:a922f95dd199f5ace:2026-05-14T02:12:31.586Z",
+          "at": "2026-05-14T02:12:31.586Z",
+          "kind": "completion",
+          "agent": "statusline-setup:adb5509",
+          "detail": "completed",
+          "sourceKey": "session-stop:a922f95dd199f5ace"
+        },
+        {
+          "id": "session-stop:adb5509cafe1d8ea1:2026-05-14T02:12:38.316Z",
+          "at": "2026-05-14T02:12:38.316Z",
+          "kind": "completion",
+          "agent": "statusline-setup:adb5509",
+          "detail": "completed",
+          "sourceKey": "session-stop:adb5509cafe1d8ea1"
+        },
+        {
+          "id": "session-stop:aafe5824cda1a8d50:2026-05-14T02:12:48.444Z",
+          "at": "2026-05-14T02:12:48.444Z",
+          "kind": "completion",
+          "agent": "statusline-setup:adb5509",
+          "detail": "completed",
+          "sourceKey": "session-stop:aafe5824cda1a8d50"
+        }
+      ]
+    }
+  ]
 }
