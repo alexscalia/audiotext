@@ -181,6 +181,10 @@
     "title": "Voice trunks",
     "subtitle": "SIP trunks connected to carriers",
     "search": "Search trunks",
+    "filters": {
+      "carrier": "Filter by carrier",
+      "ip": "Filter by IP"
+    },
     "empty": "No voice trunks yet.",
     "noResults": "No matches found.",
     "loading": "Loading...",

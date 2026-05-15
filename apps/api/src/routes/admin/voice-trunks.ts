@@ -46,7 +46,8 @@ const listVoiceTrunksRoute = createRoute({
 export const voiceTrunksRoutes = new OpenAPIHono<{
   Variables: AuthVariables;
 }>().openapi(listVoiceTrunksRoute, async (c) => {
-  const { page, pageSize, search, sortBy, sortDir } = c.req.valid("query");
+  const { page, pageSize, search, carrier, ip, sortBy, sortDir } =
+    c.req.valid("query");
 
   const carrierJoinCondition = and(
     eq(carriers.id, voiceTrunks.carrierId),
@@ -66,6 +67,23 @@ export const voiceTrunksRoutes = new OpenAPIHono<{
       ilike(voiceRateSheets.name, term),
     );
     if (searchClause) filters.push(searchClause);
+  }
+  if (carrier && carrier.length > 0) {
+    const term = `%${carrier}%`;
+    const carrierClause = or(
+      ilike(carriers.name, term),
+      ilike(carriers.businessName, term),
+    );
+    if (carrierClause) filters.push(carrierClause);
+  }
+  if (ip && ip.length > 0) {
+    const term = `${ip}%`;
+    filters.push(sql`EXISTS (
+      SELECT 1 FROM ${voiceTrunkIps}
+      WHERE ${voiceTrunkIps.voiceTrunkId} = ${voiceTrunks.id}
+        AND ${voiceTrunkIps.deletedAt} IS NULL
+        AND ${voiceTrunkIps.ip} ILIKE ${term}
+    )`);
   }
   const whereClause = and(...filters);
 

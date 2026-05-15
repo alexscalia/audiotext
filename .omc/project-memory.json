@@ -18,7 +18,7 @@
     "runtime": "Node.js 25.6.0"
   },
   "build": {
-    "buildCommand": "pnpm build",
+    "buildCommand": "while kill -0 $(pgrep -f \"tsc --noEmit\" | head -1) 2>/dev/null; do sleep 2; done; tail -50 /private/tmp/claude-501/-Users-alexscalia-Coding-audiotext/ea6aec3f-8575-4166-a650-ce91040da6fd/tasks/bqf6erg4z.output",
     "testCommand": null,
     "lintCommand": "pnpm lint",
     "devCommand": "pnpm dev",
@@ -85,20 +85,20 @@
   "hotPaths": [
     {
       "path": "packages/shared/src/index.ts",
-      "accessCount": 35,
-      "lastAccessed": 1778777613472,
+      "accessCount": 37,
+      "lastAccessed": 1778777919166,
       "type": "file"
     },
     {
       "path": "apps/web/messages/en.json",
-      "accessCount": 29,
-      "lastAccessed": 1778777774281,
+      "accessCount": 31,
+      "lastAccessed": 1778777969245,
       "type": "file"
     },
     {
       "path": "apps/web/messages/it.json",
-      "accessCount": 26,
-      "lastAccessed": 1778777780751,
+      "accessCount": 28,
+      "lastAccessed": 1778777973788,
       "type": "file"
     },
     {
@@ -109,8 +109,8 @@
     },
     {
       "path": "packages/db/src/schema.ts",
-      "accessCount": 19,
-      "lastAccessed": 1778777606714,
+      "accessCount": 20,
+      "lastAccessed": 1778777904155,
       "type": "file"
     },
     {
@@ -132,9 +132,21 @@
       "type": "file"
     },
     {
+      "path": "apps/api/src/routes/admin/voice-trunks.ts",
+      "accessCount": 12,
+      "lastAccessed": 1778803564373,
+      "type": "file"
+    },
+    {
       "path": "apps/web/src/app/admin/(dashboard)/numbering-plans/voice/[id]/page.tsx",
       "accessCount": 11,
       "lastAccessed": 1778747464274,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/app/admin/(dashboard)/voice-trunks/page.tsx",
+      "accessCount": 11,
+      "lastAccessed": 1778777963486,
       "type": "file"
     },
     {
@@ -147,12 +159,6 @@
       "path": "apps/api/src/index.ts",
       "accessCount": 8,
       "lastAccessed": 1778777421037,
-      "type": "file"
-    },
-    {
-      "path": "apps/api/src/routes/admin/voice-trunks.ts",
-      "accessCount": 8,
-      "lastAccessed": 1778777646016,
       "type": "file"
     },
     {
@@ -171,12 +177,6 @@
       "path": "packages/db/src/seed-voice-rate-sheets.ts",
       "accessCount": 5,
       "lastAccessed": 1778776169975,
-      "type": "file"
-    },
-    {
-      "path": "apps/web/src/app/admin/(dashboard)/voice-trunks/page.tsx",
-      "accessCount": 5,
-      "lastAccessed": 1778777762287,
       "type": "file"
     },
     {
@@ -210,6 +210,12 @@
       "type": "file"
     },
     {
+      "path": "apps/web/src/components/ui/search-input.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1778777903150,
+      "type": "file"
+    },
+    {
       "path": "apps/web/src/components/layout/page-header.tsx",
       "accessCount": 2,
       "lastAccessed": 1778725371628,
@@ -225,12 +231,6 @@
       "path": "apps/web/src/components/ui/data-table/pagination.tsx",
       "accessCount": 2,
       "lastAccessed": 1778725377081,
-      "type": "file"
-    },
-    {
-      "path": "apps/web/src/components/ui/search-input.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1778747412569,
       "type": "file"
     },
     {

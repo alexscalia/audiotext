@@ -720,6 +720,8 @@ export const VoiceTrunkListQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   pageSize: z.coerce.number().int().min(1).max(100).default(10),
   search: z.string().trim().max(200).optional(),
+  carrier: z.string().trim().max(200).optional(),
+  ip: z.string().trim().max(200).optional(),
   sortBy: VoiceTrunkListSortByEnum.default("name"),
   sortDir: VoiceTrunkListSortDirEnum.default("asc"),
 });

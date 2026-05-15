@@ -181,6 +181,10 @@
     "title": "Trunk voce",
     "subtitle": "Trunk SIP collegati ai carrier",
     "search": "Cerca trunk",
+    "filters": {
+      "carrier": "Filtra per carrier",
+      "ip": "Filtra per IP"
+    },
     "empty": "Nessun trunk voce presente.",
     "noResults": "Nessun risultato.",
     "loading": "Caricamento...",

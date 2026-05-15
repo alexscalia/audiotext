@@ -84,6 +84,10 @@ export default function VoiceTrunksPage() {
   ]);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
+  const [carrierInput, setCarrierInput] = useState("");
+  const [carrier, setCarrier] = useState("");
+  const [ipInput, setIpInput] = useState("");
+  const [ip, setIp] = useState("");
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -96,10 +100,12 @@ export default function VoiceTrunksPage() {
   useEffect(() => {
     const handle = setTimeout(() => {
       setSearch(searchInput.trim());
+      setCarrier(carrierInput.trim());
+      setIp(ipInput.trim());
       setPagination((p) => ({ ...p, pageIndex: 0 }));
     }, 300);
     return () => clearTimeout(handle);
-  }, [searchInput]);
+  }, [searchInput, carrierInput, ipInput]);
 
   const sortBy: VoiceTrunkListSortBy = useMemo(() => {
     const first = sorting[0];
@@ -127,6 +133,8 @@ export default function VoiceTrunksPage() {
       sortDir,
     });
     if (search) params.set("search", search);
+    if (carrier) params.set("carrier", carrier);
+    if (ip) params.set("ip", ip);
 
     fetch(`/api/admin/voice-trunks?${params.toString()}`, {
       credentials: "include",
@@ -153,7 +161,16 @@ export default function VoiceTrunksPage() {
       });
 
     return () => controller.abort();
-  }, [pagination.pageIndex, pagination.pageSize, sortBy, sortDir, search, t]);
+  }, [
+    pagination.pageIndex,
+    pagination.pageSize,
+    sortBy,
+    sortDir,
+    search,
+    carrier,
+    ip,
+    t,
+  ]);
 
   const columns = useMemo<ColumnDef<Trunk>[]>(
     () => [
@@ -242,11 +259,21 @@ export default function VoiceTrunksPage() {
       <PageHeader title={t("title")} subtitle={t("subtitle")} />
 
       <div className="mt-6 rounded-md border border-gray-200 bg-white">
-        <div className="border-b border-gray-200 p-4">
+        <div className="flex flex-col gap-3 border-b border-gray-200 p-4 sm:flex-row sm:flex-wrap">
           <SearchInput
             label={t("search")}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
+          />
+          <SearchInput
+            label={t("filters.carrier")}
+            value={carrierInput}
+            onChange={(e) => setCarrierInput(e.target.value)}
+          />
+          <SearchInput
+            label={t("filters.ip")}
+            value={ipInput}
+            onChange={(e) => setIpInput(e.target.value)}
           />
         </div>
 
@@ -257,7 +284,7 @@ export default function VoiceTrunksPage() {
           loadingLabel={t("loading")}
           emptyLabel={t("empty")}
           noResultsLabel={t("noResults")}
-          hasActiveFilter={!!search}
+          hasActiveFilter={!!search || !!carrier || !!ip}
         />
 
         {showFooter && (
