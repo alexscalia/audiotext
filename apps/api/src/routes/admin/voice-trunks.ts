@@ -7,6 +7,7 @@ import {
   and,
   eq,
   ilike,
+  inArray,
   or,
   type SQL,
 } from "drizzle-orm";
@@ -46,7 +47,7 @@ const listVoiceTrunksRoute = createRoute({
 export const voiceTrunksRoutes = new OpenAPIHono<{
   Variables: AuthVariables;
 }>().openapi(listVoiceTrunksRoute, async (c) => {
-  const { page, pageSize, search, carrier, ip, sortBy, sortDir } =
+  const { page, pageSize, search, carrier, ip, status, sortBy, sortDir } =
     c.req.valid("query");
 
   const carrierJoinCondition = and(
@@ -85,6 +86,9 @@ export const voiceTrunksRoutes = new OpenAPIHono<{
         AND ${voiceTrunkIps.ip} ILIKE ${term}
     )`);
   }
+  if (status.length > 0) {
+    filters.push(inArray(voiceTrunks.status, status));
+  }
   const whereClause = and(...filters);
 
   const orderColumn = (() => {
@@ -93,8 +97,6 @@ export const voiceTrunksRoutes = new OpenAPIHono<{
         return carriers.name;
       case "voiceRateSheetName":
         return voiceRateSheets.name;
-      case "status":
-        return voiceTrunks.status;
       case "createdAt":
         return voiceTrunks.createdAt;
       case "name":

@@ -7,6 +7,7 @@ import {
   and,
   eq,
   ilike,
+  inArray,
   or,
   type SQL,
 } from "drizzle-orm";
@@ -99,7 +100,8 @@ export const voiceRateSheetsRoutes = new OpenAPIHono<{
   Variables: AuthVariables;
 }>()
   .openapi(listVoiceRateSheetsRoute, async (c) => {
-    const { page, pageSize, search, sortBy, sortDir } = c.req.valid("query");
+    const { page, pageSize, search, status, sortBy, sortDir } =
+      c.req.valid("query");
 
     const filters: SQL[] = [isNull(voiceRateSheets.deletedAt)];
     if (search && search.length > 0) {
@@ -111,14 +113,15 @@ export const voiceRateSheetsRoutes = new OpenAPIHono<{
       );
       if (searchClause) filters.push(searchClause);
     }
+    if (status.length > 0) {
+      filters.push(inArray(voiceRateSheets.status, status));
+    }
     const whereClause = and(...filters);
 
     const orderColumn = (() => {
       switch (sortBy) {
         case "voiceNumberingPlanName":
           return voiceNumberingPlans.name;
-        case "status":
-          return voiceRateSheets.status;
         case "currencyIso":
           return voiceRateSheets.currencyIso;
         case "createdAt":

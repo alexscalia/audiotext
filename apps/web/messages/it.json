@@ -132,6 +132,11 @@
     "title": "Listini voce",
     "subtitle": "Listini prezzo per piano di numerazione voce",
     "search": "Cerca listini",
+    "filters": {
+      "status": "Filtra per stato",
+      "apply": "Applica",
+      "clear": "Azzera"
+    },
     "empty": "Nessun listino presente.",
     "noResults": "Nessun risultato.",
     "loading": "Caricamento...",
@@ -183,7 +188,10 @@
     "search": "Cerca trunk",
     "filters": {
       "carrier": "Filtra per carrier",
-      "ip": "Filtra per IP"
+      "ip": "Filtra per IP",
+      "status": "Filtra per stato",
+      "apply": "Applica",
+      "clear": "Azzera"
     },
     "empty": "Nessun trunk voce presente.",
     "noResults": "Nessun risultato.",
@@ -222,6 +230,11 @@
     "subtitle": "Gestisci i carrier di interconnessione",
     "newCarrier": "Nuovo carrier",
     "search": "Cerca carrier",
+    "filters": {
+      "status": "Filtra per stato",
+      "apply": "Applica",
+      "clear": "Azzera"
+    },
     "empty": "Nessun carrier presente.",
     "noResults": "Nessun carrier corrisponde alla ricerca.",
     "loading": "Caricamento carrier...",

@@ -7,6 +7,7 @@ import {
   and,
   eq,
   ilike,
+  inArray,
   or,
   type SQL,
 } from "drizzle-orm";
@@ -42,7 +43,8 @@ const listCarriersRoute = createRoute({
 export const carriersRoutes = new OpenAPIHono<{
   Variables: AuthVariables;
 }>().openapi(listCarriersRoute, async (c) => {
-  const { page, pageSize, search, sortBy, sortDir } = c.req.valid("query");
+  const { page, pageSize, search, status, sortBy, sortDir } =
+    c.req.valid("query");
 
   const trunkCountExpr = sql<number>`count(${voiceTrunks.id})::int`;
 
@@ -55,14 +57,15 @@ export const carriersRoutes = new OpenAPIHono<{
     );
     if (searchClause) filters.push(searchClause);
   }
+  if (status.length > 0) {
+    filters.push(inArray(carriers.status, status));
+  }
   const whereClause = and(...filters);
 
   const orderColumn = (() => {
     switch (sortBy) {
       case "businessName":
         return carriers.businessName;
-      case "status":
-        return carriers.status;
       case "trunkCount":
         return trunkCountExpr;
       case "createdAt":

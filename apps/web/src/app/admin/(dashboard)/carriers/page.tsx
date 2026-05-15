@@ -13,6 +13,7 @@ import type {
   CarrierListItem,
   CarrierListResponse,
   CarrierListSortBy,
+  CarrierStatus,
 } from "@audiotext/shared";
 import { CarrierFormModal } from "@/components/features/carriers/carrier-form-modal";
 import { StatusBadge } from "@/components/features/carriers/status-badge";
@@ -28,16 +29,18 @@ import { SearchInput } from "@/components/ui/search-input";
 import { PageHeader } from "@/components/layout/page-header";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { Pagination } from "@/components/ui/data-table/pagination";
+import { ColumnFilterDropdown } from "@/components/ui/data-table/column-filter";
 
 type Carrier = CarrierListItem;
 
 const SORTABLE_COLUMNS: readonly CarrierListSortBy[] = [
   "name",
   "businessName",
-  "status",
   "trunkCount",
   "createdAt",
 ];
+
+const STATUS_VALUES: readonly CarrierStatus[] = ["active", "inactive"];
 
 function isSortableColumn(id: string): id is CarrierListSortBy {
   return (SORTABLE_COLUMNS as readonly string[]).includes(id);
@@ -76,6 +79,7 @@ export default function CarriersPage() {
   ]);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<CarrierStatus[]>([]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -121,6 +125,7 @@ export default function CarriersPage() {
       sortDir,
     });
     if (search) params.set("search", search);
+    if (statusFilter.length > 0) params.set("status", statusFilter.join(","));
 
     fetch(`/api/admin/carriers?${params.toString()}`, {
       credentials: "include",
@@ -153,9 +158,15 @@ export default function CarriersPage() {
     sortBy,
     sortDir,
     search,
+    statusFilter,
     refreshKey,
     t,
   ]);
+
+  const handleStatusFilterChange = useCallback((next: string[]) => {
+    setStatusFilter(next as CarrierStatus[]);
+    setPagination((p) => ({ ...p, pageIndex: 0 }));
+  }, []);
 
   const refresh = useCallback(() => setRefreshKey((k) => k + 1), []);
 
@@ -181,8 +192,22 @@ export default function CarriersPage() {
       },
       {
         accessorKey: "status",
-        header: t("columns.status"),
+        header: () => (
+          <ColumnFilterDropdown
+            label={t("columns.status")}
+            triggerLabel={t("filters.status")}
+            options={STATUS_VALUES.map((v) => ({
+              value: v,
+              label: t(`status.${v}`),
+            }))}
+            selected={statusFilter}
+            onChange={handleStatusFilterChange}
+            applyLabel={t("filters.apply")}
+            clearLabel={t("filters.clear")}
+          />
+        ),
         cell: ({ row }) => <StatusBadge status={row.original.status} />,
+        enableSorting: false,
       },
       {
         accessorKey: "trunkCount",
@@ -202,7 +227,7 @@ export default function CarriersPage() {
         meta: { align: "right" },
       },
     ],
-    [t],
+    [t, statusFilter, handleStatusFilterChange],
   );
 
   const pageCount = Math.max(1, Math.ceil(total / pagination.pageSize));
@@ -252,7 +277,7 @@ export default function CarriersPage() {
           loadingLabel={t("loading")}
           emptyLabel={t("empty")}
           noResultsLabel={t("noResults")}
-          hasActiveFilter={!!search}
+          hasActiveFilter={!!search || statusFilter.length > 0}
         />
 
         {showFooter && (

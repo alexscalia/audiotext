@@ -195,7 +195,6 @@ export type CarrierListItem = z.infer<typeof CarrierListItemSchema>;
 export const CarrierListSortByEnum = z.enum([
   "name",
   "businessName",
-  "status",
   "trunkCount",
   "createdAt",
 ]);
@@ -208,6 +207,14 @@ export const CarrierListQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   pageSize: z.coerce.number().int().min(1).max(100).default(10),
   search: z.string().trim().max(200).optional(),
+  status: z
+    .string()
+    .trim()
+    .optional()
+    .transform((v) =>
+      v ? v.split(",").map((s) => s.trim()).filter(Boolean) : [],
+    )
+    .pipe(z.array(CarrierStatusEnum)),
   sortBy: CarrierListSortByEnum.default("name"),
   sortDir: CarrierListSortDirEnum.default("asc"),
 });
@@ -373,7 +380,6 @@ export type VoiceRateSheetListItem = z.infer<
 export const VoiceRateSheetListSortByEnum = z.enum([
   "name",
   "voiceNumberingPlanName",
-  "status",
   "currencyIso",
   "createdAt",
 ]);
@@ -385,6 +391,14 @@ export const VoiceRateSheetListQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   pageSize: z.coerce.number().int().min(1).max(100).default(10),
   search: z.string().trim().max(200).optional(),
+  status: z
+    .string()
+    .trim()
+    .optional()
+    .transform((v) =>
+      v ? v.split(",").map((s) => s.trim()).filter(Boolean) : [],
+    )
+    .pipe(z.array(VoiceRateSheetStatusEnum)),
   sortBy: VoiceRateSheetListSortByEnum.default("name"),
   sortDir: CarrierListSortDirEnum.default("asc"),
 });
@@ -708,7 +722,6 @@ export const VoiceTrunkListSortByEnum = z.enum([
   "name",
   "carrierName",
   "voiceRateSheetName",
-  "status",
   "createdAt",
 ]);
 export type VoiceTrunkListSortBy = z.infer<typeof VoiceTrunkListSortByEnum>;
@@ -722,6 +735,14 @@ export const VoiceTrunkListQuerySchema = z.object({
   search: z.string().trim().max(200).optional(),
   carrier: z.string().trim().max(200).optional(),
   ip: z.string().trim().max(200).optional(),
+  status: z
+    .string()
+    .trim()
+    .optional()
+    .transform((v) =>
+      v ? v.split(",").map((s) => s.trim()).filter(Boolean) : [],
+    )
+    .pipe(z.array(VoiceTrunkStatusEnum)),
   sortBy: VoiceTrunkListSortByEnum.default("name"),
   sortDir: VoiceTrunkListSortDirEnum.default("asc"),
 });

@@ -85,20 +85,20 @@
   "hotPaths": [
     {
       "path": "packages/shared/src/index.ts",
-      "accessCount": 37,
-      "lastAccessed": 1778777919166,
+      "accessCount": 41,
+      "lastAccessed": 1778803860006,
       "type": "file"
     },
     {
       "path": "apps/web/messages/en.json",
-      "accessCount": 31,
-      "lastAccessed": 1778777969245,
+      "accessCount": 35,
+      "lastAccessed": 1778804125116,
       "type": "file"
     },
     {
       "path": "apps/web/messages/it.json",
-      "accessCount": 28,
-      "lastAccessed": 1778777973788,
+      "accessCount": 32,
+      "lastAccessed": 1778804146000,
       "type": "file"
     },
     {
@@ -114,15 +114,27 @@
       "type": "file"
     },
     {
+      "path": "apps/api/src/routes/admin/voice-rate-sheets.ts",
+      "accessCount": 18,
+      "lastAccessed": 1778803923652,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/app/admin/(dashboard)/voice-trunks/page.tsx",
+      "accessCount": 18,
+      "lastAccessed": 1778804060476,
+      "type": "file"
+    },
+    {
       "path": "apps/web/src/components/shell/sidebar.tsx",
       "accessCount": 16,
       "lastAccessed": 1778776847486,
       "type": "file"
     },
     {
-      "path": "apps/api/src/routes/admin/voice-rate-sheets.ts",
-      "accessCount": 15,
-      "lastAccessed": 1778775740311,
+      "path": "apps/api/src/routes/admin/voice-trunks.ts",
+      "accessCount": 16,
+      "lastAccessed": 1778803898372,
       "type": "file"
     },
     {
@@ -132,9 +144,9 @@
       "type": "file"
     },
     {
-      "path": "apps/api/src/routes/admin/voice-trunks.ts",
-      "accessCount": 12,
-      "lastAccessed": 1778803564373,
+      "path": "apps/web/src/app/admin/(dashboard)/rate-sheets/voice/page.tsx",
+      "accessCount": 14,
+      "lastAccessed": 1778804107119,
       "type": "file"
     },
     {
@@ -144,15 +156,15 @@
       "type": "file"
     },
     {
-      "path": "apps/web/src/app/admin/(dashboard)/voice-trunks/page.tsx",
+      "path": "apps/api/src/routes/admin/voice-numbering-plans.ts",
       "accessCount": 11,
-      "lastAccessed": 1778777963486,
+      "lastAccessed": 1778803776692,
       "type": "file"
     },
     {
-      "path": "apps/api/src/routes/admin/voice-numbering-plans.ts",
-      "accessCount": 10,
-      "lastAccessed": 1778747433605,
+      "path": "apps/web/src/app/admin/(dashboard)/carriers/page.tsx",
+      "accessCount": 11,
+      "lastAccessed": 1778804003727,
       "type": "file"
     },
     {
@@ -162,15 +174,15 @@
       "type": "file"
     },
     {
-      "path": "apps/web/src/app/admin/(dashboard)/rate-sheets/voice/page.tsx",
-      "accessCount": 7,
-      "lastAccessed": 1778775838425,
+      "path": "apps/web/src/app/admin/(dashboard)/numbering-plans/voice/page.tsx",
+      "accessCount": 6,
+      "lastAccessed": 1778803776081,
       "type": "file"
     },
     {
-      "path": "apps/web/src/app/admin/(dashboard)/numbering-plans/voice/page.tsx",
-      "accessCount": 5,
-      "lastAccessed": 1778746999906,
+      "path": "apps/api/src/routes/admin/carriers.ts",
+      "accessCount": 6,
+      "lastAccessed": 1778803878038,
       "type": "file"
     },
     {
@@ -180,27 +192,21 @@
       "type": "file"
     },
     {
+      "path": "apps/web/src/components/ui/badge.tsx",
+      "accessCount": 5,
+      "lastAccessed": 1778803734150,
+      "type": "file"
+    },
+    {
       "path": "apps/web/src/app/admin/login/page.tsx",
       "accessCount": 4,
       "lastAccessed": 1778776262127,
       "type": "file"
     },
     {
-      "path": "apps/web/src/components/ui/badge.tsx",
+      "path": "apps/web/src/components/ui/data-table/column-filter.tsx",
       "accessCount": 4,
-      "lastAccessed": 1778777752085,
-      "type": "file"
-    },
-    {
-      "path": "apps/api/src/routes/admin/carriers.ts",
-      "accessCount": 3,
-      "lastAccessed": 1778775284758,
-      "type": "file"
-    },
-    {
-      "path": "apps/web/src/app/admin/(dashboard)/carriers/page.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1778775312569,
+      "lastAccessed": 1778804181946,
       "type": "file"
     },
     {
@@ -216,15 +222,15 @@
       "type": "file"
     },
     {
-      "path": "apps/web/src/components/layout/page-header.tsx",
-      "accessCount": 2,
-      "lastAccessed": 1778725371628,
+      "path": "apps/web/src/components/ui/data-table/data-table.tsx",
+      "accessCount": 3,
+      "lastAccessed": 1778803718809,
       "type": "file"
     },
     {
-      "path": "apps/web/src/components/ui/data-table/data-table.tsx",
+      "path": "apps/web/src/components/layout/page-header.tsx",
       "accessCount": 2,
-      "lastAccessed": 1778725376821,
+      "lastAccessed": 1778725371628,
       "type": "file"
     },
     {
@@ -270,9 +276,15 @@
       "type": "file"
     },
     {
+      "path": "apps/web/src/components/ui/data-table/sortable-header.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1778803726682,
+      "type": "file"
+    },
+    {
       "path": "apps/web/src/components/ui/actions-menu.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1778724465351,
+      "accessCount": 2,
+      "lastAccessed": 1778803733905,
       "type": "file"
     },
     {
@@ -291,12 +303,6 @@
       "path": "apps/web/src/components/layout/breadcrumb.tsx",
       "accessCount": 1,
       "lastAccessed": 1778725357239,
-      "type": "file"
-    },
-    {
-      "path": "apps/web/src/components/ui/data-table/sortable-header.tsx",
-      "accessCount": 1,
-      "lastAccessed": 1778725380385,
       "type": "file"
     },
     {
@@ -351,6 +357,12 @@
       "path": "apps/web/src/i18n/config.ts",
       "accessCount": 1,
       "lastAccessed": 1778776390327,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/components/ui/data-table/types.ts",
+      "accessCount": 1,
+      "lastAccessed": 1778803764638,
       "type": "file"
     }
   ],

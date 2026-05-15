@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   type ColumnDef,
@@ -13,6 +13,7 @@ import type {
   VoiceTrunkListItem,
   VoiceTrunkListResponse,
   VoiceTrunkListSortBy,
+  VoiceTrunkStatus,
 } from "@audiotext/shared";
 import { ActionsMenu, ActionsMenuItem } from "@/components/ui/actions-menu";
 import { EyeIcon, PencilIcon, TrashIcon } from "@/components/ui/icons";
@@ -20,6 +21,7 @@ import { SearchInput } from "@/components/ui/search-input";
 import { PageHeader } from "@/components/layout/page-header";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { Pagination } from "@/components/ui/data-table/pagination";
+import { ColumnFilterDropdown } from "@/components/ui/data-table/column-filter";
 import { Badge } from "@/components/ui/badge";
 
 type Trunk = VoiceTrunkListItem;
@@ -28,8 +30,13 @@ const SORTABLE_COLUMNS: readonly VoiceTrunkListSortBy[] = [
   "name",
   "carrierName",
   "voiceRateSheetName",
-  "status",
   "createdAt",
+];
+
+const STATUS_VALUES: readonly VoiceTrunkStatus[] = [
+  "active",
+  "inactive",
+  "testing",
 ];
 
 function isSortableColumn(id: string): id is VoiceTrunkListSortBy {
@@ -88,6 +95,7 @@ export default function VoiceTrunksPage() {
   const [carrier, setCarrier] = useState("");
   const [ipInput, setIpInput] = useState("");
   const [ip, setIp] = useState("");
+  const [statusFilter, setStatusFilter] = useState<VoiceTrunkStatus[]>([]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -135,6 +143,7 @@ export default function VoiceTrunksPage() {
     if (search) params.set("search", search);
     if (carrier) params.set("carrier", carrier);
     if (ip) params.set("ip", ip);
+    if (statusFilter.length > 0) params.set("status", statusFilter.join(","));
 
     fetch(`/api/admin/voice-trunks?${params.toString()}`, {
       credentials: "include",
@@ -169,8 +178,14 @@ export default function VoiceTrunksPage() {
     search,
     carrier,
     ip,
+    statusFilter,
     t,
   ]);
+
+  const handleStatusFilterChange = useCallback((next: string[]) => {
+    setStatusFilter(next as VoiceTrunkStatus[]);
+    setPagination((p) => ({ ...p, pageIndex: 0 }));
+  }, []);
 
   const columns = useMemo<ColumnDef<Trunk>[]>(
     () => [
@@ -221,8 +236,22 @@ export default function VoiceTrunksPage() {
       },
       {
         accessorKey: "status",
-        header: t("columns.status"),
+        header: () => (
+          <ColumnFilterDropdown
+            label={t("columns.status")}
+            triggerLabel={t("filters.status")}
+            options={STATUS_VALUES.map((v) => ({
+              value: v,
+              label: t(`status.${v}`),
+            }))}
+            selected={statusFilter}
+            onChange={handleStatusFilterChange}
+            applyLabel={t("filters.apply")}
+            clearLabel={t("filters.clear")}
+          />
+        ),
         cell: ({ row }) => <StatusCell status={row.original.status} />,
+        enableSorting: false,
       },
       {
         id: "actions",
@@ -232,7 +261,7 @@ export default function VoiceTrunksPage() {
         meta: { align: "right" },
       },
     ],
-    [t],
+    [t, statusFilter, handleStatusFilterChange],
   );
 
   const pageCount = Math.max(1, Math.ceil(total / pagination.pageSize));
@@ -284,7 +313,9 @@ export default function VoiceTrunksPage() {
           loadingLabel={t("loading")}
           emptyLabel={t("empty")}
           noResultsLabel={t("noResults")}
-          hasActiveFilter={!!search || !!carrier || !!ip}
+          hasActiveFilter={
+            !!search || !!carrier || !!ip || statusFilter.length > 0
+          }
         />
 
         {showFooter && (

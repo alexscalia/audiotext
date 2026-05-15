@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   type ColumnDef,
@@ -13,6 +13,7 @@ import type {
   VoiceRateSheetListItem,
   VoiceRateSheetListResponse,
   VoiceRateSheetListSortBy,
+  VoiceRateSheetStatus,
 } from "@audiotext/shared";
 import { ActionsMenu, ActionsMenuItem } from "@/components/ui/actions-menu";
 import { EyeIcon, PencilIcon, TrashIcon } from "@/components/ui/icons";
@@ -20,6 +21,7 @@ import { SearchInput } from "@/components/ui/search-input";
 import { PageHeader } from "@/components/layout/page-header";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { Pagination } from "@/components/ui/data-table/pagination";
+import { ColumnFilterDropdown } from "@/components/ui/data-table/column-filter";
 import { Badge } from "@/components/ui/badge";
 
 type RateSheet = VoiceRateSheetListItem;
@@ -27,10 +29,11 @@ type RateSheet = VoiceRateSheetListItem;
 const SORTABLE_COLUMNS: readonly VoiceRateSheetListSortBy[] = [
   "name",
   "voiceNumberingPlanName",
-  "status",
   "currencyIso",
   "createdAt",
 ];
+
+const STATUS_VALUES: readonly VoiceRateSheetStatus[] = ["active", "inactive"];
 
 function isSortableColumn(id: string): id is VoiceRateSheetListSortBy {
   return (SORTABLE_COLUMNS as readonly string[]).includes(id);
@@ -79,6 +82,7 @@ export default function VoiceRateSheetsPage() {
   ]);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<VoiceRateSheetStatus[]>([]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -122,6 +126,7 @@ export default function VoiceRateSheetsPage() {
       sortDir,
     });
     if (search) params.set("search", search);
+    if (statusFilter.length > 0) params.set("status", statusFilter.join(","));
 
     fetch(`/api/admin/voice-rate-sheets?${params.toString()}`, {
       credentials: "include",
@@ -154,8 +159,14 @@ export default function VoiceRateSheetsPage() {
     sortBy,
     sortDir,
     search,
+    statusFilter,
     t,
   ]);
+
+  const handleStatusFilterChange = useCallback((next: string[]) => {
+    setStatusFilter(next as VoiceRateSheetStatus[]);
+    setPagination((p) => ({ ...p, pageIndex: 0 }));
+  }, []);
 
   const columns = useMemo<ColumnDef<RateSheet>[]>(
     () => [
@@ -184,8 +195,22 @@ export default function VoiceRateSheetsPage() {
       },
       {
         accessorKey: "status",
-        header: t("columns.status"),
+        header: () => (
+          <ColumnFilterDropdown
+            label={t("columns.status")}
+            triggerLabel={t("filters.status")}
+            options={STATUS_VALUES.map((v) => ({
+              value: v,
+              label: t(`status.${v}`),
+            }))}
+            selected={statusFilter}
+            onChange={handleStatusFilterChange}
+            applyLabel={t("filters.apply")}
+            clearLabel={t("filters.clear")}
+          />
+        ),
         cell: ({ row }) => <StatusCell status={row.original.status} />,
+        enableSorting: false,
       },
       {
         id: "actions",
@@ -195,7 +220,7 @@ export default function VoiceRateSheetsPage() {
         meta: { align: "right" },
       },
     ],
-    [t],
+    [t, statusFilter, handleStatusFilterChange],
   );
 
   const pageCount = Math.max(1, Math.ceil(total / pagination.pageSize));
@@ -237,7 +262,7 @@ export default function VoiceRateSheetsPage() {
           loadingLabel={t("loading")}
           emptyLabel={t("empty")}
           noResultsLabel={t("noResults")}
-          hasActiveFilter={!!search}
+          hasActiveFilter={!!search || statusFilter.length > 0}
         />
 
         {showFooter && (
