@@ -42,8 +42,8 @@ services:
     container_name: audiotext-freeswitch
     restart: unless-stopped
     volumes:
-      - ./infra/sip/freeswitch/conf/dialplan/public/00_audiotext.xml:/usr/local/freeswitch/conf/dialplan/public/00_audiotext.xml:ro
-      - ./infra/sip/freeswitch/audio/welcome.wav:/usr/local/freeswitch/sounds/audiotext/welcome.wav:ro
+      - ./infra/sip/freeswitch/conf/dialplan/public/00_audiotext.xml:/usr/local/freeswitch/etc/freeswitch/dialplan/public/00_audiotext.xml:ro
+      - ./infra/sip/freeswitch/audio/welcome.wav:/usr/local/freeswitch/share/freeswitch/sounds/audiotext/welcome.wav:ro
     networks:
       sip:
         aliases:
