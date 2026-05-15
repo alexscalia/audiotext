@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { ColumnDef } from "@tanstack/react-table";
 import type {
@@ -11,7 +11,6 @@ import type {
 } from "@audiotext/shared";
 import { SearchInput } from "@/components/ui/search-input";
 import { PageHeader } from "@/components/layout/page-header";
-import { ColumnFilterDropdown } from "@/components/ui/data-table/column-filter";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { StandardRowActions } from "@/components/ui/data-table/standard-row-actions";
 import { HoverTooltip } from "@/components/ui/hover-tooltip";
@@ -20,6 +19,7 @@ import {
   makePaginationLabels,
 } from "@/components/ui/data-table/data-table-card";
 import { useDebouncedValue, useListData } from "@/hooks/useListData";
+import { useStatusFilter } from "@/hooks/useStatusFilter";
 
 type Trunk = VoiceTrunkListItem;
 
@@ -48,10 +48,14 @@ export default function VoiceTrunksPage() {
   const tStatus = useTranslations("VoiceTrunks.status");
   const [carrierInput, setCarrierInput] = useState("");
   const [ipInput, setIpInput] = useState("");
-  const [statusFilter, setStatusFilter] = useState<VoiceTrunkStatus[]>([]);
 
   const carrier = useDebouncedValue(carrierInput.trim());
   const ip = useDebouncedValue(ipInput.trim());
+
+  const statusFilter = useStatusFilter<VoiceTrunkStatus>({
+    values: STATUS_VALUES,
+    t,
+  });
 
   const list = useListData<Trunk, VoiceTrunkListSortBy>({
     endpoint: "/api/admin/voice-trunks",
@@ -65,23 +69,15 @@ export default function VoiceTrunksPage() {
     buildExtraParams: (params) => {
       if (carrier) params.set("carrier", carrier);
       if (ip) params.set("ip", ip);
-      if (statusFilter.length > 0)
-        params.set("status", statusFilter.join(","));
+      statusFilter.applyToParams(params);
     },
-    extraDeps: [carrier, ip, statusFilter],
+    extraDeps: [carrier, ip, ...statusFilter.deps],
   });
 
+  const { resetPage } = list;
   useEffect(() => {
-    list.resetPage();
-  }, [carrier, ip, list]);
-
-  const handleStatusFilterChange = useCallback(
-    (next: string[]) => {
-      setStatusFilter(next as VoiceTrunkStatus[]);
-      list.resetPage();
-    },
-    [list],
-  );
+    resetPage();
+  }, [carrier, ip, statusFilter.filter, resetPage]);
 
   const columns = useMemo<ColumnDef<Trunk>[]>(
     () => [
@@ -129,20 +125,7 @@ export default function VoiceTrunksPage() {
       },
       {
         accessorKey: "status",
-        header: () => (
-          <ColumnFilterDropdown
-            label={t("columns.status")}
-            triggerLabel={t("filters.status")}
-            options={STATUS_VALUES.map((v) => ({
-              value: v,
-              label: t(`status.${v}`),
-            }))}
-            selected={statusFilter}
-            onChange={handleStatusFilterChange}
-            applyLabel={t("filters.apply")}
-            clearLabel={t("filters.clear")}
-          />
-        ),
+        header: () => statusFilter.columnHeader,
         cell: ({ row }) => (
           <StatusBadge
             status={row.original.status}
@@ -162,7 +145,7 @@ export default function VoiceTrunksPage() {
         meta: { align: "right" },
       },
     ],
-    [t, tActions, tStatus, statusFilter, handleStatusFilterChange],
+    [t, tActions, tStatus, statusFilter.columnHeader],
   );
 
   return (
@@ -174,7 +157,7 @@ export default function VoiceTrunksPage() {
         columns={columns}
         selectId="voice-trunks-page-size"
         hasActiveFilter={
-          !!list.search || !!carrier || !!ip || statusFilter.length > 0
+          !!list.search || !!carrier || !!ip || statusFilter.hasActive
         }
         filtersClassName="flex flex-col gap-3 border-b border-gray-200 p-4 sm:flex-row sm:flex-wrap"
         filters={

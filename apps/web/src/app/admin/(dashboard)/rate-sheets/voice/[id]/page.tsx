@@ -14,8 +14,7 @@ import type {
 import { Badge } from "@/components/ui/badge";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { SearchInput } from "@/components/ui/search-input";
-import { PageHeader } from "@/components/layout/page-header";
-import { BackLink } from "@/components/layout/breadcrumb";
+import { DetailHeader } from "@/components/layout/detail-header";
 import {
   DataTableCard,
   makePaginationLabels,
@@ -108,9 +107,10 @@ export default function VoiceRateSheetDetailPage() {
     extraDeps: [locale, prefix],
   });
 
+  const { resetPage } = list;
   useEffect(() => {
-    list.resetPage();
-  }, [prefix, list]);
+    resetPage();
+  }, [prefix, resetPage]);
 
   const currency = sheet?.currencyIso ?? "USD";
 
@@ -211,35 +211,26 @@ export default function VoiceRateSheetDetailPage() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <PageHeader
-        eyebrow={
-          <BackLink
-            href="/admin/rate-sheets/voice"
-            label={t("backToRateSheets")}
-          />
-        }
-        title={sheetLoading ? "—" : (sheet?.name ?? t("detail.notFound"))}
+      <DetailHeader
+        backHref="/admin/rate-sheets/voice"
+        backLabel={t("backToRateSheets")}
+        title={sheet?.name ?? t("detail.notFound")}
+        loading={sheetLoading}
+        error={sheetError}
         meta={
-          <>
-            {sheet && (
+          sheet && (
+            <>
               <StatusBadge
                 status={sheet.status}
                 tones={SHEET_STATUS_TONES}
                 label={tStatus(sheet.status)}
               />
-            )}
-            {sheet && (
               <Badge tone="neutral">{sheet.currencyIso.toUpperCase()}</Badge>
-            )}
-            {sheet && (
               <span>
                 {t("detail.summary", { lines: sheet.lineCount })}
               </span>
-            )}
-            {sheetError && !sheetLoading && (
-              <span className="text-red-600">{sheetError}</span>
-            )}
-          </>
+            </>
+          )
         }
       />
 

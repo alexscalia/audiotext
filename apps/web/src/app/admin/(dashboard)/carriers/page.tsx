@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { ColumnDef } from "@tanstack/react-table";
 import type {
@@ -15,13 +15,13 @@ import { PlusIcon } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
 import { PageHeader } from "@/components/layout/page-header";
-import { ColumnFilterDropdown } from "@/components/ui/data-table/column-filter";
 import { StandardRowActions } from "@/components/ui/data-table/standard-row-actions";
 import {
   DataTableCard,
   makePaginationLabels,
 } from "@/components/ui/data-table/data-table-card";
 import { useListData } from "@/hooks/useListData";
+import { useStatusFilter } from "@/hooks/useStatusFilter";
 
 type Carrier = CarrierListItem;
 
@@ -43,8 +43,12 @@ export default function CarriersPage() {
   const t = useTranslations("Carriers");
   const tActions = useTranslations("Carriers.actions");
   const tStatus = useTranslations("Carriers.status");
-  const [statusFilter, setStatusFilter] = useState<CarrierStatus[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
+
+  const statusFilter = useStatusFilter<CarrierStatus>({
+    values: STATUS_VALUES,
+    t,
+  });
 
   const list = useListData<Carrier, CarrierListSortBy>({
     endpoint: "/api/admin/carriers",
@@ -55,20 +59,14 @@ export default function CarriersPage() {
       const r = json as CarrierListResponse;
       return { items: r.carriers, total: r.total };
     },
-    buildExtraParams: (params) => {
-      if (statusFilter.length > 0)
-        params.set("status", statusFilter.join(","));
-    },
-    extraDeps: [statusFilter],
+    buildExtraParams: statusFilter.applyToParams,
+    extraDeps: statusFilter.deps,
   });
 
-  const handleStatusFilterChange = useCallback(
-    (next: string[]) => {
-      setStatusFilter(next as CarrierStatus[]);
-      list.resetPage();
-    },
-    [list],
-  );
+  const { resetPage } = list;
+  useEffect(() => {
+    resetPage();
+  }, [statusFilter.filter, resetPage]);
 
   const handleCreate = useCallback(() => {
     list.refresh();
@@ -92,20 +90,7 @@ export default function CarriersPage() {
       },
       {
         accessorKey: "status",
-        header: () => (
-          <ColumnFilterDropdown
-            label={t("columns.status")}
-            triggerLabel={t("filters.status")}
-            options={STATUS_VALUES.map((v) => ({
-              value: v,
-              label: t(`status.${v}`),
-            }))}
-            selected={statusFilter}
-            onChange={handleStatusFilterChange}
-            applyLabel={t("filters.apply")}
-            clearLabel={t("filters.clear")}
-          />
-        ),
+        header: () => statusFilter.columnHeader,
         cell: ({ row }) => (
           <StatusBadge
             status={row.original.status}
@@ -135,7 +120,7 @@ export default function CarriersPage() {
         meta: { align: "right" },
       },
     ],
-    [t, tActions, tStatus, statusFilter, handleStatusFilterChange],
+    [t, tActions, tStatus, statusFilter.columnHeader],
   );
 
   return (
@@ -154,7 +139,7 @@ export default function CarriersPage() {
         list={list}
         columns={columns}
         selectId="carriers-page-size"
-        hasActiveFilter={!!list.search || statusFilter.length > 0}
+        hasActiveFilter={!!list.search || statusFilter.hasActive}
         filters={
           <SearchInput
             label={t("search")}

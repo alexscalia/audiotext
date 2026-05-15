@@ -14,8 +14,7 @@ import type {
 } from "@audiotext/shared";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { SearchInput } from "@/components/ui/search-input";
-import { PageHeader } from "@/components/layout/page-header";
-import { BackLink } from "@/components/layout/breadcrumb";
+import { DetailHeader } from "@/components/layout/detail-header";
 import {
   DataTableCard,
   makePaginationLabels,
@@ -91,9 +90,10 @@ export default function NumberingPlanDetailPage() {
     extraDeps: [locale, prefix],
   });
 
+  const { resetPage } = list;
   useEffect(() => {
-    list.resetPage();
-  }, [prefix, list]);
+    resetPage();
+  }, [prefix, resetPage]);
 
   const columns = useMemo<ColumnDef<Destination>[]>(
     () => [
@@ -203,35 +203,28 @@ export default function NumberingPlanDetailPage() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <PageHeader
-        eyebrow={
-          <BackLink
-            href="/admin/numbering-plans/voice"
-            label={t("backToPlans")}
-          />
-        }
-        title={planLoading ? "—" : (plan?.name ?? t("detail.notFound"))}
+      <DetailHeader
+        backHref="/admin/numbering-plans/voice"
+        backLabel={t("backToPlans")}
+        title={plan?.name ?? t("detail.notFound")}
+        loading={planLoading}
+        error={planError}
         meta={
-          <>
-            {plan && (
+          plan && (
+            <>
               <StatusBadge
                 status={plan.status}
                 tones={PLAN_STATUS_TONES}
                 label={tStatus(plan.status)}
               />
-            )}
-            {plan && (
               <span>
                 {t("detail.summary", {
                   destinations: plan.destinationCount,
                   codes: plan.codeCount,
                 })}
               </span>
-            )}
-            {planError && !planLoading && (
-              <span className="text-red-600">{planError}</span>
-            )}
-          </>
+            </>
+          )
         }
       />
 
