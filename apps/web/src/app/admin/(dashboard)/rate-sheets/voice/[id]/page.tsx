@@ -21,6 +21,8 @@ import {
   makePaginationLabels,
 } from "@/components/ui/data-table/data-table-card";
 import { useDebouncedValue, useListData } from "@/hooks/useListData";
+import { useResource } from "@/hooks/useResource";
+import { HoverTooltip } from "@/components/ui/hover-tooltip";
 
 type Line = VoiceRateSheetLineListItem;
 
@@ -79,42 +81,15 @@ export default function VoiceRateSheetDetailPage() {
   const [prefixInput, setPrefixInput] = useState("");
   const prefix = useDebouncedValue(prefixInput.replace(/[^0-9]/g, ""));
 
-  const [sheet, setSheet] = useState<VoiceRateSheetDetail | null>(null);
-  const [sheetError, setSheetError] = useState<string | null>(null);
-  const [sheetLoading, setSheetLoading] = useState(true);
-
-  useEffect(() => {
-    if (!id) return;
-    const controller = new AbortController();
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch lifecycle is intrinsically tied to dep changes
-    setSheetLoading(true);
-    setSheetError(null);
-    fetch(`/api/admin/voice-rate-sheets/${id}`, {
-      credentials: "include",
-      signal: controller.signal,
-    })
-      .then(async (res) => {
-        if (res.status === 404) throw new Error("not_found");
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return (await res.json()) as VoiceRateSheetDetail;
-      })
-      .then((json) => {
-        setSheet(json);
-      })
-      .catch((err: unknown) => {
-        if (controller.signal.aborted) return;
-        if (err instanceof Error && err.message === "not_found") {
-          setSheetError(t("detail.notFound"));
-        } else {
-          setSheetError(t("loadError"));
-        }
-      })
-      .finally(() => {
-        if (controller.signal.aborted) return;
-        setSheetLoading(false);
-      });
-    return () => controller.abort();
-  }, [id, t]);
+  const {
+    data: sheet,
+    loading: sheetLoading,
+    error: sheetError,
+  } = useResource<VoiceRateSheetDetail>({
+    endpoint: id ? `/api/admin/voice-rate-sheets/${id}` : null,
+    notFoundMessage: t("detail.notFound"),
+    errorMessage: t("loadError"),
+  });
 
   const list = useListData<Line, VoiceRateSheetLineSortBy>({
     endpoint: `/api/admin/voice-rate-sheets/${id}/lines`,
@@ -220,15 +195,12 @@ export default function VoiceRateSheetDetailPage() {
               <span className="text-gray-400">—</span>
             );
           return (
-            <span className="group relative inline-flex cursor-help tabular-nums text-gray-700">
+            <HoverTooltip
+              className="tabular-nums text-gray-700"
+              tooltip={tooltipText}
+            >
               {display}
-              <span
-                role="tooltip"
-                className="pointer-events-none invisible absolute right-full top-1/2 z-20 mr-2 -translate-y-1/2 whitespace-nowrap rounded-md bg-black px-2 py-1 text-xs font-normal text-white opacity-0 shadow-lg transition-opacity duration-100 group-hover:visible group-hover:opacity-100 motion-reduce:transition-none"
-              >
-                {tooltipText}
-              </span>
-            </span>
+            </HoverTooltip>
           );
         },
         meta: { align: "right" },

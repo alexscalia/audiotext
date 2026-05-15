@@ -9,12 +9,12 @@ import type {
   VoiceTrunkListSortBy,
   VoiceTrunkStatus,
 } from "@audiotext/shared";
-import { EyeIcon, PencilIcon, TrashIcon } from "@/components/ui/icons";
 import { SearchInput } from "@/components/ui/search-input";
 import { PageHeader } from "@/components/layout/page-header";
 import { ColumnFilterDropdown } from "@/components/ui/data-table/column-filter";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { ActionsCell } from "@/components/ui/data-table/actions-cell";
+import { StandardRowActions } from "@/components/ui/data-table/standard-row-actions";
+import { HoverTooltip } from "@/components/ui/hover-tooltip";
 import {
   DataTableCard,
   makePaginationLabels,
@@ -117,15 +117,12 @@ export default function VoiceTrunksPage() {
             return <span className="text-gray-400">—</span>;
           }
           return (
-            <span className="group relative inline-flex cursor-help tabular-nums text-gray-700">
+            <HoverTooltip
+              className="tabular-nums text-gray-700"
+              tooltip={ips.join(", ")}
+            >
               {row.original.ipCount.toLocaleString()}
-              <span
-                role="tooltip"
-                className="pointer-events-none invisible absolute right-full top-1/2 z-20 mr-2 -translate-y-1/2 whitespace-nowrap rounded-md bg-black px-2 py-1 text-xs font-normal text-white opacity-0 shadow-lg transition-opacity duration-100 group-hover:visible group-hover:opacity-100 motion-reduce:transition-none"
-              >
-                {ips.join(", ")}
-              </span>
-            </span>
+            </HoverTooltip>
           );
         },
         enableSorting: false,
@@ -159,27 +156,7 @@ export default function VoiceTrunksPage() {
         id: "actions",
         header: t("columns.actions"),
         cell: ({ row }) => (
-          <ActionsCell
-            triggerLabel={`${tActions("open")} — ${row.original.name}`}
-            actions={[
-              {
-                icon: <EyeIcon />,
-                label: tActions("view"),
-                onSelect: () => {},
-              },
-              {
-                icon: <PencilIcon />,
-                label: tActions("edit"),
-                onSelect: () => {},
-              },
-              {
-                icon: <TrashIcon />,
-                label: tActions("delete"),
-                tone: "danger",
-                onSelect: () => {},
-              },
-            ]}
-          />
+          <StandardRowActions itemName={row.original.name} t={tActions} />
         ),
         enableSorting: false,
         meta: { align: "right" },

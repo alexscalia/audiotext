@@ -11,17 +11,12 @@ import type {
 } from "@audiotext/shared";
 import { CarrierFormModal } from "@/components/features/carriers/carrier-form-modal";
 import { StatusBadge } from "@/components/ui/status-badge";
-import {
-  EyeIcon,
-  PencilIcon,
-  PlusIcon,
-  TrashIcon,
-} from "@/components/ui/icons";
+import { PlusIcon } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
 import { PageHeader } from "@/components/layout/page-header";
 import { ColumnFilterDropdown } from "@/components/ui/data-table/column-filter";
-import { ActionsCell } from "@/components/ui/data-table/actions-cell";
+import { StandardRowActions } from "@/components/ui/data-table/standard-row-actions";
 import {
   DataTableCard,
   makePaginationLabels,
@@ -134,27 +129,7 @@ export default function CarriersPage() {
         id: "actions",
         header: t("columns.actions"),
         cell: ({ row }) => (
-          <ActionsCell
-            triggerLabel={`${tActions("open")} — ${row.original.name}`}
-            actions={[
-              {
-                icon: <EyeIcon />,
-                label: tActions("view"),
-                onSelect: () => {},
-              },
-              {
-                icon: <PencilIcon />,
-                label: tActions("edit"),
-                onSelect: () => {},
-              },
-              {
-                icon: <TrashIcon />,
-                label: tActions("delete"),
-                tone: "danger",
-                onSelect: () => {},
-              },
-            ]}
-          />
+          <StandardRowActions itemName={row.original.name} t={tActions} />
         ),
         enableSorting: false,
         meta: { align: "right" },

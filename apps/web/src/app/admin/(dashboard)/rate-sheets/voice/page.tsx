@@ -9,12 +9,11 @@ import type {
   VoiceRateSheetListSortBy,
   VoiceRateSheetStatus,
 } from "@audiotext/shared";
-import { EyeIcon, PencilIcon, TrashIcon } from "@/components/ui/icons";
 import { SearchInput } from "@/components/ui/search-input";
 import { PageHeader } from "@/components/layout/page-header";
 import { ColumnFilterDropdown } from "@/components/ui/data-table/column-filter";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { ActionsCell } from "@/components/ui/data-table/actions-cell";
+import { StandardRowActions } from "@/components/ui/data-table/standard-row-actions";
 import {
   DataTableCard,
   makePaginationLabels,
@@ -121,26 +120,10 @@ export default function VoiceRateSheetsPage() {
         id: "actions",
         header: t("columns.actions"),
         cell: ({ row }) => (
-          <ActionsCell
-            triggerLabel={`${tActions("open")} — ${row.original.name}`}
-            actions={[
-              {
-                icon: <EyeIcon />,
-                label: tActions("view"),
-                href: `/admin/rate-sheets/voice/${row.original.id}`,
-              },
-              {
-                icon: <PencilIcon />,
-                label: tActions("edit"),
-                onSelect: () => {},
-              },
-              {
-                icon: <TrashIcon />,
-                label: tActions("delete"),
-                tone: "danger",
-                onSelect: () => {},
-              },
-            ]}
+          <StandardRowActions
+            itemName={row.original.name}
+            t={tActions}
+            viewHref={`/admin/rate-sheets/voice/${row.original.id}`}
           />
         ),
         enableSorting: false,

@@ -21,6 +21,7 @@ import {
   makePaginationLabels,
 } from "@/components/ui/data-table/data-table-card";
 import { useDebouncedValue, useListData } from "@/hooks/useListData";
+import { useResource } from "@/hooks/useResource";
 
 type Destination = VoiceNumberingPlanDestinationListItem;
 
@@ -63,42 +64,15 @@ export default function NumberingPlanDetailPage() {
   const [prefixInput, setPrefixInput] = useState("");
   const prefix = useDebouncedValue(prefixInput.replace(/[^0-9]/g, ""));
 
-  const [plan, setPlan] = useState<VoiceNumberingPlanDetail | null>(null);
-  const [planError, setPlanError] = useState<string | null>(null);
-  const [planLoading, setPlanLoading] = useState(true);
-
-  useEffect(() => {
-    if (!id) return;
-    const controller = new AbortController();
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch lifecycle is intrinsically tied to dep changes
-    setPlanLoading(true);
-    setPlanError(null);
-    fetch(`/api/admin/voice-numbering-plans/${id}`, {
-      credentials: "include",
-      signal: controller.signal,
-    })
-      .then(async (res) => {
-        if (res.status === 404) throw new Error("not_found");
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return (await res.json()) as VoiceNumberingPlanDetail;
-      })
-      .then((json) => {
-        setPlan(json);
-      })
-      .catch((err: unknown) => {
-        if (controller.signal.aborted) return;
-        if (err instanceof Error && err.message === "not_found") {
-          setPlanError(t("detail.notFound"));
-        } else {
-          setPlanError(t("loadError"));
-        }
-      })
-      .finally(() => {
-        if (controller.signal.aborted) return;
-        setPlanLoading(false);
-      });
-    return () => controller.abort();
-  }, [id, t]);
+  const {
+    data: plan,
+    loading: planLoading,
+    error: planError,
+  } = useResource<VoiceNumberingPlanDetail>({
+    endpoint: id ? `/api/admin/voice-numbering-plans/${id}` : null,
+    notFoundMessage: t("detail.notFound"),
+    errorMessage: t("loadError"),
+  });
 
   const list = useListData<Destination, VoiceNumberingPlanDestinationSortBy>({
     endpoint: `/api/admin/voice-numbering-plans/${id}/destinations`,
