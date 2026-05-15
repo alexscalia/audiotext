@@ -2,8 +2,13 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("PageTitles");
-  return { title: t("rateSheetVoiceDetail") };
+  const [t, tCommon] = await Promise.all([
+    getTranslations("PageTitles"),
+    getTranslations("Common"),
+  ]);
+  return {
+    title: { absolute: `${t("rateSheetVoiceDetail")} · ${tCommon("appName")}` },
+  };
 }
 
 export default function RateSheetVoiceDetailLayout({
