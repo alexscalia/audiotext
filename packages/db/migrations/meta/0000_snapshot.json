@@ -1,5 +1,5 @@
 {
-  "id": "8bd12967-8eac-4907-9308-cd38cc22f39c",
+  "id": "dfa776fa-2cf0-485e-96ad-b85c78208cc3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -330,14 +330,14 @@
           "primaryKey": false,
           "notNull": true
         },
-        "name": {
-          "name": "name",
-          "type": "text",
+        "voice_numbering_plan_id": {
+          "name": "voice_numbering_plan_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "internal_route_name": {
-          "name": "internal_route_name",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -354,6 +354,30 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "max_daily_total_mins": {
+          "name": "max_daily_total_mins",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "max_daily_mins_a_number": {
+          "name": "max_daily_mins_a_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "max_daily_mins_b_number": {
+          "name": "max_daily_mins_b_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "max_daily_mins_a_to_b_number": {
+          "name": "max_daily_mins_a_to_b_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -377,8 +401,8 @@
         }
       },
       "indexes": {
-        "at_voice_terminations_carrier_internal_unique_active": {
-          "name": "at_voice_terminations_carrier_internal_unique_active",
+        "at_voice_terminations_carrier_name_unique_active": {
+          "name": "at_voice_terminations_carrier_name_unique_active",
           "columns": [
             {
               "expression": "carrier_id",
@@ -387,7 +411,7 @@
               "nulls": "last"
             },
             {
-              "expression": "internal_route_name",
+              "expression": "name",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -404,6 +428,21 @@
           "columns": [
             {
               "expression": "carrier_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "at_voice_terminations_voice_numbering_plan_idx": {
+          "name": "at_voice_terminations_voice_numbering_plan_idx",
+          "columns": [
+            {
+              "expression": "voice_numbering_plan_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -473,6 +512,19 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
+        },
+        "at_voice_terminations_voice_numbering_plan_id_voice_numbering_plans_id_fk": {
+          "name": "at_voice_terminations_voice_numbering_plan_id_voice_numbering_plans_id_fk",
+          "tableFrom": "at_voice_terminations",
+          "tableTo": "voice_numbering_plans",
+          "columnsFrom": [
+            "voice_numbering_plan_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -482,6 +534,22 @@
         "at_voice_terminations_country_code_iso2": {
           "name": "at_voice_terminations_country_code_iso2",
           "value": "\"at_voice_terminations\".\"country_code\" ~ '^[A-Z]{2}$'"
+        },
+        "at_voice_terminations_max_daily_total_mins_positive": {
+          "name": "at_voice_terminations_max_daily_total_mins_positive",
+          "value": "\"at_voice_terminations\".\"max_daily_total_mins\" IS NULL OR \"at_voice_terminations\".\"max_daily_total_mins\" > 0"
+        },
+        "at_voice_terminations_max_daily_mins_a_number_positive": {
+          "name": "at_voice_terminations_max_daily_mins_a_number_positive",
+          "value": "\"at_voice_terminations\".\"max_daily_mins_a_number\" IS NULL OR \"at_voice_terminations\".\"max_daily_mins_a_number\" > 0"
+        },
+        "at_voice_terminations_max_daily_mins_b_number_positive": {
+          "name": "at_voice_terminations_max_daily_mins_b_number_positive",
+          "value": "\"at_voice_terminations\".\"max_daily_mins_b_number\" IS NULL OR \"at_voice_terminations\".\"max_daily_mins_b_number\" > 0"
+        },
+        "at_voice_terminations_max_daily_mins_a_to_b_number_positive": {
+          "name": "at_voice_terminations_max_daily_mins_a_to_b_number_positive",
+          "value": "\"at_voice_terminations\".\"max_daily_mins_a_to_b_number\" IS NULL OR \"at_voice_terminations\".\"max_daily_mins_a_to_b_number\" > 0"
         }
       },
       "isRLSEnabled": false
@@ -2701,6 +2769,160 @@
       },
       "isRLSEnabled": false
     },
+    "public.voice_trunk_ips": {
+      "name": "voice_trunk_ips",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "voice_trunk_id": {
+          "name": "voice_trunk_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ip": {
+          "name": "ip",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prefix": {
+          "name": "prefix",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "voice_trunk_ip_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'active'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "voice_trunk_ips_trunk_ip_prefix_unique_active": {
+          "name": "voice_trunk_ips_trunk_ip_prefix_unique_active",
+          "columns": [
+            {
+              "expression": "voice_trunk_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "ip",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "prefix",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"voice_trunk_ips\".\"deleted_at\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "voice_trunk_ips_trunk_idx": {
+          "name": "voice_trunk_ips_trunk_idx",
+          "columns": [
+            {
+              "expression": "voice_trunk_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "voice_trunk_ips_status_idx": {
+          "name": "voice_trunk_ips_status_idx",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "voice_trunk_ips_deleted_at_idx": {
+          "name": "voice_trunk_ips_deleted_at_idx",
+          "columns": [
+            {
+              "expression": "deleted_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "voice_trunk_ips_voice_trunk_id_voice_trunks_id_fk": {
+          "name": "voice_trunk_ips_voice_trunk_id_voice_trunks_id_fk",
+          "tableFrom": "voice_trunk_ips",
+          "tableTo": "voice_trunks",
+          "columnsFrom": [
+            "voice_trunk_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.voice_trunks": {
       "name": "voice_trunks",
       "schema": "",
@@ -2836,6 +3058,24 @@
           "primaryKey": false,
           "notNull": false
         },
+        "max_call_duration_seconds": {
+          "name": "max_call_duration_seconds",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "capacity_lines": {
+          "name": "capacity_lines",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rtp_timeout_seconds": {
+          "name": "rtp_timeout_seconds",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "codecs": {
           "name": "codecs",
           "type": "jsonb",
@@ -2858,12 +3098,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'no'"
-        },
-        "ip_acl": {
-          "name": "ip_acl",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
         },
         "metadata": {
           "name": "metadata",
@@ -3012,10 +3246,6 @@
           "name": "voice_trunks_auth_userpass_complete",
           "value": "\"voice_trunks\".\"auth_type\" NOT IN ('userpass','both') OR (\"voice_trunks\".\"username\" IS NOT NULL AND \"voice_trunks\".\"password_encrypted\" IS NOT NULL)"
         },
-        "voice_trunks_auth_ip_complete": {
-          "name": "voice_trunks_auth_ip_complete",
-          "value": "\"voice_trunks\".\"auth_type\" NOT IN ('ip','both') OR (\"voice_trunks\".\"ip_acl\" IS NOT NULL AND jsonb_array_length(\"voice_trunks\".\"ip_acl\") > 0)"
-        },
         "voice_trunks_max_channels_positive": {
           "name": "voice_trunks_max_channels_positive",
           "value": "\"voice_trunks\".\"max_channels\" IS NULL OR \"voice_trunks\".\"max_channels\" > 0"
@@ -3023,6 +3253,18 @@
         "voice_trunks_cps_limit_positive": {
           "name": "voice_trunks_cps_limit_positive",
           "value": "\"voice_trunks\".\"cps_limit\" IS NULL OR \"voice_trunks\".\"cps_limit\" > 0"
+        },
+        "voice_trunks_max_call_duration_positive": {
+          "name": "voice_trunks_max_call_duration_positive",
+          "value": "\"voice_trunks\".\"max_call_duration_seconds\" IS NULL OR \"voice_trunks\".\"max_call_duration_seconds\" > 0"
+        },
+        "voice_trunks_capacity_lines_positive": {
+          "name": "voice_trunks_capacity_lines_positive",
+          "value": "\"voice_trunks\".\"capacity_lines\" IS NULL OR \"voice_trunks\".\"capacity_lines\" > 0"
+        },
+        "voice_trunks_rtp_timeout_positive": {
+          "name": "voice_trunks_rtp_timeout_positive",
+          "value": "\"voice_trunks\".\"rtp_timeout_seconds\" IS NULL OR \"voice_trunks\".\"rtp_timeout_seconds\" > 0"
         }
       },
       "isRLSEnabled": false
@@ -3130,6 +3372,14 @@
         "rfc2833",
         "inband",
         "info"
+      ]
+    },
+    "public.voice_trunk_ip_status": {
+      "name": "voice_trunk_ip_status",
+      "schema": "public",
+      "values": [
+        "active",
+        "inactive"
       ]
     },
     "public.voice_trunk_nat_mode": {

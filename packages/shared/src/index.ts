@@ -544,10 +544,14 @@ export const AtVoiceTerminationSchema = z.object({
   id: z.string().uuid(),
   status: AtVoiceTerminationStatusEnum,
   carrierId: z.string().uuid(),
+  voiceNumberingPlanId: z.string().uuid(),
   name: z.string().min(1).max(128),
-  internalRouteName: z.string().min(1).max(128),
   currency: CurrencyEnum,
   countryCode: CountryCode,
+  maxDailyTotalMins: z.number().int().positive().nullable(),
+  maxDailyMinsANumber: z.number().int().positive().nullable(),
+  maxDailyMinsBNumber: z.number().int().positive().nullable(),
+  maxDailyMinsAToBNumber: z.number().int().positive().nullable(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
   deletedAt: z.string().datetime().nullable(),
@@ -557,10 +561,14 @@ export type AtVoiceTermination = z.infer<typeof AtVoiceTerminationSchema>;
 export const CreateAtVoiceTerminationInput = z.object({
   status: AtVoiceTerminationStatusEnum.default("active"),
   carrierId: z.string().uuid(),
+  voiceNumberingPlanId: z.string().uuid(),
   name: z.string().min(1).max(128),
-  internalRouteName: z.string().min(1).max(128),
   currency: CurrencyEnum,
   countryCode: CountryCode,
+  maxDailyTotalMins: z.number().int().positive().optional(),
+  maxDailyMinsANumber: z.number().int().positive().optional(),
+  maxDailyMinsBNumber: z.number().int().positive().optional(),
+  maxDailyMinsAToBNumber: z.number().int().positive().optional(),
 });
 export type CreateAtVoiceTerminationInput = z.infer<
   typeof CreateAtVoiceTerminationInput

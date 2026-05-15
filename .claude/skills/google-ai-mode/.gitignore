@@ -12,6 +12,7 @@ data/**/*
 # Claude-specific
 .claude/
 *.claude
+.omc/
 
 # Python
 __pycache__/

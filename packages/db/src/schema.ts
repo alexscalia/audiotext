@@ -419,10 +419,16 @@ export const atVoiceTerminations = pgTable(
     carrierId: uuid("carrier_id")
       .notNull()
       .references(() => carriers.id, { onDelete: "cascade" }),
+    voiceNumberingPlanId: uuid("voice_numbering_plan_id")
+      .notNull()
+      .references(() => voiceNumberingPlans.id, { onDelete: "restrict" }),
     name: text("name").notNull(),
-    internalRouteName: text("internal_route_name").notNull(),
     currency: currency("currency").notNull(),
     countryCode: text("country_code").notNull(),
+    maxDailyTotalMins: integer("max_daily_total_mins"),
+    maxDailyMinsANumber: integer("max_daily_mins_a_number"),
+    maxDailyMinsBNumber: integer("max_daily_mins_b_number"),
+    maxDailyMinsAToBNumber: integer("max_daily_mins_a_to_b_number"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -433,14 +439,33 @@ export const atVoiceTerminations = pgTable(
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
   (t) => [
-    uniqueIndex("at_voice_terminations_carrier_internal_unique_active")
-      .on(t.carrierId, t.internalRouteName)
+    uniqueIndex("at_voice_terminations_carrier_name_unique_active")
+      .on(t.carrierId, t.name)
       .where(sql`${t.deletedAt} IS NULL`),
     check(
       "at_voice_terminations_country_code_iso2",
       sql`${t.countryCode} ~ '^[A-Z]{2}$'`,
     ),
+    check(
+      "at_voice_terminations_max_daily_total_mins_positive",
+      sql`${t.maxDailyTotalMins} IS NULL OR ${t.maxDailyTotalMins} > 0`,
+    ),
+    check(
+      "at_voice_terminations_max_daily_mins_a_number_positive",
+      sql`${t.maxDailyMinsANumber} IS NULL OR ${t.maxDailyMinsANumber} > 0`,
+    ),
+    check(
+      "at_voice_terminations_max_daily_mins_b_number_positive",
+      sql`${t.maxDailyMinsBNumber} IS NULL OR ${t.maxDailyMinsBNumber} > 0`,
+    ),
+    check(
+      "at_voice_terminations_max_daily_mins_a_to_b_number_positive",
+      sql`${t.maxDailyMinsAToBNumber} IS NULL OR ${t.maxDailyMinsAToBNumber} > 0`,
+    ),
     index("at_voice_terminations_carrier_idx").on(t.carrierId),
+    index("at_voice_terminations_voice_numbering_plan_idx").on(
+      t.voiceNumberingPlanId,
+    ),
     index("at_voice_terminations_status_idx").on(t.status),
     index("at_voice_terminations_country_idx").on(t.countryCode),
     index("at_voice_terminations_deleted_at_idx").on(t.deletedAt),
