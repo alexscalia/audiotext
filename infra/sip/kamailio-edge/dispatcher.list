@@ -1,0 +1,7 @@
+# Kamailio dispatcher list
+# Format: setid destination [flags [priority [attrs [body]]]]
+#
+# Set 1 = IVR (FreeSWITCH external profile, port 5080).
+# All INVITEs currently route here for the audio-playback slice.
+# Carrier-sink container stays in compose but is not dispatched to.
+1 sip:freeswitch:5080 0 10

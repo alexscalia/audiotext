@@ -110,7 +110,7 @@ packages/
   db/       Drizzle ORM schema + pg Pool client (@audiotext/db)
   shared/   Zod contracts shared between web + api (@audiotext/shared)
   tsconfig/ shared TS bases (base / nextjs / node)
-crates/     reserved for future Rust port — empty stub today
+native/     reserved for Zig services (per tech_stack.md) — empty stub today. First service: `native/sip-signaling/` (LCR lookup engine queried by Kamailio).
 ```
 
 ### Backend (`apps/api`) — Hono on Node

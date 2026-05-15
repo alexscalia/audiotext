@@ -1,0 +1,54 @@
+name: audiotext-sip
+
+x-kamailio-build: &kamailio-build
+  build:
+    context: ./infra/sip
+    dockerfile: kamailio.Dockerfile
+  image: audiotext-kamailio:5.8
+
+services:
+  kamailio-edge:
+    <<: *kamailio-build
+    container_name: audiotext-kamailio-edge
+    restart: unless-stopped
+    ports:
+      - "5060:5060/udp"
+    volumes:
+      - ./infra/sip/kamailio-edge/kamailio.cfg:/etc/kamailio/kamailio.cfg:ro
+      - ./infra/sip/kamailio-edge/dispatcher.list:/etc/kamailio/dispatcher.list:ro
+    networks:
+      sip:
+        aliases:
+          - kamailio-edge
+    depends_on:
+      - freeswitch
+
+  kamailio-carrier-sink:
+    <<: *kamailio-build
+    container_name: audiotext-kamailio-carrier-sink
+    restart: unless-stopped
+    volumes:
+      - ./infra/sip/kamailio-carrier-sink/kamailio.cfg:/etc/kamailio/kamailio.cfg:ro
+    networks:
+      sip:
+        aliases:
+          - kamailio-carrier-sink
+
+  freeswitch:
+    build:
+      context: ./infra/sip
+      dockerfile: freeswitch.Dockerfile
+    image: audiotext-freeswitch:1.10
+    container_name: audiotext-freeswitch
+    restart: unless-stopped
+    volumes:
+      - ./infra/sip/freeswitch/conf/dialplan/public/00_audiotext.xml:/usr/local/freeswitch/conf/dialplan/public/00_audiotext.xml:ro
+      - ./infra/sip/freeswitch/audio/welcome.wav:/usr/local/freeswitch/sounds/audiotext/welcome.wav:ro
+    networks:
+      sip:
+        aliases:
+          - freeswitch
+
+networks:
+  sip:
+    driver: bridge

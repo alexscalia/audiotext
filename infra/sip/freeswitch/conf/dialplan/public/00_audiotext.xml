@@ -1,0 +1,18 @@
+<include>
+  <!--
+    Catch-all extension for the audiotext IVR slice.
+    Loaded into the `public` context (where unauthenticated INVITEs from
+    Kamailio's edge dispatcher arrive on the external profile, port 5080).
+
+    Action chain: answer → short pause (let RTP setup) → playback wav → hangup.
+  -->
+  <extension name="audiotext-welcome">
+    <condition field="destination_number" expression="^.*$">
+      <action application="set" data="hangup_after_bridge=true"/>
+      <action application="answer"/>
+      <action application="sleep" data="500"/>
+      <action application="playback" data="/usr/share/freeswitch/sounds/audiotext/welcome.wav"/>
+      <action application="hangup"/>
+    </condition>
+  </extension>
+</include>
