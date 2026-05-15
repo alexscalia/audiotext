@@ -5,6 +5,16 @@
     "english": "English",
     "italian": "Italian"
   },
+  "PageTitles": {
+    "login": "Sign in",
+    "dashboard": "Dashboard",
+    "numberingPlansVoice": "Voice numbering plans",
+    "numberingPlanVoiceDetail": "Voice numbering plan",
+    "rateSheetsVoice": "Voice rate sheets",
+    "rateSheetVoiceDetail": "Voice rate sheet",
+    "voiceTrunks": "Voice trunks",
+    "carriers": "Carriers"
+  },
   "Login": {
     "title": "Welcome back",
     "subtitle": "Please enter your details",
@@ -119,6 +129,10 @@
       "paging": "Paging",
       "voip": "VoIP",
       "ngn": "NGN"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
     },
     "pagination": {
       "prev": "Previous",

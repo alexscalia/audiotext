@@ -1,15 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import {
-  type ColumnDef,
-  type PaginationState,
-  type SortingState,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import type {
   VoiceRateSheetDetail,
   VoiceRateSheetLineListItem,
@@ -18,11 +12,15 @@ import type {
   VoiceRateSheetStatus,
 } from "@audiotext/shared";
 import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { SearchInput } from "@/components/ui/search-input";
 import { PageHeader } from "@/components/layout/page-header";
 import { BackLink } from "@/components/layout/breadcrumb";
-import { DataTable } from "@/components/ui/data-table/data-table";
-import { Pagination } from "@/components/ui/data-table/pagination";
+import {
+  DataTableCard,
+  makePaginationLabels,
+} from "@/components/ui/data-table/data-table-card";
+import { useDebouncedValue, useListData } from "@/hooks/useListData";
 
 type Line = VoiceRateSheetLineListItem;
 
@@ -36,19 +34,10 @@ const SORTABLE_COLUMNS: readonly VoiceRateSheetLineSortBy[] = [
   "codeCount",
 ];
 
-function isSortableColumn(id: string): id is VoiceRateSheetLineSortBy {
-  return (SORTABLE_COLUMNS as readonly string[]).includes(id);
-}
-
-function SheetStatusBadge({ status }: { status: VoiceRateSheetStatus }) {
-  const t = useTranslations("RateSheets.status");
-  const isActive = status === "active";
-  return (
-    <Badge tone={isActive ? "success" : "neutral"} withDot>
-      {t(status)}
-    </Badge>
-  );
-}
+const SHEET_STATUS_TONES: Record<VoiceRateSheetStatus, "success" | "neutral"> = {
+  active: "success",
+  inactive: "neutral",
+};
 
 function formatMoney(value: string | null, currency: string, locale: string) {
   if (value === null) {
@@ -84,32 +73,20 @@ export default function VoiceRateSheetDetailPage() {
   const id = params?.id ?? "";
 
   const t = useTranslations("RateSheets");
+  const tStatus = useTranslations("RateSheets.status");
   const locale = useLocale();
 
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: "countryName", desc: false },
-  ]);
-  const [searchInput, setSearchInput] = useState("");
-  const [search, setSearch] = useState("");
   const [prefixInput, setPrefixInput] = useState("");
-  const [prefix, setPrefix] = useState("");
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 25,
-  });
+  const prefix = useDebouncedValue(prefixInput.replace(/[^0-9]/g, ""));
 
   const [sheet, setSheet] = useState<VoiceRateSheetDetail | null>(null);
   const [sheetError, setSheetError] = useState<string | null>(null);
   const [sheetLoading, setSheetLoading] = useState(true);
 
-  const [lines, setLines] = useState<Line[]>([]);
-  const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
     if (!id) return;
     const controller = new AbortController();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch lifecycle is intrinsically tied to dep changes
     setSheetLoading(true);
     setSheetError(null);
     fetch(`/api/admin/voice-rate-sheets/${id}`, {
@@ -139,88 +116,26 @@ export default function VoiceRateSheetDetailPage() {
     return () => controller.abort();
   }, [id, t]);
 
-  useEffect(() => {
-    const handle = setTimeout(() => {
-      setSearch(searchInput.trim());
-      setPagination((p) => ({ ...p, pageIndex: 0 }));
-    }, 300);
-    return () => clearTimeout(handle);
-  }, [searchInput]);
+  const list = useListData<Line, VoiceRateSheetLineSortBy>({
+    endpoint: `/api/admin/voice-rate-sheets/${id}/lines`,
+    defaultSortBy: "countryName",
+    sortableColumns: SORTABLE_COLUMNS,
+    pageSize: 25,
+    errorMessage: t("loadError"),
+    mapResponse: (json) => {
+      const r = json as VoiceRateSheetLineListResponse;
+      return { items: r.lines, total: r.total };
+    },
+    buildExtraParams: (params) => {
+      params.set("locale", locale);
+      if (prefix) params.set("prefix", prefix);
+    },
+    extraDeps: [locale, prefix],
+  });
 
   useEffect(() => {
-    const handle = setTimeout(() => {
-      setPrefix(prefixInput.replace(/[^0-9]/g, ""));
-      setPagination((p) => ({ ...p, pageIndex: 0 }));
-    }, 300);
-    return () => clearTimeout(handle);
-  }, [prefixInput]);
-
-  const sortBy: VoiceRateSheetLineSortBy = useMemo(() => {
-    const first = sorting[0];
-    if (first && isSortableColumn(first.id)) return first.id;
-    return "countryName";
-  }, [sorting]);
-  const sortDir: "asc" | "desc" = useMemo(() => {
-    const first = sorting[0];
-    if (!first) return "asc";
-    return first.desc ? "desc" : "asc";
-  }, [sorting]);
-
-  const requestIdRef = useRef(0);
-
-  useEffect(() => {
-    if (!id) return;
-    const requestId = ++requestIdRef.current;
-    const controller = new AbortController();
-    setLoading(true);
-    setError(null);
-
-    const query = new URLSearchParams({
-      page: String(pagination.pageIndex + 1),
-      pageSize: String(pagination.pageSize),
-      sortBy,
-      sortDir,
-      locale,
-    });
-    if (search) query.set("search", search);
-    if (prefix) query.set("prefix", prefix);
-
-    fetch(`/api/admin/voice-rate-sheets/${id}/lines?${query.toString()}`, {
-      credentials: "include",
-      signal: controller.signal,
-    })
-      .then(async (res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return (await res.json()) as VoiceRateSheetLineListResponse;
-      })
-      .then((json) => {
-        if (requestId !== requestIdRef.current) return;
-        setLines(json.lines);
-        setTotal(json.total);
-      })
-      .catch((err) => {
-        if (controller.signal.aborted) return;
-        if (requestId !== requestIdRef.current) return;
-        setError(t("loadError"));
-        console.error(err);
-      })
-      .finally(() => {
-        if (requestId !== requestIdRef.current) return;
-        setLoading(false);
-      });
-
-    return () => controller.abort();
-  }, [
-    id,
-    pagination.pageIndex,
-    pagination.pageSize,
-    sortBy,
-    sortDir,
-    search,
-    prefix,
-    locale,
-    t,
-  ]);
+    list.resetPage();
+  }, [prefix, list]);
 
   const currency = sheet?.currencyIso ?? "USD";
 
@@ -322,25 +237,6 @@ export default function VoiceRateSheetDetailPage() {
     [t, currency, locale],
   );
 
-  const pageCount = Math.max(1, Math.ceil(total / pagination.pageSize));
-
-  const table = useReactTable({
-    data: lines,
-    columns,
-    pageCount,
-    state: { sorting, pagination },
-    onSortingChange: setSorting,
-    onPaginationChange: setPagination,
-    manualPagination: true,
-    manualSorting: true,
-    manualFiltering: true,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  const rows = table.getRowModel().rows;
-  const hasAnyData = total > 0;
-  const showFooter = hasAnyData && !loading && !error;
-
   return (
     <div className="mx-auto max-w-6xl">
       <PageHeader
@@ -353,7 +249,13 @@ export default function VoiceRateSheetDetailPage() {
         title={sheetLoading ? "—" : (sheet?.name ?? t("detail.notFound"))}
         meta={
           <>
-            {sheet && <SheetStatusBadge status={sheet.status} />}
+            {sheet && (
+              <StatusBadge
+                status={sheet.status}
+                tones={SHEET_STATUS_TONES}
+                label={tStatus(sheet.status)}
+              />
+            )}
             {sheet && (
               <Badge tone="neutral">{sheet.currencyIso.toUpperCase()}</Badge>
             )}
@@ -369,49 +271,35 @@ export default function VoiceRateSheetDetailPage() {
         }
       />
 
-      <div className="mt-6 rounded-md border border-gray-200 bg-white">
-        <div className="flex flex-col gap-3 border-b border-gray-200 p-4 sm:flex-row sm:items-center">
-          <SearchInput
-            label={t("detail.search")}
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-          />
-          <SearchInput
-            label={t("detail.prefixSearch")}
-            value={prefixInput}
-            onChange={(e) => setPrefixInput(e.target.value)}
-            inputMode="numeric"
-            pattern="[0-9]*"
-          />
-        </div>
-
-        <DataTable
-          table={table}
-          loading={loading}
-          error={error}
-          loadingLabel={t("loading")}
-          emptyLabel={t("detail.empty")}
-          noResultsLabel={t("noResults")}
-          hasActiveFilter={!!search || !!prefix}
-        />
-
-        {showFooter && (
-          <Pagination
-            table={table}
-            total={total}
-            rowCount={rows.length}
-            loading={loading}
-            selectId="rate-sheet-lines-page-size"
-            labels={{
-              rowsPerPage: t("pagination.rowsPerPage"),
-              showing: (vars) => t("pagination.showing", vars),
-              pageOf: (vars) => t("pagination.pageOf", vars),
-              prev: t("pagination.prev"),
-              next: t("pagination.next"),
-            }}
-          />
-        )}
-      </div>
+      <DataTableCard
+        list={list}
+        columns={columns}
+        selectId="rate-sheet-lines-page-size"
+        hasActiveFilter={!!list.search || !!prefix}
+        filtersClassName="flex flex-col gap-3 border-b border-gray-200 p-4 sm:flex-row sm:items-center"
+        filters={
+          <>
+            <SearchInput
+              label={t("detail.search")}
+              value={list.searchInput}
+              onChange={(e) => list.setSearchInput(e.target.value)}
+            />
+            <SearchInput
+              label={t("detail.prefixSearch")}
+              value={prefixInput}
+              onChange={(e) => setPrefixInput(e.target.value)}
+              inputMode="numeric"
+              pattern="[0-9]*"
+            />
+          </>
+        }
+        labels={{
+          loading: t("loading"),
+          empty: t("detail.empty"),
+          noResults: t("noResults"),
+          ...makePaginationLabels(t),
+        }}
+      />
     </div>
   );
 }

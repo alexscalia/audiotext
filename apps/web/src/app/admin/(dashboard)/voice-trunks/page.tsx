@@ -1,28 +1,25 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import {
-  type ColumnDef,
-  type PaginationState,
-  type SortingState,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import type {
   VoiceTrunkListItem,
   VoiceTrunkListResponse,
   VoiceTrunkListSortBy,
   VoiceTrunkStatus,
 } from "@audiotext/shared";
-import { ActionsMenu, ActionsMenuItem } from "@/components/ui/actions-menu";
 import { EyeIcon, PencilIcon, TrashIcon } from "@/components/ui/icons";
 import { SearchInput } from "@/components/ui/search-input";
 import { PageHeader } from "@/components/layout/page-header";
-import { DataTable } from "@/components/ui/data-table/data-table";
-import { Pagination } from "@/components/ui/data-table/pagination";
 import { ColumnFilterDropdown } from "@/components/ui/data-table/column-filter";
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { ActionsCell } from "@/components/ui/data-table/actions-cell";
+import {
+  DataTableCard,
+  makePaginationLabels,
+} from "@/components/ui/data-table/data-table-card";
+import { useDebouncedValue, useListData } from "@/hooks/useListData";
 
 type Trunk = VoiceTrunkListItem;
 
@@ -39,153 +36,52 @@ const STATUS_VALUES: readonly VoiceTrunkStatus[] = [
   "testing",
 ];
 
-function isSortableColumn(id: string): id is VoiceTrunkListSortBy {
-  return (SORTABLE_COLUMNS as readonly string[]).includes(id);
-}
-
-function ActionsCell({ trunk }: { trunk: Trunk }) {
-  const t = useTranslations("VoiceTrunks.actions");
-  return (
-    <div className="flex items-center justify-end">
-      <ActionsMenu triggerLabel={`${t("open")} — ${trunk.name}`}>
-        <ActionsMenuItem
-          icon={<EyeIcon />}
-          label={t("view")}
-          onSelect={() => {}}
-        />
-        <ActionsMenuItem
-          icon={<PencilIcon />}
-          label={t("edit")}
-          onSelect={() => {}}
-        />
-        <ActionsMenuItem
-          icon={<TrashIcon />}
-          label={t("delete")}
-          tone="danger"
-          onSelect={() => {}}
-        />
-      </ActionsMenu>
-    </div>
-  );
-}
-
-const STATUS_TONE: Record<Trunk["status"], "success" | "warn" | "neutral"> = {
+const STATUS_TONES: Record<Trunk["status"], "success" | "warn" | "neutral"> = {
   active: "success",
   testing: "warn",
   inactive: "neutral",
 };
 
-function StatusCell({ status }: { status: Trunk["status"] }) {
-  const t = useTranslations("VoiceTrunks.status");
-  return (
-    <Badge tone={STATUS_TONE[status]} withDot>
-      {t(status)}
-    </Badge>
-  );
-}
-
 export default function VoiceTrunksPage() {
   const t = useTranslations("VoiceTrunks");
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: "name", desc: false },
-  ]);
-  const [searchInput, setSearchInput] = useState("");
-  const [search, setSearch] = useState("");
+  const tActions = useTranslations("VoiceTrunks.actions");
+  const tStatus = useTranslations("VoiceTrunks.status");
   const [carrierInput, setCarrierInput] = useState("");
-  const [carrier, setCarrier] = useState("");
   const [ipInput, setIpInput] = useState("");
-  const [ip, setIp] = useState("");
   const [statusFilter, setStatusFilter] = useState<VoiceTrunkStatus[]>([]);
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
+
+  const carrier = useDebouncedValue(carrierInput.trim());
+  const ip = useDebouncedValue(ipInput.trim());
+
+  const list = useListData<Trunk, VoiceTrunkListSortBy>({
+    endpoint: "/api/admin/voice-trunks",
+    defaultSortBy: "name",
+    sortableColumns: SORTABLE_COLUMNS,
+    errorMessage: t("loadError"),
+    mapResponse: (json) => {
+      const r = json as VoiceTrunkListResponse;
+      return { items: r.trunks, total: r.total };
+    },
+    buildExtraParams: (params) => {
+      if (carrier) params.set("carrier", carrier);
+      if (ip) params.set("ip", ip);
+      if (statusFilter.length > 0)
+        params.set("status", statusFilter.join(","));
+    },
+    extraDeps: [carrier, ip, statusFilter],
   });
-  const [trunks, setTrunks] = useState<Trunk[]>([]);
-  const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const handle = setTimeout(() => {
-      setSearch(searchInput.trim());
-      setCarrier(carrierInput.trim());
-      setIp(ipInput.trim());
-      setPagination((p) => ({ ...p, pageIndex: 0 }));
-    }, 300);
-    return () => clearTimeout(handle);
-  }, [searchInput, carrierInput, ipInput]);
+    list.resetPage();
+  }, [carrier, ip, list]);
 
-  const sortBy: VoiceTrunkListSortBy = useMemo(() => {
-    const first = sorting[0];
-    if (first && isSortableColumn(first.id)) return first.id;
-    return "name";
-  }, [sorting]);
-  const sortDir: "asc" | "desc" = useMemo(() => {
-    const first = sorting[0];
-    if (!first) return "asc";
-    return first.desc ? "desc" : "asc";
-  }, [sorting]);
-
-  const requestIdRef = useRef(0);
-
-  useEffect(() => {
-    const requestId = ++requestIdRef.current;
-    const controller = new AbortController();
-    setLoading(true);
-    setError(null);
-
-    const params = new URLSearchParams({
-      page: String(pagination.pageIndex + 1),
-      pageSize: String(pagination.pageSize),
-      sortBy,
-      sortDir,
-    });
-    if (search) params.set("search", search);
-    if (carrier) params.set("carrier", carrier);
-    if (ip) params.set("ip", ip);
-    if (statusFilter.length > 0) params.set("status", statusFilter.join(","));
-
-    fetch(`/api/admin/voice-trunks?${params.toString()}`, {
-      credentials: "include",
-      signal: controller.signal,
-    })
-      .then(async (res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return (await res.json()) as VoiceTrunkListResponse;
-      })
-      .then((json) => {
-        if (requestId !== requestIdRef.current) return;
-        setTrunks(json.trunks);
-        setTotal(json.total);
-      })
-      .catch((err) => {
-        if (controller.signal.aborted) return;
-        if (requestId !== requestIdRef.current) return;
-        setError(t("loadError"));
-        console.error(err);
-      })
-      .finally(() => {
-        if (requestId !== requestIdRef.current) return;
-        setLoading(false);
-      });
-
-    return () => controller.abort();
-  }, [
-    pagination.pageIndex,
-    pagination.pageSize,
-    sortBy,
-    sortDir,
-    search,
-    carrier,
-    ip,
-    statusFilter,
-    t,
-  ]);
-
-  const handleStatusFilterChange = useCallback((next: string[]) => {
-    setStatusFilter(next as VoiceTrunkStatus[]);
-    setPagination((p) => ({ ...p, pageIndex: 0 }));
-  }, []);
+  const handleStatusFilterChange = useCallback(
+    (next: string[]) => {
+      setStatusFilter(next as VoiceTrunkStatus[]);
+      list.resetPage();
+    },
+    [list],
+  );
 
   const columns = useMemo<ColumnDef<Trunk>[]>(
     () => [
@@ -250,91 +146,86 @@ export default function VoiceTrunksPage() {
             clearLabel={t("filters.clear")}
           />
         ),
-        cell: ({ row }) => <StatusCell status={row.original.status} />,
+        cell: ({ row }) => (
+          <StatusBadge
+            status={row.original.status}
+            tones={STATUS_TONES}
+            label={tStatus(row.original.status)}
+          />
+        ),
         enableSorting: false,
       },
       {
         id: "actions",
         header: t("columns.actions"),
-        cell: ({ row }) => <ActionsCell trunk={row.original} />,
+        cell: ({ row }) => (
+          <ActionsCell
+            triggerLabel={`${tActions("open")} — ${row.original.name}`}
+            actions={[
+              {
+                icon: <EyeIcon />,
+                label: tActions("view"),
+                onSelect: () => {},
+              },
+              {
+                icon: <PencilIcon />,
+                label: tActions("edit"),
+                onSelect: () => {},
+              },
+              {
+                icon: <TrashIcon />,
+                label: tActions("delete"),
+                tone: "danger",
+                onSelect: () => {},
+              },
+            ]}
+          />
+        ),
         enableSorting: false,
         meta: { align: "right" },
       },
     ],
-    [t, statusFilter, handleStatusFilterChange],
+    [t, tActions, tStatus, statusFilter, handleStatusFilterChange],
   );
-
-  const pageCount = Math.max(1, Math.ceil(total / pagination.pageSize));
-
-  const table = useReactTable({
-    data: trunks,
-    columns,
-    pageCount,
-    state: { sorting, pagination },
-    onSortingChange: setSorting,
-    onPaginationChange: setPagination,
-    manualPagination: true,
-    manualSorting: true,
-    manualFiltering: true,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  const rows = table.getRowModel().rows;
-  const hasAnyData = total > 0;
-  const showFooter = hasAnyData && !loading && !error;
 
   return (
     <div className="mx-auto max-w-6xl">
       <PageHeader title={t("title")} subtitle={t("subtitle")} />
 
-      <div className="mt-6 rounded-md border border-gray-200 bg-white">
-        <div className="flex flex-col gap-3 border-b border-gray-200 p-4 sm:flex-row sm:flex-wrap">
-          <SearchInput
-            label={t("search")}
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-          />
-          <SearchInput
-            label={t("filters.carrier")}
-            value={carrierInput}
-            onChange={(e) => setCarrierInput(e.target.value)}
-          />
-          <SearchInput
-            label={t("filters.ip")}
-            value={ipInput}
-            onChange={(e) => setIpInput(e.target.value)}
-          />
-        </div>
-
-        <DataTable
-          table={table}
-          loading={loading}
-          error={error}
-          loadingLabel={t("loading")}
-          emptyLabel={t("empty")}
-          noResultsLabel={t("noResults")}
-          hasActiveFilter={
-            !!search || !!carrier || !!ip || statusFilter.length > 0
-          }
-        />
-
-        {showFooter && (
-          <Pagination
-            table={table}
-            total={total}
-            rowCount={rows.length}
-            loading={loading}
-            selectId="voice-trunks-page-size"
-            labels={{
-              rowsPerPage: t("pagination.rowsPerPage"),
-              showing: (vars) => t("pagination.showing", vars),
-              pageOf: (vars) => t("pagination.pageOf", vars),
-              prev: t("pagination.prev"),
-              next: t("pagination.next"),
-            }}
-          />
-        )}
-      </div>
+      <DataTableCard
+        list={list}
+        columns={columns}
+        selectId="voice-trunks-page-size"
+        hasActiveFilter={
+          !!list.search || !!carrier || !!ip || statusFilter.length > 0
+        }
+        filtersClassName="flex flex-col gap-3 border-b border-gray-200 p-4 sm:flex-row sm:flex-wrap"
+        filters={
+          <>
+            <SearchInput
+              label={t("search")}
+              value={list.searchInput}
+              onChange={(e) => list.setSearchInput(e.target.value)}
+            />
+            <SearchInput
+              label={t("filters.carrier")}
+              value={carrierInput}
+              onChange={(e) => setCarrierInput(e.target.value)}
+            />
+            <SearchInput
+              label={t("filters.ip")}
+              value={ipInput}
+              onChange={(e) => setIpInput(e.target.value)}
+            />
+          </>
+        }
+        labels={{
+          loading: t("loading"),
+          empty: t("empty"),
+          noResults: t("noResults"),
+          ...makePaginationLabels(t),
+        }}
+      />
     </div>
   );
 }

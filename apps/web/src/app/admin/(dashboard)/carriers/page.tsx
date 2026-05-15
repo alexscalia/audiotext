@@ -1,14 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import {
-  type ColumnDef,
-  type PaginationState,
-  type SortingState,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import type {
   CarrierListItem,
   CarrierListResponse,
@@ -16,8 +10,7 @@ import type {
   CarrierStatus,
 } from "@audiotext/shared";
 import { CarrierFormModal } from "@/components/features/carriers/carrier-form-modal";
-import { StatusBadge } from "@/components/features/carriers/status-badge";
-import { ActionsMenu, ActionsMenuItem } from "@/components/ui/actions-menu";
+import { StatusBadge } from "@/components/ui/status-badge";
 import {
   EyeIcon,
   PencilIcon,
@@ -27,9 +20,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
 import { PageHeader } from "@/components/layout/page-header";
-import { DataTable } from "@/components/ui/data-table/data-table";
-import { Pagination } from "@/components/ui/data-table/pagination";
 import { ColumnFilterDropdown } from "@/components/ui/data-table/column-filter";
+import { ActionsCell } from "@/components/ui/data-table/actions-cell";
+import {
+  DataTableCard,
+  makePaginationLabels,
+} from "@/components/ui/data-table/data-table-card";
+import { useListData } from "@/hooks/useListData";
 
 type Carrier = CarrierListItem;
 
@@ -42,137 +39,45 @@ const SORTABLE_COLUMNS: readonly CarrierListSortBy[] = [
 
 const STATUS_VALUES: readonly CarrierStatus[] = ["active", "inactive"];
 
-function isSortableColumn(id: string): id is CarrierListSortBy {
-  return (SORTABLE_COLUMNS as readonly string[]).includes(id);
-}
-
-function ActionsCell({ carrier }: { carrier: Carrier }) {
-  const t = useTranslations("Carriers.actions");
-  return (
-    <div className="flex items-center justify-end">
-      <ActionsMenu triggerLabel={`${t("open")} — ${carrier.name}`}>
-        <ActionsMenuItem
-          icon={<EyeIcon />}
-          label={t("view")}
-          onSelect={() => {}}
-        />
-        <ActionsMenuItem
-          icon={<PencilIcon />}
-          label={t("edit")}
-          onSelect={() => {}}
-        />
-        <ActionsMenuItem
-          icon={<TrashIcon />}
-          label={t("delete")}
-          tone="danger"
-          onSelect={() => {}}
-        />
-      </ActionsMenu>
-    </div>
-  );
-}
+const STATUS_TONES: Record<CarrierStatus, "success" | "neutral"> = {
+  active: "success",
+  inactive: "neutral",
+};
 
 export default function CarriersPage() {
   const t = useTranslations("Carriers");
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: "name", desc: false },
-  ]);
-  const [searchInput, setSearchInput] = useState("");
-  const [search, setSearch] = useState("");
+  const tActions = useTranslations("Carriers.actions");
+  const tStatus = useTranslations("Carriers.status");
   const [statusFilter, setStatusFilter] = useState<CarrierStatus[]>([]);
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [carriers, setCarriers] = useState<Carrier[]>([]);
-  const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [refreshKey, setRefreshKey] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
 
-  useEffect(() => {
-    const handle = setTimeout(() => {
-      setSearch(searchInput.trim());
-      setPagination((p) => ({ ...p, pageIndex: 0 }));
-    }, 300);
-    return () => clearTimeout(handle);
-  }, [searchInput]);
+  const list = useListData<Carrier, CarrierListSortBy>({
+    endpoint: "/api/admin/carriers",
+    defaultSortBy: "name",
+    sortableColumns: SORTABLE_COLUMNS,
+    errorMessage: t("loadError"),
+    mapResponse: (json) => {
+      const r = json as CarrierListResponse;
+      return { items: r.carriers, total: r.total };
+    },
+    buildExtraParams: (params) => {
+      if (statusFilter.length > 0)
+        params.set("status", statusFilter.join(","));
+    },
+    extraDeps: [statusFilter],
+  });
 
-  const sortBy: CarrierListSortBy = useMemo(() => {
-    const first = sorting[0];
-    if (first && isSortableColumn(first.id)) return first.id;
-    return "name";
-  }, [sorting]);
-  const sortDir: "asc" | "desc" = useMemo(() => {
-    const first = sorting[0];
-    if (!first) return "asc";
-    return first.desc ? "desc" : "asc";
-  }, [sorting]);
-
-  const requestIdRef = useRef(0);
-
-  useEffect(() => {
-    const requestId = ++requestIdRef.current;
-    const controller = new AbortController();
-    setLoading(true);
-    setError(null);
-
-    const params = new URLSearchParams({
-      page: String(pagination.pageIndex + 1),
-      pageSize: String(pagination.pageSize),
-      sortBy,
-      sortDir,
-    });
-    if (search) params.set("search", search);
-    if (statusFilter.length > 0) params.set("status", statusFilter.join(","));
-
-    fetch(`/api/admin/carriers?${params.toString()}`, {
-      credentials: "include",
-      signal: controller.signal,
-    })
-      .then(async (res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return (await res.json()) as CarrierListResponse;
-      })
-      .then((json) => {
-        if (requestId !== requestIdRef.current) return;
-        setCarriers(json.carriers);
-        setTotal(json.total);
-      })
-      .catch((err) => {
-        if (controller.signal.aborted) return;
-        if (requestId !== requestIdRef.current) return;
-        setError(t("loadError"));
-        console.error(err);
-      })
-      .finally(() => {
-        if (requestId !== requestIdRef.current) return;
-        setLoading(false);
-      });
-
-    return () => controller.abort();
-  }, [
-    pagination.pageIndex,
-    pagination.pageSize,
-    sortBy,
-    sortDir,
-    search,
-    statusFilter,
-    refreshKey,
-    t,
-  ]);
-
-  const handleStatusFilterChange = useCallback((next: string[]) => {
-    setStatusFilter(next as CarrierStatus[]);
-    setPagination((p) => ({ ...p, pageIndex: 0 }));
-  }, []);
-
-  const refresh = useCallback(() => setRefreshKey((k) => k + 1), []);
+  const handleStatusFilterChange = useCallback(
+    (next: string[]) => {
+      setStatusFilter(next as CarrierStatus[]);
+      list.resetPage();
+    },
+    [list],
+  );
 
   const handleCreate = useCallback(() => {
-    refresh();
-  }, [refresh]);
+    list.refresh();
+  }, [list]);
 
   const columns = useMemo<ColumnDef<Carrier>[]>(
     () => [
@@ -206,7 +111,13 @@ export default function CarriersPage() {
             clearLabel={t("filters.clear")}
           />
         ),
-        cell: ({ row }) => <StatusBadge status={row.original.status} />,
+        cell: ({ row }) => (
+          <StatusBadge
+            status={row.original.status}
+            tones={STATUS_TONES}
+            label={tStatus(row.original.status)}
+          />
+        ),
         enableSorting: false,
       },
       {
@@ -222,32 +133,35 @@ export default function CarriersPage() {
       {
         id: "actions",
         header: t("columns.actions"),
-        cell: ({ row }) => <ActionsCell carrier={row.original} />,
+        cell: ({ row }) => (
+          <ActionsCell
+            triggerLabel={`${tActions("open")} — ${row.original.name}`}
+            actions={[
+              {
+                icon: <EyeIcon />,
+                label: tActions("view"),
+                onSelect: () => {},
+              },
+              {
+                icon: <PencilIcon />,
+                label: tActions("edit"),
+                onSelect: () => {},
+              },
+              {
+                icon: <TrashIcon />,
+                label: tActions("delete"),
+                tone: "danger",
+                onSelect: () => {},
+              },
+            ]}
+          />
+        ),
         enableSorting: false,
         meta: { align: "right" },
       },
     ],
-    [t, statusFilter, handleStatusFilterChange],
+    [t, tActions, tStatus, statusFilter, handleStatusFilterChange],
   );
-
-  const pageCount = Math.max(1, Math.ceil(total / pagination.pageSize));
-
-  const table = useReactTable({
-    data: carriers,
-    columns,
-    pageCount,
-    state: { sorting, pagination },
-    onSortingChange: setSorting,
-    onPaginationChange: setPagination,
-    manualPagination: true,
-    manualSorting: true,
-    manualFiltering: true,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  const rows = table.getRowModel().rows;
-  const hasAnyData = total > 0;
-  const showFooter = hasAnyData && !loading && !error;
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -261,42 +175,25 @@ export default function CarriersPage() {
         }
       />
 
-      <div className="mt-6 rounded-md border border-gray-200 bg-white">
-        <div className="border-b border-gray-200 p-4">
+      <DataTableCard
+        list={list}
+        columns={columns}
+        selectId="carriers-page-size"
+        hasActiveFilter={!!list.search || statusFilter.length > 0}
+        filters={
           <SearchInput
             label={t("search")}
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
+            value={list.searchInput}
+            onChange={(e) => list.setSearchInput(e.target.value)}
           />
-        </div>
-
-        <DataTable
-          table={table}
-          loading={loading}
-          error={error}
-          loadingLabel={t("loading")}
-          emptyLabel={t("empty")}
-          noResultsLabel={t("noResults")}
-          hasActiveFilter={!!search || statusFilter.length > 0}
-        />
-
-        {showFooter && (
-          <Pagination
-            table={table}
-            total={total}
-            rowCount={rows.length}
-            loading={loading}
-            selectId="carriers-page-size"
-            labels={{
-              rowsPerPage: t("pagination.rowsPerPage"),
-              showing: (vars) => t("pagination.showing", vars),
-              pageOf: (vars) => t("pagination.pageOf", vars),
-              prev: t("pagination.prev"),
-              next: t("pagination.next"),
-            }}
-          />
-        )}
-      </div>
+        }
+        labels={{
+          loading: t("loading"),
+          empty: t("empty"),
+          noResults: t("noResults"),
+          ...makePaginationLabels(t),
+        }}
+      />
 
       {modalOpen && (
         <CarrierFormModal

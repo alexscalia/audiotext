@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-type Tone = "success" | "neutral" | "warn" | "danger" | "info";
+export type Tone = "success" | "neutral" | "warn" | "danger" | "info";
 
 type BadgeProps = {
   tone?: Tone;
