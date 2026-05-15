@@ -20,7 +20,9 @@ import {
   makePaginationLabels,
 } from "@/components/ui/data-table/data-table-card";
 import { useDebouncedValue, useListData } from "@/hooks/useListData";
-import { useResource } from "@/hooks/useResource";
+import { NOT_FOUND_ERROR, useResource } from "@/hooks/useResource";
+import { api } from "@/lib/api-client";
+import type { Locale } from "@/i18n/config";
 
 type Destination = VoiceNumberingPlanDestinationListItem;
 
@@ -58,7 +60,7 @@ export default function NumberingPlanDetailPage() {
 
   const t = useTranslations("NumberingPlans");
   const tStatus = useTranslations("NumberingPlans.status");
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
 
   const [prefixInput, setPrefixInput] = useState("");
   const prefix = useDebouncedValue(prefixInput.replace(/[^0-9]/g, ""));
@@ -68,26 +70,49 @@ export default function NumberingPlanDetailPage() {
     loading: planLoading,
     error: planError,
   } = useResource<VoiceNumberingPlanDetail>({
-    endpoint: id ? `/api/admin/voice-numbering-plans/${id}` : null,
+    queryKey: ["voice-numbering-plan", id],
+    enabled: !!id,
     notFoundMessage: t("detail.notFound"),
     errorMessage: t("loadError"),
+    queryFn: async (signal) => {
+      const res = await api.api.admin["voice-numbering-plans"][":id"].$get(
+        { param: { id } },
+        { init: { signal, credentials: "include" } },
+      );
+      if (res.status === 404) throw new Error(NOT_FOUND_ERROR);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return (await res.json()) as VoiceNumberingPlanDetail;
+    },
   });
 
   const list = useListData<Destination, VoiceNumberingPlanDestinationSortBy>({
-    endpoint: `/api/admin/voice-numbering-plans/${id}/destinations`,
+    queryKey: ["voice-numbering-plan-destinations", id, { locale, prefix }],
     defaultSortBy: "countryName",
     sortableColumns: SORTABLE_COLUMNS,
     pageSize: 25,
     errorMessage: t("loadError"),
-    mapResponse: (json) => {
-      const r = json as VoiceNumberingPlanDestinationListResponse;
-      return { items: r.destinations, total: r.total };
+    queryFn: async ({ page, pageSize, sortBy, sortDir, search, signal }) => {
+      const res = await api.api.admin["voice-numbering-plans"][
+        ":id"
+      ].destinations.$get(
+        {
+          param: { id },
+          query: {
+            page: String(page),
+            pageSize: String(pageSize),
+            sortBy,
+            sortDir,
+            locale,
+            ...(search ? { search } : {}),
+            ...(prefix ? { prefix } : {}),
+          },
+        },
+        { init: { signal, credentials: "include" } },
+      );
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = (await res.json()) as VoiceNumberingPlanDestinationListResponse;
+      return { items: json.destinations, total: json.total };
     },
-    buildExtraParams: (params) => {
-      params.set("locale", locale);
-      if (prefix) params.set("prefix", prefix);
-    },
-    extraDeps: [locale, prefix],
   });
 
   const { resetPage } = list;

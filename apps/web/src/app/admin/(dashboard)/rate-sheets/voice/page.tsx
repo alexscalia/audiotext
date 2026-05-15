@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/data-table/data-table-card";
 import { useListData } from "@/hooks/useListData";
 import { useStatusFilter } from "@/hooks/useStatusFilter";
+import { api } from "@/lib/api-client";
 
 type RateSheet = VoiceRateSheetListItem;
 
@@ -46,17 +47,30 @@ export default function VoiceRateSheetsPage() {
     t,
   });
 
+  const status = statusFilter.filter;
   const list = useListData<RateSheet, VoiceRateSheetListSortBy>({
-    endpoint: "/api/admin/voice-rate-sheets",
+    queryKey: ["voice-rate-sheets", { status }],
     defaultSortBy: "name",
     sortableColumns: SORTABLE_COLUMNS,
     errorMessage: t("loadError"),
-    mapResponse: (json) => {
-      const r = json as VoiceRateSheetListResponse;
-      return { items: r.rateSheets, total: r.total };
+    queryFn: async ({ page, pageSize, sortBy, sortDir, search, signal }) => {
+      const res = await api.api.admin["voice-rate-sheets"].$get(
+        {
+          query: {
+            page: String(page),
+            pageSize: String(pageSize),
+            sortBy,
+            sortDir,
+            ...(search ? { search } : {}),
+            ...(status.length > 0 ? { status: status.join(",") } : {}),
+          },
+        },
+        { init: { signal, credentials: "include" } },
+      );
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = (await res.json()) as VoiceRateSheetListResponse;
+      return { items: json.rateSheets, total: json.total };
     },
-    buildExtraParams: statusFilter.applyToParams,
-    extraDeps: statusFilter.deps,
   });
 
   const { resetPage } = list;

@@ -16,6 +16,7 @@ import {
   makePaginationLabels,
 } from "@/components/ui/data-table/data-table-card";
 import { useListData } from "@/hooks/useListData";
+import { api } from "@/lib/api-client";
 
 type Plan = VoiceNumberingPlanListItem;
 
@@ -32,13 +33,26 @@ export default function NumberingPlansPage() {
   const tActions = useTranslations("NumberingPlans.actions");
 
   const list = useListData<Plan, VoiceNumberingPlanListSortBy>({
-    endpoint: "/api/admin/voice-numbering-plans",
+    queryKey: ["voice-numbering-plans"],
     defaultSortBy: "name",
     sortableColumns: SORTABLE_COLUMNS,
     errorMessage: t("loadError"),
-    mapResponse: (json) => {
-      const r = json as VoiceNumberingPlanListResponse;
-      return { items: r.plans, total: r.total };
+    queryFn: async ({ page, pageSize, sortBy, sortDir, search, signal }) => {
+      const res = await api.api.admin["voice-numbering-plans"].$get(
+        {
+          query: {
+            page: String(page),
+            pageSize: String(pageSize),
+            sortBy,
+            sortDir,
+            ...(search ? { search } : {}),
+          },
+        },
+        { init: { signal, credentials: "include" } },
+      );
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = (await res.json()) as VoiceNumberingPlanListResponse;
+      return { items: json.plans, total: json.total };
     },
   });
 

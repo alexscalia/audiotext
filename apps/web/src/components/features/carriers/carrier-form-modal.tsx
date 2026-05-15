@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 import {
   useForm,
   type FieldErrors,
@@ -9,13 +9,16 @@ import {
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale, useTranslations } from "next-intl";
+import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import type { CountryListItem, CountryListResponse } from "@audiotext/shared";
+import type { CountryListResponse } from "@audiotext/shared";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/form/field";
 import { TextInput } from "@/components/form/text-input";
 import { Select } from "@/components/form/select";
+import { api } from "@/lib/api-client";
+import type { Locale } from "@/i18n/config";
 
 const errMsg = {
   required: "required",
@@ -294,7 +297,7 @@ export function CarrierFormModal({
   const tErrors = useTranslations("Carriers.form.errors");
   const tTabs = useTranslations("Carriers.tabs");
   const tActions = useTranslations("Carriers.actions");
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
 
   const formId = useId();
   const tabIdPrefix = useId();
@@ -302,34 +305,24 @@ export function CarrierFormModal({
   const [activeTab, setActiveTab] = useState<TabId>("general");
   const [bankEnabled, setBankEnabled] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
-  const [countries, setCountries] = useState<CountryListItem[]>([]);
-  const [countriesLoading, setCountriesLoading] = useState(false);
 
   const nameRef = useRef<HTMLInputElement | null>(null);
 
-  useEffect(() => {
-    if (!open) return;
-    const controller = new AbortController();
-    setCountriesLoading(true);
-    fetch(`/api/admin/countries?locale=${encodeURIComponent(locale)}`, {
-      credentials: "include",
-      signal: controller.signal,
-    })
-      .then(async (res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return (await res.json()) as CountryListResponse;
-      })
-      .then((json) => setCountries(json.countries))
-      .catch((err) => {
-        if (controller.signal.aborted) return;
-        console.error("countries load failed", err);
-      })
-      .finally(() => {
-        if (controller.signal.aborted) return;
-        setCountriesLoading(false);
-      });
-    return () => controller.abort();
-  }, [open, locale]);
+  const countriesQuery = useQuery({
+    queryKey: ["countries", locale],
+    enabled: open,
+    queryFn: async ({ signal }) => {
+      const res = await api.api.admin.countries.$get(
+        { query: { locale } },
+        { init: { signal, credentials: "include" } },
+      );
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = (await res.json()) as CountryListResponse;
+      return json.countries;
+    },
+  });
+  const countries = countriesQuery.data ?? [];
+  const countriesLoading = countriesQuery.isPending || countriesQuery.isFetching;
 
   const {
     register,

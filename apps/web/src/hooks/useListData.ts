@@ -6,13 +6,13 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import {
   type PaginationState,
   type SortingState,
 } from "@tanstack/react-table";
+import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export type SortDir = "asc" | "desc";
 
@@ -25,22 +25,23 @@ export function useDebouncedValue<T>(value: T, delayMs = 300): T {
   return debounced;
 }
 
+export type UseListDataQueryArgs<S extends string> = {
+  page: number;
+  pageSize: number;
+  sortBy: S;
+  sortDir: SortDir;
+  search: string;
+  signal: AbortSignal;
+};
+
 export type UseListDataOptions<T, S extends string> = {
-  endpoint: string;
+  queryKey: readonly unknown[];
+  queryFn: (args: UseListDataQueryArgs<S>) => Promise<{ items: T[]; total: number }>;
   defaultSortBy: S;
   sortableColumns: readonly S[];
-  mapResponse: (json: unknown) => { items: T[]; total: number };
   errorMessage: string;
-  /** Default page size. Defaults to 10. */
   pageSize?: number;
-  /** Query param name for the debounced search string. Defaults to "search". */
-  searchParam?: string;
-  /** Debounce duration in ms for the search input. Defaults to 300. */
   searchDebounceMs?: number;
-  /** Hook to attach extra params (filters etc.) to each request. */
-  buildExtraParams?: (params: URLSearchParams) => void;
-  /** Dependencies that, when changed, should trigger a refetch (e.g. filters). */
-  extraDeps?: ReadonlyArray<unknown>;
 };
 
 export type UseListDataResult<T, S extends string> = {
@@ -65,17 +66,16 @@ export function useListData<T, S extends string>(
   opts: UseListDataOptions<T, S>,
 ): UseListDataResult<T, S> {
   const {
-    endpoint,
+    queryKey,
+    queryFn,
     defaultSortBy,
     sortableColumns,
-    mapResponse,
     errorMessage,
     pageSize = 10,
-    searchParam = "search",
     searchDebounceMs = 300,
-    buildExtraParams,
-    extraDeps = [],
   } = opts;
+
+  const queryClient = useQueryClient();
 
   const [sorting, setSorting] = useState<SortingState>([
     { id: defaultSortBy, desc: false },
@@ -86,11 +86,6 @@ export function useListData<T, S extends string>(
     pageIndex: 0,
     pageSize,
   });
-  const [items, setItems] = useState<T[]>([]);
-  const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     const handle = setTimeout(() => {
@@ -114,75 +109,38 @@ export function useListData<T, S extends string>(
     return first.desc ? "desc" : "asc";
   }, [sorting]);
 
-  const requestIdRef = useRef(0);
+  const page = pagination.pageIndex + 1;
 
-  useEffect(() => {
-    const requestId = ++requestIdRef.current;
-    const controller = new AbortController();
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch lifecycle is intrinsically tied to dep changes
-    setLoading(true);
-    setError(null);
-
-    const params = new URLSearchParams({
-      page: String(pagination.pageIndex + 1),
-      pageSize: String(pagination.pageSize),
-      sortBy,
-      sortDir,
-    });
-    if (search) params.set(searchParam, search);
-    buildExtraParams?.(params);
-
-    fetch(`${endpoint}?${params.toString()}`, {
-      credentials: "include",
-      signal: controller.signal,
-    })
-      .then(async (res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return (await res.json()) as unknown;
-      })
-      .then((json) => {
-        if (requestId !== requestIdRef.current) return;
-        const mapped = mapResponse(json);
-        setItems(mapped.items);
-        setTotal(mapped.total);
-      })
-      .catch((err) => {
-        if (controller.signal.aborted) return;
-        if (requestId !== requestIdRef.current) return;
-        setError(errorMessage);
-        console.error(err);
-      })
-      .finally(() => {
-        if (requestId !== requestIdRef.current) return;
-        setLoading(false);
-      });
-
-    return () => controller.abort();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    endpoint,
-    pagination.pageIndex,
-    pagination.pageSize,
-    sortBy,
-    sortDir,
-    search,
-    searchParam,
-    errorMessage,
-    refreshKey,
-    ...extraDeps,
-  ]);
+  const query = useQuery({
+    queryKey: [
+      ...queryKey,
+      { page, pageSize: pagination.pageSize, sortBy, sortDir, search },
+    ],
+    queryFn: ({ signal }) =>
+      queryFn({
+        page,
+        pageSize: pagination.pageSize,
+        sortBy,
+        sortDir,
+        search,
+        signal,
+      }),
+    placeholderData: keepPreviousData,
+  });
 
   const resetPage = useCallback(() => {
     setPagination((p) => ({ ...p, pageIndex: 0 }));
   }, []);
 
-  const refresh = useCallback(() => setRefreshKey((k) => k + 1), []);
+  const refresh = useCallback(() => {
+    void queryClient.invalidateQueries({ queryKey });
+  }, [queryClient, queryKey]);
 
   return {
-    items,
-    total,
-    loading,
-    error,
+    items: query.data?.items ?? [],
+    total: query.data?.total ?? 0,
+    loading: query.isPending || query.isFetching,
+    error: query.error ? errorMessage : null,
     sorting,
     setSorting,
     pagination,

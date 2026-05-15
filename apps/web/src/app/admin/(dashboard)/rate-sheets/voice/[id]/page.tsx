@@ -20,7 +20,9 @@ import {
   makePaginationLabels,
 } from "@/components/ui/data-table/data-table-card";
 import { useDebouncedValue, useListData } from "@/hooks/useListData";
-import { useResource } from "@/hooks/useResource";
+import { NOT_FOUND_ERROR, useResource } from "@/hooks/useResource";
+import { api } from "@/lib/api-client";
+import type { Locale } from "@/i18n/config";
 import { HoverTooltip } from "@/components/ui/hover-tooltip";
 
 type Line = VoiceRateSheetLineListItem;
@@ -75,7 +77,7 @@ export default function VoiceRateSheetDetailPage() {
 
   const t = useTranslations("RateSheets");
   const tStatus = useTranslations("RateSheets.status");
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
 
   const [prefixInput, setPrefixInput] = useState("");
   const prefix = useDebouncedValue(prefixInput.replace(/[^0-9]/g, ""));
@@ -85,26 +87,47 @@ export default function VoiceRateSheetDetailPage() {
     loading: sheetLoading,
     error: sheetError,
   } = useResource<VoiceRateSheetDetail>({
-    endpoint: id ? `/api/admin/voice-rate-sheets/${id}` : null,
+    queryKey: ["voice-rate-sheet", id],
+    enabled: !!id,
     notFoundMessage: t("detail.notFound"),
     errorMessage: t("loadError"),
+    queryFn: async (signal) => {
+      const res = await api.api.admin["voice-rate-sheets"][":id"].$get(
+        { param: { id } },
+        { init: { signal, credentials: "include" } },
+      );
+      if (res.status === 404) throw new Error(NOT_FOUND_ERROR);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return (await res.json()) as VoiceRateSheetDetail;
+    },
   });
 
   const list = useListData<Line, VoiceRateSheetLineSortBy>({
-    endpoint: `/api/admin/voice-rate-sheets/${id}/lines`,
+    queryKey: ["voice-rate-sheet-lines", id, { locale, prefix }],
     defaultSortBy: "countryName",
     sortableColumns: SORTABLE_COLUMNS,
     pageSize: 25,
     errorMessage: t("loadError"),
-    mapResponse: (json) => {
-      const r = json as VoiceRateSheetLineListResponse;
-      return { items: r.lines, total: r.total };
+    queryFn: async ({ page, pageSize, sortBy, sortDir, search, signal }) => {
+      const res = await api.api.admin["voice-rate-sheets"][":id"].lines.$get(
+        {
+          param: { id },
+          query: {
+            page: String(page),
+            pageSize: String(pageSize),
+            sortBy,
+            sortDir,
+            locale,
+            ...(search ? { search } : {}),
+            ...(prefix ? { prefix } : {}),
+          },
+        },
+        { init: { signal, credentials: "include" } },
+      );
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = (await res.json()) as VoiceRateSheetLineListResponse;
+      return { items: json.lines, total: json.total };
     },
-    buildExtraParams: (params) => {
-      params.set("locale", locale);
-      if (prefix) params.set("prefix", prefix);
-    },
-    extraDeps: [locale, prefix],
   });
 
   const { resetPage } = list;

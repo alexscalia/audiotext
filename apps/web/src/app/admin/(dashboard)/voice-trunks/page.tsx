@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/data-table/data-table-card";
 import { useDebouncedValue, useListData } from "@/hooks/useListData";
 import { useStatusFilter } from "@/hooks/useStatusFilter";
+import { api } from "@/lib/api-client";
 
 type Trunk = VoiceTrunkListItem;
 
@@ -57,21 +58,32 @@ export default function VoiceTrunksPage() {
     t,
   });
 
+  const status = statusFilter.filter;
   const list = useListData<Trunk, VoiceTrunkListSortBy>({
-    endpoint: "/api/admin/voice-trunks",
+    queryKey: ["voice-trunks", { carrier, ip, status }],
     defaultSortBy: "name",
     sortableColumns: SORTABLE_COLUMNS,
     errorMessage: t("loadError"),
-    mapResponse: (json) => {
-      const r = json as VoiceTrunkListResponse;
-      return { items: r.trunks, total: r.total };
+    queryFn: async ({ page, pageSize, sortBy, sortDir, search, signal }) => {
+      const res = await api.api.admin["voice-trunks"].$get(
+        {
+          query: {
+            page: String(page),
+            pageSize: String(pageSize),
+            sortBy,
+            sortDir,
+            ...(search ? { search } : {}),
+            ...(carrier ? { carrier } : {}),
+            ...(ip ? { ip } : {}),
+            ...(status.length > 0 ? { status: status.join(",") } : {}),
+          },
+        },
+        { init: { signal, credentials: "include" } },
+      );
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = (await res.json()) as VoiceTrunkListResponse;
+      return { items: json.trunks, total: json.total };
     },
-    buildExtraParams: (params) => {
-      if (carrier) params.set("carrier", carrier);
-      if (ip) params.set("ip", ip);
-      statusFilter.applyToParams(params);
-    },
-    extraDeps: [carrier, ip, ...statusFilter.deps],
   });
 
   const { resetPage } = list;
