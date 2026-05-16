@@ -351,6 +351,7 @@ export const carriers = pgTable(
     salesName: text("sales_name").notNull(),
     salesEmail: text("sales_email").notNull(),
     salesPhone: text("sales_phone"),
+    timezone: text("timezone").notNull().default("UTC"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -594,6 +595,7 @@ export const atVoiceTerminationsRelations = relations(
     }),
     atVoiceNumbers: many(atVoiceNumbers),
     terminationUsers: many(atTerminationUsers),
+    blockedNumbers: many(atVoiceTerminationBlockedNumbers),
   }),
 );
 
@@ -704,6 +706,78 @@ export const atTerminationUsersRelations = relations(
     }),
     termination: one(atVoiceTerminations, {
       fields: [atTerminationUsers.atVoiceTerminationId],
+      references: [atVoiceTerminations.id],
+    }),
+  }),
+);
+
+export const voiceBlockedNumberParty = pgEnum("voice_blocked_number_party", [
+  "a",
+  "b",
+]);
+export type VoiceBlockedNumberParty =
+  (typeof voiceBlockedNumberParty.enumValues)[number];
+
+export const atVoiceTerminationBlockedNumbers = pgTable(
+  "at_voice_termination_blocked_numbers",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    atVoiceTerminationId: uuid("at_voice_termination_id")
+      .notNull()
+      .references(() => atVoiceTerminations.id, { onDelete: "cascade" }),
+    party: voiceBlockedNumberParty("party").notNull(),
+    numberPrefix: text("number_prefix").notNull(),
+    reason: text("reason"),
+    expiresAt: timestamp("expires_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex(
+      "at_voice_termination_blocked_numbers_termination_party_prefix_unique_active",
+    )
+      .on(t.atVoiceTerminationId, t.party, t.numberPrefix)
+      .where(sql`${t.deletedAt} IS NULL`),
+    check(
+      "at_voice_termination_blocked_numbers_number_prefix_digits",
+      sql`${t.numberPrefix} ~ '^[0-9]+$'`,
+    ),
+    check(
+      "at_voice_termination_blocked_numbers_expires_after_created",
+      sql`${t.expiresAt} IS NULL OR ${t.expiresAt} > ${t.createdAt}`,
+    ),
+    index("at_voice_termination_blocked_numbers_termination_idx").on(
+      t.atVoiceTerminationId,
+    ),
+    index("at_voice_termination_blocked_numbers_party_prefix_idx").on(
+      t.party,
+      t.numberPrefix,
+    ),
+    index("at_voice_termination_blocked_numbers_expires_at_idx").on(
+      t.expiresAt,
+    ),
+    index("at_voice_termination_blocked_numbers_deleted_at_idx").on(
+      t.deletedAt,
+    ),
+  ],
+);
+
+export type AtVoiceTerminationBlockedNumberRow =
+  typeof atVoiceTerminationBlockedNumbers.$inferSelect;
+export type NewAtVoiceTerminationBlockedNumberRow =
+  typeof atVoiceTerminationBlockedNumbers.$inferInsert;
+
+export const atVoiceTerminationBlockedNumbersRelations = relations(
+  atVoiceTerminationBlockedNumbers,
+  ({ one }) => ({
+    termination: one(atVoiceTerminations, {
+      fields: [atVoiceTerminationBlockedNumbers.atVoiceTerminationId],
       references: [atVoiceTerminations.id],
     }),
   }),
@@ -861,6 +935,7 @@ export const voiceTrunksRelations = relations(voiceTrunks, ({ one, many }) => ({
     references: [voiceRateSheets.id],
   }),
   ips: many(voiceTrunkIps),
+  blockedNumbers: many(voiceTrunkBlockedNumbers),
 }));
 
 export const voiceTrunkIpStatus = pgEnum("voice_trunk_ip_status", [
@@ -907,6 +982,65 @@ export const voiceTrunkIpsRelations = relations(voiceTrunkIps, ({ one }) => ({
     references: [voiceTrunks.id],
   }),
 }));
+
+export const voiceTrunkBlockedNumbers = pgTable(
+  "voice_trunk_blocked_numbers",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    voiceTrunkId: uuid("voice_trunk_id")
+      .notNull()
+      .references(() => voiceTrunks.id, { onDelete: "cascade" }),
+    party: voiceBlockedNumberParty("party").notNull(),
+    numberPrefix: text("number_prefix").notNull(),
+    reason: text("reason"),
+    expiresAt: timestamp("expires_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex(
+      "voice_trunk_blocked_numbers_trunk_party_prefix_unique_active",
+    )
+      .on(t.voiceTrunkId, t.party, t.numberPrefix)
+      .where(sql`${t.deletedAt} IS NULL`),
+    check(
+      "voice_trunk_blocked_numbers_number_prefix_digits",
+      sql`${t.numberPrefix} ~ '^[0-9]+$'`,
+    ),
+    check(
+      "voice_trunk_blocked_numbers_expires_after_created",
+      sql`${t.expiresAt} IS NULL OR ${t.expiresAt} > ${t.createdAt}`,
+    ),
+    index("voice_trunk_blocked_numbers_trunk_idx").on(t.voiceTrunkId),
+    index("voice_trunk_blocked_numbers_party_prefix_idx").on(
+      t.party,
+      t.numberPrefix,
+    ),
+    index("voice_trunk_blocked_numbers_expires_at_idx").on(t.expiresAt),
+    index("voice_trunk_blocked_numbers_deleted_at_idx").on(t.deletedAt),
+  ],
+);
+
+export type VoiceTrunkBlockedNumberRow =
+  typeof voiceTrunkBlockedNumbers.$inferSelect;
+export type NewVoiceTrunkBlockedNumberRow =
+  typeof voiceTrunkBlockedNumbers.$inferInsert;
+
+export const voiceTrunkBlockedNumbersRelations = relations(
+  voiceTrunkBlockedNumbers,
+  ({ one }) => ({
+    voiceTrunk: one(voiceTrunks, {
+      fields: [voiceTrunkBlockedNumbers.voiceTrunkId],
+      references: [voiceTrunks.id],
+    }),
+  }),
+);
 
 export const voiceNumberingPlanStatus = pgEnum("voice_numbering_plan_status", [
   "active",
