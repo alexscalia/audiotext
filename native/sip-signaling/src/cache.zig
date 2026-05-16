@@ -16,6 +16,7 @@ pub const LookupResult = union(enum) {
 };
 
 pub const Map = std.StringHashMap(std.ArrayList(Credential));
+pub const NumberSet = std.StringHashMap(void);
 
 pub fn deinitMap(m: *Map, allocator: std.mem.Allocator) void {
     var it = m.iterator();
@@ -27,15 +28,23 @@ pub fn deinitMap(m: *Map, allocator: std.mem.Allocator) void {
     m.deinit();
 }
 
+pub fn deinitNumberSet(s: *NumberSet, allocator: std.mem.Allocator) void {
+    var it = s.keyIterator();
+    while (it.next()) |k| allocator.free(k.*);
+    s.deinit();
+}
+
 pub const AuthCache = struct {
     allocator: std.mem.Allocator,
     map: Map,
+    numbers: NumberSet,
     mutex: std.Thread.Mutex = .{},
 
     pub fn init(allocator: std.mem.Allocator) AuthCache {
         return .{
             .allocator = allocator,
             .map = Map.init(allocator),
+            .numbers = NumberSet.init(allocator),
         };
     }
 
@@ -43,14 +52,18 @@ pub const AuthCache = struct {
         self.mutex.lock();
         defer self.mutex.unlock();
         deinitMap(&self.map, self.allocator);
+        deinitNumberSet(&self.numbers, self.allocator);
     }
 
-    pub fn swap(self: *AuthCache, new_map: *Map) void {
+    pub fn swap(self: *AuthCache, new_map: *Map, new_numbers: *NumberSet) void {
         self.mutex.lock();
         defer self.mutex.unlock();
         deinitMap(&self.map, self.allocator);
+        deinitNumberSet(&self.numbers, self.allocator);
         self.map = new_map.*;
+        self.numbers = new_numbers.*;
         new_map.* = Map.init(self.allocator);
+        new_numbers.* = NumberSet.init(self.allocator);
     }
 
     pub fn lookup(self: *AuthCache, ip: []const u8, b: []const u8) LookupResult {
@@ -92,7 +105,11 @@ pub const AuthCache = struct {
 
         if (best_idx) |i| {
             const c = items[i];
-            return .{ .active = .{ .stripped_b = b[c.prefix.len..] } };
+            const stripped = b[c.prefix.len..];
+            // Stripped B-number must be a DID we own (at_voice_numbers).
+            // If absent → SIP 503 cause 34 (temporary; carrier may retry).
+            if (!self.numbers.contains(stripped)) return .inactive;
+            return .{ .active = .{ .stripped_b = stripped } };
         }
         if (saw_inactive_match) return .inactive;
         return .unknown;

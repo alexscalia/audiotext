@@ -71,10 +71,39 @@ pub fn loadIntoCache(
         if (active) active_count += 1;
     }
 
-    std.log.info("loaded {} trunk_ip rows from postgres ({} active, {} distinct IPs)", .{
+    // Active DIDs owned by us. Stripped B-number must hit this set
+    // or signaling returns 503 cause 34.
+    const numbers_sql =
+        \\SELECT number FROM at_voice_numbers WHERE deleted_at IS NULL
+    ;
+    const nres = c.PQexec(conn, numbers_sql);
+    defer c.PQclear(nres);
+
+    if (c.PQresultStatus(nres) != c.PGRES_TUPLES_OK) {
+        const msg = std.mem.sliceTo(c.PQerrorMessage(conn), 0);
+        std.log.err("at_voice_numbers query failed: {s}", .{msg});
+        return error.PostgresQueryFailed;
+    }
+
+    var new_numbers = cache.NumberSet.init(allocator);
+    defer cache.deinitNumberSet(&new_numbers, allocator);
+
+    const nn = c.PQntuples(nres);
+    var j: c_int = 0;
+    while (j < nn) : (j += 1) {
+        const num_raw = c.PQgetvalue(nres, j, 0);
+        const num = std.mem.sliceTo(num_raw, 0);
+        const gop = try new_numbers.getOrPut(num);
+        if (!gop.found_existing) {
+            gop.key_ptr.* = try allocator.dupe(u8, num);
+        }
+    }
+
+    std.log.info("loaded {} trunk_ip rows ({} active, {} distinct IPs), {} active DIDs", .{
         n,
         active_count,
         new_map.count(),
+        new_numbers.count(),
     });
-    target.swap(&new_map);
+    target.swap(&new_map, &new_numbers);
 }
