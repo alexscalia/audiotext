@@ -439,6 +439,18 @@ export const atVoiceTerminations = pgTable(
       precision: 18,
       scale: 6,
     }).notNull(),
+    carrierBillingCycleDays: integer("carrier_billing_cycle_days").notNull(),
+    carrierPaymentTermsDays: integer("carrier_payment_terms_days").notNull(),
+    payoutPerMinWeekly: numeric("payout_per_min_weekly", {
+      precision: 18,
+      scale: 6,
+    }).notNull(),
+    payoutPerMinLongTerm: numeric("payout_per_min_long_term", {
+      precision: 18,
+      scale: 6,
+    }).notNull(),
+    payoutBillingCycleDays: integer("payout_billing_cycle_days").notNull(),
+    payoutPaymentTermsDays: integer("payout_payment_terms_days").notNull(),
     countryCode: text("country_code").notNull(),
     maxDailyTotalMins: integer("max_daily_total_mins"),
     maxDailyMinsANumber: integer("max_daily_mins_a_number"),
@@ -472,6 +484,30 @@ export const atVoiceTerminations = pgTable(
     check(
       "at_voice_terminations_carrier_rate_per_min_non_negative",
       sql`${t.carrierRatePerMin} >= 0`,
+    ),
+    check(
+      "at_voice_terminations_payout_per_min_weekly_non_negative",
+      sql`${t.payoutPerMinWeekly} >= 0`,
+    ),
+    check(
+      "at_voice_terminations_payout_per_min_long_term_non_negative",
+      sql`${t.payoutPerMinLongTerm} >= 0`,
+    ),
+    check(
+      "at_voice_terminations_carrier_billing_cycle_days_positive",
+      sql`${t.carrierBillingCycleDays} > 0`,
+    ),
+    check(
+      "at_voice_terminations_carrier_payment_terms_days_positive",
+      sql`${t.carrierPaymentTermsDays} > 0`,
+    ),
+    check(
+      "at_voice_terminations_payout_billing_cycle_days_positive",
+      sql`${t.payoutBillingCycleDays} > 0`,
+    ),
+    check(
+      "at_voice_terminations_payout_payment_terms_days_positive",
+      sql`${t.payoutPaymentTermsDays} > 0`,
     ),
     check(
       "at_voice_terminations_max_daily_total_mins_positive",

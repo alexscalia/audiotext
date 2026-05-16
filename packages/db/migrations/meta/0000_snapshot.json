@@ -1,5 +1,5 @@
 {
-  "id": "a0813b7e-0ad8-44d7-935a-5dfa98d78e0a",
+  "id": "76c44537-3729-403e-bbb6-74369643b5a6",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -551,6 +551,42 @@
           "primaryKey": false,
           "notNull": true
         },
+        "carrier_billing_cycle_days": {
+          "name": "carrier_billing_cycle_days",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "carrier_payment_terms_days": {
+          "name": "carrier_payment_terms_days",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "payout_per_min_weekly": {
+          "name": "payout_per_min_weekly",
+          "type": "numeric(18, 6)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "payout_per_min_long_term": {
+          "name": "payout_per_min_long_term",
+          "type": "numeric(18, 6)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "payout_billing_cycle_days": {
+          "name": "payout_billing_cycle_days",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "payout_payment_terms_days": {
+          "name": "payout_payment_terms_days",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "country_code": {
           "name": "country_code",
           "type": "text",
@@ -748,6 +784,30 @@
         "at_voice_terminations_carrier_rate_per_min_non_negative": {
           "name": "at_voice_terminations_carrier_rate_per_min_non_negative",
           "value": "\"at_voice_terminations\".\"carrier_rate_per_min\" >= 0"
+        },
+        "at_voice_terminations_payout_per_min_weekly_non_negative": {
+          "name": "at_voice_terminations_payout_per_min_weekly_non_negative",
+          "value": "\"at_voice_terminations\".\"payout_per_min_weekly\" >= 0"
+        },
+        "at_voice_terminations_payout_per_min_long_term_non_negative": {
+          "name": "at_voice_terminations_payout_per_min_long_term_non_negative",
+          "value": "\"at_voice_terminations\".\"payout_per_min_long_term\" >= 0"
+        },
+        "at_voice_terminations_carrier_billing_cycle_days_positive": {
+          "name": "at_voice_terminations_carrier_billing_cycle_days_positive",
+          "value": "\"at_voice_terminations\".\"carrier_billing_cycle_days\" > 0"
+        },
+        "at_voice_terminations_carrier_payment_terms_days_positive": {
+          "name": "at_voice_terminations_carrier_payment_terms_days_positive",
+          "value": "\"at_voice_terminations\".\"carrier_payment_terms_days\" > 0"
+        },
+        "at_voice_terminations_payout_billing_cycle_days_positive": {
+          "name": "at_voice_terminations_payout_billing_cycle_days_positive",
+          "value": "\"at_voice_terminations\".\"payout_billing_cycle_days\" > 0"
+        },
+        "at_voice_terminations_payout_payment_terms_days_positive": {
+          "name": "at_voice_terminations_payout_payment_terms_days_positive",
+          "value": "\"at_voice_terminations\".\"payout_payment_terms_days\" > 0"
         },
         "at_voice_terminations_max_daily_total_mins_positive": {
           "name": "at_voice_terminations_max_daily_total_mins_positive",
