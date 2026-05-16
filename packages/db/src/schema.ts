@@ -408,6 +408,13 @@ export const atVoiceTerminationStatus = pgEnum("at_voice_termination_status", [
 export type AtVoiceTerminationStatus =
   (typeof atVoiceTerminationStatus.enumValues)[number];
 
+export const atVoiceTerminationType = pgEnum("at_voice_termination_type", [
+  "generated",
+  "assigned",
+]);
+export type AtVoiceTerminationType =
+  (typeof atVoiceTerminationType.enumValues)[number];
+
 export const currency = pgEnum("currency", ["usd", "eur", "gbp"]);
 export type Currency = (typeof currency.enumValues)[number];
 
@@ -416,14 +423,22 @@ export const atVoiceTerminations = pgTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     status: atVoiceTerminationStatus("status").notNull().default("active"),
+    type: atVoiceTerminationType("type").notNull(),
     carrierId: uuid("carrier_id")
       .notNull()
       .references(() => carriers.id, { onDelete: "cascade" }),
-    voiceNumberingPlanId: uuid("voice_numbering_plan_id")
+    voiceNumberingPlanDestinationId: uuid("voice_numbering_plan_destination_id")
       .notNull()
-      .references(() => voiceNumberingPlans.id, { onDelete: "restrict" }),
+      .references(() => voiceNumberingPlanDestinations.id, {
+        onDelete: "restrict",
+      }),
     name: text("name").notNull(),
-    currency: currency("currency").notNull(),
+    currencyIso: text("currency_iso").notNull(),
+    carrierCurrencyIso: text("carrier_currency_iso").notNull(),
+    carrierRatePerMin: numeric("carrier_rate_per_min", {
+      precision: 18,
+      scale: 6,
+    }).notNull(),
     countryCode: text("country_code").notNull(),
     maxDailyTotalMins: integer("max_daily_total_mins"),
     maxDailyMinsANumber: integer("max_daily_mins_a_number"),
@@ -447,6 +462,18 @@ export const atVoiceTerminations = pgTable(
       sql`${t.countryCode} ~ '^[A-Z]{2}$'`,
     ),
     check(
+      "at_voice_terminations_currency_iso_format",
+      sql`${t.currencyIso} ~ '^[A-Z]{3}$'`,
+    ),
+    check(
+      "at_voice_terminations_carrier_currency_iso_format",
+      sql`${t.carrierCurrencyIso} ~ '^[A-Z]{3}$'`,
+    ),
+    check(
+      "at_voice_terminations_carrier_rate_per_min_non_negative",
+      sql`${t.carrierRatePerMin} >= 0`,
+    ),
+    check(
       "at_voice_terminations_max_daily_total_mins_positive",
       sql`${t.maxDailyTotalMins} IS NULL OR ${t.maxDailyTotalMins} > 0`,
     ),
@@ -463,8 +490,8 @@ export const atVoiceTerminations = pgTable(
       sql`${t.maxDailyMinsAToBNumber} IS NULL OR ${t.maxDailyMinsAToBNumber} > 0`,
     ),
     index("at_voice_terminations_carrier_idx").on(t.carrierId),
-    index("at_voice_terminations_voice_numbering_plan_idx").on(
-      t.voiceNumberingPlanId,
+    index("at_voice_terminations_voice_numbering_plan_destination_idx").on(
+      t.voiceNumberingPlanDestinationId,
     ),
     index("at_voice_terminations_status_idx").on(t.status),
     index("at_voice_terminations_country_idx").on(t.countryCode),
@@ -481,6 +508,10 @@ export const atVoiceTerminationsRelations = relations(
     carrier: one(carriers, {
       fields: [atVoiceTerminations.carrierId],
       references: [carriers.id],
+    }),
+    voiceNumberingPlanDestination: one(voiceNumberingPlanDestinations, {
+      fields: [atVoiceTerminations.voiceNumberingPlanDestinationId],
+      references: [voiceNumberingPlanDestinations.id],
     }),
     atVoiceNumbers: many(atVoiceNumbers),
     terminationUsers: many(atTerminationUsers),

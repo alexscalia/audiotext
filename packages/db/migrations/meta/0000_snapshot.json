@@ -1,5 +1,5 @@
 {
-  "id": "dfa776fa-2cf0-485e-96ad-b85c78208cc3",
+  "id": "a0813b7e-0ad8-44d7-935a-5dfa98d78e0a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -171,6 +171,190 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.at_termination_users": {
+      "name": "at_termination_users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "at_voice_termination_id": {
+          "name": "at_voice_termination_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "idle_revoke_hours": {
+          "name": "idle_revoke_hours",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "assigned_numbers_count": {
+          "name": "assigned_numbers_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "max_assigned_numbers": {
+          "name": "max_assigned_numbers",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 10
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "at_termination_users_user_termination_unique_active": {
+          "name": "at_termination_users_user_termination_unique_active",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "at_voice_termination_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"at_termination_users\".\"deleted_at\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "at_termination_users_user_idx": {
+          "name": "at_termination_users_user_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "at_termination_users_termination_idx": {
+          "name": "at_termination_users_termination_idx",
+          "columns": [
+            {
+              "expression": "at_voice_termination_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "at_termination_users_deleted_at_idx": {
+          "name": "at_termination_users_deleted_at_idx",
+          "columns": [
+            {
+              "expression": "deleted_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "at_termination_users_user_id_users_id_fk": {
+          "name": "at_termination_users_user_id_users_id_fk",
+          "tableFrom": "at_termination_users",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "at_termination_users_at_voice_termination_id_at_voice_terminations_id_fk": {
+          "name": "at_termination_users_at_voice_termination_id_at_voice_terminations_id_fk",
+          "tableFrom": "at_termination_users",
+          "tableTo": "at_voice_terminations",
+          "columnsFrom": [
+            "at_voice_termination_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "at_termination_users_idle_revoke_hours_positive": {
+          "name": "at_termination_users_idle_revoke_hours_positive",
+          "value": "\"at_termination_users\".\"idle_revoke_hours\" > 0"
+        },
+        "at_termination_users_max_assigned_numbers_positive": {
+          "name": "at_termination_users_max_assigned_numbers_positive",
+          "value": "\"at_termination_users\".\"max_assigned_numbers\" > 0"
+        },
+        "at_termination_users_assigned_count_nonneg": {
+          "name": "at_termination_users_assigned_count_nonneg",
+          "value": "\"at_termination_users\".\"assigned_numbers_count\" >= 0"
+        },
+        "at_termination_users_count_within_max": {
+          "name": "at_termination_users_count_within_max",
+          "value": "\"at_termination_users\".\"assigned_numbers_count\" <= \"at_termination_users\".\"max_assigned_numbers\""
+        }
+      },
+      "isRLSEnabled": false
+    },
     "public.at_voice_numbers": {
       "name": "at_voice_numbers",
       "schema": "",
@@ -324,14 +508,21 @@
           "notNull": true,
           "default": "'active'"
         },
+        "type": {
+          "name": "type",
+          "type": "at_voice_termination_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
         "carrier_id": {
           "name": "carrier_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "voice_numbering_plan_id": {
-          "name": "voice_numbering_plan_id",
+        "voice_numbering_plan_destination_id": {
+          "name": "voice_numbering_plan_destination_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -342,10 +533,21 @@
           "primaryKey": false,
           "notNull": true
         },
-        "currency": {
-          "name": "currency",
-          "type": "currency",
-          "typeSchema": "public",
+        "currency_iso": {
+          "name": "currency_iso",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "carrier_currency_iso": {
+          "name": "carrier_currency_iso",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "carrier_rate_per_min": {
+          "name": "carrier_rate_per_min",
+          "type": "numeric(18, 6)",
           "primaryKey": false,
           "notNull": true
         },
@@ -438,11 +640,11 @@
           "method": "btree",
           "with": {}
         },
-        "at_voice_terminations_voice_numbering_plan_idx": {
-          "name": "at_voice_terminations_voice_numbering_plan_idx",
+        "at_voice_terminations_voice_numbering_plan_destination_idx": {
+          "name": "at_voice_terminations_voice_numbering_plan_destination_idx",
           "columns": [
             {
-              "expression": "voice_numbering_plan_id",
+              "expression": "voice_numbering_plan_destination_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -513,12 +715,12 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "at_voice_terminations_voice_numbering_plan_id_voice_numbering_plans_id_fk": {
-          "name": "at_voice_terminations_voice_numbering_plan_id_voice_numbering_plans_id_fk",
+        "at_voice_terminations_voice_numbering_plan_destination_id_voice_numbering_plan_destinations_id_fk": {
+          "name": "at_voice_terminations_voice_numbering_plan_destination_id_voice_numbering_plan_destinations_id_fk",
           "tableFrom": "at_voice_terminations",
-          "tableTo": "voice_numbering_plans",
+          "tableTo": "voice_numbering_plan_destinations",
           "columnsFrom": [
-            "voice_numbering_plan_id"
+            "voice_numbering_plan_destination_id"
           ],
           "columnsTo": [
             "id"
@@ -534,6 +736,18 @@
         "at_voice_terminations_country_code_iso2": {
           "name": "at_voice_terminations_country_code_iso2",
           "value": "\"at_voice_terminations\".\"country_code\" ~ '^[A-Z]{2}$'"
+        },
+        "at_voice_terminations_currency_iso_format": {
+          "name": "at_voice_terminations_currency_iso_format",
+          "value": "\"at_voice_terminations\".\"currency_iso\" ~ '^[A-Z]{3}$'"
+        },
+        "at_voice_terminations_carrier_currency_iso_format": {
+          "name": "at_voice_terminations_carrier_currency_iso_format",
+          "value": "\"at_voice_terminations\".\"carrier_currency_iso\" ~ '^[A-Z]{3}$'"
+        },
+        "at_voice_terminations_carrier_rate_per_min_non_negative": {
+          "name": "at_voice_terminations_carrier_rate_per_min_non_negative",
+          "value": "\"at_voice_terminations\".\"carrier_rate_per_min\" >= 0"
         },
         "at_voice_terminations_max_daily_total_mins_positive": {
           "name": "at_voice_terminations_max_daily_total_mins_positive",
@@ -3277,6 +3491,14 @@
       "values": [
         "active",
         "inactive"
+      ]
+    },
+    "public.at_voice_termination_type": {
+      "name": "at_voice_termination_type",
+      "schema": "public",
+      "values": [
+        "generated",
+        "assigned"
       ]
     },
     "public.carrier_status": {
