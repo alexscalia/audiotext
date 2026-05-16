@@ -27,6 +27,39 @@ function pickRandom<T>(arr: readonly T[]): T {
   return arr[idx]!;
 }
 
+type DailyCaps = {
+  maxDailyTotalMins: number | null;
+  maxDailyMinsANumber: number | null;
+  maxDailyMinsBNumber: number | null;
+  maxDailyMinsAToBNumber: number | null;
+};
+
+function randomInt(minInclusive: number, maxInclusive: number): number {
+  return (
+    Math.floor(Math.random() * (maxInclusive - minInclusive + 1)) + minInclusive
+  );
+}
+
+function generateDailyCaps(): DailyCaps {
+  if (Math.random() < 0.5) {
+    return {
+      maxDailyTotalMins: null,
+      maxDailyMinsANumber: null,
+      maxDailyMinsBNumber: null,
+      maxDailyMinsAToBNumber: null,
+    };
+  }
+  const total = randomInt(2, 100) * 1000;
+  const pctBetween = (lo: number, hi: number) =>
+    Math.round((total * (lo + Math.random() * (hi - lo))) / 10) * 10;
+  return {
+    maxDailyTotalMins: total,
+    maxDailyMinsANumber: pctBetween(0.1, 0.2),
+    maxDailyMinsBNumber: pctBetween(0.1, 0.2),
+    maxDailyMinsAToBNumber: pctBetween(0.05, 0.1),
+  };
+}
+
 export async function seedAtVoiceTerminations(
   db: NodePgDatabase<typeof schema>,
 ): Promise<void> {
@@ -167,6 +200,7 @@ export async function seedAtVoiceTerminations(
       payoutBillingCycleDays: BILLING_CYCLE_DAYS,
       payoutPaymentTermsDays: PAYMENT_TERMS_DAYS,
       countryCode: destination.countryIso2,
+      ...generateDailyCaps(),
     });
   }
 
