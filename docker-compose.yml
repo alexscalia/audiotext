@@ -16,6 +16,13 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    networks:
+      - default
+      - sip
 
 volumes:
   pgdata:
+
+networks:
+  sip:
+    driver: bridge

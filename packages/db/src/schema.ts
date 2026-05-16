@@ -483,6 +483,7 @@ export const atVoiceTerminationsRelations = relations(
       references: [carriers.id],
     }),
     atVoiceNumbers: many(atVoiceNumbers),
+    terminationUsers: many(atTerminationUsers),
   }),
 );
 
@@ -530,6 +531,73 @@ export const atVoiceNumbersRelations = relations(atVoiceNumbers, ({ one }) => ({
     references: [atVoiceTerminations.id],
   }),
 }));
+
+export const atTerminationUsers = pgTable(
+  "at_termination_users",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    atVoiceTerminationId: uuid("at_voice_termination_id")
+      .notNull()
+      .references(() => atVoiceTerminations.id, { onDelete: "cascade" }),
+    idleRevokeHours: integer("idle_revoke_hours").notNull(),
+    assignedNumbersCount: integer("assigned_numbers_count")
+      .notNull()
+      .default(0),
+    maxAssignedNumbers: integer("max_assigned_numbers").notNull().default(10),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    uniqueIndex("at_termination_users_user_termination_unique_active")
+      .on(t.userId, t.atVoiceTerminationId)
+      .where(sql`${t.deletedAt} IS NULL`),
+    check(
+      "at_termination_users_idle_revoke_hours_positive",
+      sql`${t.idleRevokeHours} > 0`,
+    ),
+    check(
+      "at_termination_users_max_assigned_numbers_positive",
+      sql`${t.maxAssignedNumbers} > 0`,
+    ),
+    check(
+      "at_termination_users_assigned_count_nonneg",
+      sql`${t.assignedNumbersCount} >= 0`,
+    ),
+    check(
+      "at_termination_users_count_within_max",
+      sql`${t.assignedNumbersCount} <= ${t.maxAssignedNumbers}`,
+    ),
+    index("at_termination_users_user_idx").on(t.userId),
+    index("at_termination_users_termination_idx").on(t.atVoiceTerminationId),
+    index("at_termination_users_deleted_at_idx").on(t.deletedAt),
+  ],
+);
+
+export type AtTerminationUserRow = typeof atTerminationUsers.$inferSelect;
+export type NewAtTerminationUserRow = typeof atTerminationUsers.$inferInsert;
+
+export const atTerminationUsersRelations = relations(
+  atTerminationUsers,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [atTerminationUsers.userId],
+      references: [users.id],
+    }),
+    termination: one(atVoiceTerminations, {
+      fields: [atTerminationUsers.atVoiceTerminationId],
+      references: [atVoiceTerminations.id],
+    }),
+  }),
+);
 
 export const carriersRelations = relations(carriers, ({ many }) => ({
   atVoiceTerminations: many(atVoiceTerminations),

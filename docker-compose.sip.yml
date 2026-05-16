@@ -1,5 +1,3 @@
-name: audiotext-sip
-
 x-kamailio-build: &kamailio-build
   build:
     context: ./infra/sip
@@ -22,6 +20,36 @@ services:
           - kamailio-edge
     depends_on:
       - freeswitch
+      - sip-signaling
+
+  sip-signaling:
+    build:
+      context: ./native/sip-signaling
+      dockerfile: Dockerfile
+    image: audiotext-sip-signaling:0.1
+    container_name: audiotext-sip-signaling
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://audiotext:audiotext@postgres:5432/audiotext
+      REDIS_URL: redis://redis:6379
+      LISTEN_ADDR: 0.0.0.0:8080
+    ports:
+      - "8088:8080"
+    networks:
+      sip:
+        aliases:
+          - sip-signaling
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    container_name: audiotext-redis
+    restart: unless-stopped
+    networks:
+      sip:
+        aliases:
+          - redis
 
   kamailio-carrier-sink:
     <<: *kamailio-build

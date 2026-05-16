@@ -27,6 +27,7 @@ RUN apt-get update \
  && apt-get install -y --no-install-recommends \
       kamailio \
       kamailio-extra-modules \
+      kamailio-utils-modules \
  && apt-get purge -y curl gnupg \
  && apt-get autoremove -y \
  && rm -rf /var/lib/apt/lists/*
