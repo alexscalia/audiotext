@@ -1,3 +1,24 @@
+/**
+ * Naming conventions:
+ * - Tables: plural, snake_case in SQL, camelCase TS export.
+ * - Columns: camelCase TS ↔ snake_case SQL.
+ * - FKs: <refTable>Id / <ref_table>_id.
+ * - Timestamps: *At suffix (createdAt, updatedAt, deletedAt, expiresAt, ...).
+ * - Booleans: attribute names, no is_ prefix (emailVerified, registerEnabled).
+ * - Time units: spelled out — Seconds, Minutes, Hours, Days. Never Sec/Secs/Min/Mins.
+ * - Country codes (ISO 3166-1 alpha-2 SQL columns): countryIso2.
+ *   Exception: nested JSON `CarrierBillingDetails.address.countryCode` stays
+ *   for compatibility with the address shape used by UI/i18n.
+ * - Currency: `currency` pgEnum (usd/eur/gbp). Unprefixed = shared cross-table enum.
+ * - Soft delete: deletedAt + uniqueIndex(...).where(`deleted_at IS NULL`)
+ *   named `<table>_<cols>_unique_active`.
+ * - Indexes: <table>_<cols>_idx. FKs: <table>_<col>_<reftable>_<refcol>_fk.
+ * - Relations export: <table>Relations. Types: <Table>Row / New<Table>Row.
+ * - Domain table prefixes: `at_*` denotes AudioText-specific termination
+ *   pool tables (at_voice_terminations, at_voice_numbers, at_termination_users);
+ *   the generic voice infra (voice_trunks, voice_numbering_plans, ...) is unprefixed.
+ */
+
 import { relations, sql } from "drizzle-orm";
 import {
   pgTable,
@@ -433,31 +454,31 @@ export const atVoiceTerminations = pgTable(
         onDelete: "restrict",
       }),
     name: text("name").notNull(),
-    currencyIso: text("currency_iso").notNull(),
-    carrierCurrencyIso: text("carrier_currency_iso").notNull(),
-    carrierRatePerMin: numeric("carrier_rate_per_min", {
+    currency: currency("currency").notNull(),
+    carrierCurrency: currency("carrier_currency").notNull(),
+    carrierRatePerMinute: numeric("carrier_rate_per_minute", {
       precision: 18,
       scale: 6,
     }).notNull(),
     carrierBillingCycleDays: integer("carrier_billing_cycle_days").notNull(),
     carrierPaymentTermsDays: integer("carrier_payment_terms_days").notNull(),
-    payoutPerMinWeekly: numeric("payout_per_min_weekly", {
+    payoutPerMinuteWeekly: numeric("payout_per_minute_weekly", {
       precision: 18,
       scale: 6,
     }).notNull(),
-    payoutPerMinLongTerm: numeric("payout_per_min_long_term", {
+    payoutPerMinuteLongTerm: numeric("payout_per_minute_long_term", {
       precision: 18,
       scale: 6,
     }).notNull(),
     payoutBillingCycleDays: integer("payout_billing_cycle_days").notNull(),
     payoutPaymentTermsDays: integer("payout_payment_terms_days").notNull(),
-    countryCode: text("country_code").notNull(),
-    maxDailyTotalMins: integer("max_daily_total_mins"),
-    maxDailyMinsANumber: integer("max_daily_mins_a_number"),
-    maxDailyMinsBNumber: integer("max_daily_mins_b_number"),
-    maxDailyMinsAToBNumber: integer("max_daily_mins_a_to_b_number"),
-    maxCallDurationMin: integer("max_call_duration_min"),
-    targetAcdMin: integer("target_acd_min"),
+    countryIso2: text("country_iso2").notNull(),
+    maxDailyTotalMinutes: integer("max_daily_total_minutes"),
+    maxDailyMinutesANumber: integer("max_daily_minutes_a_number"),
+    maxDailyMinutesBNumber: integer("max_daily_minutes_b_number"),
+    maxDailyMinutesAToBNumber: integer("max_daily_minutes_a_to_b_number"),
+    maxCallDurationMinutes: integer("max_call_duration_minutes"),
+    targetAcdMinutes: integer("target_acd_minutes"),
     targetAsrPercent: integer("target_asr_percent"),
     maxANumberConcurrentCalls: integer("max_a_number_concurrent_calls"),
     maxBNumberConcurrentCalls: integer("max_b_number_concurrent_calls"),
@@ -476,28 +497,20 @@ export const atVoiceTerminations = pgTable(
       .on(t.carrierId, t.name)
       .where(sql`${t.deletedAt} IS NULL`),
     check(
-      "at_voice_terminations_country_code_iso2",
-      sql`${t.countryCode} ~ '^[A-Z]{2}$'`,
+      "at_voice_terminations_country_iso2_format",
+      sql`${t.countryIso2} ~ '^[A-Z]{2}$'`,
     ),
     check(
-      "at_voice_terminations_currency_iso_format",
-      sql`${t.currencyIso} ~ '^[A-Z]{3}$'`,
+      "at_voice_terminations_carrier_rate_per_minute_non_negative",
+      sql`${t.carrierRatePerMinute} >= 0`,
     ),
     check(
-      "at_voice_terminations_carrier_currency_iso_format",
-      sql`${t.carrierCurrencyIso} ~ '^[A-Z]{3}$'`,
+      "at_voice_terminations_payout_per_minute_weekly_non_negative",
+      sql`${t.payoutPerMinuteWeekly} >= 0`,
     ),
     check(
-      "at_voice_terminations_carrier_rate_per_min_non_negative",
-      sql`${t.carrierRatePerMin} >= 0`,
-    ),
-    check(
-      "at_voice_terminations_payout_per_min_weekly_non_negative",
-      sql`${t.payoutPerMinWeekly} >= 0`,
-    ),
-    check(
-      "at_voice_terminations_payout_per_min_long_term_non_negative",
-      sql`${t.payoutPerMinLongTerm} >= 0`,
+      "at_voice_terminations_payout_per_minute_long_term_non_negative",
+      sql`${t.payoutPerMinuteLongTerm} >= 0`,
     ),
     check(
       "at_voice_terminations_carrier_billing_cycle_days_positive",
@@ -516,28 +529,28 @@ export const atVoiceTerminations = pgTable(
       sql`${t.payoutPaymentTermsDays} > 0`,
     ),
     check(
-      "at_voice_terminations_max_daily_total_mins_positive",
-      sql`${t.maxDailyTotalMins} IS NULL OR ${t.maxDailyTotalMins} > 0`,
+      "at_voice_terminations_max_daily_total_minutes_positive",
+      sql`${t.maxDailyTotalMinutes} IS NULL OR ${t.maxDailyTotalMinutes} > 0`,
     ),
     check(
-      "at_voice_terminations_max_daily_mins_a_number_positive",
-      sql`${t.maxDailyMinsANumber} IS NULL OR ${t.maxDailyMinsANumber} > 0`,
+      "at_voice_terminations_max_daily_minutes_a_number_positive",
+      sql`${t.maxDailyMinutesANumber} IS NULL OR ${t.maxDailyMinutesANumber} > 0`,
     ),
     check(
-      "at_voice_terminations_max_daily_mins_b_number_positive",
-      sql`${t.maxDailyMinsBNumber} IS NULL OR ${t.maxDailyMinsBNumber} > 0`,
+      "at_voice_terminations_max_daily_minutes_b_number_positive",
+      sql`${t.maxDailyMinutesBNumber} IS NULL OR ${t.maxDailyMinutesBNumber} > 0`,
     ),
     check(
-      "at_voice_terminations_max_daily_mins_a_to_b_number_positive",
-      sql`${t.maxDailyMinsAToBNumber} IS NULL OR ${t.maxDailyMinsAToBNumber} > 0`,
+      "at_voice_terminations_max_daily_minutes_a_to_b_number_positive",
+      sql`${t.maxDailyMinutesAToBNumber} IS NULL OR ${t.maxDailyMinutesAToBNumber} > 0`,
     ),
     check(
-      "at_voice_terminations_max_call_duration_min_positive",
-      sql`${t.maxCallDurationMin} IS NULL OR ${t.maxCallDurationMin} > 0`,
+      "at_voice_terminations_max_call_duration_minutes_positive",
+      sql`${t.maxCallDurationMinutes} IS NULL OR ${t.maxCallDurationMinutes} > 0`,
     ),
     check(
-      "at_voice_terminations_target_acd_min_positive",
-      sql`${t.targetAcdMin} IS NULL OR ${t.targetAcdMin} > 0`,
+      "at_voice_terminations_target_acd_minutes_positive",
+      sql`${t.targetAcdMinutes} IS NULL OR ${t.targetAcdMinutes} > 0`,
     ),
     check(
       "at_voice_terminations_target_asr_percent_range",
@@ -560,7 +573,7 @@ export const atVoiceTerminations = pgTable(
       t.voiceNumberingPlanDestinationId,
     ),
     index("at_voice_terminations_status_idx").on(t.status),
-    index("at_voice_terminations_country_idx").on(t.countryCode),
+    index("at_voice_terminations_country_iso2_idx").on(t.countryIso2),
     index("at_voice_terminations_deleted_at_idx").on(t.deletedAt),
   ],
 );
@@ -775,7 +788,7 @@ export const voiceTrunks = pgTable(
     realm: text("realm"),
     fromUser: text("from_user"),
     fromDomain: text("from_domain"),
-    register: boolean("register").notNull().default(false),
+    registerEnabled: boolean("register_enabled").notNull().default(false),
     proxy: text("proxy"),
     expiresSeconds: integer("expires_seconds"),
     qualifySeconds: integer("qualify_seconds"),
@@ -1123,7 +1136,7 @@ export const voiceCdrs = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     startedAt: timestamp("started_at", { withTimezone: true }).notNull(),
     endedAt: timestamp("ended_at", { withTimezone: true }),
-    durationSecs: integer("duration_secs").notNull(),
+    durationSeconds: integer("duration_seconds").notNull(),
     buyCurrency: currency("buy_currency").notNull(),
     buyRate: numeric("buy_rate", { precision: 18, scale: 6 }).notNull(),
     sellCurrency: currency("sell_currency").notNull(),
@@ -1144,7 +1157,7 @@ export const voiceCdrs = pgTable(
     index("voice_cdrs_started_at_idx").on(t.startedAt),
     index("voice_cdrs_internal_route_idx").on(t.internalRouteName),
     index("voice_cdrs_deleted_at_idx").on(t.deletedAt),
-    check("voice_cdrs_duration_non_negative", sql`${t.durationSecs} >= 0`),
+    check("voice_cdrs_duration_non_negative", sql`${t.durationSeconds} >= 0`),
     check(
       "voice_cdrs_ended_after_started",
       sql`${t.endedAt} IS NULL OR ${t.endedAt} >= ${t.startedAt}`,
@@ -1171,7 +1184,7 @@ export const voiceRateSheets = pgTable(
     voiceNumberingPlanId: uuid("voice_numbering_plan_id")
       .notNull()
       .references(() => voiceNumberingPlans.id, { onDelete: "restrict" }),
-    currencyIso: text("currency_iso").notNull(),
+    currency: currency("currency").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -1190,10 +1203,6 @@ export const voiceRateSheets = pgTable(
       t.voiceNumberingPlanId,
     ),
     index("voice_rate_sheets_deleted_at_idx").on(t.deletedAt),
-    check(
-      "voice_rate_sheets_currency_iso_format",
-      sql`${t.currencyIso} ~ '^[A-Z]{3}$'`,
-    ),
   ],
 );
 
@@ -1223,10 +1232,10 @@ export const voiceRateSheetLines = pgTable(
       .references(() => voiceNumberingPlanDestinations.id, {
         onDelete: "restrict",
       }),
-    minDurationSec: integer("min_duration_sec").notNull(),
-    incrementSec: integer("increment_sec").notNull(),
+    minDurationSeconds: integer("min_duration_seconds").notNull(),
+    incrementSeconds: integer("increment_seconds").notNull(),
     setupFee: numeric("setup_fee", { precision: 18, scale: 6 }),
-    ratePerMin: numeric("rate_per_min", { precision: 18, scale: 6 }).notNull(),
+    ratePerMinute: numeric("rate_per_minute", { precision: 18, scale: 6 }).notNull(),
     validFrom: timestamp("valid_from", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -1249,8 +1258,8 @@ export const voiceRateSheetLines = pgTable(
     index("voice_rate_sheet_lines_valid_to_idx").on(t.validTo),
     index("voice_rate_sheet_lines_deleted_at_idx").on(t.deletedAt),
     check(
-      "voice_rate_sheet_lines_rate_per_min_non_negative",
-      sql`${t.ratePerMin} >= 0`,
+      "voice_rate_sheet_lines_rate_per_minute_non_negative",
+      sql`${t.ratePerMinute} >= 0`,
     ),
     check(
       "voice_rate_sheet_lines_setup_fee_non_negative",
@@ -1258,11 +1267,11 @@ export const voiceRateSheetLines = pgTable(
     ),
     check(
       "voice_rate_sheet_lines_min_duration_non_negative",
-      sql`${t.minDurationSec} >= 0`,
+      sql`${t.minDurationSeconds} >= 0`,
     ),
     check(
       "voice_rate_sheet_lines_increment_positive",
-      sql`${t.incrementSec} > 0`,
+      sql`${t.incrementSeconds} > 0`,
     ),
     check(
       "voice_rate_sheet_lines_valid_range",

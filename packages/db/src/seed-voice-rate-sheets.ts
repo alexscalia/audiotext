@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { and, eq, isNull } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "./schema.js";
-import type { VoiceNumberingPlanDestinationType } from "./schema.js";
+import type { Currency, VoiceNumberingPlanDestinationType } from "./schema.js";
 
 const DESTINATION_TYPES = new Set<VoiceNumberingPlanDestinationType>(
   schema.voiceNumberingPlanDestinationType.enumValues,
@@ -14,9 +14,9 @@ type RateBucket = {
   countryIso2: string;
   name: string;
   type: VoiceNumberingPlanDestinationType;
-  ratePerMin: number;
-  minDurationSec: number;
-  incrementSec: number;
+  ratePerMinute: number;
+  minDurationSeconds: number;
+  incrementSeconds: number;
   setupFee: number;
 };
 

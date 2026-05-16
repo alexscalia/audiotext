@@ -481,7 +481,7 @@ function buildCarrierTrunks(
       realm: needsCreds ? `${carrierName}.sip` : null,
       fromUser: `${carrierName}-from`,
       fromDomain: `${carrierName}.sip`,
-      register: needsCreds && t === 1,
+      registerEnabled: needsCreds && t === 1,
       proxy: `sip.${carrierName}.example.com:5060`,
       expiresSeconds: 3600,
       qualifySeconds: 60,
