@@ -52,20 +52,20 @@ function parseRateRows(): RateBucket[] {
     }
     const type = typeRaw as VoiceNumberingPlanDestinationType;
 
-    const ratePerMin = Number.parseFloat(cells[10]!);
-    const minDurationSec = Number.parseInt(cells[11]!, 10);
-    const incrementSec = Number.parseInt(cells[12]!, 10);
+    const ratePerMinute = Number.parseFloat(cells[10]!);
+    const minDurationSeconds = Number.parseInt(cells[11]!, 10);
+    const incrementSeconds = Number.parseInt(cells[12]!, 10);
     const setupFee = Number.parseFloat(cells[13]!);
 
-    if (!Number.isFinite(ratePerMin) || ratePerMin < 0) {
+    if (!Number.isFinite(ratePerMinute) || ratePerMinute < 0) {
       throw new Error(`csv row ${i + 1}: invalid Rate Per Min "${cells[10]}"`);
     }
-    if (!Number.isFinite(minDurationSec) || minDurationSec < 0) {
+    if (!Number.isFinite(minDurationSeconds) || minDurationSeconds < 0) {
       throw new Error(
         `csv row ${i + 1}: invalid Min Duration Sec "${cells[11]}"`,
       );
     }
-    if (!Number.isFinite(incrementSec) || incrementSec <= 0) {
+    if (!Number.isFinite(incrementSeconds) || incrementSeconds <= 0) {
       throw new Error(`csv row ${i + 1}: invalid Increment Sec "${cells[12]}"`);
     }
     if (!Number.isFinite(setupFee) || setupFee < 0) {
@@ -79,18 +79,21 @@ function parseRateRows(): RateBucket[] {
         countryIso2: iso2,
         name,
         type,
-        ratePerMin,
-        minDurationSec,
-        incrementSec,
+        ratePerMinute,
+        minDurationSeconds,
+        incrementSeconds,
         setupFee,
       });
     } else {
-      existing.ratePerMin = Math.max(existing.ratePerMin, ratePerMin);
-      existing.minDurationSec = Math.min(
-        existing.minDurationSec,
-        minDurationSec,
+      existing.ratePerMinute = Math.max(existing.ratePerMinute, ratePerMinute);
+      existing.minDurationSeconds = Math.min(
+        existing.minDurationSeconds,
+        minDurationSeconds,
       );
-      existing.incrementSec = Math.min(existing.incrementSec, incrementSec);
+      existing.incrementSeconds = Math.min(
+        existing.incrementSeconds,
+        incrementSeconds,
+      );
       existing.setupFee = Math.max(existing.setupFee, setupFee);
     }
   }
@@ -113,21 +116,24 @@ function buildSimplifiedRateBuckets(rateRows: RateBucket[]): RateBucket[] {
         countryIso2: row.countryIso2,
         name: "Mobile",
         type: "mobile",
-        ratePerMin: row.ratePerMin,
-        minDurationSec: row.minDurationSec,
-        incrementSec: row.incrementSec,
+        ratePerMinute: row.ratePerMinute,
+        minDurationSeconds: row.minDurationSeconds,
+        incrementSeconds: row.incrementSeconds,
         setupFee: row.setupFee,
       };
       mergedByCountry.set(row.countryIso2, merged);
       result.push(merged);
       continue;
     }
-    existing.ratePerMin = Math.max(existing.ratePerMin, row.ratePerMin);
-    existing.minDurationSec = Math.min(
-      existing.minDurationSec,
-      row.minDurationSec,
+    existing.ratePerMinute = Math.max(existing.ratePerMinute, row.ratePerMinute);
+    existing.minDurationSeconds = Math.min(
+      existing.minDurationSeconds,
+      row.minDurationSeconds,
     );
-    existing.incrementSec = Math.min(existing.incrementSec, row.incrementSec);
+    existing.incrementSeconds = Math.min(
+      existing.incrementSeconds,
+      row.incrementSeconds,
+    );
     existing.setupFee = Math.max(existing.setupFee, row.setupFee);
   }
 
@@ -159,7 +165,7 @@ async function ensureRateSheet(
   db: NodePgDatabase<typeof schema>,
   name: string,
   planId: string,
-  currencyIso: string,
+  currency: Currency,
 ): Promise<string> {
   const [existing] = await db
     .select()
@@ -183,7 +189,7 @@ async function ensureRateSheet(
       name,
       status: "active",
       voiceNumberingPlanId: planId,
-      currencyIso,
+      currency,
     })
     .returning({ id: schema.voiceRateSheets.id });
   if (!created) throw new Error(`failed to create rate sheet ${name}`);
@@ -217,12 +223,12 @@ async function seedSheet(
   db: NodePgDatabase<typeof schema>,
   sheetName: string,
   planName: string,
-  currencyIso: string,
+  currency: Currency,
   buckets: RateBucket[],
   rateMultiplier: number,
 ): Promise<void> {
   const planId = await getPlanId(db, planName);
-  const sheetId = await ensureRateSheet(db, sheetName, planId, currencyIso);
+  const sheetId = await ensureRateSheet(db, sheetName, planId, currency);
 
   let inserted = 0;
   for (const bucket of buckets) {
@@ -235,9 +241,9 @@ async function seedSheet(
     await db.insert(schema.voiceRateSheetLines).values({
       voiceRateSheetId: sheetId,
       voiceNumberingPlanDestinationId: destinationId,
-      ratePerMin: (bucket.ratePerMin * rateMultiplier).toFixed(6),
-      minDurationSec: bucket.minDurationSec,
-      incrementSec: bucket.incrementSec,
+      ratePerMinute: (bucket.ratePerMinute * rateMultiplier).toFixed(6),
+      minDurationSeconds: bucket.minDurationSeconds,
+      incrementSeconds: bucket.incrementSeconds,
       setupFee: (bucket.setupFee * rateMultiplier).toFixed(6),
     });
     inserted += 1;
@@ -252,14 +258,14 @@ export async function seedVoiceRateSheets(
   const extended = parseRateRows();
   const simplified = buildSimplifiedRateBuckets(extended);
 
-  await seedSheet(db, "Extended USD", "Extended", "USD", extended, 1);
-  await seedSheet(db, "Simplified USD", "Simplified", "USD", simplified, 1);
-  await seedSheet(db, "Extended EUR", "Extended", "EUR", extended, USD_TO_EUR);
+  await seedSheet(db, "Extended USD", "Extended", "usd", extended, 1);
+  await seedSheet(db, "Simplified USD", "Simplified", "usd", simplified, 1);
+  await seedSheet(db, "Extended EUR", "Extended", "eur", extended, USD_TO_EUR);
   await seedSheet(
     db,
     "Simplified EUR",
     "Simplified",
-    "EUR",
+    "eur",
     simplified,
     USD_TO_EUR,
   );

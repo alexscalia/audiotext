@@ -109,7 +109,7 @@ export const voiceRateSheetsRoutes = new OpenAPIHono<{
       const searchClause = or(
         ilike(voiceRateSheets.name, term),
         ilike(voiceNumberingPlans.name, term),
-        ilike(voiceRateSheets.currencyIso, term),
+        ilike(voiceRateSheets.currency, term),
       );
       if (searchClause) filters.push(searchClause);
     }
@@ -122,8 +122,8 @@ export const voiceRateSheetsRoutes = new OpenAPIHono<{
       switch (sortBy) {
         case "voiceNumberingPlanName":
           return voiceNumberingPlans.name;
-        case "currencyIso":
-          return voiceRateSheets.currencyIso;
+        case "currency":
+          return voiceRateSheets.currency;
         case "createdAt":
           return voiceRateSheets.createdAt;
         case "name":
@@ -148,7 +148,7 @@ export const voiceRateSheetsRoutes = new OpenAPIHono<{
           status: voiceRateSheets.status,
           voiceNumberingPlanId: voiceRateSheets.voiceNumberingPlanId,
           voiceNumberingPlanName: voiceNumberingPlans.name,
-          currencyIso: voiceRateSheets.currencyIso,
+          currency: voiceRateSheets.currency,
           createdAt: voiceRateSheets.createdAt,
           updatedAt: voiceRateSheets.updatedAt,
         })
@@ -175,7 +175,7 @@ export const voiceRateSheetsRoutes = new OpenAPIHono<{
           status: r.status,
           voiceNumberingPlanId: r.voiceNumberingPlanId,
           voiceNumberingPlanName: r.voiceNumberingPlanName,
-          currencyIso: r.currencyIso,
+          currency: r.currency,
           createdAt: r.createdAt.toISOString(),
           updatedAt: r.updatedAt.toISOString(),
         })),
@@ -196,7 +196,7 @@ export const voiceRateSheetsRoutes = new OpenAPIHono<{
         status: voiceRateSheets.status,
         voiceNumberingPlanId: voiceRateSheets.voiceNumberingPlanId,
         voiceNumberingPlanName: voiceNumberingPlans.name,
-        currencyIso: voiceRateSheets.currencyIso,
+        currency: voiceRateSheets.currency,
         lineCount: sql<number>`count(${voiceRateSheetLines.id})::int`,
         createdAt: voiceRateSheets.createdAt,
         updatedAt: voiceRateSheets.updatedAt,
@@ -236,7 +236,7 @@ export const voiceRateSheetsRoutes = new OpenAPIHono<{
         status: row.status,
         voiceNumberingPlanId: row.voiceNumberingPlanId,
         voiceNumberingPlanName: row.voiceNumberingPlanName,
-        currencyIso: row.currencyIso,
+        currency: row.currency,
         lineCount: row.lineCount,
         createdAt: row.createdAt.toISOString(),
         updatedAt: row.updatedAt.toISOString(),
@@ -321,8 +321,8 @@ export const voiceRateSheetsRoutes = new OpenAPIHono<{
       switch (sortBy) {
         case "destinationName":
           return voiceNumberingPlanDestinations.name;
-        case "ratePerMin":
-          return voiceRateSheetLines.ratePerMin;
+        case "ratePerMinute":
+          return voiceRateSheetLines.ratePerMinute;
         case "setupFee":
           return voiceRateSheetLines.setupFee;
         case "validFrom":
@@ -357,10 +357,10 @@ export const voiceRateSheetsRoutes = new OpenAPIHono<{
           countryIso2: voiceNumberingPlanDestinations.countryIso2,
           countryName: countryNameExpr,
           destinationName: voiceNumberingPlanDestinations.name,
-          minDurationSec: voiceRateSheetLines.minDurationSec,
-          incrementSec: voiceRateSheetLines.incrementSec,
+          minDurationSeconds: voiceRateSheetLines.minDurationSeconds,
+          incrementSeconds: voiceRateSheetLines.incrementSeconds,
           setupFee: voiceRateSheetLines.setupFee,
-          ratePerMin: voiceRateSheetLines.ratePerMin,
+          ratePerMinute: voiceRateSheetLines.ratePerMinute,
           validFrom: voiceRateSheetLines.validFrom,
           validTo: voiceRateSheetLines.validTo,
           countryCode: countryCodeExpr,
@@ -419,10 +419,10 @@ export const voiceRateSheetsRoutes = new OpenAPIHono<{
           countryIso2: r.countryIso2,
           countryName: r.countryName,
           destinationName: r.destinationName,
-          minDurationSec: r.minDurationSec,
-          incrementSec: r.incrementSec,
+          minDurationSeconds: r.minDurationSeconds,
+          incrementSeconds: r.incrementSeconds,
           setupFee: r.setupFee,
-          ratePerMin: r.ratePerMin,
+          ratePerMinute: r.ratePerMinute,
           validFrom: r.validFrom.toISOString(),
           validTo: r.validTo ? r.validTo.toISOString() : null,
           countryCode: r.countryCode,

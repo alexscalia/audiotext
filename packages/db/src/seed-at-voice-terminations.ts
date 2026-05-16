@@ -28,10 +28,10 @@ function pickRandom<T>(arr: readonly T[]): T {
 }
 
 type DailyCaps = {
-  maxDailyTotalMins: number | null;
-  maxDailyMinsANumber: number | null;
-  maxDailyMinsBNumber: number | null;
-  maxDailyMinsAToBNumber: number | null;
+  maxDailyTotalMinutes: number | null;
+  maxDailyMinutesANumber: number | null;
+  maxDailyMinutesBNumber: number | null;
+  maxDailyMinutesAToBNumber: number | null;
 };
 
 function randomInt(minInclusive: number, maxInclusive: number): number {
@@ -43,20 +43,20 @@ function randomInt(minInclusive: number, maxInclusive: number): number {
 function generateDailyCaps(): DailyCaps {
   if (Math.random() < 0.5) {
     return {
-      maxDailyTotalMins: null,
-      maxDailyMinsANumber: null,
-      maxDailyMinsBNumber: null,
-      maxDailyMinsAToBNumber: null,
+      maxDailyTotalMinutes: null,
+      maxDailyMinutesANumber: null,
+      maxDailyMinutesBNumber: null,
+      maxDailyMinutesAToBNumber: null,
     };
   }
   const total = randomInt(2, 100) * 1000;
   const pctBetween = (lo: number, hi: number) =>
     Math.round((total * (lo + Math.random() * (hi - lo))) / 10) * 10;
   return {
-    maxDailyTotalMins: total,
-    maxDailyMinsANumber: pctBetween(0.1, 0.2),
-    maxDailyMinsBNumber: pctBetween(0.1, 0.2),
-    maxDailyMinsAToBNumber: pctBetween(0.05, 0.1),
+    maxDailyTotalMinutes: total,
+    maxDailyMinutesANumber: pctBetween(0.1, 0.2),
+    maxDailyMinutesBNumber: pctBetween(0.1, 0.2),
+    maxDailyMinutesAToBNumber: pctBetween(0.05, 0.1),
   };
 }
 
@@ -111,7 +111,7 @@ export async function seedAtVoiceTerminations(
     .select({
       id: schema.voiceRateSheets.id,
       name: schema.voiceRateSheets.name,
-      currencyIso: schema.voiceRateSheets.currencyIso,
+      currency: schema.voiceRateSheets.currency,
     })
     .from(schema.voiceRateSheets)
     .where(
@@ -134,7 +134,7 @@ export async function seedAtVoiceTerminations(
       voiceRateSheetId: schema.voiceRateSheetLines.voiceRateSheetId,
       voiceNumberingPlanDestinationId:
         schema.voiceRateSheetLines.voiceNumberingPlanDestinationId,
-      ratePerMin: schema.voiceRateSheetLines.ratePerMin,
+      ratePerMinute: schema.voiceRateSheetLines.ratePerMinute,
     })
     .from(schema.voiceRateSheetLines)
     .where(
@@ -147,7 +147,7 @@ export async function seedAtVoiceTerminations(
   const ratesByPair = new Map<string, string>();
   for (const line of lines) {
     const key = `${line.voiceRateSheetId}|${line.voiceNumberingPlanDestinationId}`;
-    ratesByPair.set(key, line.ratePerMin);
+    ratesByPair.set(key, line.ratePerMinute);
   }
 
   const carriers = await db
@@ -187,11 +187,11 @@ export async function seedAtVoiceTerminations(
 
     const carrier = pickRandom(carriers);
     const carrierRate = Number.parseFloat(sheetRate) * CARRIER_RATE_FACTOR;
-    const carrierRatePerMin = carrierRate.toFixed(6);
-    const payoutPerMinWeekly = (carrierRate * PAYOUT_WEEKLY_MULTIPLIER).toFixed(
-      6,
-    );
-    const payoutPerMinLongTerm = (
+    const carrierRatePerMinute = carrierRate.toFixed(6);
+    const payoutPerMinuteWeekly = (
+      carrierRate * PAYOUT_WEEKLY_MULTIPLIER
+    ).toFixed(6);
+    const payoutPerMinuteLongTerm = (
       carrierRate * PAYOUT_LONG_TERM_MULTIPLIER
     ).toFixed(6);
 
@@ -201,18 +201,18 @@ export async function seedAtVoiceTerminations(
       status: "active",
       type,
       name: `${countryNameByIso2.get(destination.countryIso2) ?? destination.countryIso2} #${pad(i)}`,
-      currencyIso: sheet.currencyIso,
-      carrierCurrencyIso: sheet.currencyIso,
-      carrierRatePerMin,
+      currency: sheet.currency,
+      carrierCurrency: sheet.currency,
+      carrierRatePerMinute,
       carrierBillingCycleDays: BILLING_CYCLE_DAYS,
       carrierPaymentTermsDays: PAYMENT_TERMS_DAYS,
-      payoutPerMinWeekly,
-      payoutPerMinLongTerm,
+      payoutPerMinuteWeekly,
+      payoutPerMinuteLongTerm,
       payoutBillingCycleDays: BILLING_CYCLE_DAYS,
       payoutPaymentTermsDays: PAYMENT_TERMS_DAYS,
-      countryCode: destination.countryIso2,
-      maxCallDurationMin: 60,
-      targetAcdMin: 5,
+      countryIso2: destination.countryIso2,
+      maxCallDurationMinutes: 60,
+      targetAcdMinutes: 5,
       targetAsrPercent: 50,
       maxANumberConcurrentCalls: 3,
       maxBNumberConcurrentCalls: 3,

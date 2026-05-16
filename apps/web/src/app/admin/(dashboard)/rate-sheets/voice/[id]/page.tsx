@@ -30,7 +30,7 @@ type Line = VoiceRateSheetLineListItem;
 const SORTABLE_COLUMNS: readonly VoiceRateSheetLineSortBy[] = [
   "countryName",
   "destinationName",
-  "ratePerMin",
+  "ratePerMinute",
   "setupFee",
   "validFrom",
   "validTo",
@@ -135,7 +135,7 @@ export default function VoiceRateSheetDetailPage() {
     resetPage();
   }, [prefix, resetPage]);
 
-  const currency = sheet?.currencyIso ?? "USD";
+  const currency = sheet?.currency ?? "USD";
 
   const columns = useMemo<ColumnDef<Line>[]>(
     () => [
@@ -161,7 +161,7 @@ export default function VoiceRateSheetDetailPage() {
         enableSorting: false,
         cell: ({ row }) => (
           <span className="tabular-nums text-gray-700">
-            {row.original.minDurationSec}s / {row.original.incrementSec}s
+            {row.original.minDurationSeconds}s / {row.original.incrementSeconds}s
           </span>
         ),
         meta: { align: "right" },
@@ -174,10 +174,10 @@ export default function VoiceRateSheetDetailPage() {
         meta: { align: "right" },
       },
       {
-        accessorKey: "ratePerMin",
+        accessorKey: "ratePerMinute",
         header: t("columns.ratePerMin"),
         cell: ({ row }) =>
-          formatMoney(row.original.ratePerMin, currency, locale),
+          formatMoney(row.original.ratePerMinute, currency, locale),
         meta: { align: "right" },
       },
       {
@@ -248,7 +248,7 @@ export default function VoiceRateSheetDetailPage() {
                 tones={SHEET_STATUS_TONES}
                 label={tStatus(sheet.status)}
               />
-              <Badge tone="neutral">{sheet.currencyIso.toUpperCase()}</Badge>
+              <Badge tone="neutral">{sheet.currency.toUpperCase()}</Badge>
               <span>
                 {t("detail.summary", { lines: sheet.lineCount })}
               </span>

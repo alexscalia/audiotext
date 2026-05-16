@@ -1,5 +1,5 @@
 {
-  "id": "38fa0497-3d2a-469d-a931-cb6ce45fad75",
+  "id": "09565f60-a066-4462-9435-7138f11c28a1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -533,20 +533,22 @@
           "primaryKey": false,
           "notNull": true
         },
-        "currency_iso": {
-          "name": "currency_iso",
-          "type": "text",
+        "currency": {
+          "name": "currency",
+          "type": "currency",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
-        "carrier_currency_iso": {
-          "name": "carrier_currency_iso",
-          "type": "text",
+        "carrier_currency": {
+          "name": "carrier_currency",
+          "type": "currency",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
-        "carrier_rate_per_min": {
-          "name": "carrier_rate_per_min",
+        "carrier_rate_per_minute": {
+          "name": "carrier_rate_per_minute",
           "type": "numeric(18, 6)",
           "primaryKey": false,
           "notNull": true
@@ -563,14 +565,14 @@
           "primaryKey": false,
           "notNull": true
         },
-        "payout_per_min_weekly": {
-          "name": "payout_per_min_weekly",
+        "payout_per_minute_weekly": {
+          "name": "payout_per_minute_weekly",
           "type": "numeric(18, 6)",
           "primaryKey": false,
           "notNull": true
         },
-        "payout_per_min_long_term": {
-          "name": "payout_per_min_long_term",
+        "payout_per_minute_long_term": {
+          "name": "payout_per_minute_long_term",
           "type": "numeric(18, 6)",
           "primaryKey": false,
           "notNull": true
@@ -587,32 +589,68 @@
           "primaryKey": false,
           "notNull": true
         },
-        "country_code": {
-          "name": "country_code",
+        "country_iso2": {
+          "name": "country_iso2",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "max_daily_total_mins": {
-          "name": "max_daily_total_mins",
+        "max_daily_total_minutes": {
+          "name": "max_daily_total_minutes",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
-        "max_daily_mins_a_number": {
-          "name": "max_daily_mins_a_number",
+        "max_daily_minutes_a_number": {
+          "name": "max_daily_minutes_a_number",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
-        "max_daily_mins_b_number": {
-          "name": "max_daily_mins_b_number",
+        "max_daily_minutes_b_number": {
+          "name": "max_daily_minutes_b_number",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
-        "max_daily_mins_a_to_b_number": {
-          "name": "max_daily_mins_a_to_b_number",
+        "max_daily_minutes_a_to_b_number": {
+          "name": "max_daily_minutes_a_to_b_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "max_call_duration_minutes": {
+          "name": "max_call_duration_minutes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "target_acd_minutes": {
+          "name": "target_acd_minutes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "target_asr_percent": {
+          "name": "target_asr_percent",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "max_a_number_concurrent_calls": {
+          "name": "max_a_number_concurrent_calls",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "max_b_number_concurrent_calls": {
+          "name": "max_b_number_concurrent_calls",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "max_a_to_b_number_concurrent_calls": {
+          "name": "max_a_to_b_number_concurrent_calls",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -706,11 +744,11 @@
           "method": "btree",
           "with": {}
         },
-        "at_voice_terminations_country_idx": {
-          "name": "at_voice_terminations_country_idx",
+        "at_voice_terminations_country_iso2_idx": {
+          "name": "at_voice_terminations_country_iso2_idx",
           "columns": [
             {
-              "expression": "country_code",
+              "expression": "country_iso2",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -769,29 +807,21 @@
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {
-        "at_voice_terminations_country_code_iso2": {
-          "name": "at_voice_terminations_country_code_iso2",
-          "value": "\"at_voice_terminations\".\"country_code\" ~ '^[A-Z]{2}$'"
+        "at_voice_terminations_country_iso2_format": {
+          "name": "at_voice_terminations_country_iso2_format",
+          "value": "\"at_voice_terminations\".\"country_iso2\" ~ '^[A-Z]{2}$'"
         },
-        "at_voice_terminations_currency_iso_format": {
-          "name": "at_voice_terminations_currency_iso_format",
-          "value": "\"at_voice_terminations\".\"currency_iso\" ~ '^[A-Z]{3}$'"
+        "at_voice_terminations_carrier_rate_per_minute_non_negative": {
+          "name": "at_voice_terminations_carrier_rate_per_minute_non_negative",
+          "value": "\"at_voice_terminations\".\"carrier_rate_per_minute\" >= 0"
         },
-        "at_voice_terminations_carrier_currency_iso_format": {
-          "name": "at_voice_terminations_carrier_currency_iso_format",
-          "value": "\"at_voice_terminations\".\"carrier_currency_iso\" ~ '^[A-Z]{3}$'"
+        "at_voice_terminations_payout_per_minute_weekly_non_negative": {
+          "name": "at_voice_terminations_payout_per_minute_weekly_non_negative",
+          "value": "\"at_voice_terminations\".\"payout_per_minute_weekly\" >= 0"
         },
-        "at_voice_terminations_carrier_rate_per_min_non_negative": {
-          "name": "at_voice_terminations_carrier_rate_per_min_non_negative",
-          "value": "\"at_voice_terminations\".\"carrier_rate_per_min\" >= 0"
-        },
-        "at_voice_terminations_payout_per_min_weekly_non_negative": {
-          "name": "at_voice_terminations_payout_per_min_weekly_non_negative",
-          "value": "\"at_voice_terminations\".\"payout_per_min_weekly\" >= 0"
-        },
-        "at_voice_terminations_payout_per_min_long_term_non_negative": {
-          "name": "at_voice_terminations_payout_per_min_long_term_non_negative",
-          "value": "\"at_voice_terminations\".\"payout_per_min_long_term\" >= 0"
+        "at_voice_terminations_payout_per_minute_long_term_non_negative": {
+          "name": "at_voice_terminations_payout_per_minute_long_term_non_negative",
+          "value": "\"at_voice_terminations\".\"payout_per_minute_long_term\" >= 0"
         },
         "at_voice_terminations_carrier_billing_cycle_days_positive": {
           "name": "at_voice_terminations_carrier_billing_cycle_days_positive",
@@ -809,21 +839,45 @@
           "name": "at_voice_terminations_payout_payment_terms_days_positive",
           "value": "\"at_voice_terminations\".\"payout_payment_terms_days\" > 0"
         },
-        "at_voice_terminations_max_daily_total_mins_positive": {
-          "name": "at_voice_terminations_max_daily_total_mins_positive",
-          "value": "\"at_voice_terminations\".\"max_daily_total_mins\" IS NULL OR \"at_voice_terminations\".\"max_daily_total_mins\" > 0"
+        "at_voice_terminations_max_daily_total_minutes_positive": {
+          "name": "at_voice_terminations_max_daily_total_minutes_positive",
+          "value": "\"at_voice_terminations\".\"max_daily_total_minutes\" IS NULL OR \"at_voice_terminations\".\"max_daily_total_minutes\" > 0"
         },
-        "at_voice_terminations_max_daily_mins_a_number_positive": {
-          "name": "at_voice_terminations_max_daily_mins_a_number_positive",
-          "value": "\"at_voice_terminations\".\"max_daily_mins_a_number\" IS NULL OR \"at_voice_terminations\".\"max_daily_mins_a_number\" > 0"
+        "at_voice_terminations_max_daily_minutes_a_number_positive": {
+          "name": "at_voice_terminations_max_daily_minutes_a_number_positive",
+          "value": "\"at_voice_terminations\".\"max_daily_minutes_a_number\" IS NULL OR \"at_voice_terminations\".\"max_daily_minutes_a_number\" > 0"
         },
-        "at_voice_terminations_max_daily_mins_b_number_positive": {
-          "name": "at_voice_terminations_max_daily_mins_b_number_positive",
-          "value": "\"at_voice_terminations\".\"max_daily_mins_b_number\" IS NULL OR \"at_voice_terminations\".\"max_daily_mins_b_number\" > 0"
+        "at_voice_terminations_max_daily_minutes_b_number_positive": {
+          "name": "at_voice_terminations_max_daily_minutes_b_number_positive",
+          "value": "\"at_voice_terminations\".\"max_daily_minutes_b_number\" IS NULL OR \"at_voice_terminations\".\"max_daily_minutes_b_number\" > 0"
         },
-        "at_voice_terminations_max_daily_mins_a_to_b_number_positive": {
-          "name": "at_voice_terminations_max_daily_mins_a_to_b_number_positive",
-          "value": "\"at_voice_terminations\".\"max_daily_mins_a_to_b_number\" IS NULL OR \"at_voice_terminations\".\"max_daily_mins_a_to_b_number\" > 0"
+        "at_voice_terminations_max_daily_minutes_a_to_b_number_positive": {
+          "name": "at_voice_terminations_max_daily_minutes_a_to_b_number_positive",
+          "value": "\"at_voice_terminations\".\"max_daily_minutes_a_to_b_number\" IS NULL OR \"at_voice_terminations\".\"max_daily_minutes_a_to_b_number\" > 0"
+        },
+        "at_voice_terminations_max_call_duration_minutes_positive": {
+          "name": "at_voice_terminations_max_call_duration_minutes_positive",
+          "value": "\"at_voice_terminations\".\"max_call_duration_minutes\" IS NULL OR \"at_voice_terminations\".\"max_call_duration_minutes\" > 0"
+        },
+        "at_voice_terminations_target_acd_minutes_positive": {
+          "name": "at_voice_terminations_target_acd_minutes_positive",
+          "value": "\"at_voice_terminations\".\"target_acd_minutes\" IS NULL OR \"at_voice_terminations\".\"target_acd_minutes\" > 0"
+        },
+        "at_voice_terminations_target_asr_percent_range": {
+          "name": "at_voice_terminations_target_asr_percent_range",
+          "value": "\"at_voice_terminations\".\"target_asr_percent\" IS NULL OR (\"at_voice_terminations\".\"target_asr_percent\" >= 0 AND \"at_voice_terminations\".\"target_asr_percent\" <= 100)"
+        },
+        "at_voice_terminations_max_a_number_concurrent_calls_positive": {
+          "name": "at_voice_terminations_max_a_number_concurrent_calls_positive",
+          "value": "\"at_voice_terminations\".\"max_a_number_concurrent_calls\" IS NULL OR \"at_voice_terminations\".\"max_a_number_concurrent_calls\" > 0"
+        },
+        "at_voice_terminations_max_b_number_concurrent_calls_positive": {
+          "name": "at_voice_terminations_max_b_number_concurrent_calls_positive",
+          "value": "\"at_voice_terminations\".\"max_b_number_concurrent_calls\" IS NULL OR \"at_voice_terminations\".\"max_b_number_concurrent_calls\" > 0"
+        },
+        "at_voice_terminations_max_a_to_b_number_concurrent_calls_positive": {
+          "name": "at_voice_terminations_max_a_to_b_number_concurrent_calls_positive",
+          "value": "\"at_voice_terminations\".\"max_a_to_b_number_concurrent_calls\" IS NULL OR \"at_voice_terminations\".\"max_a_to_b_number_concurrent_calls\" > 0"
         }
       },
       "isRLSEnabled": false
@@ -2075,8 +2129,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "duration_secs": {
-          "name": "duration_secs",
+        "duration_seconds": {
+          "name": "duration_seconds",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -2200,7 +2254,7 @@
       "checkConstraints": {
         "voice_cdrs_duration_non_negative": {
           "name": "voice_cdrs_duration_non_negative",
-          "value": "\"voice_cdrs\".\"duration_secs\" >= 0"
+          "value": "\"voice_cdrs\".\"duration_seconds\" >= 0"
         },
         "voice_cdrs_ended_after_started": {
           "name": "voice_cdrs_ended_after_started",
@@ -2706,14 +2760,14 @@
           "primaryKey": false,
           "notNull": true
         },
-        "min_duration_sec": {
-          "name": "min_duration_sec",
+        "min_duration_seconds": {
+          "name": "min_duration_seconds",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "increment_sec": {
-          "name": "increment_sec",
+        "increment_seconds": {
+          "name": "increment_seconds",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -2724,8 +2778,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "rate_per_min": {
-          "name": "rate_per_min",
+        "rate_per_minute": {
+          "name": "rate_per_minute",
           "type": "numeric(18, 6)",
           "primaryKey": false,
           "notNull": true
@@ -2873,9 +2927,9 @@
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {
-        "voice_rate_sheet_lines_rate_per_min_non_negative": {
-          "name": "voice_rate_sheet_lines_rate_per_min_non_negative",
-          "value": "\"voice_rate_sheet_lines\".\"rate_per_min\" >= 0"
+        "voice_rate_sheet_lines_rate_per_minute_non_negative": {
+          "name": "voice_rate_sheet_lines_rate_per_minute_non_negative",
+          "value": "\"voice_rate_sheet_lines\".\"rate_per_minute\" >= 0"
         },
         "voice_rate_sheet_lines_setup_fee_non_negative": {
           "name": "voice_rate_sheet_lines_setup_fee_non_negative",
@@ -2883,11 +2937,11 @@
         },
         "voice_rate_sheet_lines_min_duration_non_negative": {
           "name": "voice_rate_sheet_lines_min_duration_non_negative",
-          "value": "\"voice_rate_sheet_lines\".\"min_duration_sec\" >= 0"
+          "value": "\"voice_rate_sheet_lines\".\"min_duration_seconds\" >= 0"
         },
         "voice_rate_sheet_lines_increment_positive": {
           "name": "voice_rate_sheet_lines_increment_positive",
-          "value": "\"voice_rate_sheet_lines\".\"increment_sec\" > 0"
+          "value": "\"voice_rate_sheet_lines\".\"increment_seconds\" > 0"
         },
         "voice_rate_sheet_lines_valid_range": {
           "name": "voice_rate_sheet_lines_valid_range",
@@ -2927,9 +2981,10 @@
           "primaryKey": false,
           "notNull": true
         },
-        "currency_iso": {
-          "name": "currency_iso",
-          "type": "text",
+        "currency": {
+          "name": "currency",
+          "type": "currency",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
@@ -3035,12 +3090,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
-      "checkConstraints": {
-        "voice_rate_sheets_currency_iso_format": {
-          "name": "voice_rate_sheets_currency_iso_format",
-          "value": "\"voice_rate_sheets\".\"currency_iso\" ~ '^[A-Z]{3}$'"
-        }
-      },
+      "checkConstraints": {},
       "isRLSEnabled": false
     },
     "public.voice_trunk_ips": {
@@ -3295,8 +3345,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "register": {
-          "name": "register",
+        "register_enabled": {
+          "name": "register_enabled",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,

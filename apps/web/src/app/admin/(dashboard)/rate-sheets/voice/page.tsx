@@ -26,7 +26,7 @@ type RateSheet = VoiceRateSheetListItem;
 const SORTABLE_COLUMNS: readonly VoiceRateSheetListSortBy[] = [
   "name",
   "voiceNumberingPlanName",
-  "currencyIso",
+  "currency",
   "createdAt",
 ];
 
@@ -88,10 +88,10 @@ export default function VoiceRateSheetsPage() {
         ),
       },
       {
-        accessorKey: "currencyIso",
+        accessorKey: "currency",
         header: t("columns.currency"),
         cell: ({ row }) => (
-          <span className="text-gray-700">{row.original.currencyIso}</span>
+          <span className="text-gray-700">{row.original.currency}</span>
         ),
       },
       {

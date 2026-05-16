@@ -65,37 +65,47 @@ CREATE TABLE "at_voice_terminations" (
 	"carrier_id" uuid NOT NULL,
 	"voice_numbering_plan_destination_id" uuid NOT NULL,
 	"name" text NOT NULL,
-	"currency_iso" text NOT NULL,
-	"carrier_currency_iso" text NOT NULL,
-	"carrier_rate_per_min" numeric(18, 6) NOT NULL,
+	"currency" "currency" NOT NULL,
+	"carrier_currency" "currency" NOT NULL,
+	"carrier_rate_per_minute" numeric(18, 6) NOT NULL,
 	"carrier_billing_cycle_days" integer NOT NULL,
 	"carrier_payment_terms_days" integer NOT NULL,
-	"payout_per_min_weekly" numeric(18, 6) NOT NULL,
-	"payout_per_min_long_term" numeric(18, 6) NOT NULL,
+	"payout_per_minute_weekly" numeric(18, 6) NOT NULL,
+	"payout_per_minute_long_term" numeric(18, 6) NOT NULL,
 	"payout_billing_cycle_days" integer NOT NULL,
 	"payout_payment_terms_days" integer NOT NULL,
-	"country_code" text NOT NULL,
-	"max_daily_total_mins" integer,
-	"max_daily_mins_a_number" integer,
-	"max_daily_mins_b_number" integer,
-	"max_daily_mins_a_to_b_number" integer,
+	"country_iso2" text NOT NULL,
+	"max_daily_total_minutes" integer,
+	"max_daily_minutes_a_number" integer,
+	"max_daily_minutes_b_number" integer,
+	"max_daily_minutes_a_to_b_number" integer,
+	"max_call_duration_minutes" integer,
+	"target_acd_minutes" integer,
+	"target_asr_percent" integer,
+	"max_a_number_concurrent_calls" integer,
+	"max_b_number_concurrent_calls" integer,
+	"max_a_to_b_number_concurrent_calls" integer,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone,
-	CONSTRAINT "at_voice_terminations_country_code_iso2" CHECK ("at_voice_terminations"."country_code" ~ '^[A-Z]{2}$'),
-	CONSTRAINT "at_voice_terminations_currency_iso_format" CHECK ("at_voice_terminations"."currency_iso" ~ '^[A-Z]{3}$'),
-	CONSTRAINT "at_voice_terminations_carrier_currency_iso_format" CHECK ("at_voice_terminations"."carrier_currency_iso" ~ '^[A-Z]{3}$'),
-	CONSTRAINT "at_voice_terminations_carrier_rate_per_min_non_negative" CHECK ("at_voice_terminations"."carrier_rate_per_min" >= 0),
-	CONSTRAINT "at_voice_terminations_payout_per_min_weekly_non_negative" CHECK ("at_voice_terminations"."payout_per_min_weekly" >= 0),
-	CONSTRAINT "at_voice_terminations_payout_per_min_long_term_non_negative" CHECK ("at_voice_terminations"."payout_per_min_long_term" >= 0),
+	CONSTRAINT "at_voice_terminations_country_iso2_format" CHECK ("at_voice_terminations"."country_iso2" ~ '^[A-Z]{2}$'),
+	CONSTRAINT "at_voice_terminations_carrier_rate_per_minute_non_negative" CHECK ("at_voice_terminations"."carrier_rate_per_minute" >= 0),
+	CONSTRAINT "at_voice_terminations_payout_per_minute_weekly_non_negative" CHECK ("at_voice_terminations"."payout_per_minute_weekly" >= 0),
+	CONSTRAINT "at_voice_terminations_payout_per_minute_long_term_non_negative" CHECK ("at_voice_terminations"."payout_per_minute_long_term" >= 0),
 	CONSTRAINT "at_voice_terminations_carrier_billing_cycle_days_positive" CHECK ("at_voice_terminations"."carrier_billing_cycle_days" > 0),
 	CONSTRAINT "at_voice_terminations_carrier_payment_terms_days_positive" CHECK ("at_voice_terminations"."carrier_payment_terms_days" > 0),
 	CONSTRAINT "at_voice_terminations_payout_billing_cycle_days_positive" CHECK ("at_voice_terminations"."payout_billing_cycle_days" > 0),
 	CONSTRAINT "at_voice_terminations_payout_payment_terms_days_positive" CHECK ("at_voice_terminations"."payout_payment_terms_days" > 0),
-	CONSTRAINT "at_voice_terminations_max_daily_total_mins_positive" CHECK ("at_voice_terminations"."max_daily_total_mins" IS NULL OR "at_voice_terminations"."max_daily_total_mins" > 0),
-	CONSTRAINT "at_voice_terminations_max_daily_mins_a_number_positive" CHECK ("at_voice_terminations"."max_daily_mins_a_number" IS NULL OR "at_voice_terminations"."max_daily_mins_a_number" > 0),
-	CONSTRAINT "at_voice_terminations_max_daily_mins_b_number_positive" CHECK ("at_voice_terminations"."max_daily_mins_b_number" IS NULL OR "at_voice_terminations"."max_daily_mins_b_number" > 0),
-	CONSTRAINT "at_voice_terminations_max_daily_mins_a_to_b_number_positive" CHECK ("at_voice_terminations"."max_daily_mins_a_to_b_number" IS NULL OR "at_voice_terminations"."max_daily_mins_a_to_b_number" > 0)
+	CONSTRAINT "at_voice_terminations_max_daily_total_minutes_positive" CHECK ("at_voice_terminations"."max_daily_total_minutes" IS NULL OR "at_voice_terminations"."max_daily_total_minutes" > 0),
+	CONSTRAINT "at_voice_terminations_max_daily_minutes_a_number_positive" CHECK ("at_voice_terminations"."max_daily_minutes_a_number" IS NULL OR "at_voice_terminations"."max_daily_minutes_a_number" > 0),
+	CONSTRAINT "at_voice_terminations_max_daily_minutes_b_number_positive" CHECK ("at_voice_terminations"."max_daily_minutes_b_number" IS NULL OR "at_voice_terminations"."max_daily_minutes_b_number" > 0),
+	CONSTRAINT "at_voice_terminations_max_daily_minutes_a_to_b_number_positive" CHECK ("at_voice_terminations"."max_daily_minutes_a_to_b_number" IS NULL OR "at_voice_terminations"."max_daily_minutes_a_to_b_number" > 0),
+	CONSTRAINT "at_voice_terminations_max_call_duration_minutes_positive" CHECK ("at_voice_terminations"."max_call_duration_minutes" IS NULL OR "at_voice_terminations"."max_call_duration_minutes" > 0),
+	CONSTRAINT "at_voice_terminations_target_acd_minutes_positive" CHECK ("at_voice_terminations"."target_acd_minutes" IS NULL OR "at_voice_terminations"."target_acd_minutes" > 0),
+	CONSTRAINT "at_voice_terminations_target_asr_percent_range" CHECK ("at_voice_terminations"."target_asr_percent" IS NULL OR ("at_voice_terminations"."target_asr_percent" >= 0 AND "at_voice_terminations"."target_asr_percent" <= 100)),
+	CONSTRAINT "at_voice_terminations_max_a_number_concurrent_calls_positive" CHECK ("at_voice_terminations"."max_a_number_concurrent_calls" IS NULL OR "at_voice_terminations"."max_a_number_concurrent_calls" > 0),
+	CONSTRAINT "at_voice_terminations_max_b_number_concurrent_calls_positive" CHECK ("at_voice_terminations"."max_b_number_concurrent_calls" IS NULL OR "at_voice_terminations"."max_b_number_concurrent_calls" > 0),
+	CONSTRAINT "at_voice_terminations_max_a_to_b_number_concurrent_calls_positive" CHECK ("at_voice_terminations"."max_a_to_b_number_concurrent_calls" IS NULL OR "at_voice_terminations"."max_a_to_b_number_concurrent_calls" > 0)
 );
 --> statement-breakpoint
 CREATE TABLE "carriers" (
@@ -218,7 +228,7 @@ CREATE TABLE "voice_cdrs" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"started_at" timestamp with time zone NOT NULL,
 	"ended_at" timestamp with time zone,
-	"duration_secs" integer NOT NULL,
+	"duration_seconds" integer NOT NULL,
 	"buy_currency" "currency" NOT NULL,
 	"buy_rate" numeric(18, 6) NOT NULL,
 	"sell_currency" "currency" NOT NULL,
@@ -229,7 +239,7 @@ CREATE TABLE "voice_cdrs" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone,
-	CONSTRAINT "voice_cdrs_duration_non_negative" CHECK ("voice_cdrs"."duration_secs" >= 0),
+	CONSTRAINT "voice_cdrs_duration_non_negative" CHECK ("voice_cdrs"."duration_seconds" >= 0),
 	CONSTRAINT "voice_cdrs_ended_after_started" CHECK ("voice_cdrs"."ended_at" IS NULL OR "voice_cdrs"."ended_at" >= "voice_cdrs"."started_at")
 );
 --> statement-breakpoint
@@ -277,19 +287,19 @@ CREATE TABLE "voice_rate_sheet_lines" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"voice_rate_sheet_id" uuid NOT NULL,
 	"voice_numbering_plan_destination_id" uuid NOT NULL,
-	"min_duration_sec" integer NOT NULL,
-	"increment_sec" integer NOT NULL,
+	"min_duration_seconds" integer NOT NULL,
+	"increment_seconds" integer NOT NULL,
 	"setup_fee" numeric(18, 6),
-	"rate_per_min" numeric(18, 6) NOT NULL,
+	"rate_per_minute" numeric(18, 6) NOT NULL,
 	"valid_from" timestamp with time zone DEFAULT now() NOT NULL,
 	"valid_to" timestamp with time zone,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone,
-	CONSTRAINT "voice_rate_sheet_lines_rate_per_min_non_negative" CHECK ("voice_rate_sheet_lines"."rate_per_min" >= 0),
+	CONSTRAINT "voice_rate_sheet_lines_rate_per_minute_non_negative" CHECK ("voice_rate_sheet_lines"."rate_per_minute" >= 0),
 	CONSTRAINT "voice_rate_sheet_lines_setup_fee_non_negative" CHECK ("voice_rate_sheet_lines"."setup_fee" IS NULL OR "voice_rate_sheet_lines"."setup_fee" >= 0),
-	CONSTRAINT "voice_rate_sheet_lines_min_duration_non_negative" CHECK ("voice_rate_sheet_lines"."min_duration_sec" >= 0),
-	CONSTRAINT "voice_rate_sheet_lines_increment_positive" CHECK ("voice_rate_sheet_lines"."increment_sec" > 0),
+	CONSTRAINT "voice_rate_sheet_lines_min_duration_non_negative" CHECK ("voice_rate_sheet_lines"."min_duration_seconds" >= 0),
+	CONSTRAINT "voice_rate_sheet_lines_increment_positive" CHECK ("voice_rate_sheet_lines"."increment_seconds" > 0),
 	CONSTRAINT "voice_rate_sheet_lines_valid_range" CHECK ("voice_rate_sheet_lines"."valid_to" IS NULL OR "voice_rate_sheet_lines"."valid_to" > "voice_rate_sheet_lines"."valid_from")
 );
 --> statement-breakpoint
@@ -298,11 +308,10 @@ CREATE TABLE "voice_rate_sheets" (
 	"name" text NOT NULL,
 	"status" "voice_rate_sheet_status" DEFAULT 'active' NOT NULL,
 	"voice_numbering_plan_id" uuid NOT NULL,
-	"currency_iso" text NOT NULL,
+	"currency" "currency" NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"deleted_at" timestamp with time zone,
-	CONSTRAINT "voice_rate_sheets_currency_iso_format" CHECK ("voice_rate_sheets"."currency_iso" ~ '^[A-Z]{3}$')
+	"deleted_at" timestamp with time zone
 );
 --> statement-breakpoint
 CREATE TABLE "voice_trunk_ips" (
@@ -331,7 +340,7 @@ CREATE TABLE "voice_trunks" (
 	"realm" text,
 	"from_user" text,
 	"from_domain" text,
-	"register" boolean DEFAULT false NOT NULL,
+	"register_enabled" boolean DEFAULT false NOT NULL,
 	"proxy" text,
 	"expires_seconds" integer,
 	"qualify_seconds" integer,
@@ -391,7 +400,7 @@ CREATE UNIQUE INDEX "at_voice_terminations_carrier_name_unique_active" ON "at_vo
 CREATE INDEX "at_voice_terminations_carrier_idx" ON "at_voice_terminations" USING btree ("carrier_id");--> statement-breakpoint
 CREATE INDEX "at_voice_terminations_voice_numbering_plan_destination_idx" ON "at_voice_terminations" USING btree ("voice_numbering_plan_destination_id");--> statement-breakpoint
 CREATE INDEX "at_voice_terminations_status_idx" ON "at_voice_terminations" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "at_voice_terminations_country_idx" ON "at_voice_terminations" USING btree ("country_code");--> statement-breakpoint
+CREATE INDEX "at_voice_terminations_country_iso2_idx" ON "at_voice_terminations" USING btree ("country_iso2");--> statement-breakpoint
 CREATE INDEX "at_voice_terminations_deleted_at_idx" ON "at_voice_terminations" USING btree ("deleted_at");--> statement-breakpoint
 CREATE UNIQUE INDEX "carriers_name_unique_active" ON "carriers" USING btree ("name") WHERE "carriers"."deleted_at" IS NULL;--> statement-breakpoint
 CREATE INDEX "carriers_status_idx" ON "carriers" USING btree ("status");--> statement-breakpoint
