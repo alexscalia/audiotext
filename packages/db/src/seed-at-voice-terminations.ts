@@ -159,6 +159,17 @@ export async function seedAtVoiceTerminations(
     .where(isNull(schema.carriers.deletedAt));
   if (carriers.length === 0) throw new Error("no carriers to seed against");
 
+  const countryRows = await db
+    .select({
+      iso2: schema.countries.iso2,
+      nameEn: schema.countries.nameEn,
+    })
+    .from(schema.countries)
+    .where(isNull(schema.countries.deletedAt));
+  const countryNameByIso2 = new Map<string, string>(
+    countryRows.map((c) => [c.iso2, c.nameEn]),
+  );
+
   const rows: NewAtVoiceTerminationRow[] = [];
   let skipped = 0;
 
@@ -186,11 +197,10 @@ export async function seedAtVoiceTerminations(
 
     rows.push({
       carrierId: carrier.id,
-      voiceNumberingPlanDestinationId:
-        type === "generated" ? destination.id : null,
+      voiceNumberingPlanDestinationId: destination.id,
       status: "active",
       type,
-      name: `${carrier.name} — ${destination.name} #${pad(i)}`,
+      name: `${countryNameByIso2.get(destination.countryIso2) ?? destination.countryIso2} #${pad(i)}`,
       currencyIso: sheet.currencyIso,
       carrierCurrencyIso: sheet.currencyIso,
       carrierRatePerMin,
