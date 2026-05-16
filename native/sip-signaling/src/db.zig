@@ -19,13 +19,12 @@ pub fn loadIntoCache(
         return error.PostgresConnectFailed;
     }
 
-    // Load every non-deleted (ip,trunk) pair. `active` collapses both the
-    // ip-row status and the parent-trunk status into a single boolean — a
-    // peer is `active` only when ip.status='active' AND trunk.status is
-    // 'active' or 'testing'. Soft-deleted rows on either side are excluded
-    // entirely and surface as `unknown` on lookup.
+    // Every (ip, prefix) credential. Empty string in `prefix` means
+    // "no tech prefix expected" (catch-all). `active` = ip-row and
+    // parent-trunk both eligible.
     const sql =
         \\SELECT vti.ip,
+        \\       COALESCE(vti.prefix, '')                  AS prefix,
         \\       (vti.status = 'active'
         \\        AND vt.status IN ('active', 'testing')) AS active
         \\FROM voice_trunk_ips vti
@@ -45,27 +44,37 @@ pub fn loadIntoCache(
 
     const n = c.PQntuples(res);
 
-    var new_map = std.StringHashMap(cache.Entry).init(allocator);
-    defer {
-        var it = new_map.keyIterator();
-        while (it.next()) |k| allocator.free(k.*);
-        new_map.deinit();
-    }
+    var new_map = cache.Map.init(allocator);
+    defer cache.deinitMap(&new_map, allocator);
 
-    var i: c_int = 0;
     var active_count: usize = 0;
+    var i: c_int = 0;
     while (i < n) : (i += 1) {
         const ip_raw = c.PQgetvalue(res, i, 0);
         const ip = std.mem.sliceTo(ip_raw, 0);
-        const active_raw = c.PQgetvalue(res, i, 1);
+        const prefix_raw = c.PQgetvalue(res, i, 1);
+        const prefix = std.mem.sliceTo(prefix_raw, 0);
+        const active_raw = c.PQgetvalue(res, i, 2);
         const active = active_raw[0] == 't';
 
-        const owned = try allocator.dupe(u8, ip);
-        errdefer allocator.free(owned);
-        try new_map.put(owned, .{ .active = active });
+        const gop = try new_map.getOrPut(ip);
+        if (!gop.found_existing) {
+            gop.key_ptr.* = try allocator.dupe(u8, ip);
+            gop.value_ptr.* = std.ArrayList(cache.Credential).init(allocator);
+        }
+        const owned_prefix = try allocator.dupe(u8, prefix);
+        errdefer allocator.free(owned_prefix);
+        try gop.value_ptr.append(.{
+            .prefix = owned_prefix,
+            .active = active,
+        });
         if (active) active_count += 1;
     }
 
-    std.log.info("loaded {} trunk_ip rows from postgres ({} active)", .{ n, active_count });
+    std.log.info("loaded {} trunk_ip rows from postgres ({} active, {} distinct IPs)", .{
+        n,
+        active_count,
+        new_map.count(),
+    });
     target.swap(&new_map);
 }

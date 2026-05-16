@@ -65,21 +65,29 @@ fn handleConnection(
         const b = try urlDecode(allocator, b_raw);
         defer allocator.free(b);
 
-        // Three-state decision:
-        //   .active   → allow, no SIP rejection
-        //   .unknown  → peer not in voice_trunk_ips → permanent (likely
-        //               spoof/scanner) → SIP 403 Forbidden, Q.850;cause=21
-        //   .inactive → peer known but disabled (ip or trunk inactive) →
-        //               temporary → SIP 503, Q.850;cause=34 (encourages
-        //               upstream LCR retry on alternate carrier).
-        const result = auth_cache.lookup(ip);
+        // Three-outcome decision (collapsed from four logical cases):
+        //   .active   → (ip, prefix) credential matches → allow, return
+        //               stripped B-number so kamailio rewrites $rU.
+        //   .unknown  → IP not in cache, OR IP in cache but no prefix
+        //               matches the B-number → auth failed → SIP 403,
+        //               Q.850;cause=21 (permanent).
+        //   .inactive → IP+prefix matches but that credential is disabled
+        //               (ip-row or parent trunk inactive) → SIP 503,
+        //               Q.850;cause=34 (temporary; upstream may retry).
+        const result = auth_cache.lookup(ip, b);
+        var body_buf: [512]u8 = undefined;
         const body: []const u8 = switch (result) {
-            .active => "{\"allowed\":1}\n",
+            .active => |m| try std.fmt.bufPrint(&body_buf, "{{\"allowed\":1,\"b\":\"{s}\"}}\n", .{m.stripped_b}),
             .unknown => "{\"allowed\":0,\"status\":403,\"cause\":21}\n",
             .inactive => "{\"allowed\":0,\"status\":503,\"cause\":34}\n",
         };
         try writeResp(conn.stream, 200, body, "application/json");
-        std.log.info("authorize ip={s} a={s} b={s} result={s}", .{ ip, a, b, @tagName(result) });
+
+        const stripped: []const u8 = switch (result) {
+            .active => |m| m.stripped_b,
+            else => "",
+        };
+        std.log.info("authorize ip={s} a={s} b={s} result={s} stripped_b={s}", .{ ip, a, b, @tagName(result), stripped });
         return;
     }
     try writeResp(conn.stream, 404, "{\"error\":\"not found\"}\n", "application/json");
