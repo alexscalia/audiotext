@@ -200,9 +200,10 @@ docker logs -f audiotext-sip-signaling   # expect "loaded N authorized IPs from 
 ### Direct HTTP probe (host)
 
 ```bash
-curl 'http://localhost:8088/healthz'
-curl 'http://localhost:8088/authorize?ip=<some-active-ip>'   # expect {"allowed":1}
-curl 'http://localhost:8088/authorize?ip=8.8.8.8'             # expect {"allowed":0}
+curl 'http://localhost:8088/healthz'                          # ok
+curl 'http://localhost:8088/authorize?ip=<active-ip>'         # {"allowed":1}
+curl 'http://localhost:8088/authorize?ip=<inactive-ip>'       # {"allowed":0,"status":503,"cause":34}
+curl 'http://localhost:8088/authorize?ip=8.8.8.8'             # {"allowed":0,"status":403,"cause":21}
 ```
 
 ### SIP probe via sipp
