@@ -186,7 +186,8 @@ export async function seedAtVoiceTerminations(
 
     rows.push({
       carrierId: carrier.id,
-      voiceNumberingPlanDestinationId: destination.id,
+      voiceNumberingPlanDestinationId:
+        type === "generated" ? destination.id : null,
       status: "active",
       type,
       name: `${carrier.name} — ${destination.name} #${pad(i)}`,

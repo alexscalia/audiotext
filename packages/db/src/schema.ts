@@ -427,11 +427,11 @@ export const atVoiceTerminations = pgTable(
     carrierId: uuid("carrier_id")
       .notNull()
       .references(() => carriers.id, { onDelete: "cascade" }),
-    voiceNumberingPlanDestinationId: uuid("voice_numbering_plan_destination_id")
-      .notNull()
-      .references(() => voiceNumberingPlanDestinations.id, {
-        onDelete: "restrict",
-      }),
+    voiceNumberingPlanDestinationId: uuid(
+      "voice_numbering_plan_destination_id",
+    ).references(() => voiceNumberingPlanDestinations.id, {
+      onDelete: "restrict",
+    }),
     name: text("name").notNull(),
     currencyIso: text("currency_iso").notNull(),
     carrierCurrencyIso: text("carrier_currency_iso").notNull(),
@@ -472,6 +472,10 @@ export const atVoiceTerminations = pgTable(
     check(
       "at_voice_terminations_country_code_iso2",
       sql`${t.countryCode} ~ '^[A-Z]{2}$'`,
+    ),
+    check(
+      "at_voice_terminations_destination_required_when_generated",
+      sql`(${t.type} = 'generated' AND ${t.voiceNumberingPlanDestinationId} IS NOT NULL) OR (${t.type} = 'assigned' AND ${t.voiceNumberingPlanDestinationId} IS NULL)`,
     ),
     check(
       "at_voice_terminations_currency_iso_format",
