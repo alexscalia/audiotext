@@ -9,6 +9,7 @@ import type {
   NewCarrierRow,
   NewVoiceTrunkRow,
 } from "./schema.js";
+import { seedAtVoiceNumbers } from "./seed-at-voice-numbers.js";
 import { seedAtVoiceTerminations } from "./seed-at-voice-terminations.js";
 import { seedCountries } from "./seed-countries.js";
 import { seedVoiceNumberingPlan } from "./seed-voice-numbering-plan.js";
@@ -696,6 +697,7 @@ async function main() {
   await seedVoiceNumberingPlan(db);
   await seedVoiceRateSheets(db);
   await seedAtVoiceTerminations(db);
+  await seedAtVoiceNumbers(db);
   console.log("seed complete");
 }
 
