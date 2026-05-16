@@ -1,1 +1,0 @@
-ALTER TABLE "carriers" ADD COLUMN "timezone" text DEFAULT 'UTC' NOT NULL;
