@@ -456,6 +456,12 @@ export const atVoiceTerminations = pgTable(
     maxDailyMinsANumber: integer("max_daily_mins_a_number"),
     maxDailyMinsBNumber: integer("max_daily_mins_b_number"),
     maxDailyMinsAToBNumber: integer("max_daily_mins_a_to_b_number"),
+    maxCallDurationMin: integer("max_call_duration_min"),
+    targetAcdMin: integer("target_acd_min"),
+    targetAsrPercent: integer("target_asr_percent"),
+    maxANumberConcurrentCalls: integer("max_a_number_concurrent_calls"),
+    maxBNumberConcurrentCalls: integer("max_b_number_concurrent_calls"),
+    maxAToBNumberConcurrentCalls: integer("max_a_to_b_number_concurrent_calls"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -524,6 +530,30 @@ export const atVoiceTerminations = pgTable(
     check(
       "at_voice_terminations_max_daily_mins_a_to_b_number_positive",
       sql`${t.maxDailyMinsAToBNumber} IS NULL OR ${t.maxDailyMinsAToBNumber} > 0`,
+    ),
+    check(
+      "at_voice_terminations_max_call_duration_min_positive",
+      sql`${t.maxCallDurationMin} IS NULL OR ${t.maxCallDurationMin} > 0`,
+    ),
+    check(
+      "at_voice_terminations_target_acd_min_positive",
+      sql`${t.targetAcdMin} IS NULL OR ${t.targetAcdMin} > 0`,
+    ),
+    check(
+      "at_voice_terminations_target_asr_percent_range",
+      sql`${t.targetAsrPercent} IS NULL OR (${t.targetAsrPercent} >= 0 AND ${t.targetAsrPercent} <= 100)`,
+    ),
+    check(
+      "at_voice_terminations_max_a_number_concurrent_calls_positive",
+      sql`${t.maxANumberConcurrentCalls} IS NULL OR ${t.maxANumberConcurrentCalls} > 0`,
+    ),
+    check(
+      "at_voice_terminations_max_b_number_concurrent_calls_positive",
+      sql`${t.maxBNumberConcurrentCalls} IS NULL OR ${t.maxBNumberConcurrentCalls} > 0`,
+    ),
+    check(
+      "at_voice_terminations_max_a_to_b_number_concurrent_calls_positive",
+      sql`${t.maxAToBNumberConcurrentCalls} IS NULL OR ${t.maxAToBNumberConcurrentCalls} > 0`,
     ),
     index("at_voice_terminations_carrier_idx").on(t.carrierId),
     index("at_voice_terminations_voice_numbering_plan_destination_idx").on(

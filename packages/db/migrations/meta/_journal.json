@@ -8,6 +8,13 @@
       "when": 1778898969072,
       "tag": "0000_noisy_abomination",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1778910447765,
+      "tag": "0001_tranquil_the_professor",
+      "breakpoints": true
     }
   ]
 }

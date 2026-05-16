@@ -211,6 +211,12 @@ export async function seedAtVoiceTerminations(
       payoutBillingCycleDays: BILLING_CYCLE_DAYS,
       payoutPaymentTermsDays: PAYMENT_TERMS_DAYS,
       countryCode: destination.countryIso2,
+      maxCallDurationMin: 60,
+      targetAcdMin: 5,
+      targetAsrPercent: 50,
+      maxANumberConcurrentCalls: 3,
+      maxBNumberConcurrentCalls: 3,
+      maxAToBNumberConcurrentCalls: 3,
       ...generateDailyCaps(),
     });
   }
