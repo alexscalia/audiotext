@@ -1,6 +1,20 @@
 import { z } from "zod";
 
-export const APP_TIMEZONE = "Asia/Hong_Kong";
+declare const process: { env: Record<string, string | undefined> } | undefined;
+
+function resolveAppTimezone(): string {
+  const tz =
+    (typeof process !== "undefined" ? process.env.APP_TIMEZONE : undefined) ??
+    "UTC";
+  try {
+    new Intl.DateTimeFormat("en-US", { timeZone: tz });
+  } catch {
+    throw new Error(`Invalid APP_TIMEZONE: ${tz}`);
+  }
+  return tz;
+}
+
+export const APP_TIMEZONE = resolveAppTimezone();
 
 export const HealthSchema = z.object({
   ok: z.boolean(),
