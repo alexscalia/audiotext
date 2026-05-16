@@ -61,6 +61,15 @@ export type CarrierBillingDetails = {
   notes?: string;
 };
 
+export const userStatus = pgEnum("user_status", [
+  "active",
+  "pending",
+  "inactive",
+  "suspended",
+  "banned",
+]);
+export type UserStatus = (typeof userStatus.enumValues)[number];
+
 export const users = pgTable(
   "users",
   {
@@ -69,6 +78,7 @@ export const users = pgTable(
     email: text("email").notNull(),
     emailVerified: boolean("email_verified").notNull().default(false),
     image: text("image"),
+    status: userStatus("status").notNull().default("active"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -82,6 +92,7 @@ export const users = pgTable(
     uniqueIndex("users_email_unique_active")
       .on(t.email)
       .where(sql`${t.deletedAt} IS NULL`),
+    index("users_status_idx").on(t.status),
     index("users_deleted_at_idx").on(t.deletedAt),
   ],
 );
@@ -604,6 +615,9 @@ export const atVoiceNumbers = pgTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     atVoiceTerminationId: uuid("at_voice_termination_id").notNull(),
+    userId: uuid("user_id").references(() => users.id, {
+      onDelete: "set null",
+    }),
     number: text("number").notNull(),
     lastSuccessfulAttemptAt: timestamp("last_successful_attempt_at", {
       withTimezone: true,
@@ -624,6 +638,7 @@ export const atVoiceNumbers = pgTable(
     index("at_voice_numbers_at_voice_termination_idx").on(
       t.atVoiceTerminationId,
     ),
+    index("at_voice_numbers_user_idx").on(t.userId),
     index("at_voice_numbers_last_success_idx").on(t.lastSuccessfulAttemptAt),
     index("at_voice_numbers_deleted_at_idx").on(t.deletedAt),
     foreignKey({
@@ -641,6 +656,10 @@ export const atVoiceNumbersRelations = relations(atVoiceNumbers, ({ one }) => ({
   termination: one(atVoiceTerminations, {
     fields: [atVoiceNumbers.atVoiceTerminationId],
     references: [atVoiceTerminations.id],
+  }),
+  user: one(users, {
+    fields: [atVoiceNumbers.userId],
+    references: [users.id],
   }),
 }));
 

@@ -4,6 +4,7 @@ CREATE TYPE "public"."carrier_status" AS ENUM('active', 'inactive');--> statemen
 CREATE TYPE "public"."chat_app" AS ENUM('whatsapp', 'telegram', 'signal');--> statement-breakpoint
 CREATE TYPE "public"."currency" AS ENUM('usd', 'eur', 'gbp');--> statement-breakpoint
 CREATE TYPE "public"."role_scope" AS ENUM('admin', 'user');--> statement-breakpoint
+CREATE TYPE "public"."voice_blocked_number_party" AS ENUM('a', 'b');--> statement-breakpoint
 CREATE TYPE "public"."voice_numbering_plan_destination_type" AS ENUM('all', 'landline', 'mobile', 'premium', 'special', 'toll_free', 'shared_cost', 'satellite', 'personal', 'paging', 'voip', 'ngn');--> statement-breakpoint
 CREATE TYPE "public"."voice_numbering_plan_status" AS ENUM('active', 'inactive');--> statement-breakpoint
 CREATE TYPE "public"."voice_rate_sheet_status" AS ENUM('active', 'inactive');--> statement-breakpoint
@@ -51,11 +52,26 @@ CREATE TABLE "at_termination_users" (
 CREATE TABLE "at_voice_numbers" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"at_voice_termination_id" uuid NOT NULL,
+	"user_id" uuid,
 	"number" text NOT NULL,
 	"last_successful_attempt_at" timestamp with time zone,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone
+);
+--> statement-breakpoint
+CREATE TABLE "at_voice_termination_blocked_prefixes" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"at_voice_termination_id" uuid,
+	"party" "voice_blocked_number_party" NOT NULL,
+	"number_prefix" text NOT NULL,
+	"reason" text,
+	"expires_at" timestamp with time zone,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"deleted_at" timestamp with time zone,
+	CONSTRAINT "at_voice_termination_blocked_prefixes_number_prefix_digits" CHECK ("at_voice_termination_blocked_prefixes"."number_prefix" ~ '^[0-9]+$'),
+	CONSTRAINT "at_voice_termination_blocked_prefixes_expires_after_created" CHECK ("at_voice_termination_blocked_prefixes"."expires_at" IS NULL OR "at_voice_termination_blocked_prefixes"."expires_at" > "at_voice_termination_blocked_prefixes"."created_at")
 );
 --> statement-breakpoint
 CREATE TABLE "at_voice_terminations" (
@@ -126,6 +142,7 @@ CREATE TABLE "carriers" (
 	"sales_name" text NOT NULL,
 	"sales_email" text NOT NULL,
 	"sales_phone" text,
+	"timezone" text DEFAULT 'UTC' NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone
@@ -314,6 +331,20 @@ CREATE TABLE "voice_rate_sheets" (
 	"deleted_at" timestamp with time zone
 );
 --> statement-breakpoint
+CREATE TABLE "voice_trunk_blocked_prefixes" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"voice_trunk_id" uuid,
+	"party" "voice_blocked_number_party" NOT NULL,
+	"number_prefix" text NOT NULL,
+	"reason" text,
+	"expires_at" timestamp with time zone,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"deleted_at" timestamp with time zone,
+	CONSTRAINT "voice_trunk_blocked_prefixes_number_prefix_digits" CHECK ("voice_trunk_blocked_prefixes"."number_prefix" ~ '^[0-9]+$'),
+	CONSTRAINT "voice_trunk_blocked_prefixes_expires_after_created" CHECK ("voice_trunk_blocked_prefixes"."expires_at" IS NULL OR "voice_trunk_blocked_prefixes"."expires_at" > "voice_trunk_blocked_prefixes"."created_at")
+);
+--> statement-breakpoint
 CREATE TABLE "voice_trunk_ips" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"voice_trunk_id" uuid NOT NULL,
@@ -367,7 +398,9 @@ CREATE TABLE "voice_trunks" (
 ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "at_termination_users" ADD CONSTRAINT "at_termination_users_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "at_termination_users" ADD CONSTRAINT "at_termination_users_at_voice_termination_id_at_voice_terminations_id_fk" FOREIGN KEY ("at_voice_termination_id") REFERENCES "public"."at_voice_terminations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "at_voice_numbers" ADD CONSTRAINT "at_voice_numbers_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "at_voice_numbers" ADD CONSTRAINT "at_voice_numbers_at_voice_termination_id_fk" FOREIGN KEY ("at_voice_termination_id") REFERENCES "public"."at_voice_terminations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "at_voice_termination_blocked_prefixes" ADD CONSTRAINT "at_voice_termination_blocked_prefixes_at_voice_termination_id_at_voice_terminations_id_fk" FOREIGN KEY ("at_voice_termination_id") REFERENCES "public"."at_voice_terminations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "at_voice_terminations" ADD CONSTRAINT "at_voice_terminations_carrier_id_carriers_id_fk" FOREIGN KEY ("carrier_id") REFERENCES "public"."carriers"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "at_voice_terminations" ADD CONSTRAINT "at_voice_terminations_voice_numbering_plan_destination_id_voice_numbering_plan_destinations_id_fk" FOREIGN KEY ("voice_numbering_plan_destination_id") REFERENCES "public"."voice_numbering_plan_destinations"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "chat_contacts" ADD CONSTRAINT "chat_contacts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -382,6 +415,7 @@ ALTER TABLE "voice_numbering_plan_destinations" ADD CONSTRAINT "voice_numbering_
 ALTER TABLE "voice_rate_sheet_lines" ADD CONSTRAINT "voice_rate_sheet_lines_voice_rate_sheet_id_voice_rate_sheets_id_fk" FOREIGN KEY ("voice_rate_sheet_id") REFERENCES "public"."voice_rate_sheets"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "voice_rate_sheet_lines" ADD CONSTRAINT "voice_rate_sheet_lines_voice_numbering_plan_destination_id_voice_numbering_plan_destinations_id_fk" FOREIGN KEY ("voice_numbering_plan_destination_id") REFERENCES "public"."voice_numbering_plan_destinations"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "voice_rate_sheets" ADD CONSTRAINT "voice_rate_sheets_voice_numbering_plan_id_voice_numbering_plans_id_fk" FOREIGN KEY ("voice_numbering_plan_id") REFERENCES "public"."voice_numbering_plans"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "voice_trunk_blocked_prefixes" ADD CONSTRAINT "voice_trunk_blocked_prefixes_voice_trunk_id_voice_trunks_id_fk" FOREIGN KEY ("voice_trunk_id") REFERENCES "public"."voice_trunks"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "voice_trunk_ips" ADD CONSTRAINT "voice_trunk_ips_voice_trunk_id_voice_trunks_id_fk" FOREIGN KEY ("voice_trunk_id") REFERENCES "public"."voice_trunks"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "voice_trunks" ADD CONSTRAINT "voice_trunks_carrier_id_carriers_id_fk" FOREIGN KEY ("carrier_id") REFERENCES "public"."carriers"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "voice_trunks" ADD CONSTRAINT "voice_trunks_voice_rate_sheet_id_voice_rate_sheets_id_fk" FOREIGN KEY ("voice_rate_sheet_id") REFERENCES "public"."voice_rate_sheets"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
@@ -394,8 +428,15 @@ CREATE INDEX "at_termination_users_termination_idx" ON "at_termination_users" US
 CREATE INDEX "at_termination_users_deleted_at_idx" ON "at_termination_users" USING btree ("deleted_at");--> statement-breakpoint
 CREATE UNIQUE INDEX "at_voice_numbers_number_unique_active" ON "at_voice_numbers" USING btree ("number") WHERE "at_voice_numbers"."deleted_at" IS NULL;--> statement-breakpoint
 CREATE INDEX "at_voice_numbers_at_voice_termination_idx" ON "at_voice_numbers" USING btree ("at_voice_termination_id");--> statement-breakpoint
+CREATE INDEX "at_voice_numbers_user_idx" ON "at_voice_numbers" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "at_voice_numbers_last_success_idx" ON "at_voice_numbers" USING btree ("last_successful_attempt_at");--> statement-breakpoint
 CREATE INDEX "at_voice_numbers_deleted_at_idx" ON "at_voice_numbers" USING btree ("deleted_at");--> statement-breakpoint
+CREATE UNIQUE INDEX "at_voice_termination_blocked_prefixes_scoped_unique_active" ON "at_voice_termination_blocked_prefixes" USING btree ("at_voice_termination_id","party","number_prefix") WHERE "at_voice_termination_blocked_prefixes"."deleted_at" IS NULL AND "at_voice_termination_blocked_prefixes"."at_voice_termination_id" IS NOT NULL;--> statement-breakpoint
+CREATE UNIQUE INDEX "at_voice_termination_blocked_prefixes_global_unique_active" ON "at_voice_termination_blocked_prefixes" USING btree ("party","number_prefix") WHERE "at_voice_termination_blocked_prefixes"."deleted_at" IS NULL AND "at_voice_termination_blocked_prefixes"."at_voice_termination_id" IS NULL;--> statement-breakpoint
+CREATE INDEX "at_voice_termination_blocked_prefixes_termination_idx" ON "at_voice_termination_blocked_prefixes" USING btree ("at_voice_termination_id");--> statement-breakpoint
+CREATE INDEX "at_voice_termination_blocked_prefixes_party_prefix_idx" ON "at_voice_termination_blocked_prefixes" USING btree ("party","number_prefix");--> statement-breakpoint
+CREATE INDEX "at_voice_termination_blocked_prefixes_expires_at_idx" ON "at_voice_termination_blocked_prefixes" USING btree ("expires_at");--> statement-breakpoint
+CREATE INDEX "at_voice_termination_blocked_prefixes_deleted_at_idx" ON "at_voice_termination_blocked_prefixes" USING btree ("deleted_at");--> statement-breakpoint
 CREATE UNIQUE INDEX "at_voice_terminations_carrier_name_unique_active" ON "at_voice_terminations" USING btree ("carrier_id","name") WHERE "at_voice_terminations"."deleted_at" IS NULL;--> statement-breakpoint
 CREATE INDEX "at_voice_terminations_carrier_idx" ON "at_voice_terminations" USING btree ("carrier_id");--> statement-breakpoint
 CREATE INDEX "at_voice_terminations_voice_numbering_plan_destination_idx" ON "at_voice_terminations" USING btree ("voice_numbering_plan_destination_id");--> statement-breakpoint
@@ -455,6 +496,12 @@ CREATE UNIQUE INDEX "voice_rate_sheets_name_unique_active" ON "voice_rate_sheets
 CREATE INDEX "voice_rate_sheets_status_idx" ON "voice_rate_sheets" USING btree ("status");--> statement-breakpoint
 CREATE INDEX "voice_rate_sheets_voice_numbering_plan_idx" ON "voice_rate_sheets" USING btree ("voice_numbering_plan_id");--> statement-breakpoint
 CREATE INDEX "voice_rate_sheets_deleted_at_idx" ON "voice_rate_sheets" USING btree ("deleted_at");--> statement-breakpoint
+CREATE UNIQUE INDEX "voice_trunk_blocked_prefixes_scoped_unique_active" ON "voice_trunk_blocked_prefixes" USING btree ("voice_trunk_id","party","number_prefix") WHERE "voice_trunk_blocked_prefixes"."deleted_at" IS NULL AND "voice_trunk_blocked_prefixes"."voice_trunk_id" IS NOT NULL;--> statement-breakpoint
+CREATE UNIQUE INDEX "voice_trunk_blocked_prefixes_global_unique_active" ON "voice_trunk_blocked_prefixes" USING btree ("party","number_prefix") WHERE "voice_trunk_blocked_prefixes"."deleted_at" IS NULL AND "voice_trunk_blocked_prefixes"."voice_trunk_id" IS NULL;--> statement-breakpoint
+CREATE INDEX "voice_trunk_blocked_prefixes_trunk_idx" ON "voice_trunk_blocked_prefixes" USING btree ("voice_trunk_id");--> statement-breakpoint
+CREATE INDEX "voice_trunk_blocked_prefixes_party_prefix_idx" ON "voice_trunk_blocked_prefixes" USING btree ("party","number_prefix");--> statement-breakpoint
+CREATE INDEX "voice_trunk_blocked_prefixes_expires_at_idx" ON "voice_trunk_blocked_prefixes" USING btree ("expires_at");--> statement-breakpoint
+CREATE INDEX "voice_trunk_blocked_prefixes_deleted_at_idx" ON "voice_trunk_blocked_prefixes" USING btree ("deleted_at");--> statement-breakpoint
 CREATE UNIQUE INDEX "voice_trunk_ips_trunk_ip_prefix_unique_active" ON "voice_trunk_ips" USING btree ("voice_trunk_id","ip","prefix") WHERE "voice_trunk_ips"."deleted_at" IS NULL;--> statement-breakpoint
 CREATE INDEX "voice_trunk_ips_trunk_idx" ON "voice_trunk_ips" USING btree ("voice_trunk_id");--> statement-breakpoint
 CREATE INDEX "voice_trunk_ips_status_idx" ON "voice_trunk_ips" USING btree ("status");--> statement-breakpoint

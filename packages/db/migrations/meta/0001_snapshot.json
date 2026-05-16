@@ -1,6 +1,6 @@
 {
-  "id": "bc598c03-b29e-45ad-932d-1d9410e15b09",
-  "prevId": "09565f60-a066-4462-9435-7138f11c28a1",
+  "id": "ce3a5db5-5e99-4455-b597-1e19bbded2d8",
+  "prevId": "8563ed29-5fb2-4b0d-9db9-6e506d0c054e",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -372,6 +372,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
         "number": {
           "name": "number",
           "type": "text",
@@ -437,6 +443,21 @@
           "method": "btree",
           "with": {}
         },
+        "at_voice_numbers_user_idx": {
+          "name": "at_voice_numbers_user_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "at_voice_numbers_last_success_idx": {
           "name": "at_voice_numbers_last_success_idx",
           "columns": [
@@ -469,6 +490,19 @@
         }
       },
       "foreignKeys": {
+        "at_voice_numbers_user_id_users_id_fk": {
+          "name": "at_voice_numbers_user_id_users_id_fk",
+          "tableFrom": "at_voice_numbers",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
         "at_voice_numbers_at_voice_termination_id_fk": {
           "name": "at_voice_numbers_at_voice_termination_id_fk",
           "tableFrom": "at_voice_numbers",
@@ -2159,6 +2193,14 @@
           "primaryKey": false,
           "notNull": false
         },
+        "status": {
+          "name": "status",
+          "type": "user_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'active'"
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
@@ -2193,6 +2235,21 @@
           ],
           "isUnique": true,
           "where": "\"users\".\"deleted_at\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "users_status_idx": {
+          "name": "users_status_idx",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -4072,6 +4129,17 @@
       "values": [
         "admin",
         "user"
+      ]
+    },
+    "public.user_status": {
+      "name": "user_status",
+      "schema": "public",
+      "values": [
+        "active",
+        "pending",
+        "inactive",
+        "suspended",
+        "banned"
       ]
     },
     "public.voice_blocked_number_party": {

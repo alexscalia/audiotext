@@ -1,5 +1,5 @@
 {
-  "id": "09565f60-a066-4462-9435-7138f11c28a1",
+  "id": "8563ed29-5fb2-4b0d-9db9-6e506d0c054e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -372,6 +372,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
         "number": {
           "name": "number",
           "type": "text",
@@ -437,6 +443,21 @@
           "method": "btree",
           "with": {}
         },
+        "at_voice_numbers_user_idx": {
+          "name": "at_voice_numbers_user_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "at_voice_numbers_last_success_idx": {
           "name": "at_voice_numbers_last_success_idx",
           "columns": [
@@ -469,6 +490,19 @@
         }
       },
       "foreignKeys": {
+        "at_voice_numbers_user_id_users_id_fk": {
+          "name": "at_voice_numbers_user_id_users_id_fk",
+          "tableFrom": "at_voice_numbers",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
         "at_voice_numbers_at_voice_termination_id_fk": {
           "name": "at_voice_numbers_at_voice_termination_id_fk",
           "tableFrom": "at_voice_numbers",
@@ -487,6 +521,217 @@
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.at_voice_termination_blocked_prefixes": {
+      "name": "at_voice_termination_blocked_prefixes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "at_voice_termination_id": {
+          "name": "at_voice_termination_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "party": {
+          "name": "party",
+          "type": "voice_blocked_number_party",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "number_prefix": {
+          "name": "number_prefix",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reason": {
+          "name": "reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "at_voice_termination_blocked_prefixes_scoped_unique_active": {
+          "name": "at_voice_termination_blocked_prefixes_scoped_unique_active",
+          "columns": [
+            {
+              "expression": "at_voice_termination_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "party",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "number_prefix",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"at_voice_termination_blocked_prefixes\".\"deleted_at\" IS NULL AND \"at_voice_termination_blocked_prefixes\".\"at_voice_termination_id\" IS NOT NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "at_voice_termination_blocked_prefixes_global_unique_active": {
+          "name": "at_voice_termination_blocked_prefixes_global_unique_active",
+          "columns": [
+            {
+              "expression": "party",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "number_prefix",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"at_voice_termination_blocked_prefixes\".\"deleted_at\" IS NULL AND \"at_voice_termination_blocked_prefixes\".\"at_voice_termination_id\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "at_voice_termination_blocked_prefixes_termination_idx": {
+          "name": "at_voice_termination_blocked_prefixes_termination_idx",
+          "columns": [
+            {
+              "expression": "at_voice_termination_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "at_voice_termination_blocked_prefixes_party_prefix_idx": {
+          "name": "at_voice_termination_blocked_prefixes_party_prefix_idx",
+          "columns": [
+            {
+              "expression": "party",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "number_prefix",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "at_voice_termination_blocked_prefixes_expires_at_idx": {
+          "name": "at_voice_termination_blocked_prefixes_expires_at_idx",
+          "columns": [
+            {
+              "expression": "expires_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "at_voice_termination_blocked_prefixes_deleted_at_idx": {
+          "name": "at_voice_termination_blocked_prefixes_deleted_at_idx",
+          "columns": [
+            {
+              "expression": "deleted_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "at_voice_termination_blocked_prefixes_at_voice_termination_id_at_voice_terminations_id_fk": {
+          "name": "at_voice_termination_blocked_prefixes_at_voice_termination_id_at_voice_terminations_id_fk",
+          "tableFrom": "at_voice_termination_blocked_prefixes",
+          "tableTo": "at_voice_terminations",
+          "columnsFrom": [
+            "at_voice_termination_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "at_voice_termination_blocked_prefixes_number_prefix_digits": {
+          "name": "at_voice_termination_blocked_prefixes_number_prefix_digits",
+          "value": "\"at_voice_termination_blocked_prefixes\".\"number_prefix\" ~ '^[0-9]+$'"
+        },
+        "at_voice_termination_blocked_prefixes_expires_after_created": {
+          "name": "at_voice_termination_blocked_prefixes_expires_after_created",
+          "value": "\"at_voice_termination_blocked_prefixes\".\"expires_at\" IS NULL OR \"at_voice_termination_blocked_prefixes\".\"expires_at\" > \"at_voice_termination_blocked_prefixes\".\"created_at\""
+        }
+      },
       "isRLSEnabled": false
     },
     "public.at_voice_terminations": {
@@ -990,6 +1235,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "timezone": {
+          "name": "timezone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'UTC'"
         },
         "created_at": {
           "name": "created_at",
@@ -3093,6 +3345,217 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.voice_trunk_blocked_prefixes": {
+      "name": "voice_trunk_blocked_prefixes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "voice_trunk_id": {
+          "name": "voice_trunk_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "party": {
+          "name": "party",
+          "type": "voice_blocked_number_party",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "number_prefix": {
+          "name": "number_prefix",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reason": {
+          "name": "reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "voice_trunk_blocked_prefixes_scoped_unique_active": {
+          "name": "voice_trunk_blocked_prefixes_scoped_unique_active",
+          "columns": [
+            {
+              "expression": "voice_trunk_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "party",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "number_prefix",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"voice_trunk_blocked_prefixes\".\"deleted_at\" IS NULL AND \"voice_trunk_blocked_prefixes\".\"voice_trunk_id\" IS NOT NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "voice_trunk_blocked_prefixes_global_unique_active": {
+          "name": "voice_trunk_blocked_prefixes_global_unique_active",
+          "columns": [
+            {
+              "expression": "party",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "number_prefix",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"voice_trunk_blocked_prefixes\".\"deleted_at\" IS NULL AND \"voice_trunk_blocked_prefixes\".\"voice_trunk_id\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "voice_trunk_blocked_prefixes_trunk_idx": {
+          "name": "voice_trunk_blocked_prefixes_trunk_idx",
+          "columns": [
+            {
+              "expression": "voice_trunk_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "voice_trunk_blocked_prefixes_party_prefix_idx": {
+          "name": "voice_trunk_blocked_prefixes_party_prefix_idx",
+          "columns": [
+            {
+              "expression": "party",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "number_prefix",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "voice_trunk_blocked_prefixes_expires_at_idx": {
+          "name": "voice_trunk_blocked_prefixes_expires_at_idx",
+          "columns": [
+            {
+              "expression": "expires_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "voice_trunk_blocked_prefixes_deleted_at_idx": {
+          "name": "voice_trunk_blocked_prefixes_deleted_at_idx",
+          "columns": [
+            {
+              "expression": "deleted_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "voice_trunk_blocked_prefixes_voice_trunk_id_voice_trunks_id_fk": {
+          "name": "voice_trunk_blocked_prefixes_voice_trunk_id_voice_trunks_id_fk",
+          "tableFrom": "voice_trunk_blocked_prefixes",
+          "tableTo": "voice_trunks",
+          "columnsFrom": [
+            "voice_trunk_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "voice_trunk_blocked_prefixes_number_prefix_digits": {
+          "name": "voice_trunk_blocked_prefixes_number_prefix_digits",
+          "value": "\"voice_trunk_blocked_prefixes\".\"number_prefix\" ~ '^[0-9]+$'"
+        },
+        "voice_trunk_blocked_prefixes_expires_after_created": {
+          "name": "voice_trunk_blocked_prefixes_expires_after_created",
+          "value": "\"voice_trunk_blocked_prefixes\".\"expires_at\" IS NULL OR \"voice_trunk_blocked_prefixes\".\"expires_at\" > \"voice_trunk_blocked_prefixes\".\"created_at\""
+        }
+      },
+      "isRLSEnabled": false
+    },
     "public.voice_trunk_ips": {
       "name": "voice_trunk_ips",
       "schema": "",
@@ -3643,6 +4106,14 @@
       "values": [
         "admin",
         "user"
+      ]
+    },
+    "public.voice_blocked_number_party": {
+      "name": "voice_blocked_number_party",
+      "schema": "public",
+      "values": [
+        "a",
+        "b"
       ]
     },
     "public.voice_numbering_plan_destination_type": {

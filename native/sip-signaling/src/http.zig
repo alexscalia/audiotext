@@ -55,8 +55,14 @@ fn handleConnection(
             try writeResp(conn.stream, 400, "{\"error\":\"missing ip\"}\n", "application/json");
             return;
         };
-        const a_raw = extractQueryParam(target, "a") orelse "";
-        const b_raw = extractQueryParam(target, "b") orelse "";
+        const a_raw = extractQueryParam(target, "a") orelse {
+            try writeResp(conn.stream, 400, "{\"error\":\"missing a\"}\n", "application/json");
+            return;
+        };
+        const b_raw = extractQueryParam(target, "b") orelse {
+            try writeResp(conn.stream, 400, "{\"error\":\"missing b\"}\n", "application/json");
+            return;
+        };
 
         const ip = try urlDecode(allocator, ip_raw);
         defer allocator.free(ip);

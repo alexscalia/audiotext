@@ -71,10 +71,15 @@ pub fn loadIntoCache(
         if (active) active_count += 1;
     }
 
-    // Active DIDs owned by us. Stripped B-number must hit this set
-    // or signaling returns 503 cause 34.
+    // Active DIDs owned by us, AND whose owning user is active + not deleted.
+    // Stripped B-number must hit this set or signaling returns 503 cause 34.
     const numbers_sql =
-        \\SELECT number FROM at_voice_numbers WHERE deleted_at IS NULL
+        \\SELECT n.number
+        \\FROM at_voice_numbers n
+        \\JOIN users u ON u.id = n.user_id
+        \\WHERE n.deleted_at IS NULL
+        \\  AND u.deleted_at IS NULL
+        \\  AND u.status = 'active'
     ;
     const nres = c.PQexec(conn, numbers_sql);
     defer c.PQclear(nres);
