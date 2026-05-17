@@ -71,21 +71,26 @@ fn handleConnection(
         const b = try urlDecode(allocator, b_raw);
         defer allocator.free(b);
 
-        // Three-outcome decision (collapsed from four logical cases):
-        //   .active   → (ip, prefix) credential matches → allow, return
-        //               stripped B-number so kamailio rewrites $rU.
+        // Four-outcome decision:
+        //   .active   → (ip, prefix) credential matches AND stripped B is an
+        //               owned DID with active user AND no block-list hit →
+        //               allow, return stripped B-number so kamailio rewrites $rU.
         //   .unknown  → IP not in cache, OR IP in cache but no prefix
         //               matches the B-number → auth failed → SIP 403,
         //               Q.850;cause=21 (permanent).
-        //   .inactive → IP+prefix matches but that credential is disabled
-        //               (ip-row or parent trunk inactive) → SIP 503,
-        //               Q.850;cause=34 (temporary; upstream may retry).
-        const result = auth_cache.lookup(ip, b);
+        //   .inactive → IP+prefix matches but credential disabled OR stripped
+        //               B is not a deliverable DID → SIP 503, Q.850;cause=34
+        //               (temporary; upstream may retry).
+        //   .blocked  → IP+prefix matches but A/B hit a deny-list (trunk-side
+        //               or termination-side) → SIP 503, Q.850;cause=34. Same
+        //               wire reply as .inactive but logged distinctly.
+        const result = auth_cache.lookup(ip, a, b);
         var body_buf: [512]u8 = undefined;
         const body: []const u8 = switch (result) {
             .active => |m| try std.fmt.bufPrint(&body_buf, "{{\"allowed\":1,\"b\":\"{s}\"}}\n", .{m.stripped_b}),
             .unknown => "{\"allowed\":0,\"status\":403,\"cause\":21}\n",
             .inactive => "{\"allowed\":0,\"status\":503,\"cause\":34}\n",
+            .blocked => "{\"allowed\":0,\"status\":503,\"cause\":34}\n",
         };
         try writeResp(conn.stream, 200, body, "application/json");
 

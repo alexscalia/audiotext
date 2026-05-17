@@ -3,6 +3,7 @@ const std = @import("std");
 pub const Credential = struct {
     prefix: []const u8,
     active: bool,
+    trunk_id: []const u8,
 };
 
 pub const Match = struct {
@@ -13,15 +14,40 @@ pub const LookupResult = union(enum) {
     active: Match,
     inactive,
     unknown,
+    blocked,
 };
 
 pub const Map = std.StringHashMap(std.ArrayList(Credential));
 pub const NumberSet = std.StringHashMap(void);
 
+pub const BlockSet = struct {
+    a_prefixes: std.ArrayList([]const u8),
+    b_prefixes: std.ArrayList([]const u8),
+
+    pub fn init(allocator: std.mem.Allocator) BlockSet {
+        return .{
+            .a_prefixes = std.ArrayList([]const u8).init(allocator),
+            .b_prefixes = std.ArrayList([]const u8).init(allocator),
+        };
+    }
+
+    pub fn deinit(self: *BlockSet, allocator: std.mem.Allocator) void {
+        for (self.a_prefixes.items) |p| allocator.free(p);
+        for (self.b_prefixes.items) |p| allocator.free(p);
+        self.a_prefixes.deinit();
+        self.b_prefixes.deinit();
+    }
+};
+
+pub const BlockMap = std.StringHashMap(BlockSet);
+
 pub fn deinitMap(m: *Map, allocator: std.mem.Allocator) void {
     var it = m.iterator();
     while (it.next()) |e| {
-        for (e.value_ptr.items) |c| allocator.free(c.prefix);
+        for (e.value_ptr.items) |c| {
+            allocator.free(c.prefix);
+            allocator.free(c.trunk_id);
+        }
         e.value_ptr.deinit();
         allocator.free(e.key_ptr.*);
     }
@@ -34,10 +60,30 @@ pub fn deinitNumberSet(s: *NumberSet, allocator: std.mem.Allocator) void {
     s.deinit();
 }
 
+pub fn deinitBlockMap(m: *BlockMap, allocator: std.mem.Allocator) void {
+    var it = m.iterator();
+    while (it.next()) |e| {
+        e.value_ptr.deinit(allocator);
+        allocator.free(e.key_ptr.*);
+    }
+    m.deinit();
+}
+
+fn anyPrefixMatch(prefixes: []const []const u8, s: []const u8) bool {
+    for (prefixes) |p| {
+        if (p.len == 0) continue;
+        if (std.mem.startsWith(u8, s, p)) return true;
+    }
+    return false;
+}
+
 pub const AuthCache = struct {
     allocator: std.mem.Allocator,
     map: Map,
     numbers: NumberSet,
+    trunk_blocks: BlockMap,
+    global_trunk_blocks: BlockSet,
+    term_blocks: BlockSet,
     mutex: std.Thread.Mutex = .{},
 
     pub fn init(allocator: std.mem.Allocator) AuthCache {
@@ -45,6 +91,9 @@ pub const AuthCache = struct {
             .allocator = allocator,
             .map = Map.init(allocator),
             .numbers = NumberSet.init(allocator),
+            .trunk_blocks = BlockMap.init(allocator),
+            .global_trunk_blocks = BlockSet.init(allocator),
+            .term_blocks = BlockSet.init(allocator),
         };
     }
 
@@ -53,20 +102,41 @@ pub const AuthCache = struct {
         defer self.mutex.unlock();
         deinitMap(&self.map, self.allocator);
         deinitNumberSet(&self.numbers, self.allocator);
+        deinitBlockMap(&self.trunk_blocks, self.allocator);
+        self.global_trunk_blocks.deinit(self.allocator);
+        self.term_blocks.deinit(self.allocator);
     }
 
-    pub fn swap(self: *AuthCache, new_map: *Map, new_numbers: *NumberSet) void {
+    pub fn swap(
+        self: *AuthCache,
+        new_map: *Map,
+        new_numbers: *NumberSet,
+        new_trunk_blocks: *BlockMap,
+        new_global_trunk_blocks: *BlockSet,
+        new_term_blocks: *BlockSet,
+    ) void {
         self.mutex.lock();
         defer self.mutex.unlock();
         deinitMap(&self.map, self.allocator);
         deinitNumberSet(&self.numbers, self.allocator);
+        deinitBlockMap(&self.trunk_blocks, self.allocator);
+        self.global_trunk_blocks.deinit(self.allocator);
+        self.term_blocks.deinit(self.allocator);
+
         self.map = new_map.*;
         self.numbers = new_numbers.*;
+        self.trunk_blocks = new_trunk_blocks.*;
+        self.global_trunk_blocks = new_global_trunk_blocks.*;
+        self.term_blocks = new_term_blocks.*;
+
         new_map.* = Map.init(self.allocator);
         new_numbers.* = NumberSet.init(self.allocator);
+        new_trunk_blocks.* = BlockMap.init(self.allocator);
+        new_global_trunk_blocks.* = BlockSet.init(self.allocator);
+        new_term_blocks.* = BlockSet.init(self.allocator);
     }
 
-    pub fn lookup(self: *AuthCache, ip: []const u8, b: []const u8) LookupResult {
+    pub fn lookup(self: *AuthCache, ip: []const u8, a: []const u8, b: []const u8) LookupResult {
         self.mutex.lock();
         defer self.mutex.unlock();
 
@@ -106,6 +176,19 @@ pub const AuthCache = struct {
         if (best_idx) |i| {
             const c = items[i];
             const stripped = b[c.prefix.len..];
+
+            // Block-list scan — first hit wins, returns .blocked (SIP 503 cause 34).
+            // Order: global trunk blocks → per-trunk blocks for this credential's
+            // trunk → termination blocks (flat: per-term + global merged).
+            if (anyPrefixMatch(self.global_trunk_blocks.a_prefixes.items, a)) return .blocked;
+            if (anyPrefixMatch(self.global_trunk_blocks.b_prefixes.items, stripped)) return .blocked;
+            if (self.trunk_blocks.getPtr(c.trunk_id)) |bs| {
+                if (anyPrefixMatch(bs.a_prefixes.items, a)) return .blocked;
+                if (anyPrefixMatch(bs.b_prefixes.items, stripped)) return .blocked;
+            }
+            if (anyPrefixMatch(self.term_blocks.a_prefixes.items, a)) return .blocked;
+            if (anyPrefixMatch(self.term_blocks.b_prefixes.items, stripped)) return .blocked;
+
             // Stripped B-number must be a DID we own (at_voice_numbers).
             // If absent → SIP 503 cause 34 (temporary; carrier may retry).
             if (!self.numbers.contains(stripped)) return .inactive;

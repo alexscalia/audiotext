@@ -746,7 +746,7 @@ export const atVoiceTerminationBlockedPrefixes = pgTable(
       { onDelete: "cascade" },
     ),
     party: voiceBlockedNumberParty("party").notNull(),
-    numberPrefix: text("number_prefix").notNull(),
+    prefix: text("prefix").notNull(),
     reason: text("reason"),
     expiresAt: timestamp("expires_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true })
@@ -762,20 +762,20 @@ export const atVoiceTerminationBlockedPrefixes = pgTable(
     uniqueIndex(
       "at_voice_termination_blocked_prefixes_scoped_unique_active",
     )
-      .on(t.atVoiceTerminationId, t.party, t.numberPrefix)
+      .on(t.atVoiceTerminationId, t.party, t.prefix)
       .where(
         sql`${t.deletedAt} IS NULL AND ${t.atVoiceTerminationId} IS NOT NULL`,
       ),
     uniqueIndex(
       "at_voice_termination_blocked_prefixes_global_unique_active",
     )
-      .on(t.party, t.numberPrefix)
+      .on(t.party, t.prefix)
       .where(
         sql`${t.deletedAt} IS NULL AND ${t.atVoiceTerminationId} IS NULL`,
       ),
     check(
-      "at_voice_termination_blocked_prefixes_number_prefix_digits",
-      sql`${t.numberPrefix} ~ '^[0-9]+$'`,
+      "at_voice_termination_blocked_prefixes_prefix_digits",
+      sql`${t.prefix} ~ '^[0-9]+$'`,
     ),
     check(
       "at_voice_termination_blocked_prefixes_expires_after_created",
@@ -786,7 +786,7 @@ export const atVoiceTerminationBlockedPrefixes = pgTable(
     ),
     index("at_voice_termination_blocked_prefixes_party_prefix_idx").on(
       t.party,
-      t.numberPrefix,
+      t.prefix,
     ),
     index("at_voice_termination_blocked_prefixes_expires_at_idx").on(
       t.expiresAt,
@@ -1020,7 +1020,7 @@ export const voiceTrunkBlockedPrefixes = pgTable(
       onDelete: "cascade",
     }),
     party: voiceBlockedNumberParty("party").notNull(),
-    numberPrefix: text("number_prefix").notNull(),
+    prefix: text("prefix").notNull(),
     reason: text("reason"),
     expiresAt: timestamp("expires_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true })
@@ -1034,14 +1034,14 @@ export const voiceTrunkBlockedPrefixes = pgTable(
   },
   (t) => [
     uniqueIndex("voice_trunk_blocked_prefixes_scoped_unique_active")
-      .on(t.voiceTrunkId, t.party, t.numberPrefix)
+      .on(t.voiceTrunkId, t.party, t.prefix)
       .where(sql`${t.deletedAt} IS NULL AND ${t.voiceTrunkId} IS NOT NULL`),
     uniqueIndex("voice_trunk_blocked_prefixes_global_unique_active")
-      .on(t.party, t.numberPrefix)
+      .on(t.party, t.prefix)
       .where(sql`${t.deletedAt} IS NULL AND ${t.voiceTrunkId} IS NULL`),
     check(
-      "voice_trunk_blocked_prefixes_number_prefix_digits",
-      sql`${t.numberPrefix} ~ '^[0-9]+$'`,
+      "voice_trunk_blocked_prefixes_prefix_digits",
+      sql`${t.prefix} ~ '^[0-9]+$'`,
     ),
     check(
       "voice_trunk_blocked_prefixes_expires_after_created",
@@ -1050,7 +1050,7 @@ export const voiceTrunkBlockedPrefixes = pgTable(
     index("voice_trunk_blocked_prefixes_trunk_idx").on(t.voiceTrunkId),
     index("voice_trunk_blocked_prefixes_party_prefix_idx").on(
       t.party,
-      t.numberPrefix,
+      t.prefix,
     ),
     index("voice_trunk_blocked_prefixes_expires_at_idx").on(t.expiresAt),
     index("voice_trunk_blocked_prefixes_deleted_at_idx").on(t.deletedAt),
