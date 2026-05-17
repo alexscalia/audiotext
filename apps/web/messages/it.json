@@ -56,6 +56,9 @@
     "interconnections": "Interconnessioni",
     "trunks": "Trunk voce",
     "carriers": "Carrier",
+    "audiotextVoice": "Audiotext Voce",
+    "audiotextVoiceRanges": "Range",
+    "audiotextVoiceNumbers": "Numeri",
     "settings": "Impostazioni"
   },
   "Header": {

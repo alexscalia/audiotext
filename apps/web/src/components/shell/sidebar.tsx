@@ -17,6 +17,9 @@ type NavKey =
   | "interconnections"
   | "trunks"
   | "carriers"
+  | "audiotextVoice"
+  | "audiotextVoiceRanges"
+  | "audiotextVoiceNumbers"
   | "settings";
 
 type LeafItem = {
@@ -153,6 +156,26 @@ const NAV: NavItem[] = [
     children: [
       { href: "/admin/carriers", key: "carriers" },
       { href: "/admin/voice-trunks", key: "trunks" },
+    ],
+  },
+  {
+    type: "group",
+    key: "audiotextVoice",
+    basePath: "/admin/audiotext-voice",
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.8}
+        className="h-5 w-5"
+      >
+        <path d="M4 12v0M8 8v8M12 5v14M16 8v8M20 12v0" strokeLinecap="round" />
+      </svg>
+    ),
+    children: [
+      { href: "/admin/audiotext-voice/ranges", key: "audiotextVoiceRanges" },
+      { href: "/admin/audiotext-voice/numbers", key: "audiotextVoiceNumbers" },
     ],
   },
   {
