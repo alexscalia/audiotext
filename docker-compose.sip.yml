@@ -46,6 +46,9 @@ services:
     image: redis:7-alpine
     container_name: audiotext-redis
     restart: unless-stopped
+    ports:
+      # Loopback-only — apps/api on the host reads/writes quota counters here.
+      - "127.0.0.1:6379:6379/tcp"
     networks:
       sip:
         aliases:
@@ -69,14 +72,41 @@ services:
     image: audiotext-freeswitch:1.10
     container_name: audiotext-freeswitch
     restart: unless-stopped
+    ports:
+      # ESL — bound to host loopback only (127.0.0.1). 8021 conflicts with a
+      # typical native FS install on the host, so we use 8121. apps/api on
+      # the host should set FREESWITCH_ESL_PORT=8121 to subscribe to
+      # CHANNEL_DESTROY. Loopback bind prevents internet exposure.
+      - "127.0.0.1:8121:8021/tcp"
     volumes:
       - ./infra/sip/freeswitch/conf/dialplan/public/00_audiotext.xml:/usr/local/freeswitch/etc/freeswitch/dialplan/public/00_audiotext.xml:ro
+      - ./infra/sip/freeswitch/conf/autoload_configs/event_socket.conf.xml:/usr/local/freeswitch/etc/freeswitch/autoload_configs/event_socket.conf.xml:ro
+      - ./infra/sip/freeswitch/conf/autoload_configs/acl.conf.xml:/usr/local/freeswitch/etc/freeswitch/autoload_configs/acl.conf.xml:ro
       - ./infra/sip/freeswitch/audio/welcome.wav:/usr/local/freeswitch/share/freeswitch/sounds/audiotext/welcome.wav:ro
     networks:
       sip:
         aliases:
           - freeswitch
 
+  sipp:
+    # Test harness — does not start by default. Use `--profile test` to bring up.
+    #   docker compose -f docker-compose.sip.yml --profile test run --rm sipp \
+    #     -sf /scenarios/inbound-call.xml -s 99+18005551234 -m 1 \
+    #     -i 172.28.99.50 kamailio-edge:5060
+    image: ctaloi/sipp:latest
+    container_name: audiotext-sipp
+    profiles: ["test"]
+    volumes:
+      - ./scripts/test/sipp:/scenarios:ro
+    networks:
+      sip:
+        ipv4_address: 172.28.99.50
+        aliases:
+          - sipp
+
 networks:
   sip:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.99.0/24

@@ -212,15 +212,17 @@ async function settleQuota(redis: Redis, cdr: CdrEvent): Promise<void> {
     `quota:range:${cdr.rangeId}:b:${cdr.bNumber}:${date}`,
     `quota:range:${cdr.rangeId}:ab:${cdr.aNumber}:${cdr.bNumber}:${date}`,
   ];
-  try {
-    const pipe = redis.pipeline();
-    for (const k of keys) {
-      pipe.incrby(k, delta);
-      pipe.expire(k, TTL_SEC);
+  console.log(
+    `[cdr] settle range=${cdr.rangeId} billsec=${cdr.billsec} delta=${delta}`,
+  );
+  for (const k of keys) {
+    try {
+      const next = await redis.incrby(k, delta);
+      await redis.expire(k, TTL_SEC);
+      console.log(`[cdr]   ${k} -> ${next}`);
+    } catch (err) {
+      console.error(`[cdr] redis settle failed for ${k}:`, err);
     }
-    await pipe.exec();
-  } catch (err) {
-    console.error("[cdr] redis settle failed:", err);
   }
 }
 

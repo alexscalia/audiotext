@@ -128,7 +128,10 @@ pub const AuthCache = struct {
     trunk_blocks: BlockMap,
     global_trunk_blocks: BlockSet,
     range_blocks: BlockSet,
-    mutex: std.Thread.Mutex = .{},
+    // RwLock: parallel reads (one per HTTP worker), exclusive write only
+    // during reload. Reload is rare (Redis pub/sub triggered), so contention
+    // collapses to ~zero on the hot path.
+    lock: std.Thread.RwLock = .{},
 
     pub fn init(allocator: std.mem.Allocator) AuthCache {
         return .{
@@ -143,8 +146,8 @@ pub const AuthCache = struct {
     }
 
     pub fn deinit(self: *AuthCache) void {
-        self.mutex.lock();
-        defer self.mutex.unlock();
+        self.lock.lock();
+        defer self.lock.unlock();
         deinitMap(&self.map, self.allocator);
         deinitNumberMap(&self.numbers, self.allocator);
         deinitRangeMap(&self.ranges, self.allocator);
@@ -162,8 +165,8 @@ pub const AuthCache = struct {
         new_global_trunk_blocks: *BlockSet,
         new_range_blocks: *BlockSet,
     ) void {
-        self.mutex.lock();
-        defer self.mutex.unlock();
+        self.lock.lock();
+        defer self.lock.unlock();
         deinitMap(&self.map, self.allocator);
         deinitNumberMap(&self.numbers, self.allocator);
         deinitRangeMap(&self.ranges, self.allocator);
@@ -187,8 +190,8 @@ pub const AuthCache = struct {
     }
 
     pub fn lookup(self: *AuthCache, ip: []const u8, a: []const u8, b: []const u8) LookupResult {
-        self.mutex.lock();
-        defer self.mutex.unlock();
+        self.lock.lockShared();
+        defer self.lock.unlockShared();
 
         const list_ptr = self.map.getPtr(ip) orelse return .unknown;
         const items = list_ptr.items;
@@ -259,14 +262,14 @@ pub const AuthCache = struct {
     }
 
     pub fn getRangeQuotas(self: *AuthCache, range_id: []const u8) ?RangeQuotas {
-        self.mutex.lock();
-        defer self.mutex.unlock();
+        self.lock.lockShared();
+        defer self.lock.unlockShared();
         return self.ranges.get(range_id);
     }
 
     pub fn rowCount(self: *AuthCache) usize {
-        self.mutex.lock();
-        defer self.mutex.unlock();
+        self.lock.lockShared();
+        defer self.lock.unlockShared();
         var n: usize = 0;
         var it = self.map.valueIterator();
         while (it.next()) |v| n += v.items.len;

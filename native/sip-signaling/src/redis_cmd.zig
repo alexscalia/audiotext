@@ -98,6 +98,11 @@ pub const RedisCmd = struct {
     pub fn loadScript(self: *RedisCmd) !void {
         self.mutex.lock();
         defer self.mutex.unlock();
+        try self.loadScriptLocked();
+    }
+
+    // Internal: caller must hold self.mutex.
+    fn loadScriptLocked(self: *RedisCmd) !void {
         try self.ensureConn();
         const ctx = self.conn.?;
         const reply_opt = c.redisCommand(ctx, "SCRIPT LOAD %b", LUA_QUOTA_RESERVE.ptr, LUA_QUOTA_RESERVE.len);
@@ -133,9 +138,12 @@ pub const RedisCmd = struct {
         self.mutex.lock();
         defer self.mutex.unlock();
         self.ensureConn() catch return .redis_error;
+        // Script may be missing on first call after startup, or after Redis
+        // flushed/restarted. Reload on demand instead of fail-open.
         if (self.script_sha_len != 40) {
-            std.log.warn("quotaReserve called before script loaded", .{});
-            return .redis_error;
+            self.loadScriptLocked() catch {
+                return .redis_error;
+            };
         }
         const ctx = self.conn.?;
 
@@ -191,11 +199,10 @@ pub const RedisCmd = struct {
             // NOSCRIPT → reload + signal caller to retry next time; treat this
             // INVITE as redis_error (fail-open). Subsequent calls succeed.
             if (std.mem.startsWith(u8, err_msg, "NOSCRIPT")) {
-                std.log.warn("EVALSHA NOSCRIPT, reloading", .{});
-                // unlock-free reload would be cleaner; we drop the lock by
-                // jumping to loadScript via re-entry. Keep simple: clear sha
-                // and let next call reload.
+                std.log.warn("EVALSHA NOSCRIPT, reloading + retrying next call", .{});
                 self.script_sha_len = 0;
+                // Reload immediately so the next call doesn't fail-open.
+                self.loadScriptLocked() catch {};
                 return .redis_error;
             }
             std.log.warn("EVALSHA error: {s}", .{err_msg});

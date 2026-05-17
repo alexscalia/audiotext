@@ -19,13 +19,19 @@ pub fn main() !void {
     std.log.info("loading authorized IPs from postgres", .{});
     try db.loadIntoCache(allocator, env.database_url, &auth_cache);
 
-    var rcmd = try redis_cmd.RedisCmd.init(allocator, env.redis_url);
-    defer rcmd.deinit();
-    rcmd.loadScript() catch |err| {
-        // Non-fatal — quota check fails open until the script is reloaded
-        // on first successful EVALSHA reconnection.
-        std.log.warn("initial SCRIPT LOAD failed: {} (fail-open until next reload)", .{err});
-    };
+    // One Redis connection per HTTP worker — eliminates the EVALSHA
+    // serialization choke. Pool size defaults to cpu count, override
+    // via SIGNALING_WORKERS env.
+    const n_workers = try resolveWorkerCount(allocator);
+    const rcmds = try allocator.alloc(redis_cmd.RedisCmd, n_workers);
+    defer allocator.free(rcmds);
+    for (rcmds) |*r| {
+        r.* = try redis_cmd.RedisCmd.init(allocator, env.redis_url);
+        r.loadScript() catch |err| {
+            std.log.warn("initial SCRIPT LOAD failed (will retry on demand): {}", .{err});
+        };
+    }
+    defer for (rcmds) |*r| r.deinit();
 
     const reload_ctx = redis.ReloadCtx{
         .allocator = allocator,
@@ -36,8 +42,18 @@ pub fn main() !void {
     const redis_thread = try std.Thread.spawn(.{}, redis.subscribeLoop, .{reload_ctx});
     redis_thread.detach();
 
-    std.log.info("listening on {s}", .{env.listen_addr});
-    try http.serve(allocator, env.listen_addr, &auth_cache, &rcmd);
+    std.log.info("listening on {s} with {d} HTTP workers", .{ env.listen_addr, n_workers });
+    try http.serve(allocator, env.listen_addr, &auth_cache, rcmds);
+}
+
+fn resolveWorkerCount(allocator: std.mem.Allocator) !usize {
+    if (std.process.getEnvVarOwned(allocator, "SIGNALING_WORKERS")) |raw| {
+        defer allocator.free(raw);
+        const n = std.fmt.parseInt(usize, raw, 10) catch 0;
+        if (n > 0) return n;
+    } else |_| {}
+    const cpu = std.Thread.getCpuCount() catch 2;
+    return @max(cpu, 2);
 }
 
 const Env = struct {

@@ -1,0 +1,19 @@
+<configuration name="acl.conf" description="Network Lists">
+  <network-lists>
+    <!--
+      esl_clients — custom ACL for mod_event_socket. Allows:
+        - 127.0.0.0/8        host loopback (when running directly in container)
+        - 172.16.0.0/12      docker bridge networks (incl. the sip network 172.28.x)
+        - 10.0.0.0/8         alt private range (Docker Desktop on some setups)
+        - 192.168.0.0/16     alt private range
+      Combined with the host port bound to 127.0.0.1 (see docker-compose.sip.yml),
+      this lets apps/api on the host reach ESL while internet scanners hit nothing.
+    -->
+    <list name="esl_clients" default="deny">
+      <node type="allow" cidr="127.0.0.0/8"/>
+      <node type="allow" cidr="172.16.0.0/12"/>
+      <node type="allow" cidr="10.0.0.0/8"/>
+      <node type="allow" cidr="192.168.0.0/16"/>
+    </list>
+  </network-lists>
+</configuration>

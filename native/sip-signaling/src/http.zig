@@ -2,23 +2,61 @@ const std = @import("std");
 const cache = @import("cache.zig");
 const redis_cmd = @import("redis_cmd.zig");
 
+// Per-worker context. Each worker thread owns one Redis connection so
+// EVALSHAs don't serialize through a global mutex.
+pub const Worker = struct {
+    id: usize,
+    cache: *cache.AuthCache,
+    rcmd: *redis_cmd.RedisCmd,
+    allocator: std.mem.Allocator,
+    server: *std.net.Server,
+};
+
 pub fn serve(
     allocator: std.mem.Allocator,
     listen_addr: []const u8,
     auth_cache: *cache.AuthCache,
-    rcmd: *redis_cmd.RedisCmd,
+    rcmds: []redis_cmd.RedisCmd,
 ) !void {
     const addr = try parseAddr(listen_addr);
     var server = try addr.listen(.{ .reuse_address = true });
     defer server.deinit();
 
+    // Spawn N-1 worker threads; main thread is the Nth worker. All workers
+    // call accept() on the shared listening socket — kernel serializes the
+    // accept and hands one TCP socket to one worker.
+    const n = rcmds.len;
+    const workers = try allocator.alloc(Worker, n);
+    defer allocator.free(workers);
+    for (workers, 0..) |*w, i| {
+        w.* = .{
+            .id = i,
+            .cache = auth_cache,
+            .rcmd = &rcmds[i],
+            .allocator = allocator,
+            .server = &server,
+        };
+    }
+
+    var threads = try allocator.alloc(std.Thread, if (n > 1) n - 1 else 0);
+    defer allocator.free(threads);
+    var i: usize = 0;
+    while (i < threads.len) : (i += 1) {
+        threads[i] = try std.Thread.spawn(.{}, workerLoop, .{&workers[i + 1]});
+    }
+    std.log.info("started {d} HTTP worker(s)", .{n});
+    workerLoop(&workers[0]);
+}
+
+fn workerLoop(w: *Worker) void {
     while (true) {
-        const conn = server.accept() catch |err| {
-            std.log.err("accept failed: {}", .{err});
+        const conn = w.server.accept() catch |err| {
+            std.log.err("worker {d} accept failed: {}", .{ w.id, err });
+            std.time.sleep(10 * std.time.ns_per_ms);
             continue;
         };
-        handleConnection(allocator, conn, auth_cache, rcmd) catch |err| {
-            std.log.warn("connection error: {}", .{err});
+        handleConnection(w, conn) catch |err| {
+            std.log.warn("worker {d} connection error: {}", .{ w.id, err });
         };
         conn.stream.close();
     }
@@ -31,55 +69,96 @@ fn parseAddr(s: []const u8) !std.net.Address {
     return std.net.Address.parseIp(host, port);
 }
 
-fn handleConnection(
-    allocator: std.mem.Allocator,
-    conn: std.net.Server.Connection,
-    auth_cache: *cache.AuthCache,
-    rcmd: *redis_cmd.RedisCmd,
-) !void {
+// Reads HTTP/1.1 requests on a single TCP connection until peer closes,
+// requests Connection: close, or we hit an error. Kamailio's http_client
+// keeps connections (modparam keep_connections=1), so this saves the
+// TCP handshake on every authorize.
+fn handleConnection(w: *Worker, conn: std.net.Server.Connection) !void {
+    var arena_state = std.heap.ArenaAllocator.init(w.allocator);
+    defer arena_state.deinit();
+
     var buf: [4096]u8 = undefined;
-    const n = try conn.stream.read(&buf);
-    if (n == 0) return;
-    const request = buf[0..n];
+    var len: usize = 0;
 
-    const line_end = std.mem.indexOfScalar(u8, request, '\r') orelse return error.MalformedRequest;
-    const line = request[0..line_end];
+    while (true) {
+        // Find end-of-headers in current buffer; read more if needed.
+        var header_end: ?usize = null;
+        while (header_end == null) {
+            if (len > 0) {
+                if (std.mem.indexOf(u8, buf[0..len], "\r\n\r\n")) |idx| {
+                    header_end = idx;
+                    break;
+                }
+            }
+            if (len == buf.len) return error.HeaderTooLarge;
+            const n = conn.stream.read(buf[len..]) catch |err| switch (err) {
+                error.ConnectionResetByPeer, error.BrokenPipe => return,
+                else => return err,
+            };
+            if (n == 0) return; // peer closed
+            len += n;
+        }
 
-    var it = std.mem.tokenizeScalar(u8, line, ' ');
-    _ = it.next() orelse return error.MalformedRequest;
-    const target = it.next() orelse return error.MalformedRequest;
+        const he = header_end.?;
+        const request = buf[0..he];
 
+        // Default to keep-alive (HTTP/1.1). Carrier closes when done.
+        var close_after = false;
+        if (std.mem.indexOf(u8, request, "Connection: close")) |_| close_after = true;
+        if (std.mem.indexOf(u8, request, "connection: close")) |_| close_after = true;
+        if (std.mem.indexOf(u8, request, "HTTP/1.0")) |_| close_after = true;
+
+        // Parse request line.
+        const line_end = std.mem.indexOfScalar(u8, request, '\r') orelse return error.MalformedRequest;
+        const line = request[0..line_end];
+
+        var it = std.mem.tokenizeScalar(u8, line, ' ');
+        _ = it.next() orelse return error.MalformedRequest;
+        const target = it.next() orelse return error.MalformedRequest;
+
+        _ = arena_state.reset(.retain_capacity);
+        try handleRequest(w, conn.stream, target, arena_state.allocator(), close_after);
+
+        // Shift buffer: drop processed bytes (headers + \r\n\r\n). GET has no body.
+        const consumed = he + 4;
+        const remaining = len - consumed;
+        if (remaining > 0) std.mem.copyForwards(u8, buf[0..remaining], buf[consumed..len]);
+        len = remaining;
+
+        if (close_after) return;
+    }
+}
+
+fn handleRequest(
+    w: *Worker,
+    stream: std.net.Stream,
+    target: []const u8,
+    allocator: std.mem.Allocator,
+    close_after: bool,
+) !void {
     if (std.mem.startsWith(u8, target, "/healthz")) {
-        try writeResp(conn.stream, 200, "ok\n", "text/plain");
+        try writeResp(stream, 200, "ok\n", "text/plain", close_after);
         return;
     }
     if (std.mem.startsWith(u8, target, "/authorize")) {
         const ip_raw = extractQueryParam(target, "ip") orelse {
-            try writeResp(conn.stream, 400, "{\"error\":\"missing ip\"}\n", "application/json");
+            try writeResp(stream, 400, "{\"error\":\"missing ip\"}\n", "application/json", close_after);
             return;
         };
         const a_raw = extractQueryParam(target, "a") orelse {
-            try writeResp(conn.stream, 400, "{\"error\":\"missing a\"}\n", "application/json");
+            try writeResp(stream, 400, "{\"error\":\"missing a\"}\n", "application/json", close_after);
             return;
         };
         const b_raw = extractQueryParam(target, "b") orelse {
-            try writeResp(conn.stream, 400, "{\"error\":\"missing b\"}\n", "application/json");
+            try writeResp(stream, 400, "{\"error\":\"missing b\"}\n", "application/json", close_after);
             return;
         };
 
         const ip = try urlDecode(allocator, ip_raw);
-        defer allocator.free(ip);
         const a = try urlDecode(allocator, a_raw);
-        defer allocator.free(a);
         const b = try urlDecode(allocator, b_raw);
-        defer allocator.free(b);
 
-        // .active   → credential matches, stripped B is owned DID, no block hit.
-        //             Then runs per-range daily-minute quota check.
-        // .unknown  → 403/21 permanent.
-        // .inactive → 503/34 (carrier may retry).
-        // .blocked  → 503/34 block-list hit.
-        const result = auth_cache.lookup(ip, a, b);
+        const result = w.cache.lookup(ip, a, b);
 
         var body_buf: [1024]u8 = undefined;
         var body: []const u8 = undefined;
@@ -87,10 +166,9 @@ fn handleConnection(
 
         switch (result) {
             .active => |m| {
-                // Quota check — only hit Redis if range has any cap set.
                 const range_id = m.rangeId();
                 const trunk_id = m.trunkId();
-                const quotas_opt = auth_cache.getRangeQuotas(range_id);
+                const quotas_opt = w.cache.getRangeQuotas(range_id);
                 if (quotas_opt) |q| {
                     if (q.anyEnforced()) {
                         const date_buf = utcDate();
@@ -103,7 +181,7 @@ fn handleConnection(
                         const k_b = try std.fmt.bufPrint(&k_b_buf, "quota:range:{s}:b:{s}:{s}", .{ range_id, m.stripped_b, &date_buf });
                         const k_ab = try std.fmt.bufPrint(&k_ab_buf, "quota:range:{s}:ab:{s}:{s}:{s}", .{ range_id, a, m.stripped_b, &date_buf });
 
-                        const rr = rcmd.quotaReserve(
+                        const rr = w.rcmd.quotaReserve(
                             k_total,
                             k_a,
                             k_b,
@@ -114,40 +192,38 @@ fn handleConnection(
                             q.max_ab_sec,
                         );
                         switch (rr) {
-                            .ok, .redis_error => {}, // redis_error → fail-open
+                            .ok, .redis_error => {},
                             .blocked_total => {
                                 outcome_tag = "quota_total";
                                 body = "{\"allowed\":0,\"status\":503,\"cause\":34}\n";
-                                try writeResp(conn.stream, 200, body, "application/json");
+                                try writeResp(stream, 200, body, "application/json", close_after);
                                 std.log.info("authorize ip={s} a={s} b={s} result=quota_total range_id={s}", .{ ip, a, b, range_id });
                                 return;
                             },
                             .blocked_a => {
                                 outcome_tag = "quota_a";
                                 body = "{\"allowed\":0,\"status\":503,\"cause\":34}\n";
-                                try writeResp(conn.stream, 200, body, "application/json");
+                                try writeResp(stream, 200, body, "application/json", close_after);
                                 std.log.info("authorize ip={s} a={s} b={s} result=quota_a range_id={s}", .{ ip, a, b, range_id });
                                 return;
                             },
                             .blocked_b => {
                                 outcome_tag = "quota_b";
                                 body = "{\"allowed\":0,\"status\":503,\"cause\":34}\n";
-                                try writeResp(conn.stream, 200, body, "application/json");
+                                try writeResp(stream, 200, body, "application/json", close_after);
                                 std.log.info("authorize ip={s} a={s} b={s} result=quota_b range_id={s}", .{ ip, a, b, range_id });
                                 return;
                             },
                             .blocked_ab => {
                                 outcome_tag = "quota_ab";
                                 body = "{\"allowed\":0,\"status\":503,\"cause\":34}\n";
-                                try writeResp(conn.stream, 200, body, "application/json");
+                                try writeResp(stream, 200, body, "application/json", close_after);
                                 std.log.info("authorize ip={s} a={s} b={s} result=quota_ab range_id={s}", .{ ip, a, b, range_id });
                                 return;
                             },
                         }
                     }
                 }
-                // b_dialed = original B-number from carrier (pre-strip).
-                // FreeSWITCH CDR listener uses these IDs for attribution.
                 body = try std.fmt.bufPrint(
                     &body_buf,
                     "{{\"allowed\":1,\"b\":\"{s}\",\"b_dialed\":\"{s}\",\"range_id\":\"{s}\",\"trunk_id\":\"{s}\"}}\n",
@@ -158,7 +234,7 @@ fn handleConnection(
             .inactive => body = "{\"allowed\":0,\"status\":503,\"cause\":34}\n",
             .blocked => body = "{\"allowed\":0,\"status\":503,\"cause\":34}\n",
         }
-        try writeResp(conn.stream, 200, body, "application/json");
+        try writeResp(stream, 200, body, "application/json", close_after);
 
         const stripped: []const u8 = switch (result) {
             .active => |m| m.stripped_b,
@@ -167,12 +243,9 @@ fn handleConnection(
         std.log.info("authorize ip={s} a={s} b={s} result={s} stripped_b={s}", .{ ip, a, b, outcome_tag, stripped });
         return;
     }
-    try writeResp(conn.stream, 404, "{\"error\":\"not found\"}\n", "application/json");
+    try writeResp(stream, 404, "{\"error\":\"not found\"}\n", "application/json", close_after);
 }
 
-// Returns "YYYY-MM-DD" in UTC for today's quota key scope.
-// Uses pod clock — fine in practice; NTP-synced pods + 48h key TTL leave plenty
-// of slack across midnight boundary.
 fn utcDate() [10]u8 {
     var out: [10]u8 = undefined;
     const es = std.time.epoch.EpochSeconds{ .secs = @intCast(std.time.timestamp()) };
@@ -189,7 +262,6 @@ fn utcDate() [10]u8 {
 
 fn urlDecode(allocator: std.mem.Allocator, s: []const u8) ![]u8 {
     var out = try allocator.alloc(u8, s.len);
-    errdefer allocator.free(out);
     var oi: usize = 0;
     var i: usize = 0;
     while (i < s.len) {
@@ -216,7 +288,7 @@ fn urlDecode(allocator: std.mem.Allocator, s: []const u8) ![]u8 {
             i += 1;
         }
     }
-    return allocator.realloc(out, oi);
+    return out[0..oi];
 }
 
 fn extractQueryParam(target: []const u8, key: []const u8) ?[]const u8 {
@@ -232,7 +304,7 @@ fn extractQueryParam(target: []const u8, key: []const u8) ?[]const u8 {
     return null;
 }
 
-fn writeResp(stream: std.net.Stream, status: u16, body: []const u8, ctype: []const u8) !void {
+fn writeResp(stream: std.net.Stream, status: u16, body: []const u8, ctype: []const u8, close_after: bool) !void {
     var buf: [256]u8 = undefined;
     const reason: []const u8 = switch (status) {
         200 => "OK",
@@ -240,7 +312,12 @@ fn writeResp(stream: std.net.Stream, status: u16, body: []const u8, ctype: []con
         404 => "Not Found",
         else => "Error",
     };
-    const head = try std.fmt.bufPrint(&buf, "HTTP/1.1 {d} {s}\r\nContent-Type: {s}\r\nContent-Length: {d}\r\nConnection: close\r\n\r\n", .{ status, reason, ctype, body.len });
+    const conn_hdr: []const u8 = if (close_after) "close" else "keep-alive";
+    const head = try std.fmt.bufPrint(
+        &buf,
+        "HTTP/1.1 {d} {s}\r\nContent-Type: {s}\r\nContent-Length: {d}\r\nConnection: {s}\r\n\r\n",
+        .{ status, reason, ctype, body.len, conn_hdr },
+    );
     try stream.writeAll(head);
     try stream.writeAll(body);
 }
