@@ -164,26 +164,26 @@ pub fn loadIntoCache(
         }
     }
 
-    // Outbound (termination-side) blocked prefixes.
-    // Signaling doesn't pick a termination yet (no LCR), so per-termination
+    // Outbound (range-side) blocked prefixes.
+    // Signaling doesn't pick a range yet (no LCR), so per-range
     // and global rows are flattened into one set and checked against every
     // call's A and stripped-B.
-    const term_blocks_sql =
+    const range_blocks_sql =
         \\SELECT party, prefix
-        \\FROM at_voice_termination_blocked_prefixes
+        \\FROM at_voice_range_blocked_prefixes
         \\WHERE deleted_at IS NULL
         \\  AND (expires_at IS NULL OR expires_at > now())
     ;
-    const tmres = c.PQexec(conn, term_blocks_sql);
+    const tmres = c.PQexec(conn, range_blocks_sql);
     defer c.PQclear(tmres);
     if (c.PQresultStatus(tmres) != c.PGRES_TUPLES_OK) {
         const msg = std.mem.sliceTo(c.PQerrorMessage(conn), 0);
-        std.log.err("at_voice_termination_blocked_prefixes query failed: {s}", .{msg});
+        std.log.err("at_voice_range_blocked_prefixes query failed: {s}", .{msg});
         return error.PostgresQueryFailed;
     }
 
-    var new_term_blocks = cache.BlockSet.init(allocator);
-    defer new_term_blocks.deinit(allocator);
+    var new_range_blocks = cache.BlockSet.init(allocator);
+    defer new_range_blocks.deinit(allocator);
 
     const tmn = c.PQntuples(tmres);
     var l: c_int = 0;
@@ -196,14 +196,14 @@ pub fn loadIntoCache(
         const owned_prefix = try allocator.dupe(u8, prefix);
         errdefer allocator.free(owned_prefix);
         if (party.len > 0 and party[0] == 'a') {
-            try new_term_blocks.a_prefixes.append(owned_prefix);
+            try new_range_blocks.a_prefixes.append(owned_prefix);
         } else {
-            try new_term_blocks.b_prefixes.append(owned_prefix);
+            try new_range_blocks.b_prefixes.append(owned_prefix);
         }
     }
 
     std.log.info(
-        "loaded {} trunk_ip rows ({} active, {} distinct IPs), {} active DIDs, {} per-trunk block sets, {} global trunk-block prefixes (a={} b={}), {} term-block prefixes (a={} b={})",
+        "loaded {} trunk_ip rows ({} active, {} distinct IPs), {} active DIDs, {} per-trunk block sets, {} global trunk-block prefixes (a={} b={}), {} range-block prefixes (a={} b={})",
         .{
             n,
             active_count,
@@ -213,10 +213,10 @@ pub fn loadIntoCache(
             new_global_trunk_blocks.a_prefixes.items.len + new_global_trunk_blocks.b_prefixes.items.len,
             new_global_trunk_blocks.a_prefixes.items.len,
             new_global_trunk_blocks.b_prefixes.items.len,
-            new_term_blocks.a_prefixes.items.len + new_term_blocks.b_prefixes.items.len,
-            new_term_blocks.a_prefixes.items.len,
-            new_term_blocks.b_prefixes.items.len,
+            new_range_blocks.a_prefixes.items.len + new_range_blocks.b_prefixes.items.len,
+            new_range_blocks.a_prefixes.items.len,
+            new_range_blocks.b_prefixes.items.len,
         },
     );
-    target.swap(&new_map, &new_numbers, &new_trunk_blocks, &new_global_trunk_blocks, &new_term_blocks);
+    target.swap(&new_map, &new_numbers, &new_trunk_blocks, &new_global_trunk_blocks, &new_range_blocks);
 }

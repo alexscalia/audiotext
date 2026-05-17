@@ -82,7 +82,7 @@ fn handleConnection(
         //               B is not a deliverable DID → SIP 503, Q.850;cause=34
         //               (temporary; upstream may retry).
         //   .blocked  → IP+prefix matches but A/B hit a deny-list (trunk-side
-        //               or termination-side) → SIP 503, Q.850;cause=34. Same
+        //               or range-side) → SIP 503, Q.850;cause=34. Same
         //               wire reply as .inactive but logged distinctly.
         const result = auth_cache.lookup(ip, a, b);
         var body_buf: [512]u8 = undefined;

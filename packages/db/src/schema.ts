@@ -14,8 +14,8 @@
  *   named `<table>_<cols>_unique_active`.
  * - Indexes: <table>_<cols>_idx. FKs: <table>_<col>_<reftable>_<refcol>_fk.
  * - Relations export: <table>Relations. Types: <Table>Row / New<Table>Row.
- * - Domain table prefixes: `at_*` denotes AudioText-specific termination
- *   pool tables (at_voice_terminations, at_voice_numbers, at_termination_users);
+ * - Domain table prefixes: `at_*` denotes AudioText-specific range
+ *   pool tables (at_voice_ranges, at_voice_numbers, at_range_users);
  *   the generic voice infra (voice_trunks, voice_numbering_plans, ...) is unprefixed.
  */
 
@@ -434,29 +434,29 @@ export const chatContactsRelations = relations(chatContacts, ({ one }) => ({
   }),
 }));
 
-export const atVoiceTerminationStatus = pgEnum("at_voice_termination_status", [
+export const atVoiceRangeStatus = pgEnum("at_voice_range_status", [
   "active",
   "inactive",
 ]);
-export type AtVoiceTerminationStatus =
-  (typeof atVoiceTerminationStatus.enumValues)[number];
+export type AtVoiceRangeStatus =
+  (typeof atVoiceRangeStatus.enumValues)[number];
 
-export const atVoiceTerminationType = pgEnum("at_voice_termination_type", [
+export const atVoiceRangeType = pgEnum("at_voice_range_type", [
   "generated",
   "assigned",
 ]);
-export type AtVoiceTerminationType =
-  (typeof atVoiceTerminationType.enumValues)[number];
+export type AtVoiceRangeType =
+  (typeof atVoiceRangeType.enumValues)[number];
 
 export const currency = pgEnum("currency", ["usd", "eur", "gbp"]);
 export type Currency = (typeof currency.enumValues)[number];
 
-export const atVoiceTerminations = pgTable(
-  "at_voice_terminations",
+export const atVoiceRanges = pgTable(
+  "at_voice_ranges",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    status: atVoiceTerminationStatus("status").notNull().default("active"),
-    type: atVoiceTerminationType("type").notNull(),
+    status: atVoiceRangeStatus("status").notNull().default("active"),
+    type: atVoiceRangeType("type").notNull(),
     carrierId: uuid("carrier_id")
       .notNull()
       .references(() => carriers.id, { onDelete: "cascade" }),
@@ -505,108 +505,108 @@ export const atVoiceTerminations = pgTable(
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
   (t) => [
-    uniqueIndex("at_voice_terminations_carrier_name_unique_active")
+    uniqueIndex("at_voice_ranges_carrier_name_unique_active")
       .on(t.carrierId, t.name)
       .where(sql`${t.deletedAt} IS NULL`),
     check(
-      "at_voice_terminations_country_iso2_format",
+      "at_voice_ranges_country_iso2_format",
       sql`${t.countryIso2} ~ '^[A-Z]{2}$'`,
     ),
     check(
-      "at_voice_terminations_carrier_rate_per_minute_non_negative",
+      "at_voice_ranges_carrier_rate_per_minute_non_negative",
       sql`${t.carrierRatePerMinute} >= 0`,
     ),
     check(
-      "at_voice_terminations_payout_per_minute_weekly_non_negative",
+      "at_voice_ranges_payout_per_minute_weekly_non_negative",
       sql`${t.payoutPerMinuteWeekly} >= 0`,
     ),
     check(
-      "at_voice_terminations_payout_per_minute_long_term_non_negative",
+      "at_voice_ranges_payout_per_minute_long_term_non_negative",
       sql`${t.payoutPerMinuteLongTerm} >= 0`,
     ),
     check(
-      "at_voice_terminations_carrier_billing_cycle_days_positive",
+      "at_voice_ranges_carrier_billing_cycle_days_positive",
       sql`${t.carrierBillingCycleDays} > 0`,
     ),
     check(
-      "at_voice_terminations_carrier_payment_terms_days_positive",
+      "at_voice_ranges_carrier_payment_terms_days_positive",
       sql`${t.carrierPaymentTermsDays} > 0`,
     ),
     check(
-      "at_voice_terminations_payout_billing_cycle_days_positive",
+      "at_voice_ranges_payout_billing_cycle_days_positive",
       sql`${t.payoutBillingCycleDays} > 0`,
     ),
     check(
-      "at_voice_terminations_payout_payment_terms_days_positive",
+      "at_voice_ranges_payout_payment_terms_days_positive",
       sql`${t.payoutPaymentTermsDays} > 0`,
     ),
     check(
-      "at_voice_terminations_max_daily_total_minutes_positive",
+      "at_voice_ranges_max_daily_total_minutes_positive",
       sql`${t.maxDailyTotalMinutes} IS NULL OR ${t.maxDailyTotalMinutes} > 0`,
     ),
     check(
-      "at_voice_terminations_max_daily_minutes_a_number_positive",
+      "at_voice_ranges_max_daily_minutes_a_number_positive",
       sql`${t.maxDailyMinutesANumber} IS NULL OR ${t.maxDailyMinutesANumber} > 0`,
     ),
     check(
-      "at_voice_terminations_max_daily_minutes_b_number_positive",
+      "at_voice_ranges_max_daily_minutes_b_number_positive",
       sql`${t.maxDailyMinutesBNumber} IS NULL OR ${t.maxDailyMinutesBNumber} > 0`,
     ),
     check(
-      "at_voice_terminations_max_daily_minutes_a_to_b_number_positive",
+      "at_voice_ranges_max_daily_minutes_a_to_b_number_positive",
       sql`${t.maxDailyMinutesAToBNumber} IS NULL OR ${t.maxDailyMinutesAToBNumber} > 0`,
     ),
     check(
-      "at_voice_terminations_max_call_duration_minutes_positive",
+      "at_voice_ranges_max_call_duration_minutes_positive",
       sql`${t.maxCallDurationMinutes} IS NULL OR ${t.maxCallDurationMinutes} > 0`,
     ),
     check(
-      "at_voice_terminations_target_acd_minutes_positive",
+      "at_voice_ranges_target_acd_minutes_positive",
       sql`${t.targetAcdMinutes} IS NULL OR ${t.targetAcdMinutes} > 0`,
     ),
     check(
-      "at_voice_terminations_target_asr_percent_range",
+      "at_voice_ranges_target_asr_percent_range",
       sql`${t.targetAsrPercent} IS NULL OR (${t.targetAsrPercent} >= 0 AND ${t.targetAsrPercent} <= 100)`,
     ),
     check(
-      "at_voice_terminations_max_a_number_concurrent_calls_positive",
+      "at_voice_ranges_max_a_number_concurrent_calls_positive",
       sql`${t.maxANumberConcurrentCalls} IS NULL OR ${t.maxANumberConcurrentCalls} > 0`,
     ),
     check(
-      "at_voice_terminations_max_b_number_concurrent_calls_positive",
+      "at_voice_ranges_max_b_number_concurrent_calls_positive",
       sql`${t.maxBNumberConcurrentCalls} IS NULL OR ${t.maxBNumberConcurrentCalls} > 0`,
     ),
     check(
-      "at_voice_terminations_max_a_to_b_number_concurrent_calls_positive",
+      "at_voice_ranges_max_a_to_b_number_concurrent_calls_positive",
       sql`${t.maxAToBNumberConcurrentCalls} IS NULL OR ${t.maxAToBNumberConcurrentCalls} > 0`,
     ),
-    index("at_voice_terminations_carrier_idx").on(t.carrierId),
-    index("at_voice_terminations_voice_numbering_plan_destination_idx").on(
+    index("at_voice_ranges_carrier_idx").on(t.carrierId),
+    index("at_voice_ranges_voice_numbering_plan_destination_idx").on(
       t.voiceNumberingPlanDestinationId,
     ),
-    index("at_voice_terminations_status_idx").on(t.status),
-    index("at_voice_terminations_country_iso2_idx").on(t.countryIso2),
-    index("at_voice_terminations_deleted_at_idx").on(t.deletedAt),
+    index("at_voice_ranges_status_idx").on(t.status),
+    index("at_voice_ranges_country_iso2_idx").on(t.countryIso2),
+    index("at_voice_ranges_deleted_at_idx").on(t.deletedAt),
   ],
 );
 
-export type AtVoiceTerminationRow = typeof atVoiceTerminations.$inferSelect;
-export type NewAtVoiceTerminationRow = typeof atVoiceTerminations.$inferInsert;
+export type AtVoiceRangeRow = typeof atVoiceRanges.$inferSelect;
+export type NewAtVoiceRangeRow = typeof atVoiceRanges.$inferInsert;
 
-export const atVoiceTerminationsRelations = relations(
-  atVoiceTerminations,
+export const atVoiceRangesRelations = relations(
+  atVoiceRanges,
   ({ one, many }) => ({
     carrier: one(carriers, {
-      fields: [atVoiceTerminations.carrierId],
+      fields: [atVoiceRanges.carrierId],
       references: [carriers.id],
     }),
     voiceNumberingPlanDestination: one(voiceNumberingPlanDestinations, {
-      fields: [atVoiceTerminations.voiceNumberingPlanDestinationId],
+      fields: [atVoiceRanges.voiceNumberingPlanDestinationId],
       references: [voiceNumberingPlanDestinations.id],
     }),
     atVoiceNumbers: many(atVoiceNumbers),
-    terminationUsers: many(atTerminationUsers),
-    blockedPrefixes: many(atVoiceTerminationBlockedPrefixes),
+    rangeUsers: many(atRangeUsers),
+    blockedPrefixes: many(atVoiceRangeBlockedPrefixes),
   }),
 );
 
@@ -614,7 +614,7 @@ export const atVoiceNumbers = pgTable(
   "at_voice_numbers",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    atVoiceTerminationId: uuid("at_voice_termination_id").notNull(),
+    atVoiceRangeId: uuid("at_voice_range_id").notNull(),
     userId: uuid("user_id").references(() => users.id, {
       onDelete: "set null",
     }),
@@ -635,16 +635,16 @@ export const atVoiceNumbers = pgTable(
     uniqueIndex("at_voice_numbers_number_unique_active")
       .on(t.number)
       .where(sql`${t.deletedAt} IS NULL`),
-    index("at_voice_numbers_at_voice_termination_idx").on(
-      t.atVoiceTerminationId,
+    index("at_voice_numbers_at_voice_range_idx").on(
+      t.atVoiceRangeId,
     ),
     index("at_voice_numbers_user_idx").on(t.userId),
     index("at_voice_numbers_last_success_idx").on(t.lastSuccessfulAttemptAt),
     index("at_voice_numbers_deleted_at_idx").on(t.deletedAt),
     foreignKey({
-      name: "at_voice_numbers_at_voice_termination_id_fk",
-      columns: [t.atVoiceTerminationId],
-      foreignColumns: [atVoiceTerminations.id],
+      name: "at_voice_numbers_at_voice_range_id_fk",
+      columns: [t.atVoiceRangeId],
+      foreignColumns: [atVoiceRanges.id],
     }).onDelete("cascade"),
   ],
 );
@@ -653,9 +653,9 @@ export type AtVoiceNumberRow = typeof atVoiceNumbers.$inferSelect;
 export type NewAtVoiceNumberRow = typeof atVoiceNumbers.$inferInsert;
 
 export const atVoiceNumbersRelations = relations(atVoiceNumbers, ({ one }) => ({
-  termination: one(atVoiceTerminations, {
-    fields: [atVoiceNumbers.atVoiceTerminationId],
-    references: [atVoiceTerminations.id],
+  range: one(atVoiceRanges, {
+    fields: [atVoiceNumbers.atVoiceRangeId],
+    references: [atVoiceRanges.id],
   }),
   user: one(users, {
     fields: [atVoiceNumbers.userId],
@@ -663,16 +663,16 @@ export const atVoiceNumbersRelations = relations(atVoiceNumbers, ({ one }) => ({
   }),
 }));
 
-export const atTerminationUsers = pgTable(
-  "at_termination_users",
+export const atRangeUsers = pgTable(
+  "at_range_users",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     userId: uuid("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    atVoiceTerminationId: uuid("at_voice_termination_id")
+    atVoiceRangeId: uuid("at_voice_range_id")
       .notNull()
-      .references(() => atVoiceTerminations.id, { onDelete: "cascade" }),
+      .references(() => atVoiceRanges.id, { onDelete: "cascade" }),
     idleRevokeHours: integer("idle_revoke_hours").notNull(),
     assignedNumbersCount: integer("assigned_numbers_count")
       .notNull()
@@ -688,44 +688,44 @@ export const atTerminationUsers = pgTable(
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
   (t) => [
-    uniqueIndex("at_termination_users_user_termination_unique_active")
-      .on(t.userId, t.atVoiceTerminationId)
+    uniqueIndex("at_range_users_user_range_unique_active")
+      .on(t.userId, t.atVoiceRangeId)
       .where(sql`${t.deletedAt} IS NULL`),
     check(
-      "at_termination_users_idle_revoke_hours_positive",
+      "at_range_users_idle_revoke_hours_positive",
       sql`${t.idleRevokeHours} > 0`,
     ),
     check(
-      "at_termination_users_max_assigned_numbers_positive",
+      "at_range_users_max_assigned_numbers_positive",
       sql`${t.maxAssignedNumbers} > 0`,
     ),
     check(
-      "at_termination_users_assigned_count_nonneg",
+      "at_range_users_assigned_count_nonneg",
       sql`${t.assignedNumbersCount} >= 0`,
     ),
     check(
-      "at_termination_users_count_within_max",
+      "at_range_users_count_within_max",
       sql`${t.assignedNumbersCount} <= ${t.maxAssignedNumbers}`,
     ),
-    index("at_termination_users_user_idx").on(t.userId),
-    index("at_termination_users_termination_idx").on(t.atVoiceTerminationId),
-    index("at_termination_users_deleted_at_idx").on(t.deletedAt),
+    index("at_range_users_user_idx").on(t.userId),
+    index("at_range_users_range_idx").on(t.atVoiceRangeId),
+    index("at_range_users_deleted_at_idx").on(t.deletedAt),
   ],
 );
 
-export type AtTerminationUserRow = typeof atTerminationUsers.$inferSelect;
-export type NewAtTerminationUserRow = typeof atTerminationUsers.$inferInsert;
+export type AtRangeUserRow = typeof atRangeUsers.$inferSelect;
+export type NewAtRangeUserRow = typeof atRangeUsers.$inferInsert;
 
-export const atTerminationUsersRelations = relations(
-  atTerminationUsers,
+export const atRangeUsersRelations = relations(
+  atRangeUsers,
   ({ one }) => ({
     user: one(users, {
-      fields: [atTerminationUsers.userId],
+      fields: [atRangeUsers.userId],
       references: [users.id],
     }),
-    termination: one(atVoiceTerminations, {
-      fields: [atTerminationUsers.atVoiceTerminationId],
-      references: [atVoiceTerminations.id],
+    range: one(atVoiceRanges, {
+      fields: [atRangeUsers.atVoiceRangeId],
+      references: [atVoiceRanges.id],
     }),
   }),
 );
@@ -737,12 +737,12 @@ export const voiceBlockedNumberParty = pgEnum("voice_blocked_number_party", [
 export type VoiceBlockedNumberParty =
   (typeof voiceBlockedNumberParty.enumValues)[number];
 
-export const atVoiceTerminationBlockedPrefixes = pgTable(
-  "at_voice_termination_blocked_prefixes",
+export const atVoiceRangeBlockedPrefixes = pgTable(
+  "at_voice_range_blocked_prefixes",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    atVoiceTerminationId: uuid("at_voice_termination_id").references(
-      () => atVoiceTerminations.id,
+    atVoiceRangeId: uuid("at_voice_range_id").references(
+      () => atVoiceRanges.id,
       { onDelete: "cascade" },
     ),
     party: voiceBlockedNumberParty("party").notNull(),
@@ -760,60 +760,60 @@ export const atVoiceTerminationBlockedPrefixes = pgTable(
   },
   (t) => [
     uniqueIndex(
-      "at_voice_termination_blocked_prefixes_scoped_unique_active",
+      "at_voice_range_blocked_prefixes_scoped_unique_active",
     )
-      .on(t.atVoiceTerminationId, t.party, t.prefix)
+      .on(t.atVoiceRangeId, t.party, t.prefix)
       .where(
-        sql`${t.deletedAt} IS NULL AND ${t.atVoiceTerminationId} IS NOT NULL`,
+        sql`${t.deletedAt} IS NULL AND ${t.atVoiceRangeId} IS NOT NULL`,
       ),
     uniqueIndex(
-      "at_voice_termination_blocked_prefixes_global_unique_active",
+      "at_voice_range_blocked_prefixes_global_unique_active",
     )
       .on(t.party, t.prefix)
       .where(
-        sql`${t.deletedAt} IS NULL AND ${t.atVoiceTerminationId} IS NULL`,
+        sql`${t.deletedAt} IS NULL AND ${t.atVoiceRangeId} IS NULL`,
       ),
     check(
-      "at_voice_termination_blocked_prefixes_prefix_digits",
+      "at_voice_range_blocked_prefixes_prefix_digits",
       sql`${t.prefix} ~ '^[0-9]+$'`,
     ),
     check(
-      "at_voice_termination_blocked_prefixes_expires_after_created",
+      "at_voice_range_blocked_prefixes_expires_after_created",
       sql`${t.expiresAt} IS NULL OR ${t.expiresAt} > ${t.createdAt}`,
     ),
-    index("at_voice_termination_blocked_prefixes_termination_idx").on(
-      t.atVoiceTerminationId,
+    index("at_voice_range_blocked_prefixes_range_idx").on(
+      t.atVoiceRangeId,
     ),
-    index("at_voice_termination_blocked_prefixes_party_prefix_idx").on(
+    index("at_voice_range_blocked_prefixes_party_prefix_idx").on(
       t.party,
       t.prefix,
     ),
-    index("at_voice_termination_blocked_prefixes_expires_at_idx").on(
+    index("at_voice_range_blocked_prefixes_expires_at_idx").on(
       t.expiresAt,
     ),
-    index("at_voice_termination_blocked_prefixes_deleted_at_idx").on(
+    index("at_voice_range_blocked_prefixes_deleted_at_idx").on(
       t.deletedAt,
     ),
   ],
 );
 
-export type AtVoiceTerminationBlockedPrefixRow =
-  typeof atVoiceTerminationBlockedPrefixes.$inferSelect;
-export type NewAtVoiceTerminationBlockedPrefixRow =
-  typeof atVoiceTerminationBlockedPrefixes.$inferInsert;
+export type AtVoiceRangeBlockedPrefixRow =
+  typeof atVoiceRangeBlockedPrefixes.$inferSelect;
+export type NewAtVoiceRangeBlockedPrefixRow =
+  typeof atVoiceRangeBlockedPrefixes.$inferInsert;
 
-export const atVoiceTerminationBlockedPrefixesRelations = relations(
-  atVoiceTerminationBlockedPrefixes,
+export const atVoiceRangeBlockedPrefixesRelations = relations(
+  atVoiceRangeBlockedPrefixes,
   ({ one }) => ({
-    termination: one(atVoiceTerminations, {
-      fields: [atVoiceTerminationBlockedPrefixes.atVoiceTerminationId],
-      references: [atVoiceTerminations.id],
+    range: one(atVoiceRanges, {
+      fields: [atVoiceRangeBlockedPrefixes.atVoiceRangeId],
+      references: [atVoiceRanges.id],
     }),
   }),
 );
 
 export const carriersRelations = relations(carriers, ({ many }) => ({
-  atVoiceTerminations: many(atVoiceTerminations),
+  atVoiceRanges: many(atVoiceRanges),
   chatContacts: many(chatContacts),
   voiceTrunks: many(voiceTrunks),
 }));

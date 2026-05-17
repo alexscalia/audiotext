@@ -2,8 +2,8 @@ import { and, eq, inArray, isNull } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "./schema.js";
 import type {
-  AtVoiceTerminationType,
-  NewAtVoiceTerminationRow,
+  AtVoiceRangeType,
+  NewAtVoiceRangeRow,
 } from "./schema.js";
 
 const TARGET_TOTAL = 1000;
@@ -60,16 +60,16 @@ function generateDailyCaps(): DailyCaps {
   };
 }
 
-export async function seedAtVoiceTerminations(
+export async function seedAtVoiceRanges(
   db: NodePgDatabase<typeof schema>,
 ): Promise<void> {
   const existing = await db
-    .select({ id: schema.atVoiceTerminations.id })
-    .from(schema.atVoiceTerminations)
-    .where(isNull(schema.atVoiceTerminations.deletedAt))
+    .select({ id: schema.atVoiceRanges.id })
+    .from(schema.atVoiceRanges)
+    .where(isNull(schema.atVoiceRanges.deletedAt))
     .limit(1);
   if (existing[0]) {
-    console.log("at_voice_terminations already seeded — skipping");
+    console.log("at_voice_ranges already seeded — skipping");
     return;
   }
 
@@ -170,11 +170,11 @@ export async function seedAtVoiceTerminations(
     countryRows.map((c) => [c.iso2, c.nameEn]),
   );
 
-  const rows: NewAtVoiceTerminationRow[] = [];
+  const rows: NewAtVoiceRangeRow[] = [];
   let skipped = 0;
 
   for (let i = 0; i < TARGET_TOTAL; i += 1) {
-    const type: AtVoiceTerminationType =
+    const type: AtVoiceRangeType =
       i < ASSIGNED_COUNT ? "assigned" : "generated";
     const destination = pickRandom(destinations);
     const sheet = pickRandom(sheets);
@@ -223,12 +223,12 @@ export async function seedAtVoiceTerminations(
 
   for (let i = 0; i < rows.length; i += INSERT_CHUNK) {
     const chunk = rows.slice(i, i + INSERT_CHUNK);
-    await db.insert(schema.atVoiceTerminations).values(chunk);
+    await db.insert(schema.atVoiceRanges).values(chunk);
   }
 
   const assigned = rows.filter((r) => r.type === "assigned").length;
   const generated = rows.filter((r) => r.type === "generated").length;
   console.log(
-    `seeded at_voice_terminations: ${rows.length} rows (assigned=${assigned}, generated=${generated}, skipped=${skipped})`,
+    `seeded at_voice_ranges: ${rows.length} rows (assigned=${assigned}, generated=${generated}, skipped=${skipped})`,
   );
 }

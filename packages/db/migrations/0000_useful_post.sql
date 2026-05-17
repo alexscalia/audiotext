@@ -1,9 +1,10 @@
-CREATE TYPE "public"."at_voice_termination_status" AS ENUM('active', 'inactive');--> statement-breakpoint
-CREATE TYPE "public"."at_voice_termination_type" AS ENUM('generated', 'assigned');--> statement-breakpoint
+CREATE TYPE "public"."at_voice_range_status" AS ENUM('active', 'inactive');--> statement-breakpoint
+CREATE TYPE "public"."at_voice_range_type" AS ENUM('generated', 'assigned');--> statement-breakpoint
 CREATE TYPE "public"."carrier_status" AS ENUM('active', 'inactive');--> statement-breakpoint
 CREATE TYPE "public"."chat_app" AS ENUM('whatsapp', 'telegram', 'signal');--> statement-breakpoint
 CREATE TYPE "public"."currency" AS ENUM('usd', 'eur', 'gbp');--> statement-breakpoint
 CREATE TYPE "public"."role_scope" AS ENUM('admin', 'user');--> statement-breakpoint
+CREATE TYPE "public"."user_status" AS ENUM('active', 'pending', 'inactive', 'suspended', 'banned');--> statement-breakpoint
 CREATE TYPE "public"."voice_blocked_number_party" AS ENUM('a', 'b');--> statement-breakpoint
 CREATE TYPE "public"."voice_numbering_plan_destination_type" AS ENUM('all', 'landline', 'mobile', 'premium', 'special', 'toll_free', 'shared_cost', 'satellite', 'personal', 'paging', 'voip', 'ngn');--> statement-breakpoint
 CREATE TYPE "public"."voice_numbering_plan_status" AS ENUM('active', 'inactive');--> statement-breakpoint
@@ -33,25 +34,25 @@ CREATE TABLE "accounts" (
 	"deleted_at" timestamp with time zone
 );
 --> statement-breakpoint
-CREATE TABLE "at_termination_users" (
+CREATE TABLE "at_range_users" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
-	"at_voice_termination_id" uuid NOT NULL,
+	"at_voice_range_id" uuid NOT NULL,
 	"idle_revoke_hours" integer NOT NULL,
 	"assigned_numbers_count" integer DEFAULT 0 NOT NULL,
 	"max_assigned_numbers" integer DEFAULT 10 NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone,
-	CONSTRAINT "at_termination_users_idle_revoke_hours_positive" CHECK ("at_termination_users"."idle_revoke_hours" > 0),
-	CONSTRAINT "at_termination_users_max_assigned_numbers_positive" CHECK ("at_termination_users"."max_assigned_numbers" > 0),
-	CONSTRAINT "at_termination_users_assigned_count_nonneg" CHECK ("at_termination_users"."assigned_numbers_count" >= 0),
-	CONSTRAINT "at_termination_users_count_within_max" CHECK ("at_termination_users"."assigned_numbers_count" <= "at_termination_users"."max_assigned_numbers")
+	CONSTRAINT "at_range_users_idle_revoke_hours_positive" CHECK ("at_range_users"."idle_revoke_hours" > 0),
+	CONSTRAINT "at_range_users_max_assigned_numbers_positive" CHECK ("at_range_users"."max_assigned_numbers" > 0),
+	CONSTRAINT "at_range_users_assigned_count_nonneg" CHECK ("at_range_users"."assigned_numbers_count" >= 0),
+	CONSTRAINT "at_range_users_count_within_max" CHECK ("at_range_users"."assigned_numbers_count" <= "at_range_users"."max_assigned_numbers")
 );
 --> statement-breakpoint
 CREATE TABLE "at_voice_numbers" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"at_voice_termination_id" uuid NOT NULL,
+	"at_voice_range_id" uuid NOT NULL,
 	"user_id" uuid,
 	"number" text NOT NULL,
 	"last_successful_attempt_at" timestamp with time zone,
@@ -60,24 +61,24 @@ CREATE TABLE "at_voice_numbers" (
 	"deleted_at" timestamp with time zone
 );
 --> statement-breakpoint
-CREATE TABLE "at_voice_termination_blocked_prefixes" (
+CREATE TABLE "at_voice_range_blocked_prefixes" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"at_voice_termination_id" uuid,
+	"at_voice_range_id" uuid,
 	"party" "voice_blocked_number_party" NOT NULL,
-	"number_prefix" text NOT NULL,
+	"prefix" text NOT NULL,
 	"reason" text,
 	"expires_at" timestamp with time zone,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone,
-	CONSTRAINT "at_voice_termination_blocked_prefixes_number_prefix_digits" CHECK ("at_voice_termination_blocked_prefixes"."number_prefix" ~ '^[0-9]+$'),
-	CONSTRAINT "at_voice_termination_blocked_prefixes_expires_after_created" CHECK ("at_voice_termination_blocked_prefixes"."expires_at" IS NULL OR "at_voice_termination_blocked_prefixes"."expires_at" > "at_voice_termination_blocked_prefixes"."created_at")
+	CONSTRAINT "at_voice_range_blocked_prefixes_prefix_digits" CHECK ("at_voice_range_blocked_prefixes"."prefix" ~ '^[0-9]+$'),
+	CONSTRAINT "at_voice_range_blocked_prefixes_expires_after_created" CHECK ("at_voice_range_blocked_prefixes"."expires_at" IS NULL OR "at_voice_range_blocked_prefixes"."expires_at" > "at_voice_range_blocked_prefixes"."created_at")
 );
 --> statement-breakpoint
-CREATE TABLE "at_voice_terminations" (
+CREATE TABLE "at_voice_ranges" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"status" "at_voice_termination_status" DEFAULT 'active' NOT NULL,
-	"type" "at_voice_termination_type" NOT NULL,
+	"status" "at_voice_range_status" DEFAULT 'active' NOT NULL,
+	"type" "at_voice_range_type" NOT NULL,
 	"carrier_id" uuid NOT NULL,
 	"voice_numbering_plan_destination_id" uuid NOT NULL,
 	"name" text NOT NULL,
@@ -104,24 +105,24 @@ CREATE TABLE "at_voice_terminations" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone,
-	CONSTRAINT "at_voice_terminations_country_iso2_format" CHECK ("at_voice_terminations"."country_iso2" ~ '^[A-Z]{2}$'),
-	CONSTRAINT "at_voice_terminations_carrier_rate_per_minute_non_negative" CHECK ("at_voice_terminations"."carrier_rate_per_minute" >= 0),
-	CONSTRAINT "at_voice_terminations_payout_per_minute_weekly_non_negative" CHECK ("at_voice_terminations"."payout_per_minute_weekly" >= 0),
-	CONSTRAINT "at_voice_terminations_payout_per_minute_long_term_non_negative" CHECK ("at_voice_terminations"."payout_per_minute_long_term" >= 0),
-	CONSTRAINT "at_voice_terminations_carrier_billing_cycle_days_positive" CHECK ("at_voice_terminations"."carrier_billing_cycle_days" > 0),
-	CONSTRAINT "at_voice_terminations_carrier_payment_terms_days_positive" CHECK ("at_voice_terminations"."carrier_payment_terms_days" > 0),
-	CONSTRAINT "at_voice_terminations_payout_billing_cycle_days_positive" CHECK ("at_voice_terminations"."payout_billing_cycle_days" > 0),
-	CONSTRAINT "at_voice_terminations_payout_payment_terms_days_positive" CHECK ("at_voice_terminations"."payout_payment_terms_days" > 0),
-	CONSTRAINT "at_voice_terminations_max_daily_total_minutes_positive" CHECK ("at_voice_terminations"."max_daily_total_minutes" IS NULL OR "at_voice_terminations"."max_daily_total_minutes" > 0),
-	CONSTRAINT "at_voice_terminations_max_daily_minutes_a_number_positive" CHECK ("at_voice_terminations"."max_daily_minutes_a_number" IS NULL OR "at_voice_terminations"."max_daily_minutes_a_number" > 0),
-	CONSTRAINT "at_voice_terminations_max_daily_minutes_b_number_positive" CHECK ("at_voice_terminations"."max_daily_minutes_b_number" IS NULL OR "at_voice_terminations"."max_daily_minutes_b_number" > 0),
-	CONSTRAINT "at_voice_terminations_max_daily_minutes_a_to_b_number_positive" CHECK ("at_voice_terminations"."max_daily_minutes_a_to_b_number" IS NULL OR "at_voice_terminations"."max_daily_minutes_a_to_b_number" > 0),
-	CONSTRAINT "at_voice_terminations_max_call_duration_minutes_positive" CHECK ("at_voice_terminations"."max_call_duration_minutes" IS NULL OR "at_voice_terminations"."max_call_duration_minutes" > 0),
-	CONSTRAINT "at_voice_terminations_target_acd_minutes_positive" CHECK ("at_voice_terminations"."target_acd_minutes" IS NULL OR "at_voice_terminations"."target_acd_minutes" > 0),
-	CONSTRAINT "at_voice_terminations_target_asr_percent_range" CHECK ("at_voice_terminations"."target_asr_percent" IS NULL OR ("at_voice_terminations"."target_asr_percent" >= 0 AND "at_voice_terminations"."target_asr_percent" <= 100)),
-	CONSTRAINT "at_voice_terminations_max_a_number_concurrent_calls_positive" CHECK ("at_voice_terminations"."max_a_number_concurrent_calls" IS NULL OR "at_voice_terminations"."max_a_number_concurrent_calls" > 0),
-	CONSTRAINT "at_voice_terminations_max_b_number_concurrent_calls_positive" CHECK ("at_voice_terminations"."max_b_number_concurrent_calls" IS NULL OR "at_voice_terminations"."max_b_number_concurrent_calls" > 0),
-	CONSTRAINT "at_voice_terminations_max_a_to_b_number_concurrent_calls_positive" CHECK ("at_voice_terminations"."max_a_to_b_number_concurrent_calls" IS NULL OR "at_voice_terminations"."max_a_to_b_number_concurrent_calls" > 0)
+	CONSTRAINT "at_voice_ranges_country_iso2_format" CHECK ("at_voice_ranges"."country_iso2" ~ '^[A-Z]{2}$'),
+	CONSTRAINT "at_voice_ranges_carrier_rate_per_minute_non_negative" CHECK ("at_voice_ranges"."carrier_rate_per_minute" >= 0),
+	CONSTRAINT "at_voice_ranges_payout_per_minute_weekly_non_negative" CHECK ("at_voice_ranges"."payout_per_minute_weekly" >= 0),
+	CONSTRAINT "at_voice_ranges_payout_per_minute_long_term_non_negative" CHECK ("at_voice_ranges"."payout_per_minute_long_term" >= 0),
+	CONSTRAINT "at_voice_ranges_carrier_billing_cycle_days_positive" CHECK ("at_voice_ranges"."carrier_billing_cycle_days" > 0),
+	CONSTRAINT "at_voice_ranges_carrier_payment_terms_days_positive" CHECK ("at_voice_ranges"."carrier_payment_terms_days" > 0),
+	CONSTRAINT "at_voice_ranges_payout_billing_cycle_days_positive" CHECK ("at_voice_ranges"."payout_billing_cycle_days" > 0),
+	CONSTRAINT "at_voice_ranges_payout_payment_terms_days_positive" CHECK ("at_voice_ranges"."payout_payment_terms_days" > 0),
+	CONSTRAINT "at_voice_ranges_max_daily_total_minutes_positive" CHECK ("at_voice_ranges"."max_daily_total_minutes" IS NULL OR "at_voice_ranges"."max_daily_total_minutes" > 0),
+	CONSTRAINT "at_voice_ranges_max_daily_minutes_a_number_positive" CHECK ("at_voice_ranges"."max_daily_minutes_a_number" IS NULL OR "at_voice_ranges"."max_daily_minutes_a_number" > 0),
+	CONSTRAINT "at_voice_ranges_max_daily_minutes_b_number_positive" CHECK ("at_voice_ranges"."max_daily_minutes_b_number" IS NULL OR "at_voice_ranges"."max_daily_minutes_b_number" > 0),
+	CONSTRAINT "at_voice_ranges_max_daily_minutes_a_to_b_number_positive" CHECK ("at_voice_ranges"."max_daily_minutes_a_to_b_number" IS NULL OR "at_voice_ranges"."max_daily_minutes_a_to_b_number" > 0),
+	CONSTRAINT "at_voice_ranges_max_call_duration_minutes_positive" CHECK ("at_voice_ranges"."max_call_duration_minutes" IS NULL OR "at_voice_ranges"."max_call_duration_minutes" > 0),
+	CONSTRAINT "at_voice_ranges_target_acd_minutes_positive" CHECK ("at_voice_ranges"."target_acd_minutes" IS NULL OR "at_voice_ranges"."target_acd_minutes" > 0),
+	CONSTRAINT "at_voice_ranges_target_asr_percent_range" CHECK ("at_voice_ranges"."target_asr_percent" IS NULL OR ("at_voice_ranges"."target_asr_percent" >= 0 AND "at_voice_ranges"."target_asr_percent" <= 100)),
+	CONSTRAINT "at_voice_ranges_max_a_number_concurrent_calls_positive" CHECK ("at_voice_ranges"."max_a_number_concurrent_calls" IS NULL OR "at_voice_ranges"."max_a_number_concurrent_calls" > 0),
+	CONSTRAINT "at_voice_ranges_max_b_number_concurrent_calls_positive" CHECK ("at_voice_ranges"."max_b_number_concurrent_calls" IS NULL OR "at_voice_ranges"."max_b_number_concurrent_calls" > 0),
+	CONSTRAINT "at_voice_ranges_max_a_to_b_number_concurrent_calls_positive" CHECK ("at_voice_ranges"."max_a_to_b_number_concurrent_calls" IS NULL OR "at_voice_ranges"."max_a_to_b_number_concurrent_calls" > 0)
 );
 --> statement-breakpoint
 CREATE TABLE "carriers" (
@@ -226,6 +227,7 @@ CREATE TABLE "users" (
 	"email" text NOT NULL,
 	"email_verified" boolean DEFAULT false NOT NULL,
 	"image" text,
+	"status" "user_status" DEFAULT 'active' NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone
@@ -335,13 +337,13 @@ CREATE TABLE "voice_trunk_blocked_prefixes" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"voice_trunk_id" uuid,
 	"party" "voice_blocked_number_party" NOT NULL,
-	"number_prefix" text NOT NULL,
+	"prefix" text NOT NULL,
 	"reason" text,
 	"expires_at" timestamp with time zone,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone,
-	CONSTRAINT "voice_trunk_blocked_prefixes_number_prefix_digits" CHECK ("voice_trunk_blocked_prefixes"."number_prefix" ~ '^[0-9]+$'),
+	CONSTRAINT "voice_trunk_blocked_prefixes_prefix_digits" CHECK ("voice_trunk_blocked_prefixes"."prefix" ~ '^[0-9]+$'),
 	CONSTRAINT "voice_trunk_blocked_prefixes_expires_after_created" CHECK ("voice_trunk_blocked_prefixes"."expires_at" IS NULL OR "voice_trunk_blocked_prefixes"."expires_at" > "voice_trunk_blocked_prefixes"."created_at")
 );
 --> statement-breakpoint
@@ -396,13 +398,13 @@ CREATE TABLE "voice_trunks" (
 );
 --> statement-breakpoint
 ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "at_termination_users" ADD CONSTRAINT "at_termination_users_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "at_termination_users" ADD CONSTRAINT "at_termination_users_at_voice_termination_id_at_voice_terminations_id_fk" FOREIGN KEY ("at_voice_termination_id") REFERENCES "public"."at_voice_terminations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "at_range_users" ADD CONSTRAINT "at_range_users_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "at_range_users" ADD CONSTRAINT "at_range_users_at_voice_range_id_at_voice_ranges_id_fk" FOREIGN KEY ("at_voice_range_id") REFERENCES "public"."at_voice_ranges"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "at_voice_numbers" ADD CONSTRAINT "at_voice_numbers_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "at_voice_numbers" ADD CONSTRAINT "at_voice_numbers_at_voice_termination_id_fk" FOREIGN KEY ("at_voice_termination_id") REFERENCES "public"."at_voice_terminations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "at_voice_termination_blocked_prefixes" ADD CONSTRAINT "at_voice_termination_blocked_prefixes_at_voice_termination_id_at_voice_terminations_id_fk" FOREIGN KEY ("at_voice_termination_id") REFERENCES "public"."at_voice_terminations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "at_voice_terminations" ADD CONSTRAINT "at_voice_terminations_carrier_id_carriers_id_fk" FOREIGN KEY ("carrier_id") REFERENCES "public"."carriers"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "at_voice_terminations" ADD CONSTRAINT "at_voice_terminations_voice_numbering_plan_destination_id_voice_numbering_plan_destinations_id_fk" FOREIGN KEY ("voice_numbering_plan_destination_id") REFERENCES "public"."voice_numbering_plan_destinations"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "at_voice_numbers" ADD CONSTRAINT "at_voice_numbers_at_voice_range_id_fk" FOREIGN KEY ("at_voice_range_id") REFERENCES "public"."at_voice_ranges"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "at_voice_range_blocked_prefixes" ADD CONSTRAINT "at_voice_range_blocked_prefixes_at_voice_range_id_at_voice_ranges_id_fk" FOREIGN KEY ("at_voice_range_id") REFERENCES "public"."at_voice_ranges"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "at_voice_ranges" ADD CONSTRAINT "at_voice_ranges_carrier_id_carriers_id_fk" FOREIGN KEY ("carrier_id") REFERENCES "public"."carriers"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "at_voice_ranges" ADD CONSTRAINT "at_voice_ranges_voice_numbering_plan_destination_id_voice_numbering_plan_destinations_id_fk" FOREIGN KEY ("voice_numbering_plan_destination_id") REFERENCES "public"."voice_numbering_plan_destinations"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "chat_contacts" ADD CONSTRAINT "chat_contacts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "chat_contacts" ADD CONSTRAINT "chat_contacts_carrier_id_carriers_id_fk" FOREIGN KEY ("carrier_id") REFERENCES "public"."carriers"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "role_permissions" ADD CONSTRAINT "role_permissions_role_id_roles_id_fk" FOREIGN KEY ("role_id") REFERENCES "public"."roles"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -422,27 +424,27 @@ ALTER TABLE "voice_trunks" ADD CONSTRAINT "voice_trunks_voice_rate_sheet_id_voic
 CREATE UNIQUE INDEX "accounts_provider_account_unique_active" ON "accounts" USING btree ("provider_id","account_id") WHERE "accounts"."deleted_at" IS NULL;--> statement-breakpoint
 CREATE INDEX "accounts_user_idx" ON "accounts" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "accounts_deleted_at_idx" ON "accounts" USING btree ("deleted_at");--> statement-breakpoint
-CREATE UNIQUE INDEX "at_termination_users_user_termination_unique_active" ON "at_termination_users" USING btree ("user_id","at_voice_termination_id") WHERE "at_termination_users"."deleted_at" IS NULL;--> statement-breakpoint
-CREATE INDEX "at_termination_users_user_idx" ON "at_termination_users" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX "at_termination_users_termination_idx" ON "at_termination_users" USING btree ("at_voice_termination_id");--> statement-breakpoint
-CREATE INDEX "at_termination_users_deleted_at_idx" ON "at_termination_users" USING btree ("deleted_at");--> statement-breakpoint
+CREATE UNIQUE INDEX "at_range_users_user_range_unique_active" ON "at_range_users" USING btree ("user_id","at_voice_range_id") WHERE "at_range_users"."deleted_at" IS NULL;--> statement-breakpoint
+CREATE INDEX "at_range_users_user_idx" ON "at_range_users" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "at_range_users_range_idx" ON "at_range_users" USING btree ("at_voice_range_id");--> statement-breakpoint
+CREATE INDEX "at_range_users_deleted_at_idx" ON "at_range_users" USING btree ("deleted_at");--> statement-breakpoint
 CREATE UNIQUE INDEX "at_voice_numbers_number_unique_active" ON "at_voice_numbers" USING btree ("number") WHERE "at_voice_numbers"."deleted_at" IS NULL;--> statement-breakpoint
-CREATE INDEX "at_voice_numbers_at_voice_termination_idx" ON "at_voice_numbers" USING btree ("at_voice_termination_id");--> statement-breakpoint
+CREATE INDEX "at_voice_numbers_at_voice_range_idx" ON "at_voice_numbers" USING btree ("at_voice_range_id");--> statement-breakpoint
 CREATE INDEX "at_voice_numbers_user_idx" ON "at_voice_numbers" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "at_voice_numbers_last_success_idx" ON "at_voice_numbers" USING btree ("last_successful_attempt_at");--> statement-breakpoint
 CREATE INDEX "at_voice_numbers_deleted_at_idx" ON "at_voice_numbers" USING btree ("deleted_at");--> statement-breakpoint
-CREATE UNIQUE INDEX "at_voice_termination_blocked_prefixes_scoped_unique_active" ON "at_voice_termination_blocked_prefixes" USING btree ("at_voice_termination_id","party","number_prefix") WHERE "at_voice_termination_blocked_prefixes"."deleted_at" IS NULL AND "at_voice_termination_blocked_prefixes"."at_voice_termination_id" IS NOT NULL;--> statement-breakpoint
-CREATE UNIQUE INDEX "at_voice_termination_blocked_prefixes_global_unique_active" ON "at_voice_termination_blocked_prefixes" USING btree ("party","number_prefix") WHERE "at_voice_termination_blocked_prefixes"."deleted_at" IS NULL AND "at_voice_termination_blocked_prefixes"."at_voice_termination_id" IS NULL;--> statement-breakpoint
-CREATE INDEX "at_voice_termination_blocked_prefixes_termination_idx" ON "at_voice_termination_blocked_prefixes" USING btree ("at_voice_termination_id");--> statement-breakpoint
-CREATE INDEX "at_voice_termination_blocked_prefixes_party_prefix_idx" ON "at_voice_termination_blocked_prefixes" USING btree ("party","number_prefix");--> statement-breakpoint
-CREATE INDEX "at_voice_termination_blocked_prefixes_expires_at_idx" ON "at_voice_termination_blocked_prefixes" USING btree ("expires_at");--> statement-breakpoint
-CREATE INDEX "at_voice_termination_blocked_prefixes_deleted_at_idx" ON "at_voice_termination_blocked_prefixes" USING btree ("deleted_at");--> statement-breakpoint
-CREATE UNIQUE INDEX "at_voice_terminations_carrier_name_unique_active" ON "at_voice_terminations" USING btree ("carrier_id","name") WHERE "at_voice_terminations"."deleted_at" IS NULL;--> statement-breakpoint
-CREATE INDEX "at_voice_terminations_carrier_idx" ON "at_voice_terminations" USING btree ("carrier_id");--> statement-breakpoint
-CREATE INDEX "at_voice_terminations_voice_numbering_plan_destination_idx" ON "at_voice_terminations" USING btree ("voice_numbering_plan_destination_id");--> statement-breakpoint
-CREATE INDEX "at_voice_terminations_status_idx" ON "at_voice_terminations" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "at_voice_terminations_country_iso2_idx" ON "at_voice_terminations" USING btree ("country_iso2");--> statement-breakpoint
-CREATE INDEX "at_voice_terminations_deleted_at_idx" ON "at_voice_terminations" USING btree ("deleted_at");--> statement-breakpoint
+CREATE UNIQUE INDEX "at_voice_range_blocked_prefixes_scoped_unique_active" ON "at_voice_range_blocked_prefixes" USING btree ("at_voice_range_id","party","prefix") WHERE "at_voice_range_blocked_prefixes"."deleted_at" IS NULL AND "at_voice_range_blocked_prefixes"."at_voice_range_id" IS NOT NULL;--> statement-breakpoint
+CREATE UNIQUE INDEX "at_voice_range_blocked_prefixes_global_unique_active" ON "at_voice_range_blocked_prefixes" USING btree ("party","prefix") WHERE "at_voice_range_blocked_prefixes"."deleted_at" IS NULL AND "at_voice_range_blocked_prefixes"."at_voice_range_id" IS NULL;--> statement-breakpoint
+CREATE INDEX "at_voice_range_blocked_prefixes_range_idx" ON "at_voice_range_blocked_prefixes" USING btree ("at_voice_range_id");--> statement-breakpoint
+CREATE INDEX "at_voice_range_blocked_prefixes_party_prefix_idx" ON "at_voice_range_blocked_prefixes" USING btree ("party","prefix");--> statement-breakpoint
+CREATE INDEX "at_voice_range_blocked_prefixes_expires_at_idx" ON "at_voice_range_blocked_prefixes" USING btree ("expires_at");--> statement-breakpoint
+CREATE INDEX "at_voice_range_blocked_prefixes_deleted_at_idx" ON "at_voice_range_blocked_prefixes" USING btree ("deleted_at");--> statement-breakpoint
+CREATE UNIQUE INDEX "at_voice_ranges_carrier_name_unique_active" ON "at_voice_ranges" USING btree ("carrier_id","name") WHERE "at_voice_ranges"."deleted_at" IS NULL;--> statement-breakpoint
+CREATE INDEX "at_voice_ranges_carrier_idx" ON "at_voice_ranges" USING btree ("carrier_id");--> statement-breakpoint
+CREATE INDEX "at_voice_ranges_voice_numbering_plan_destination_idx" ON "at_voice_ranges" USING btree ("voice_numbering_plan_destination_id");--> statement-breakpoint
+CREATE INDEX "at_voice_ranges_status_idx" ON "at_voice_ranges" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "at_voice_ranges_country_iso2_idx" ON "at_voice_ranges" USING btree ("country_iso2");--> statement-breakpoint
+CREATE INDEX "at_voice_ranges_deleted_at_idx" ON "at_voice_ranges" USING btree ("deleted_at");--> statement-breakpoint
 CREATE UNIQUE INDEX "carriers_name_unique_active" ON "carriers" USING btree ("name") WHERE "carriers"."deleted_at" IS NULL;--> statement-breakpoint
 CREATE INDEX "carriers_status_idx" ON "carriers" USING btree ("status");--> statement-breakpoint
 CREATE INDEX "carriers_deleted_at_idx" ON "carriers" USING btree ("deleted_at");--> statement-breakpoint
@@ -467,6 +469,7 @@ CREATE INDEX "sessions_deleted_at_idx" ON "sessions" USING btree ("deleted_at");
 CREATE INDEX "user_roles_role_idx" ON "user_roles" USING btree ("role_id");--> statement-breakpoint
 CREATE INDEX "user_roles_deleted_at_idx" ON "user_roles" USING btree ("deleted_at");--> statement-breakpoint
 CREATE UNIQUE INDEX "users_email_unique_active" ON "users" USING btree ("email") WHERE "users"."deleted_at" IS NULL;--> statement-breakpoint
+CREATE INDEX "users_status_idx" ON "users" USING btree ("status");--> statement-breakpoint
 CREATE INDEX "users_deleted_at_idx" ON "users" USING btree ("deleted_at");--> statement-breakpoint
 CREATE INDEX "verifications_identifier_idx" ON "verifications" USING btree ("identifier");--> statement-breakpoint
 CREATE INDEX "verifications_expires_at_idx" ON "verifications" USING btree ("expires_at");--> statement-breakpoint
@@ -496,10 +499,10 @@ CREATE UNIQUE INDEX "voice_rate_sheets_name_unique_active" ON "voice_rate_sheets
 CREATE INDEX "voice_rate_sheets_status_idx" ON "voice_rate_sheets" USING btree ("status");--> statement-breakpoint
 CREATE INDEX "voice_rate_sheets_voice_numbering_plan_idx" ON "voice_rate_sheets" USING btree ("voice_numbering_plan_id");--> statement-breakpoint
 CREATE INDEX "voice_rate_sheets_deleted_at_idx" ON "voice_rate_sheets" USING btree ("deleted_at");--> statement-breakpoint
-CREATE UNIQUE INDEX "voice_trunk_blocked_prefixes_scoped_unique_active" ON "voice_trunk_blocked_prefixes" USING btree ("voice_trunk_id","party","number_prefix") WHERE "voice_trunk_blocked_prefixes"."deleted_at" IS NULL AND "voice_trunk_blocked_prefixes"."voice_trunk_id" IS NOT NULL;--> statement-breakpoint
-CREATE UNIQUE INDEX "voice_trunk_blocked_prefixes_global_unique_active" ON "voice_trunk_blocked_prefixes" USING btree ("party","number_prefix") WHERE "voice_trunk_blocked_prefixes"."deleted_at" IS NULL AND "voice_trunk_blocked_prefixes"."voice_trunk_id" IS NULL;--> statement-breakpoint
+CREATE UNIQUE INDEX "voice_trunk_blocked_prefixes_scoped_unique_active" ON "voice_trunk_blocked_prefixes" USING btree ("voice_trunk_id","party","prefix") WHERE "voice_trunk_blocked_prefixes"."deleted_at" IS NULL AND "voice_trunk_blocked_prefixes"."voice_trunk_id" IS NOT NULL;--> statement-breakpoint
+CREATE UNIQUE INDEX "voice_trunk_blocked_prefixes_global_unique_active" ON "voice_trunk_blocked_prefixes" USING btree ("party","prefix") WHERE "voice_trunk_blocked_prefixes"."deleted_at" IS NULL AND "voice_trunk_blocked_prefixes"."voice_trunk_id" IS NULL;--> statement-breakpoint
 CREATE INDEX "voice_trunk_blocked_prefixes_trunk_idx" ON "voice_trunk_blocked_prefixes" USING btree ("voice_trunk_id");--> statement-breakpoint
-CREATE INDEX "voice_trunk_blocked_prefixes_party_prefix_idx" ON "voice_trunk_blocked_prefixes" USING btree ("party","number_prefix");--> statement-breakpoint
+CREATE INDEX "voice_trunk_blocked_prefixes_party_prefix_idx" ON "voice_trunk_blocked_prefixes" USING btree ("party","prefix");--> statement-breakpoint
 CREATE INDEX "voice_trunk_blocked_prefixes_expires_at_idx" ON "voice_trunk_blocked_prefixes" USING btree ("expires_at");--> statement-breakpoint
 CREATE INDEX "voice_trunk_blocked_prefixes_deleted_at_idx" ON "voice_trunk_blocked_prefixes" USING btree ("deleted_at");--> statement-breakpoint
 CREATE UNIQUE INDEX "voice_trunk_ips_trunk_ip_prefix_unique_active" ON "voice_trunk_ips" USING btree ("voice_trunk_id","ip","prefix") WHERE "voice_trunk_ips"."deleted_at" IS NULL;--> statement-breakpoint

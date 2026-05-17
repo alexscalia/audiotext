@@ -83,7 +83,7 @@ pub const AuthCache = struct {
     numbers: NumberSet,
     trunk_blocks: BlockMap,
     global_trunk_blocks: BlockSet,
-    term_blocks: BlockSet,
+    range_blocks: BlockSet,
     mutex: std.Thread.Mutex = .{},
 
     pub fn init(allocator: std.mem.Allocator) AuthCache {
@@ -93,7 +93,7 @@ pub const AuthCache = struct {
             .numbers = NumberSet.init(allocator),
             .trunk_blocks = BlockMap.init(allocator),
             .global_trunk_blocks = BlockSet.init(allocator),
-            .term_blocks = BlockSet.init(allocator),
+            .range_blocks = BlockSet.init(allocator),
         };
     }
 
@@ -104,7 +104,7 @@ pub const AuthCache = struct {
         deinitNumberSet(&self.numbers, self.allocator);
         deinitBlockMap(&self.trunk_blocks, self.allocator);
         self.global_trunk_blocks.deinit(self.allocator);
-        self.term_blocks.deinit(self.allocator);
+        self.range_blocks.deinit(self.allocator);
     }
 
     pub fn swap(
@@ -113,7 +113,7 @@ pub const AuthCache = struct {
         new_numbers: *NumberSet,
         new_trunk_blocks: *BlockMap,
         new_global_trunk_blocks: *BlockSet,
-        new_term_blocks: *BlockSet,
+        new_range_blocks: *BlockSet,
     ) void {
         self.mutex.lock();
         defer self.mutex.unlock();
@@ -121,19 +121,19 @@ pub const AuthCache = struct {
         deinitNumberSet(&self.numbers, self.allocator);
         deinitBlockMap(&self.trunk_blocks, self.allocator);
         self.global_trunk_blocks.deinit(self.allocator);
-        self.term_blocks.deinit(self.allocator);
+        self.range_blocks.deinit(self.allocator);
 
         self.map = new_map.*;
         self.numbers = new_numbers.*;
         self.trunk_blocks = new_trunk_blocks.*;
         self.global_trunk_blocks = new_global_trunk_blocks.*;
-        self.term_blocks = new_term_blocks.*;
+        self.range_blocks = new_range_blocks.*;
 
         new_map.* = Map.init(self.allocator);
         new_numbers.* = NumberSet.init(self.allocator);
         new_trunk_blocks.* = BlockMap.init(self.allocator);
         new_global_trunk_blocks.* = BlockSet.init(self.allocator);
-        new_term_blocks.* = BlockSet.init(self.allocator);
+        new_range_blocks.* = BlockSet.init(self.allocator);
     }
 
     pub fn lookup(self: *AuthCache, ip: []const u8, a: []const u8, b: []const u8) LookupResult {
@@ -179,15 +179,15 @@ pub const AuthCache = struct {
 
             // Block-list scan — first hit wins, returns .blocked (SIP 503 cause 34).
             // Order: global trunk blocks → per-trunk blocks for this credential's
-            // trunk → termination blocks (flat: per-term + global merged).
+            // trunk → range blocks (flat: per-range + global merged).
             if (anyPrefixMatch(self.global_trunk_blocks.a_prefixes.items, a)) return .blocked;
             if (anyPrefixMatch(self.global_trunk_blocks.b_prefixes.items, stripped)) return .blocked;
             if (self.trunk_blocks.getPtr(c.trunk_id)) |bs| {
                 if (anyPrefixMatch(bs.a_prefixes.items, a)) return .blocked;
                 if (anyPrefixMatch(bs.b_prefixes.items, stripped)) return .blocked;
             }
-            if (anyPrefixMatch(self.term_blocks.a_prefixes.items, a)) return .blocked;
-            if (anyPrefixMatch(self.term_blocks.b_prefixes.items, stripped)) return .blocked;
+            if (anyPrefixMatch(self.range_blocks.a_prefixes.items, a)) return .blocked;
+            if (anyPrefixMatch(self.range_blocks.b_prefixes.items, stripped)) return .blocked;
 
             // Stripped B-number must be a DID we own (at_voice_numbers).
             // If absent → SIP 503 cause 34 (temporary; carrier may retry).

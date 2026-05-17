@@ -3,8 +3,8 @@ import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "./schema.js";
 import type { NewAtVoiceNumberRow } from "./schema.js";
 
-const MIN_PER_TERMINATION = 10;
-const MAX_PER_TERMINATION = 100;
+const MIN_PER_RANGE = 10;
+const MAX_PER_RANGE = 100;
 const INSERT_CHUNK = 500;
 
 function randomInt(minInclusive: number, maxInclusive: number): number {
@@ -39,21 +39,21 @@ export async function seedAtVoiceNumbers(
     return;
   }
 
-  const terminations = await db
+  const ranges = await db
     .select({
-      id: schema.atVoiceTerminations.id,
+      id: schema.atVoiceRanges.id,
       voiceNumberingPlanDestinationId:
-        schema.atVoiceTerminations.voiceNumberingPlanDestinationId,
+        schema.atVoiceRanges.voiceNumberingPlanDestinationId,
     })
-    .from(schema.atVoiceTerminations)
-    .where(isNull(schema.atVoiceTerminations.deletedAt));
-  if (terminations.length === 0) {
-    console.log("no at_voice_terminations found — skipping at_voice_numbers");
+    .from(schema.atVoiceRanges)
+    .where(isNull(schema.atVoiceRanges.deletedAt));
+  if (ranges.length === 0) {
+    console.log("no at_voice_ranges found — skipping at_voice_numbers");
     return;
   }
 
   const destinationIds = Array.from(
-    new Set(terminations.map((t) => t.voiceNumberingPlanDestinationId)),
+    new Set(ranges.map((t) => t.voiceNumberingPlanDestinationId)),
   );
 
   const destinationRows = await db
@@ -104,22 +104,22 @@ export async function seedAtVoiceNumbers(
 
   const generated = new Set<string>();
   const rows: NewAtVoiceNumberRow[] = [];
-  let skippedTerminations = 0;
+  let skippedRanges = 0;
   let skippedSlots = 0;
 
-  for (const termination of terminations) {
+  for (const range of ranges) {
     const destination = destinationMap.get(
-      termination.voiceNumberingPlanDestinationId,
+      range.voiceNumberingPlanDestinationId,
     );
     const codes = codesByDestination.get(
-      termination.voiceNumberingPlanDestinationId,
+      range.voiceNumberingPlanDestinationId,
     );
     if (!destination || !codes || codes.length === 0) {
-      skippedTerminations += 1;
+      skippedRanges += 1;
       continue;
     }
 
-    const count = randomInt(MIN_PER_TERMINATION, MAX_PER_TERMINATION);
+    const count = randomInt(MIN_PER_RANGE, MAX_PER_RANGE);
     const maxAttempts = count * 20;
 
     for (let slot = 0; slot < count; slot += 1) {
@@ -135,7 +135,7 @@ export async function seedAtVoiceNumbers(
         if (generated.has(candidate)) continue;
         generated.add(candidate);
         rows.push({
-          atVoiceTerminationId: termination.id,
+          atVoiceRangeId: range.id,
           number: candidate,
         });
         placed = true;
@@ -151,6 +151,6 @@ export async function seedAtVoiceNumbers(
   }
 
   console.log(
-    `seeded at_voice_numbers: ${rows.length} numbers across ${terminations.length - skippedTerminations} terminations (skippedTerminations=${skippedTerminations}, skippedSlots=${skippedSlots})`,
+    `seeded at_voice_numbers: ${rows.length} numbers across ${ranges.length - skippedRanges} ranges (skippedRanges=${skippedRanges}, skippedSlots=${skippedSlots})`,
   );
 }

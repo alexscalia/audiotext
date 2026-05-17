@@ -10,7 +10,7 @@ import type {
   NewVoiceTrunkRow,
 } from "./schema.js";
 import { seedAtVoiceNumbers } from "./seed-at-voice-numbers.js";
-import { seedAtVoiceTerminations } from "./seed-at-voice-terminations.js";
+import { seedAtVoiceRanges } from "./seed-at-voice-ranges.js";
 import { seedCountries } from "./seed-countries.js";
 import { seedVoiceNumberingPlan } from "./seed-voice-numbering-plan.js";
 import { seedVoiceRateSheets } from "./seed-voice-rate-sheets.js";
@@ -696,7 +696,7 @@ async function main() {
   await seedCountries(db);
   await seedVoiceNumberingPlan(db);
   await seedVoiceRateSheets(db);
-  await seedAtVoiceTerminations(db);
+  await seedAtVoiceRanges(db);
   await seedAtVoiceNumbers(db);
   console.log("seed complete");
 }

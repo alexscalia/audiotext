@@ -546,17 +546,17 @@ export type CreateChatContactInput = z.infer<typeof CreateChatContactInput>;
 export const UpdateChatContactInput = chatContactBase.partial();
 export type UpdateChatContactInput = z.infer<typeof UpdateChatContactInput>;
 
-export const AtVoiceTerminationStatusEnum = z.enum(["active", "inactive"]);
-export type AtVoiceTerminationStatus = z.infer<
-  typeof AtVoiceTerminationStatusEnum
+export const AtVoiceRangeStatusEnum = z.enum(["active", "inactive"]);
+export type AtVoiceRangeStatus = z.infer<
+  typeof AtVoiceRangeStatusEnum
 >;
 
 export const CurrencyEnum = z.enum(["usd", "eur", "gbp"]);
 export type Currency = z.infer<typeof CurrencyEnum>;
 
-export const AtVoiceTerminationSchema = z.object({
+export const AtVoiceRangeSchema = z.object({
   id: z.string().uuid(),
-  status: AtVoiceTerminationStatusEnum,
+  status: AtVoiceRangeStatusEnum,
   carrierId: z.string().uuid(),
   voiceNumberingPlanId: z.string().uuid(),
   name: z.string().min(1).max(128),
@@ -570,10 +570,10 @@ export const AtVoiceTerminationSchema = z.object({
   updatedAt: z.string().datetime(),
   deletedAt: z.string().datetime().nullable(),
 });
-export type AtVoiceTermination = z.infer<typeof AtVoiceTerminationSchema>;
+export type AtVoiceRange = z.infer<typeof AtVoiceRangeSchema>;
 
-export const CreateAtVoiceTerminationInput = z.object({
-  status: AtVoiceTerminationStatusEnum.default("active"),
+export const CreateAtVoiceRangeInput = z.object({
+  status: AtVoiceRangeStatusEnum.default("active"),
   carrierId: z.string().uuid(),
   voiceNumberingPlanId: z.string().uuid(),
   name: z.string().min(1).max(128),
@@ -584,14 +584,14 @@ export const CreateAtVoiceTerminationInput = z.object({
   maxDailyMinutesBNumber: z.number().int().positive().optional(),
   maxDailyMinutesAToBNumber: z.number().int().positive().optional(),
 });
-export type CreateAtVoiceTerminationInput = z.infer<
-  typeof CreateAtVoiceTerminationInput
+export type CreateAtVoiceRangeInput = z.infer<
+  typeof CreateAtVoiceRangeInput
 >;
 
-export const UpdateAtVoiceTerminationInput =
-  CreateAtVoiceTerminationInput.partial();
-export type UpdateAtVoiceTerminationInput = z.infer<
-  typeof UpdateAtVoiceTerminationInput
+export const UpdateAtVoiceRangeInput =
+  CreateAtVoiceRangeInput.partial();
+export type UpdateAtVoiceRangeInput = z.infer<
+  typeof UpdateAtVoiceRangeInput
 >;
 
 export const VoiceTrunkStatusEnum = z.enum(["active", "inactive", "testing"]);
@@ -786,7 +786,7 @@ export const AtVoiceNumberDigits = z
 
 export const AtVoiceNumberSchema = z.object({
   id: z.string().uuid(),
-  atVoiceTerminationId: z.string().uuid(),
+  atVoiceRangeId: z.string().uuid(),
   number: AtVoiceNumberDigits,
   lastSuccessfulAttemptAt: z.string().datetime().nullable(),
   createdAt: z.string().datetime(),
@@ -796,13 +796,13 @@ export const AtVoiceNumberSchema = z.object({
 export type AtVoiceNumber = z.infer<typeof AtVoiceNumberSchema>;
 
 export const CreateAtVoiceNumberInput = z.object({
-  atVoiceTerminationId: z.string().uuid(),
+  atVoiceRangeId: z.string().uuid(),
   number: AtVoiceNumberDigits,
 });
 export type CreateAtVoiceNumberInput = z.infer<typeof CreateAtVoiceNumberInput>;
 
 export const UpdateAtVoiceNumberInput = z.object({
-  atVoiceTerminationId: z.string().uuid().optional(),
+  atVoiceRangeId: z.string().uuid().optional(),
   number: AtVoiceNumberDigits.optional(),
   lastSuccessfulAttemptAt: z.string().datetime().nullable().optional(),
 });

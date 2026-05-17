@@ -61,12 +61,12 @@ Sequential steps from the moment a SIP `INVITE` hits the edge until it is accept
     - `stripped` starts with any prefix in `global_trunk_blocks.b_prefixes` (same table, NULL trunk, `party='b'`)
     - For the matched credential's trunk: `a` starts with any prefix in `trunk_blocks[trunk_id].a_prefixes` (per-trunk rows, `party='a'`)
     - For the matched credential's trunk: `stripped` starts with any prefix in `trunk_blocks[trunk_id].b_prefixes` (per-trunk rows, `party='b'`)
-    - `a` starts with any prefix in `term_blocks.a_prefixes` (all rows from `at_voice_termination_blocked_prefixes` where `party='a'`, per-termination + global flattened)
-    - `stripped` starts with any prefix in `term_blocks.b_prefixes` (same table, `party='b'`)
+    - `a` starts with any prefix in `range_blocks.a_prefixes` (all rows from `at_voice_range_blocked_prefixes` where `party='a'`, per-range + global flattened)
+    - `stripped` starts with any prefix in `range_blocks.b_prefixes` (same table, `party='b'`)
 
     > Block-set rows are loaded at boot/reload with `deleted_at IS NULL AND (expires_at IS NULL OR expires_at > now())`. A row whose `expires_at` passes mid-cache-lifetime keeps blocking until the next reload (reload latency is sub-50ms, so acceptable).
     >
-    > Termination-side rows are flattened because signaling does not pick a termination yet (LCR not built). Once carrier selection lands, this scan will scope per-chosen-termination instead of flat.
+    > Range-side rows are flattened because signaling does not pick a range yet (LCR not built). Once carrier selection lands, this scan will scope per-chosen-range instead of flat.
 
 17. **IF** `stripped` is NOT present in the `numbers` set
     **THEN** return `{"allowed":0,"status":503,"cause":34}` (DID not deliverable). GOTO Step 6.
@@ -136,14 +136,14 @@ C. Zig re-runs FOUR queries:
    WHERE deleted_at IS NULL
      AND (expires_at IS NULL OR expires_at > now());
 
-   -- 4. outbound (termination-side) blocked prefixes
-   --    per-termination and global rows are flattened (no LCR yet)
+   -- 4. outbound (range-side) blocked prefixes
+   --    per-range and global rows are flattened (no LCR yet)
    SELECT party, prefix
-   FROM at_voice_termination_blocked_prefixes
+   FROM at_voice_range_blocked_prefixes
    WHERE deleted_at IS NULL
      AND (expires_at IS NULL OR expires_at > now());
    ```
-D. Builds fresh maps for credentials, numbers set, per-trunk blocks, global trunk blocks, termination blocks. Swaps all five under one mutex, frees the old set.
+D. Builds fresh maps for credentials, numbers set, per-trunk blocks, global trunk blocks, range blocks. Swaps all five under one mutex, frees the old set.
 E. Next INVITE sees the new state. Stale window ≈ <50ms.
 F. **IF** subscriber loses connection → retries every 3s (`redis.zig`).
 
@@ -157,7 +157,7 @@ F. **IF** subscriber loses connection → retries every 3s (`redis.zig`).
 | IP unknown | `403` | `21` |
 | IP known, no prefix match | `403` | `21` |
 | Match found, credential inactive | `503` | `34` |
-| Match + active, but A or stripped B hits a block prefix (trunk-side or termination-side) | `503` | `34` |
+| Match + active, but A or stripped B hits a block prefix (trunk-side or range-side) | `503` | `34` |
 | Match + active + no block, but stripped B not in deliverable DID set (unknown, unassigned, or user not active) | `503` | `34` |
 | Missing `ip` / `a` / `b` query param | `400` | — |
 | Zig unreachable / timeout | `503` (kamailio fallback) | `41` |
