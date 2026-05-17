@@ -1,6 +1,22 @@
 import net from "node:net";
-import { db, voiceCdrs } from "@audiotext/db";
+import {
+  atVoiceNumbers,
+  atVoiceRanges,
+  db,
+  voiceCdrs,
+  voiceFxRates,
+  type PayoutTenure,
+} from "@audiotext/db";
+import { and, desc, eq, isNull, lte, or, sql } from "drizzle-orm";
 import Redis from "ioredis";
+import {
+  FxRateMissingError,
+  priceCdr,
+  type Currency,
+  type RateLineSnapshot,
+} from "../lib/rating.js";
+
+type CdrRateSnapshot = RateLineSnapshot & { payoutTenure: PayoutTenure };
 
 // FreeSWITCH ESL (event_socket) inbound client.
 //
@@ -179,6 +195,33 @@ function extractCdr(event: Record<string, string>): CdrEvent | null {
 
 async function writeCdr(cdr: CdrEvent): Promise<void> {
   try {
+    const snapshot = await buildRateSnapshot(cdr.rangeId, cdr.bNumber);
+    if (!snapshot) {
+      console.warn("[cdr] range not found, skipping insert", {
+        rangeId: cdr.rangeId,
+      });
+      return;
+    }
+
+    const fxRate =
+      snapshot.buyCurrency === snapshot.sellCurrency
+        ? null
+        : await loadFxRate(snapshot.buyCurrency, snapshot.sellCurrency, cdr.startedAt);
+
+    let priced;
+    try {
+      priced = priceCdr(cdr.billsec, snapshot, fxRate);
+    } catch (err) {
+      if (err instanceof FxRateMissingError) {
+        console.error(
+          `[cdr] missing fx ${snapshot.buyCurrency}->${snapshot.sellCurrency}, skipping insert`,
+          { rangeId: cdr.rangeId },
+        );
+        return;
+      }
+      throw err;
+    }
+
     await db.insert(voiceCdrs).values({
       atVoiceRangeId: cdr.rangeId,
       voiceTrunkId: cdr.trunkId,
@@ -188,19 +231,101 @@ async function writeCdr(cdr: CdrEvent): Promise<void> {
       startedAt: cdr.startedAt,
       endedAt: cdr.endedAt,
       durationSeconds: cdr.billsec,
-      // TODO: populate buy/sell currency + rate from at_voice_ranges lookup
-      // once a rate snapshot column exists on the range or a separate
-      // rate-history table lands. For now, mirror range currency at IVR
-      // (inbound carrier rate) using carrier_currency/carrier_rate_per_minute.
-      buyCurrency: "usd",
-      buyRate: "0",
-      sellCurrency: "usd",
-      sellRate: "0",
+      buyCurrency: snapshot.buyCurrency,
+      buyRate: snapshot.buyRate,
+      sellCurrency: snapshot.sellCurrency,
+      sellRate: snapshot.sellRate,
+      minDurationSeconds: snapshot.minDurationSeconds,
+      incrementSeconds: snapshot.incrementSeconds,
+      setupFee: snapshot.setupFee,
+      buyCost: priced.buyCost,
+      sellCost: priced.sellCost,
+      margin: priced.margin,
+      fxRate: priced.fxRate,
+      payoutTenure: snapshot.payoutTenure,
       internalRouteName: "ivr-welcome",
     });
   } catch (err) {
     console.error("[cdr] insert failed:", err);
   }
+}
+
+// Builds the rate snapshot from the inbound range + the called number's
+// payout tenure. Buy = carrier ingest cost, sell = payout from originating
+// carrier (weekly vs long_term per number). Increment/min/setup default to
+// per-second billing with no setup fee — TODO: add billing-policy columns to
+// at_voice_ranges and snapshot them here.
+async function buildRateSnapshot(
+  rangeId: string,
+  bNumber: string,
+): Promise<CdrRateSnapshot | null> {
+  const [row] = await db
+    .select({
+      buyCurrency: atVoiceRanges.carrierCurrency,
+      buyRate: atVoiceRanges.carrierRatePerMinute,
+      sellCurrency: atVoiceRanges.currency,
+      payoutWeekly: atVoiceRanges.payoutPerMinuteWeekly,
+      payoutLongTerm: atVoiceRanges.payoutPerMinuteLongTerm,
+      tenure: atVoiceNumbers.payoutTenure,
+    })
+    .from(atVoiceRanges)
+    .leftJoin(
+      atVoiceNumbers,
+      and(
+        eq(atVoiceNumbers.atVoiceRangeId, atVoiceRanges.id),
+        eq(atVoiceNumbers.number, bNumber),
+        isNull(atVoiceNumbers.deletedAt),
+      ),
+    )
+    .where(and(eq(atVoiceRanges.id, rangeId), isNull(atVoiceRanges.deletedAt)))
+    .limit(1);
+  if (!row) return null;
+
+  const tenure: PayoutTenure = row.tenure ?? "weekly";
+  if (!row.tenure) {
+    console.warn("[cdr] orphan number, defaulting tenure=weekly", {
+      rangeId,
+      bNumber,
+    });
+  }
+  const sellRate =
+    tenure === "weekly" ? row.payoutWeekly : row.payoutLongTerm;
+
+  return {
+    minDurationSeconds: 0,
+    incrementSeconds: 1,
+    setupFee: null,
+    buyCurrency: row.buyCurrency as Currency,
+    buyRate: row.buyRate,
+    sellCurrency: row.sellCurrency as Currency,
+    sellRate,
+    payoutTenure: tenure,
+  };
+}
+
+async function loadFxRate(
+  base: Currency,
+  quote: Currency,
+  at: Date,
+): Promise<string | null> {
+  const [row] = await db
+    .select({ rate: voiceFxRates.rate })
+    .from(voiceFxRates)
+    .where(
+      and(
+        eq(voiceFxRates.baseCurrency, base),
+        eq(voiceFxRates.quoteCurrency, quote),
+        isNull(voiceFxRates.deletedAt),
+        lte(voiceFxRates.validFrom, at),
+        or(
+          isNull(voiceFxRates.validTo),
+          sql`${voiceFxRates.validTo} > ${at}`,
+        ),
+      ),
+    )
+    .orderBy(desc(voiceFxRates.validFrom))
+    .limit(1);
+  return row?.rate ?? null;
 }
 
 async function settleQuota(redis: Redis, cdr: CdrEvent): Promise<void> {

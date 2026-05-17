@@ -451,6 +451,9 @@ export type AtVoiceRangeType =
 export const currency = pgEnum("currency", ["usd", "eur", "gbp"]);
 export type Currency = (typeof currency.enumValues)[number];
 
+export const payoutTenure = pgEnum("payout_tenure", ["weekly", "long_term"]);
+export type PayoutTenure = (typeof payoutTenure.enumValues)[number];
+
 export const atVoiceRanges = pgTable(
   "at_voice_ranges",
   {
@@ -619,6 +622,7 @@ export const atVoiceNumbers = pgTable(
       onDelete: "set null",
     }),
     number: text("number").notNull(),
+    payoutTenure: payoutTenure("payout_tenure").notNull().default("weekly"),
     lastSuccessfulAttemptAt: timestamp("last_successful_attempt_at", {
       withTimezone: true,
     }),
@@ -1314,6 +1318,14 @@ export const voiceCdrs = pgTable(
     buyRate: numeric("buy_rate", { precision: 18, scale: 6 }).notNull(),
     sellCurrency: currency("sell_currency").notNull(),
     sellRate: numeric("sell_rate", { precision: 18, scale: 6 }).notNull(),
+    minDurationSeconds: integer("min_duration_seconds").notNull(),
+    incrementSeconds: integer("increment_seconds").notNull(),
+    setupFee: numeric("setup_fee", { precision: 18, scale: 6 }),
+    buyCost: numeric("buy_cost", { precision: 18, scale: 6 }).notNull(),
+    sellCost: numeric("sell_cost", { precision: 18, scale: 6 }).notNull(),
+    margin: numeric("margin", { precision: 18, scale: 6 }).notNull(),
+    fxRate: numeric("fx_rate", { precision: 18, scale: 8 }),
+    payoutTenure: payoutTenure("payout_tenure").notNull(),
     internalRouteName: text("internal_route_name").notNull(),
     inboundRouteName: text("inbound_route_name"),
     outboundRouteName: text("outbound_route_name"),
@@ -1338,6 +1350,25 @@ export const voiceCdrs = pgTable(
     check(
       "voice_cdrs_ended_after_started",
       sql`${t.endedAt} IS NULL OR ${t.endedAt} >= ${t.startedAt}`,
+    ),
+    check(
+      "voice_cdrs_min_duration_non_negative",
+      sql`${t.minDurationSeconds} >= 0`,
+    ),
+    check("voice_cdrs_increment_positive", sql`${t.incrementSeconds} > 0`),
+    check(
+      "voice_cdrs_setup_fee_non_negative",
+      sql`${t.setupFee} IS NULL OR ${t.setupFee} >= 0`,
+    ),
+    check("voice_cdrs_buy_cost_non_negative", sql`${t.buyCost} >= 0`),
+    check("voice_cdrs_sell_cost_non_negative", sql`${t.sellCost} >= 0`),
+    check(
+      "voice_cdrs_fx_rate_positive",
+      sql`${t.fxRate} IS NULL OR ${t.fxRate} > 0`,
+    ),
+    check(
+      "voice_cdrs_fx_rate_matches_currency",
+      sql`(${t.buyCurrency} = ${t.sellCurrency} AND ${t.fxRate} IS NULL) OR (${t.buyCurrency} <> ${t.sellCurrency} AND ${t.fxRate} IS NOT NULL)`,
     ),
   ],
 );
@@ -1473,6 +1504,53 @@ export const voiceRateSheetLinesRelations = relations(
     }),
   }),
 );
+
+export const voiceFxRates = pgTable(
+  "voice_fx_rates",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    baseCurrency: currency("base_currency").notNull(),
+    quoteCurrency: currency("quote_currency").notNull(),
+    rate: numeric("rate", { precision: 18, scale: 8 }).notNull(),
+    source: text("source").notNull(),
+    validFrom: timestamp("valid_from", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    validTo: timestamp("valid_to", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+  },
+  (t) => [
+    index("voice_fx_rates_pair_idx").on(
+      t.baseCurrency,
+      t.quoteCurrency,
+      t.validFrom,
+    ),
+    index("voice_fx_rates_valid_from_idx").on(t.validFrom),
+    index("voice_fx_rates_deleted_at_idx").on(t.deletedAt),
+    uniqueIndex("voice_fx_rates_pair_active_from_uidx")
+      .on(t.baseCurrency, t.quoteCurrency, t.validFrom)
+      .where(sql`${t.deletedAt} IS NULL`),
+    check("voice_fx_rates_rate_positive", sql`${t.rate} > 0`),
+    check(
+      "voice_fx_rates_pair_distinct",
+      sql`${t.baseCurrency} <> ${t.quoteCurrency}`,
+    ),
+    check(
+      "voice_fx_rates_valid_range",
+      sql`${t.validTo} IS NULL OR ${t.validTo} > ${t.validFrom}`,
+    ),
+  ],
+);
+
+export type VoiceFxRateRow = typeof voiceFxRates.$inferSelect;
+export type NewVoiceFxRateRow = typeof voiceFxRates.$inferInsert;
 
 export type UserRow = typeof users.$inferSelect;
 export type NewUserRow = typeof users.$inferInsert;

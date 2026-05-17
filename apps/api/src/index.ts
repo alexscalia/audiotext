@@ -13,6 +13,7 @@ import { voiceNumberingPlansRoutes } from "./routes/admin/voice-numbering-plans"
 import { voiceRateSheetsRoutes } from "./routes/admin/voice-rate-sheets";
 import { voiceTrunksRoutes } from "./routes/admin/voice-trunks";
 import { startCdrListener } from "./services/cdr-listener";
+import { closeLcrReload } from "./lib/lcr-reload";
 
 const PORT = Number(process.env.PORT ?? 3101);
 
@@ -54,6 +55,7 @@ async function shutdown(signal: string) {
   console.log(`${signal} received, shutting down`);
   server.close();
   if (cdrListener) await cdrListener.stop();
+  await closeLcrReload();
   await pool.end();
   process.exit(0);
 }

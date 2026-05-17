@@ -1,6 +1,7 @@
 import { and, eq, isNull } from "drizzle-orm";
 import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
+import Redis from "ioredis";
 import * as schema from "./schema.js";
 
 // Deterministic fixture for end-to-end quota tests.
@@ -172,9 +173,19 @@ async function main(): Promise<void> {
   console.log(`  prefix      = ${TEST_PREFIX}`);
   console.log(`  sipp_ip     = ${SIPP_IP}`);
   console.log(`  cap         = max_daily_total_minutes=1 (60s)`);
-  console.log("");
-  console.log("Trigger sip-signaling reload so it picks up the new rows:");
-  console.log(`  redis-cli -h localhost -p 6379 PUBLISH lcr:reload x`);
+
+  // Tell sip-signaling to reload its in-memory cache so the new range,
+  // DID, trunk and IP are visible to the next /authorize call.
+  const redisUrl = process.env.REDIS_URL ?? "redis://localhost:6379";
+  try {
+    const pub = new Redis(redisUrl, { lazyConnect: false });
+    await pub.publish("lcr:reload", "x");
+    await pub.quit();
+    console.log(`  lcr:reload  = published`);
+  } catch (err) {
+    console.warn(`  lcr:reload  = FAILED (${(err as Error).message})`);
+    console.warn(`  manual:    redis-cli -h localhost -p 6379 PUBLISH lcr:reload x`);
+  }
 
   await pool.end();
 }

@@ -1,5 +1,5 @@
 {
-  "id": "9ecd314a-c8e6-4e0c-8dde-b83d0b02ab4e",
+  "id": "79ae14c1-27c9-4e74-b087-b8813f088d78",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -383,6 +383,14 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "payout_tenure": {
+          "name": "payout_tenure",
+          "type": "payout_tenure",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'weekly'"
         },
         "last_successful_attempt_at": {
           "name": "last_successful_attempt_at",
@@ -2392,6 +2400,36 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
+        "at_voice_range_id": {
+          "name": "at_voice_range_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "voice_trunk_id": {
+          "name": "voice_trunk_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "a_number": {
+          "name": "a_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "b_number": {
+          "name": "b_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "b_number_dialed": {
+          "name": "b_number_dialed",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "started_at": {
           "name": "started_at",
           "type": "timestamp with time zone",
@@ -2433,6 +2471,55 @@
         "sell_rate": {
           "name": "sell_rate",
           "type": "numeric(18, 6)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "min_duration_seconds": {
+          "name": "min_duration_seconds",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "increment_seconds": {
+          "name": "increment_seconds",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "setup_fee": {
+          "name": "setup_fee",
+          "type": "numeric(18, 6)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "buy_cost": {
+          "name": "buy_cost",
+          "type": "numeric(18, 6)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sell_cost": {
+          "name": "sell_cost",
+          "type": "numeric(18, 6)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "margin": {
+          "name": "margin",
+          "type": "numeric(18, 6)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fx_rate": {
+          "name": "fx_rate",
+          "type": "numeric(18, 8)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "payout_tenure": {
+          "name": "payout_tenure",
+          "type": "payout_tenure",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
@@ -2520,9 +2607,120 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "voice_cdrs_range_started_idx": {
+          "name": "voice_cdrs_range_started_idx",
+          "columns": [
+            {
+              "expression": "at_voice_range_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "started_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "voice_cdrs_trunk_started_idx": {
+          "name": "voice_cdrs_trunk_started_idx",
+          "columns": [
+            {
+              "expression": "voice_trunk_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "started_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "voice_cdrs_a_number_started_idx": {
+          "name": "voice_cdrs_a_number_started_idx",
+          "columns": [
+            {
+              "expression": "a_number",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "started_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "voice_cdrs_b_number_started_idx": {
+          "name": "voice_cdrs_b_number_started_idx",
+          "columns": [
+            {
+              "expression": "b_number",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "started_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "voice_cdrs_at_voice_range_id_at_voice_ranges_id_fk": {
+          "name": "voice_cdrs_at_voice_range_id_at_voice_ranges_id_fk",
+          "tableFrom": "voice_cdrs",
+          "tableTo": "at_voice_ranges",
+          "columnsFrom": [
+            "at_voice_range_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "voice_cdrs_voice_trunk_id_voice_trunks_id_fk": {
+          "name": "voice_cdrs_voice_trunk_id_voice_trunks_id_fk",
+          "tableFrom": "voice_cdrs",
+          "tableTo": "voice_trunks",
+          "columnsFrom": [
+            "voice_trunk_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -2534,6 +2732,212 @@
         "voice_cdrs_ended_after_started": {
           "name": "voice_cdrs_ended_after_started",
           "value": "\"voice_cdrs\".\"ended_at\" IS NULL OR \"voice_cdrs\".\"ended_at\" >= \"voice_cdrs\".\"started_at\""
+        },
+        "voice_cdrs_min_duration_non_negative": {
+          "name": "voice_cdrs_min_duration_non_negative",
+          "value": "\"voice_cdrs\".\"min_duration_seconds\" >= 0"
+        },
+        "voice_cdrs_increment_positive": {
+          "name": "voice_cdrs_increment_positive",
+          "value": "\"voice_cdrs\".\"increment_seconds\" > 0"
+        },
+        "voice_cdrs_setup_fee_non_negative": {
+          "name": "voice_cdrs_setup_fee_non_negative",
+          "value": "\"voice_cdrs\".\"setup_fee\" IS NULL OR \"voice_cdrs\".\"setup_fee\" >= 0"
+        },
+        "voice_cdrs_buy_cost_non_negative": {
+          "name": "voice_cdrs_buy_cost_non_negative",
+          "value": "\"voice_cdrs\".\"buy_cost\" >= 0"
+        },
+        "voice_cdrs_sell_cost_non_negative": {
+          "name": "voice_cdrs_sell_cost_non_negative",
+          "value": "\"voice_cdrs\".\"sell_cost\" >= 0"
+        },
+        "voice_cdrs_fx_rate_positive": {
+          "name": "voice_cdrs_fx_rate_positive",
+          "value": "\"voice_cdrs\".\"fx_rate\" IS NULL OR \"voice_cdrs\".\"fx_rate\" > 0"
+        },
+        "voice_cdrs_fx_rate_matches_currency": {
+          "name": "voice_cdrs_fx_rate_matches_currency",
+          "value": "(\"voice_cdrs\".\"buy_currency\" = \"voice_cdrs\".\"sell_currency\" AND \"voice_cdrs\".\"fx_rate\" IS NULL) OR (\"voice_cdrs\".\"buy_currency\" <> \"voice_cdrs\".\"sell_currency\" AND \"voice_cdrs\".\"fx_rate\" IS NOT NULL)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.voice_fx_rates": {
+      "name": "voice_fx_rates",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "base_currency": {
+          "name": "base_currency",
+          "type": "currency",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "quote_currency": {
+          "name": "quote_currency",
+          "type": "currency",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rate": {
+          "name": "rate",
+          "type": "numeric(18, 8)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source": {
+          "name": "source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "valid_from": {
+          "name": "valid_from",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "valid_to": {
+          "name": "valid_to",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "voice_fx_rates_pair_idx": {
+          "name": "voice_fx_rates_pair_idx",
+          "columns": [
+            {
+              "expression": "base_currency",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "quote_currency",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "valid_from",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "voice_fx_rates_valid_from_idx": {
+          "name": "voice_fx_rates_valid_from_idx",
+          "columns": [
+            {
+              "expression": "valid_from",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "voice_fx_rates_deleted_at_idx": {
+          "name": "voice_fx_rates_deleted_at_idx",
+          "columns": [
+            {
+              "expression": "deleted_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "voice_fx_rates_pair_active_from_uidx": {
+          "name": "voice_fx_rates_pair_active_from_uidx",
+          "columns": [
+            {
+              "expression": "base_currency",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "quote_currency",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "valid_from",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"voice_fx_rates\".\"deleted_at\" IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "voice_fx_rates_rate_positive": {
+          "name": "voice_fx_rates_rate_positive",
+          "value": "\"voice_fx_rates\".\"rate\" > 0"
+        },
+        "voice_fx_rates_pair_distinct": {
+          "name": "voice_fx_rates_pair_distinct",
+          "value": "\"voice_fx_rates\".\"base_currency\" <> \"voice_fx_rates\".\"quote_currency\""
+        },
+        "voice_fx_rates_valid_range": {
+          "name": "voice_fx_rates_valid_range",
+          "value": "\"voice_fx_rates\".\"valid_to\" IS NULL OR \"voice_fx_rates\".\"valid_to\" > \"voice_fx_rates\".\"valid_from\""
         }
       },
       "isRLSEnabled": false
@@ -4121,6 +4525,14 @@
         "usd",
         "eur",
         "gbp"
+      ]
+    },
+    "public.payout_tenure": {
+      "name": "payout_tenure",
+      "schema": "public",
+      "values": [
+        "weekly",
+        "long_term"
       ]
     },
     "public.role_scope": {
