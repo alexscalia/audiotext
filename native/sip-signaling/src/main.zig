@@ -3,6 +3,7 @@ const cache = @import("cache.zig");
 const db = @import("db.zig");
 const http = @import("http.zig");
 const redis = @import("redis.zig");
+const redis_cmd = @import("redis_cmd.zig");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -18,6 +19,14 @@ pub fn main() !void {
     std.log.info("loading authorized IPs from postgres", .{});
     try db.loadIntoCache(allocator, env.database_url, &auth_cache);
 
+    var rcmd = try redis_cmd.RedisCmd.init(allocator, env.redis_url);
+    defer rcmd.deinit();
+    rcmd.loadScript() catch |err| {
+        // Non-fatal — quota check fails open until the script is reloaded
+        // on first successful EVALSHA reconnection.
+        std.log.warn("initial SCRIPT LOAD failed: {} (fail-open until next reload)", .{err});
+    };
+
     const reload_ctx = redis.ReloadCtx{
         .allocator = allocator,
         .database_url = env.database_url,
@@ -28,7 +37,7 @@ pub fn main() !void {
     redis_thread.detach();
 
     std.log.info("listening on {s}", .{env.listen_addr});
-    try http.serve(allocator, env.listen_addr, &auth_cache);
+    try http.serve(allocator, env.listen_addr, &auth_cache, &rcmd);
 }
 
 const Env = struct {

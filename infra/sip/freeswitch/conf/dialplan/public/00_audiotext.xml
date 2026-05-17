@@ -4,10 +4,20 @@
     Loaded into the `public` context (where unauthenticated INVITEs from
     Kamailio's edge dispatcher arrive on the external profile, port 5080).
 
-    Action chain: answer → short pause (let RTP setup) → endless_playback (loop until caller hangs up).
+    Action chain:
+      1. Capture attribution headers from Kamailio (X-Range-Id, X-Trunk-Id,
+         X-A, X-B, X-B-Dialed) into named channel vars so they appear in
+         the CHANNEL_DESTROY ESL event consumed by the CDR listener.
+      2. answer → short pause (let RTP setup) → endless_playback (loop until
+         caller hangs up).
   -->
   <extension name="audiotext-welcome">
     <condition field="destination_number" expression="^.*$">
+      <action application="set" data="at_voice_range_id=${sip_h_X-Range-Id}"/>
+      <action application="set" data="voice_trunk_id=${sip_h_X-Trunk-Id}"/>
+      <action application="set" data="a_number=${sip_h_X-A}"/>
+      <action application="set" data="b_number=${sip_h_X-B}"/>
+      <action application="set" data="b_number_dialed=${sip_h_X-B-Dialed}"/>
       <action application="answer"/>
       <action application="sleep" data="500"/>
       <action application="endless_playback" data="/usr/local/freeswitch/share/freeswitch/sounds/audiotext/welcome.wav"/>

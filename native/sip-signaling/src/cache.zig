@@ -6,8 +6,24 @@ pub const Credential = struct {
     trunk_id: []const u8,
 };
 
+// UUID textual form = 36 chars (8-4-4-4-12). Inline buffers keep Match
+// self-contained so the result survives a cache reload that frees the
+// underlying NumberMap / Credential entries.
+pub const UUID_TEXT_LEN: usize = 36;
+
 pub const Match = struct {
     stripped_b: []const u8,
+    range_id_buf: [UUID_TEXT_LEN]u8,
+    range_id_len: u8,
+    trunk_id_buf: [UUID_TEXT_LEN]u8,
+    trunk_id_len: u8,
+
+    pub fn rangeId(self: *const Match) []const u8 {
+        return self.range_id_buf[0..self.range_id_len];
+    }
+    pub fn trunkId(self: *const Match) []const u8 {
+        return self.trunk_id_buf[0..self.trunk_id_len];
+    }
 };
 
 pub const LookupResult = union(enum) {
@@ -17,8 +33,26 @@ pub const LookupResult = union(enum) {
     blocked,
 };
 
+// Daily-minute quotas for one range. Values in seconds.
+// -1 sentinel = NULL in DB (unlimited).
+pub const RangeQuotas = struct {
+    max_total_sec: i64,
+    max_a_sec: i64,
+    max_b_sec: i64,
+    max_ab_sec: i64,
+
+    pub fn anyEnforced(self: RangeQuotas) bool {
+        return self.max_total_sec >= 0 or
+            self.max_a_sec >= 0 or
+            self.max_b_sec >= 0 or
+            self.max_ab_sec >= 0;
+    }
+};
+
 pub const Map = std.StringHashMap(std.ArrayList(Credential));
-pub const NumberSet = std.StringHashMap(void);
+// number → range_id (range_id is owned-copy string)
+pub const NumberMap = std.StringHashMap([]const u8);
+pub const RangeMap = std.StringHashMap(RangeQuotas);
 
 pub const BlockSet = struct {
     a_prefixes: std.ArrayList([]const u8),
@@ -54,10 +88,19 @@ pub fn deinitMap(m: *Map, allocator: std.mem.Allocator) void {
     m.deinit();
 }
 
-pub fn deinitNumberSet(s: *NumberSet, allocator: std.mem.Allocator) void {
-    var it = s.keyIterator();
+pub fn deinitNumberMap(m: *NumberMap, allocator: std.mem.Allocator) void {
+    var it = m.iterator();
+    while (it.next()) |e| {
+        allocator.free(e.key_ptr.*);
+        allocator.free(e.value_ptr.*);
+    }
+    m.deinit();
+}
+
+pub fn deinitRangeMap(m: *RangeMap, allocator: std.mem.Allocator) void {
+    var it = m.keyIterator();
     while (it.next()) |k| allocator.free(k.*);
-    s.deinit();
+    m.deinit();
 }
 
 pub fn deinitBlockMap(m: *BlockMap, allocator: std.mem.Allocator) void {
@@ -80,7 +123,8 @@ fn anyPrefixMatch(prefixes: []const []const u8, s: []const u8) bool {
 pub const AuthCache = struct {
     allocator: std.mem.Allocator,
     map: Map,
-    numbers: NumberSet,
+    numbers: NumberMap,
+    ranges: RangeMap,
     trunk_blocks: BlockMap,
     global_trunk_blocks: BlockSet,
     range_blocks: BlockSet,
@@ -90,7 +134,8 @@ pub const AuthCache = struct {
         return .{
             .allocator = allocator,
             .map = Map.init(allocator),
-            .numbers = NumberSet.init(allocator),
+            .numbers = NumberMap.init(allocator),
+            .ranges = RangeMap.init(allocator),
             .trunk_blocks = BlockMap.init(allocator),
             .global_trunk_blocks = BlockSet.init(allocator),
             .range_blocks = BlockSet.init(allocator),
@@ -101,7 +146,8 @@ pub const AuthCache = struct {
         self.mutex.lock();
         defer self.mutex.unlock();
         deinitMap(&self.map, self.allocator);
-        deinitNumberSet(&self.numbers, self.allocator);
+        deinitNumberMap(&self.numbers, self.allocator);
+        deinitRangeMap(&self.ranges, self.allocator);
         deinitBlockMap(&self.trunk_blocks, self.allocator);
         self.global_trunk_blocks.deinit(self.allocator);
         self.range_blocks.deinit(self.allocator);
@@ -110,7 +156,8 @@ pub const AuthCache = struct {
     pub fn swap(
         self: *AuthCache,
         new_map: *Map,
-        new_numbers: *NumberSet,
+        new_numbers: *NumberMap,
+        new_ranges: *RangeMap,
         new_trunk_blocks: *BlockMap,
         new_global_trunk_blocks: *BlockSet,
         new_range_blocks: *BlockSet,
@@ -118,19 +165,22 @@ pub const AuthCache = struct {
         self.mutex.lock();
         defer self.mutex.unlock();
         deinitMap(&self.map, self.allocator);
-        deinitNumberSet(&self.numbers, self.allocator);
+        deinitNumberMap(&self.numbers, self.allocator);
+        deinitRangeMap(&self.ranges, self.allocator);
         deinitBlockMap(&self.trunk_blocks, self.allocator);
         self.global_trunk_blocks.deinit(self.allocator);
         self.range_blocks.deinit(self.allocator);
 
         self.map = new_map.*;
         self.numbers = new_numbers.*;
+        self.ranges = new_ranges.*;
         self.trunk_blocks = new_trunk_blocks.*;
         self.global_trunk_blocks = new_global_trunk_blocks.*;
         self.range_blocks = new_range_blocks.*;
 
         new_map.* = Map.init(self.allocator);
-        new_numbers.* = NumberSet.init(self.allocator);
+        new_numbers.* = NumberMap.init(self.allocator);
+        new_ranges.* = RangeMap.init(self.allocator);
         new_trunk_blocks.* = BlockMap.init(self.allocator);
         new_global_trunk_blocks.* = BlockSet.init(self.allocator);
         new_range_blocks.* = BlockSet.init(self.allocator);
@@ -178,8 +228,6 @@ pub const AuthCache = struct {
             const stripped = b[c.prefix.len..];
 
             // Block-list scan — first hit wins, returns .blocked (SIP 503 cause 34).
-            // Order: global trunk blocks → per-trunk blocks for this credential's
-            // trunk → range blocks (flat: per-range + global merged).
             if (anyPrefixMatch(self.global_trunk_blocks.a_prefixes.items, a)) return .blocked;
             if (anyPrefixMatch(self.global_trunk_blocks.b_prefixes.items, stripped)) return .blocked;
             if (self.trunk_blocks.getPtr(c.trunk_id)) |bs| {
@@ -189,13 +237,31 @@ pub const AuthCache = struct {
             if (anyPrefixMatch(self.range_blocks.a_prefixes.items, a)) return .blocked;
             if (anyPrefixMatch(self.range_blocks.b_prefixes.items, stripped)) return .blocked;
 
-            // Stripped B-number must be a DID we own (at_voice_numbers).
-            // If absent → SIP 503 cause 34 (temporary; carrier may retry).
-            if (!self.numbers.contains(stripped)) return .inactive;
-            return .{ .active = .{ .stripped_b = stripped } };
+            // Stripped B-number must be a DID we own.
+            const range_id = self.numbers.get(stripped) orelse return .inactive;
+            var m: Match = .{
+                .stripped_b = stripped,
+                .range_id_buf = undefined,
+                .range_id_len = 0,
+                .trunk_id_buf = undefined,
+                .trunk_id_len = 0,
+            };
+            const rlen = @min(range_id.len, UUID_TEXT_LEN);
+            @memcpy(m.range_id_buf[0..rlen], range_id[0..rlen]);
+            m.range_id_len = @intCast(rlen);
+            const tlen = @min(c.trunk_id.len, UUID_TEXT_LEN);
+            @memcpy(m.trunk_id_buf[0..tlen], c.trunk_id[0..tlen]);
+            m.trunk_id_len = @intCast(tlen);
+            return .{ .active = m };
         }
         if (saw_inactive_match) return .inactive;
         return .unknown;
+    }
+
+    pub fn getRangeQuotas(self: *AuthCache, range_id: []const u8) ?RangeQuotas {
+        self.mutex.lock();
+        defer self.mutex.unlock();
+        return self.ranges.get(range_id);
     }
 
     pub fn rowCount(self: *AuthCache) usize {

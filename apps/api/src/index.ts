@@ -12,6 +12,7 @@ import { countriesRoutes } from "./routes/admin/countries";
 import { voiceNumberingPlansRoutes } from "./routes/admin/voice-numbering-plans";
 import { voiceRateSheetsRoutes } from "./routes/admin/voice-rate-sheets";
 import { voiceTrunksRoutes } from "./routes/admin/voice-trunks";
+import { startCdrListener } from "./services/cdr-listener";
 
 const PORT = Number(process.env.PORT ?? 3101);
 
@@ -46,9 +47,13 @@ const server = serve({ fetch: app.fetch, port: PORT }, ({ port }) => {
   console.log(`docs at http://localhost:${port}/docs`);
 });
 
+const cdrListener =
+  process.env.CDR_LISTENER_ENABLED === "false" ? null : startCdrListener();
+
 async function shutdown(signal: string) {
   console.log(`${signal} received, shutting down`);
   server.close();
+  if (cdrListener) await cdrListener.stop();
   await pool.end();
   process.exit(0);
 }

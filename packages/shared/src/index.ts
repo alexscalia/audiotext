@@ -813,6 +813,11 @@ export type MoneyRate = z.infer<typeof MoneyRate>;
 
 export const VoiceCdrSchema = z.object({
   id: z.string().uuid(),
+  atVoiceRangeId: z.string().uuid(),
+  voiceTrunkId: z.string().uuid(),
+  aNumber: z.string().min(1).max(64),
+  bNumber: z.string().min(1).max(64),
+  bNumberDialed: z.string().min(1).max(64),
   startedAt: z.string().datetime(),
   endedAt: z.string().datetime().nullable(),
   durationSeconds: z.number().int().nonnegative(),
@@ -830,6 +835,11 @@ export const VoiceCdrSchema = z.object({
 export type VoiceCdr = z.infer<typeof VoiceCdrSchema>;
 
 export const CreateVoiceCdrInput = z.object({
+  atVoiceRangeId: z.string().uuid(),
+  voiceTrunkId: z.string().uuid(),
+  aNumber: z.string().min(1).max(64),
+  bNumber: z.string().min(1).max(64),
+  bNumberDialed: z.string().min(1).max(64),
   startedAt: z.string().datetime(),
   endedAt: z.string().datetime().optional(),
   durationSeconds: z.number().int().nonnegative(),

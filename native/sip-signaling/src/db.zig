@@ -79,9 +79,10 @@ pub fn loadIntoCache(
     }
 
     // Active DIDs owned by us, AND whose owning user is active + not deleted.
-    // Stripped B-number must hit this set or signaling returns 503 cause 34.
+    // Stripped B-number must hit this map or signaling returns 503 cause 34.
+    // range_id is needed to scope per-range daily-minute quota enforcement.
     const numbers_sql =
-        \\SELECT n.number
+        \\SELECT n.number, n.at_voice_range_id::text
         \\FROM at_voice_numbers n
         \\JOIN users u ON u.id = n.user_id
         \\WHERE n.deleted_at IS NULL
@@ -97,17 +98,63 @@ pub fn loadIntoCache(
         return error.PostgresQueryFailed;
     }
 
-    var new_numbers = cache.NumberSet.init(allocator);
-    defer cache.deinitNumberSet(&new_numbers, allocator);
+    var new_numbers = cache.NumberMap.init(allocator);
+    defer cache.deinitNumberMap(&new_numbers, allocator);
 
     const nn = c.PQntuples(nres);
     var j: c_int = 0;
     while (j < nn) : (j += 1) {
         const num_raw = c.PQgetvalue(nres, j, 0);
         const num = std.mem.sliceTo(num_raw, 0);
+        const range_raw = c.PQgetvalue(nres, j, 1);
+        const range_id = std.mem.sliceTo(range_raw, 0);
         const gop = try new_numbers.getOrPut(num);
         if (!gop.found_existing) {
             gop.key_ptr.* = try allocator.dupe(u8, num);
+            gop.value_ptr.* = try allocator.dupe(u8, range_id);
+        }
+    }
+
+    // Per-range daily-minute quotas. NULL columns → -1 sentinel (unlimited).
+    // Caps stored as seconds for arithmetic against billsec.
+    const ranges_sql =
+        \\SELECT id::text,
+        \\       COALESCE(max_daily_total_minutes,        -1) * 60 AS total_sec,
+        \\       COALESCE(max_daily_minutes_a_number,     -1) * 60 AS a_sec,
+        \\       COALESCE(max_daily_minutes_b_number,     -1) * 60 AS b_sec,
+        \\       COALESCE(max_daily_minutes_a_to_b_number,-1) * 60 AS ab_sec
+        \\FROM at_voice_ranges
+        \\WHERE deleted_at IS NULL
+    ;
+    const rres = c.PQexec(conn, ranges_sql);
+    defer c.PQclear(rres);
+    if (c.PQresultStatus(rres) != c.PGRES_TUPLES_OK) {
+        const msg = std.mem.sliceTo(c.PQerrorMessage(conn), 0);
+        std.log.err("at_voice_ranges query failed: {s}", .{msg});
+        return error.PostgresQueryFailed;
+    }
+
+    var new_ranges = cache.RangeMap.init(allocator);
+    defer cache.deinitRangeMap(&new_ranges, allocator);
+
+    const rn = c.PQntuples(rres);
+    var rj: c_int = 0;
+    while (rj < rn) : (rj += 1) {
+        const id_raw = c.PQgetvalue(rres, rj, 0);
+        const id = std.mem.sliceTo(id_raw, 0);
+        const total = try parseI64(c.PQgetvalue(rres, rj, 1));
+        const a_sec = try parseI64(c.PQgetvalue(rres, rj, 2));
+        const b_sec = try parseI64(c.PQgetvalue(rres, rj, 3));
+        const ab_sec = try parseI64(c.PQgetvalue(rres, rj, 4));
+        const gop = try new_ranges.getOrPut(id);
+        if (!gop.found_existing) {
+            gop.key_ptr.* = try allocator.dupe(u8, id);
+            gop.value_ptr.* = .{
+                .max_total_sec = total,
+                .max_a_sec = a_sec,
+                .max_b_sec = b_sec,
+                .max_ab_sec = ab_sec,
+            };
         }
     }
 
@@ -203,12 +250,13 @@ pub fn loadIntoCache(
     }
 
     std.log.info(
-        "loaded {} trunk_ip rows ({} active, {} distinct IPs), {} active DIDs, {} per-trunk block sets, {} global trunk-block prefixes (a={} b={}), {} range-block prefixes (a={} b={})",
+        "loaded {} trunk_ip rows ({} active, {} distinct IPs), {} active DIDs, {} ranges, {} per-trunk block sets, {} global trunk-block prefixes (a={} b={}), {} range-block prefixes (a={} b={})",
         .{
             n,
             active_count,
             new_map.count(),
             new_numbers.count(),
+            new_ranges.count(),
             new_trunk_blocks.count(),
             new_global_trunk_blocks.a_prefixes.items.len + new_global_trunk_blocks.b_prefixes.items.len,
             new_global_trunk_blocks.a_prefixes.items.len,
@@ -218,5 +266,10 @@ pub fn loadIntoCache(
             new_range_blocks.b_prefixes.items.len,
         },
     );
-    target.swap(&new_map, &new_numbers, &new_trunk_blocks, &new_global_trunk_blocks, &new_range_blocks);
+    target.swap(&new_map, &new_numbers, &new_ranges, &new_trunk_blocks, &new_global_trunk_blocks, &new_range_blocks);
+}
+
+fn parseI64(raw: [*c]const u8) !i64 {
+    const s = std.mem.sliceTo(raw, 0);
+    return std.fmt.parseInt(i64, s, 10);
 }

@@ -1298,6 +1298,15 @@ export const voiceCdrs = pgTable(
   "voice_cdrs",
   {
     id: uuid("id").primaryKey().defaultRandom(),
+    atVoiceRangeId: uuid("at_voice_range_id")
+      .notNull()
+      .references(() => atVoiceRanges.id, { onDelete: "restrict" }),
+    voiceTrunkId: uuid("voice_trunk_id")
+      .notNull()
+      .references(() => voiceTrunks.id, { onDelete: "restrict" }),
+    aNumber: text("a_number").notNull(),
+    bNumber: text("b_number").notNull(),
+    bNumberDialed: text("b_number_dialed").notNull(),
     startedAt: timestamp("started_at", { withTimezone: true }).notNull(),
     endedAt: timestamp("ended_at", { withTimezone: true }),
     durationSeconds: integer("duration_seconds").notNull(),
@@ -1321,6 +1330,10 @@ export const voiceCdrs = pgTable(
     index("voice_cdrs_started_at_idx").on(t.startedAt),
     index("voice_cdrs_internal_route_idx").on(t.internalRouteName),
     index("voice_cdrs_deleted_at_idx").on(t.deletedAt),
+    index("voice_cdrs_range_started_idx").on(t.atVoiceRangeId, t.startedAt),
+    index("voice_cdrs_trunk_started_idx").on(t.voiceTrunkId, t.startedAt),
+    index("voice_cdrs_a_number_started_idx").on(t.aNumber, t.startedAt),
+    index("voice_cdrs_b_number_started_idx").on(t.bNumber, t.startedAt),
     check("voice_cdrs_duration_non_negative", sql`${t.durationSeconds} >= 0`),
     check(
       "voice_cdrs_ended_after_started",
