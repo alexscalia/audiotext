@@ -137,6 +137,7 @@ export async function seedAtVoiceNumbers(
         rows.push({
           atVoiceRangeId: range.id,
           number: candidate,
+          payoutTenure: Math.random() < 0.5 ? "weekly" : "long_term",
         });
         placed = true;
         break;
