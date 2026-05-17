@@ -22,11 +22,37 @@ const pool = new Pool({ connectionString: url });
 const db = drizzle(pool, { schema });
 
 const ADMIN_ROLE_NAME = "admin";
+const USER_ROLE_NAME = "user";
 const PASSWORD = "password";
+const USER_COUNT = 1000;
 
 const ADMINS = [
   { email: "admin001@admin.com", name: "Admin 001" },
   { email: "admin002@admin.com", name: "Admin 002" },
+];
+
+const FIRST_NAMES = [
+  "Marco", "Luca", "Giulia", "Sofia", "Alessandro", "Francesca", "Matteo", "Chiara",
+  "Andrea", "Elena", "Davide", "Martina", "Simone", "Giorgia", "Federico", "Anna",
+  "Riccardo", "Sara", "Lorenzo", "Valentina", "Tommaso", "Alice", "Stefano", "Laura",
+  "Paolo", "Beatrice", "Gabriele", "Cecilia", "Antonio", "Eleonora", "James", "Mary",
+  "John", "Patricia", "Robert", "Jennifer", "Michael", "Linda", "William", "Elizabeth",
+  "David", "Barbara", "Richard", "Susan", "Joseph", "Jessica", "Thomas", "Sarah",
+  "Charles", "Karen", "Christopher", "Nancy", "Daniel", "Lisa", "Matthew", "Betty",
+  "Anthony", "Helen", "Mark", "Sandra", "Donald", "Donna", "Steven", "Carol",
+  "Paul", "Ruth", "Andrew", "Sharon", "Joshua", "Michelle", "Kenneth", "Laura",
+  "Kevin", "Sarah", "Brian", "Kimberly", "George", "Deborah", "Edward", "Dorothy",
+];
+
+const LAST_NAMES = [
+  "Rossi", "Russo", "Ferrari", "Esposito", "Bianchi", "Romano", "Colombo", "Ricci",
+  "Marino", "Greco", "Bruno", "Gallo", "Conti", "De Luca", "Mancini", "Costa",
+  "Giordano", "Rizzo", "Lombardi", "Moretti", "Barbieri", "Fontana", "Santoro", "Mariani",
+  "Rinaldi", "Caruso", "Ferrara", "Galli", "Martini", "Leone",
+  "Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis",
+  "Rodriguez", "Martinez", "Hernandez", "Lopez", "Gonzalez", "Wilson", "Anderson", "Thomas",
+  "Taylor", "Moore", "Jackson", "Martin", "Lee", "Perez", "Thompson", "White",
+  "Harris", "Sanchez", "Clark", "Ramirez", "Lewis", "Robinson",
 ];
 
 async function ensureAdminRole(): Promise<string> {
@@ -53,6 +79,99 @@ async function ensureAdminRole(): Promise<string> {
     .returning({ id: schema.roles.id });
   if (!created) throw new Error("failed to create admin role");
   return created.id;
+}
+
+async function ensureUserRole(): Promise<string> {
+  const existing = await db
+    .select()
+    .from(schema.roles)
+    .where(
+      and(
+        eq(schema.roles.scope, "user"),
+        eq(schema.roles.name, USER_ROLE_NAME),
+        isNull(schema.roles.deletedAt),
+      ),
+    )
+    .limit(1);
+  if (existing[0]) return existing[0].id;
+
+  const [created] = await db
+    .insert(schema.roles)
+    .values({
+      scope: "user",
+      name: USER_ROLE_NAME,
+      description: "Standard user",
+    })
+    .returning({ id: schema.roles.id });
+  if (!created) throw new Error("failed to create user role");
+  return created.id;
+}
+
+function pick<T>(arr: readonly T[], i: number): T {
+  return arr[i % arr.length]!;
+}
+
+async function seedStandardUsers(
+  roleId: string,
+  passwordHash: string,
+  count: number,
+): Promise<void> {
+  const existing = await db
+    .select({ id: schema.users.id, email: schema.users.email })
+    .from(schema.users)
+    .where(isNull(schema.users.deletedAt));
+  const existingEmails = new Set(existing.map((u) => u.email));
+
+  const newUserRows: schema.NewUserRow[] = [];
+  for (let i = 1; i <= count; i += 1) {
+    const idStr = pad(i, 4);
+    const email = `user${idStr}@example.com`;
+    if (existingEmails.has(email)) continue;
+    const first = pick(FIRST_NAMES, i * 7 + 3);
+    const last = pick(LAST_NAMES, i * 13 + 5);
+    newUserRows.push({
+      email,
+      name: `${first} ${last}`,
+      emailVerified: true,
+    });
+  }
+
+  if (newUserRows.length === 0) {
+    console.log(`standard users already seeded (${count})`);
+    return;
+  }
+
+  const inserted: { id: string; email: string }[] = [];
+  const chunkSize = 200;
+  for (let i = 0; i < newUserRows.length; i += chunkSize) {
+    const chunk = newUserRows.slice(i, i + chunkSize);
+    const rows = await db
+      .insert(schema.users)
+      .values(chunk)
+      .returning({ id: schema.users.id, email: schema.users.email });
+    inserted.push(...rows);
+  }
+  console.log(`standard users created: ${inserted.length}`);
+
+  const accountRows: schema.NewAccountRow[] = inserted.map((u) => ({
+    userId: u.id,
+    accountId: u.id,
+    providerId: "credential",
+    password: passwordHash,
+  }));
+  for (let i = 0; i < accountRows.length; i += chunkSize) {
+    await db.insert(schema.accounts).values(accountRows.slice(i, i + chunkSize));
+  }
+  console.log(`standard user credentials created: ${accountRows.length}`);
+
+  const roleRows: (typeof schema.userRoles.$inferInsert)[] = inserted.map((u) => ({
+    userId: u.id,
+    roleId,
+  }));
+  for (let i = 0; i < roleRows.length; i += chunkSize) {
+    await db.insert(schema.userRoles).values(roleRows.slice(i, i + chunkSize));
+  }
+  console.log(`standard user role assignments created: ${roleRows.length}`);
 }
 
 async function seedAdmin(
@@ -683,6 +802,8 @@ async function main() {
   for (const admin of ADMINS) {
     await seedAdmin(admin.email, admin.name, roleId, passwordHash);
   }
+  const userRoleId = await ensureUserRole();
+  await seedStandardUsers(userRoleId, passwordHash, USER_COUNT);
   const allCarriers = [
     ...CARRIERS,
     ...buildGeneratedCarriers(100, CARRIERS.length),
