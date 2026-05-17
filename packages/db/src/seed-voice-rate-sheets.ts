@@ -166,7 +166,7 @@ async function ensureRateSheet(
   name: string,
   planId: string,
   currency: Currency,
-): Promise<string> {
+): Promise<{ id: string; created: boolean }> {
   const [existing] = await db
     .select()
     .from(schema.voiceRateSheets)
@@ -178,9 +178,7 @@ async function ensureRateSheet(
     )
     .limit(1);
   if (existing) {
-    throw new Error(
-      `rate sheet "${name}" already exists; clean up before re-seeding`,
-    );
+    return { id: existing.id, created: false };
   }
 
   const [created] = await db
@@ -193,7 +191,7 @@ async function ensureRateSheet(
     })
     .returning({ id: schema.voiceRateSheets.id });
   if (!created) throw new Error(`failed to create rate sheet ${name}`);
-  return created.id;
+  return { id: created.id, created: true };
 }
 
 async function getDestinationId(
@@ -228,7 +226,16 @@ async function seedSheet(
   rateMultiplier: number,
 ): Promise<void> {
   const planId = await getPlanId(db, planName);
-  const sheetId = await ensureRateSheet(db, sheetName, planId, currency);
+  const { id: sheetId, created } = await ensureRateSheet(
+    db,
+    sheetName,
+    planId,
+    currency,
+  );
+  if (!created) {
+    console.log(`rate sheet "${sheetName}" already seeded — skipping lines`);
+    return;
+  }
 
   let inserted = 0;
   for (const bucket of buckets) {
