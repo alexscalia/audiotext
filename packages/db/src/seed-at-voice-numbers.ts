@@ -1,4 +1,4 @@
-import { and, inArray, isNull } from "drizzle-orm";
+import { and, eq, inArray, isNull } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "./schema.js";
 import type { NewAtVoiceNumberRow } from "./schema.js";
@@ -26,16 +26,76 @@ function randomDigits(n: number): string {
   return out;
 }
 
+async function fetchStandardUserIds(
+  db: NodePgDatabase<typeof schema>,
+): Promise<string[]> {
+  const rows = await db
+    .select({ id: schema.users.id })
+    .from(schema.users)
+    .innerJoin(schema.userRoles, eq(schema.userRoles.userId, schema.users.id))
+    .innerJoin(schema.roles, eq(schema.roles.id, schema.userRoles.roleId))
+    .where(
+      and(
+        eq(schema.roles.scope, "user"),
+        isNull(schema.users.deletedAt),
+        isNull(schema.userRoles.deletedAt),
+        isNull(schema.roles.deletedAt),
+      ),
+    );
+  return rows.map((r) => r.id);
+}
+
+async function backfillMissingUserIds(
+  db: NodePgDatabase<typeof schema>,
+): Promise<void> {
+  const orphans = await db
+    .select({ id: schema.atVoiceNumbers.id })
+    .from(schema.atVoiceNumbers)
+    .where(
+      and(
+        isNull(schema.atVoiceNumbers.userId),
+        isNull(schema.atVoiceNumbers.deletedAt),
+      ),
+    );
+  if (orphans.length === 0) return;
+
+  const userIds = await fetchStandardUserIds(db);
+  if (userIds.length === 0) {
+    console.log(
+      `at_voice_numbers backfill skipped: ${orphans.length} orphans, no standard users`,
+    );
+    return;
+  }
+
+  const UPDATE_CHUNK = 500;
+  for (let i = 0; i < orphans.length; i += UPDATE_CHUNK) {
+    const chunk = orphans.slice(i, i + UPDATE_CHUNK);
+    await db.transaction(async (tx) => {
+      for (const row of chunk) {
+        await tx
+          .update(schema.atVoiceNumbers)
+          .set({ userId: pickRandom(userIds) })
+          .where(eq(schema.atVoiceNumbers.id, row.id));
+      }
+    });
+  }
+  console.log(
+    `at_voice_numbers backfilled userId on ${orphans.length} existing rows`,
+  );
+}
+
 export async function seedAtVoiceNumbers(
   db: NodePgDatabase<typeof schema>,
 ): Promise<void> {
+  await backfillMissingUserIds(db);
+
   const existing = await db
     .select({ id: schema.atVoiceNumbers.id })
     .from(schema.atVoiceNumbers)
     .where(isNull(schema.atVoiceNumbers.deletedAt))
     .limit(1);
   if (existing[0]) {
-    console.log("at_voice_numbers already seeded — skipping");
+    console.log("at_voice_numbers already seeded — skipping generation");
     return;
   }
 
@@ -49,6 +109,12 @@ export async function seedAtVoiceNumbers(
     .where(isNull(schema.atVoiceRanges.deletedAt));
   if (ranges.length === 0) {
     console.log("no at_voice_ranges found — skipping at_voice_numbers");
+    return;
+  }
+
+  const userIds = await fetchStandardUserIds(db);
+  if (userIds.length === 0) {
+    console.log("no standard users found — skipping at_voice_numbers");
     return;
   }
 
@@ -138,6 +204,7 @@ export async function seedAtVoiceNumbers(
           atVoiceRangeId: range.id,
           number: candidate,
           payoutTenure: Math.random() < 0.5 ? "weekly" : "long_term",
+          userId: pickRandom(userIds),
         });
         placed = true;
         break;
