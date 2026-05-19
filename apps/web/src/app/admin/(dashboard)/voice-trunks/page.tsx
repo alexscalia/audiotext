@@ -26,7 +26,6 @@ import { IconToggle } from "@/components/ui/icon-toggle";
 import { useDebouncedValue, useListData } from "@/hooks/useListData";
 import { useStatusFilter } from "@/hooks/useStatusFilter";
 import { api } from "@/lib/api-client";
-import { VoiceTrunkIpsModal } from "@/components/features/voice-trunks/voice-trunk-ips-modal";
 import { VoiceTrunkFormModal } from "@/components/features/voice-trunks/voice-trunk-form-modal";
 
 type Trunk = VoiceTrunkListItem;
@@ -60,7 +59,6 @@ export default function VoiceTrunksPage() {
   const [view, setView] = useState<View>("active");
   const [carrierInput, setCarrierInput] = useState("");
   const [ipInput, setIpInput] = useState("");
-  const [ipsTrunk, setIpsTrunk] = useState<Trunk | null>(null);
   const [formState, setFormState] = useState<
     | { mode: "create" }
     | { mode: "edit"; trunk: VoiceTrunkDetail }
@@ -235,7 +233,6 @@ export default function VoiceTrunksPage() {
           <StandardRowActions
             itemName={row.original.name}
             t={tActions}
-            onView={() => setIpsTrunk(row.original)}
             onRestore={() => {
               if (window.confirm(tActions("confirmRestore"))) {
                 restoreMutation.mutate(row.original.id);
@@ -246,7 +243,7 @@ export default function VoiceTrunksPage() {
           <StandardRowActions
             itemName={row.original.name}
             t={tActions}
-            onView={() => setIpsTrunk(row.original)}
+            viewHref={`/admin/voice-trunks/${row.original.id}`}
             onEdit={() => openEdit.mutate(row.original.id)}
             onRemove={() => {
               if (window.confirm(tActions("confirmTrash"))) {
@@ -328,13 +325,6 @@ export default function VoiceTrunksPage() {
           noResults: t("noResults"),
           ...makePaginationLabels(t),
         }}
-      />
-
-      <VoiceTrunkIpsModal
-        open={!!ipsTrunk}
-        trunk={ipsTrunk}
-        onClose={() => setIpsTrunk(null)}
-        onMutate={list.refresh}
       />
 
       <VoiceTrunkFormModal

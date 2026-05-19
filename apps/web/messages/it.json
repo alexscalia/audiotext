@@ -13,6 +13,7 @@
     "rateSheetsVoice": "Listini voce",
     "rateSheetVoiceDetail": "Listino voce",
     "voiceTrunks": "Trunk voce",
+    "voiceTrunkDetail": "Trunk voce",
     "carriers": "Carrier"
   },
   "Login": {
@@ -244,7 +245,8 @@
       "confirmTrash": "Spostare nel cestino?",
       "confirmRestore": "Ripristinare questo trunk?",
       "restoreFailed": "Ripristino non riuscito.",
-      "duplicateNameOnRestore": "Impossibile ripristinare: un altro trunk attivo usa questo nome."
+      "duplicateNameOnRestore": "Impossibile ripristinare: un altro trunk attivo usa questo nome.",
+      "manageIps": "{count, plural, =0 {Gestisci IP} one {Gestisci IP (#)} other {Gestisci IP (#)}}"
     },
     "form": {
       "titleCreate": "Nuovo voice trunk",
@@ -384,6 +386,77 @@
         "duplicate": "Questa combinazione IP + prefisso esiste già per questo trunk",
         "ownedByOtherCarrier": "L'IP {ip} è già usato dal carrier '{carrier}'. Un IP può appartenere a un solo carrier.",
         "saveError": "Impossibile salvare. Riprova."
+      }
+    },
+    "detail": {
+      "backToTrunks": "Torna ai trunk voce",
+      "notFound": "Trunk non trovato.",
+      "sections": {
+        "identity": "Identità",
+        "sip": "Configurazione SIP",
+        "capacity": "Capacità e limiti"
+      },
+      "fields": {
+        "carrier": "Carrier",
+        "rateSheet": "Rate sheet",
+        "status": "Stato",
+        "direction": "Direzione",
+        "protocol": "Protocollo",
+        "transport": "Trasporto",
+        "authType": "Tipo auth",
+        "username": "Utente",
+        "password": "Password",
+        "realm": "Realm",
+        "fromUser": "Utente From",
+        "fromDomain": "Dominio From",
+        "register": "Register",
+        "expiresSeconds": "Scadenza (s)",
+        "qualifySeconds": "Qualify (s)",
+        "codecs": "Codec",
+        "dtmfMode": "Modalità DTMF",
+        "natMode": "Modalità NAT",
+        "maxChannels": "Canali max",
+        "cpsLimit": "Limite CPS",
+        "maxCallDuration": "Durata max chiamata (s)",
+        "capacityLines": "Linee di capacità",
+        "rtpTimeout": "Timeout RTP (s)",
+        "ipCount": "IP autorizzati"
+      },
+      "values": {
+        "direction": {
+          "inbound": "Ingresso",
+          "outbound": "Uscita",
+          "both": "Entrambe"
+        },
+        "protocol": {
+          "sip": "SIP",
+          "sips": "SIPS"
+        },
+        "transport": {
+          "udp": "UDP",
+          "tcp": "TCP",
+          "tls": "TLS"
+        },
+        "authType": {
+          "ip": "IP",
+          "userpass": "Utente + password",
+          "both": "Entrambi"
+        },
+        "dtmfMode": {
+          "rfc2833": "RFC 2833",
+          "inband": "Inband",
+          "info": "SIP INFO"
+        },
+        "natMode": {
+          "no": "No",
+          "yes": "Sì",
+          "force_rport": "Force rport",
+          "comedia": "Comedia"
+        },
+        "registerEnabled": {
+          "true": "Abilitato",
+          "false": "Disabilitato"
+        }
       }
     }
   },
