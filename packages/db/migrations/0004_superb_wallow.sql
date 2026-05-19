@@ -1,0 +1,1 @@
+ALTER TABLE "voice_trunks" ADD CONSTRAINT "voice_trunks_active_requires_rate_sheet" CHECK ("voice_trunks"."status" <> 'active' OR "voice_trunks"."voice_rate_sheet_id" IS NOT NULL);

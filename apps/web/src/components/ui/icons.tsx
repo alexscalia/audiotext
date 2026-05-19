@@ -138,6 +138,44 @@ export function CheckIcon({ className = BASE }: IconProps = {}) {
   );
 }
 
+export function ListIcon({ className = BASE }: IconProps = {}) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function RestoreIcon({ className = BASE }: IconProps = {}) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        d="M9 14 4 9l5-5M4 9h9a7 7 0 0 1 7 7v0a7 7 0 0 1-7 7H8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function XIcon({ className = BASE }: IconProps = {}) {
   return (
     <svg

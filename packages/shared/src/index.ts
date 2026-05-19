@@ -632,18 +632,16 @@ export const PositiveInt = z.number().int().positive();
 
 const voiceTrunkBaseFields = {
   carrierId: z.string().uuid(),
+  voiceRateSheetId: z.string().uuid().nullable().optional(),
   name: z.string().min(1).max(128),
   status: VoiceTrunkStatusEnum.default("active"),
   direction: VoiceTrunkDirectionEnum.default("both"),
   protocol: VoiceTrunkProtocolEnum.default("sip"),
   transport: VoiceTrunkTransportEnum.default("udp"),
-  host: z.string().min(1).max(255),
-  port: Port.default(5060),
   realm: z.string().max(255).optional(),
   fromUser: z.string().max(128).optional(),
   fromDomain: z.string().max(255).optional(),
   registerEnabled: z.boolean().default(false),
-  proxy: z.string().max(255).optional(),
   expiresSeconds: PositiveInt.optional(),
   qualifySeconds: PositiveInt.optional(),
   maxChannels: PositiveInt.optional(),
@@ -660,13 +658,12 @@ const voiceTrunkBaseFields = {
 export const VoiceTrunkSchema = z.object({
   id: z.string().uuid(),
   carrierId: z.string().uuid(),
+  voiceRateSheetId: z.string().uuid().nullable(),
   name: z.string(),
   status: VoiceTrunkStatusEnum,
   direction: VoiceTrunkDirectionEnum,
   protocol: VoiceTrunkProtocolEnum,
   transport: VoiceTrunkTransportEnum,
-  host: z.string(),
-  port: Port,
   authType: VoiceTrunkAuthTypeEnum,
   username: z.string().nullable(),
   passwordEncrypted: z.string().nullable(),
@@ -674,7 +671,6 @@ export const VoiceTrunkSchema = z.object({
   fromUser: z.string().nullable(),
   fromDomain: z.string().nullable(),
   registerEnabled: z.boolean(),
-  proxy: z.string().nullable(),
   expiresSeconds: z.number().int().nullable(),
   qualifySeconds: z.number().int().nullable(),
   maxChannels: z.number().int().nullable(),
@@ -692,37 +688,56 @@ export const VoiceTrunkSchema = z.object({
 });
 export type VoiceTrunk = z.infer<typeof VoiceTrunkSchema>;
 
-export const CreateVoiceTrunkInput = z.discriminatedUnion("authType", [
-  z.object({
-    authType: z.literal("ip"),
-    ...voiceTrunkBaseFields,
-  }),
-  z.object({
-    authType: z.literal("userpass"),
-    username: z.string().min(1).max(128),
-    password: z.string().min(1).max(256),
-    ...voiceTrunkBaseFields,
-  }),
-  z.object({
-    authType: z.literal("both"),
-    username: z.string().min(1).max(128),
-    password: z.string().min(1).max(256),
-    ...voiceTrunkBaseFields,
-  }),
-]);
+export const VoiceTrunkDetailSchema = VoiceTrunkSchema.omit({
+  passwordEncrypted: true,
+  deletedAt: true,
+}).extend({
+  hasPassword: z.boolean(),
+  carrierName: z.string(),
+  voiceRateSheetName: z.string().nullable(),
+  ipCount: z.number().int().nonnegative(),
+  ips: z.array(z.string()),
+});
+export type VoiceTrunkDetail = z.infer<typeof VoiceTrunkDetailSchema>;
+
+export const CreateVoiceTrunkInput = z
+  .discriminatedUnion("authType", [
+    z.object({
+      authType: z.literal("ip"),
+      ...voiceTrunkBaseFields,
+    }),
+    z.object({
+      authType: z.literal("userpass"),
+      username: z.string().min(1).max(128),
+      password: z.string().min(1).max(256),
+      ...voiceTrunkBaseFields,
+    }),
+    z.object({
+      authType: z.literal("both"),
+      username: z.string().min(1).max(128),
+      password: z.string().min(1).max(256),
+      ...voiceTrunkBaseFields,
+    }),
+  ])
+  .superRefine((v, ctx) => {
+    if (v.status === "active" && !v.voiceRateSheetId) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["voiceRateSheetId"],
+        message: "rate_sheet_required",
+      });
+    }
+  });
 export type CreateVoiceTrunkInput = z.infer<typeof CreateVoiceTrunkInput>;
 
-export const UpdateVoiceTrunkInput = z.object({
-  ...Object.fromEntries(
-    Object.entries(voiceTrunkBaseFields).map(([k, v]) => [
-      k,
-      (v as z.ZodType).optional(),
-    ]),
-  ),
-  authType: VoiceTrunkAuthTypeEnum.optional(),
-  username: z.string().min(1).max(128).nullable().optional(),
-  password: z.string().min(1).max(256).optional(),
-});
+export const UpdateVoiceTrunkInput = z
+  .object(voiceTrunkBaseFields)
+  .partial()
+  .extend({
+    authType: VoiceTrunkAuthTypeEnum.optional(),
+    username: z.string().min(1).max(128).nullable().optional(),
+    password: z.string().min(1).max(256).optional(),
+  });
 export type UpdateVoiceTrunkInput = z.infer<typeof UpdateVoiceTrunkInput>;
 
 export const VoiceTrunkListItemSchema = z.object({
@@ -737,6 +752,7 @@ export const VoiceTrunkListItemSchema = z.object({
   ips: z.array(z.string()),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
+  deletedAt: z.string().datetime().nullable(),
 });
 export type VoiceTrunkListItem = z.infer<typeof VoiceTrunkListItemSchema>;
 
@@ -767,6 +783,7 @@ export const VoiceTrunkListQuerySchema = z.object({
     .pipe(z.array(VoiceTrunkStatusEnum)),
   sortBy: VoiceTrunkListSortByEnum.default("name"),
   sortDir: VoiceTrunkListSortDirEnum.default("asc"),
+  view: z.enum(["active", "trashed"]).default("active"),
 });
 export type VoiceTrunkListQuery = z.infer<typeof VoiceTrunkListQuerySchema>;
 

@@ -113,7 +113,7 @@
     "actions": {
       "view": "Visualizza",
       "edit": "Modifica",
-      "delete": "Elimina",
+      "trash": "Cestina",
       "openWebsite": "Apri il sito di {name}",
       "open": "Apri menu azioni",
       "cancel": "Annulla",
@@ -188,7 +188,7 @@
     "actions": {
       "view": "Visualizza",
       "edit": "Modifica",
-      "delete": "Elimina",
+      "trash": "Cestina",
       "open": "Apri menu azioni"
     },
     "pagination": {
@@ -203,6 +203,11 @@
     "title": "Trunk voce",
     "subtitle": "Trunk SIP collegati ai carrier",
     "search": "Cerca trunk",
+    "view": {
+      "ariaLabel": "Cambia vista",
+      "active": "Attivi",
+      "trashed": "Cestino"
+    },
     "filters": {
       "carrier": "Filtra per carrier",
       "ip": "Filtra per IP",
@@ -220,6 +225,7 @@
       "rateSheet": "Listino",
       "ips": "IP",
       "status": "Stato",
+      "deletedAt": "Eliminato il",
       "actions": "Azioni"
     },
     "status": {
@@ -230,8 +236,88 @@
     "actions": {
       "view": "IP",
       "edit": "Modifica",
-      "delete": "Elimina",
-      "open": "Apri menu azioni"
+      "trash": "Cestina",
+      "restore": "Ripristina",
+      "open": "Apri menu azioni",
+      "close": "Chiudi",
+      "new": "Nuovo trunk",
+      "confirmTrash": "Spostare nel cestino?",
+      "confirmRestore": "Ripristinare questo trunk?",
+      "restoreFailed": "Ripristino non riuscito.",
+      "duplicateNameOnRestore": "Impossibile ripristinare: un altro trunk attivo usa questo nome."
+    },
+    "form": {
+      "titleCreate": "Nuovo voice trunk",
+      "titleEdit": "Modifica voice trunk",
+      "subtitle": "Configura endpoint del carrier, autenticazione, capacità e media.",
+      "save": "Salva",
+      "saving": "Salvataggio…",
+      "cancel": "Annulla",
+      "changePassword": "Cambia password",
+      "addCodec": "Aggiungi",
+      "removeCodec": "Rimuovi codec {codec}",
+      "sections": {
+        "identity": "Identità",
+        "auth": "Autenticazione",
+        "signaling": "Segnalazione",
+        "capacity": "Capacità",
+        "media": "Media"
+      },
+      "fields": {
+        "carrier": "Carrier",
+        "carrierPlaceholder": "Seleziona un carrier",
+        "voiceRateSheet": "Rate sheet",
+        "voiceRateSheetNone": "— Nessun rate sheet —",
+        "name": "Nome",
+        "status": "Stato",
+        "direction": "Direzione",
+        "directionValues": {
+          "inbound": "Ingresso",
+          "outbound": "Uscita",
+          "both": "Entrambe"
+        },
+        "protocol": "Protocollo",
+        "transport": "Trasporto",
+        "authType": "Tipo auth",
+        "authTypeValues": {
+          "ip": "IP",
+          "userpass": "Utente + password",
+          "both": "Entrambi"
+        },
+        "username": "Utente",
+        "password": "Password",
+        "realm": "Realm",
+        "fromUser": "Utente From",
+        "fromDomain": "Dominio From",
+        "registerEnabled": "Invia REGISTER",
+        "expiresSeconds": "Scadenza (secondi)",
+        "qualifySeconds": "Qualify (secondi)",
+        "maxChannels": "Canali max",
+        "cpsLimit": "Limite CPS",
+        "maxCallDurationSeconds": "Durata max chiamata (secondi)",
+        "capacityLines": "Linee di capacità",
+        "rtpTimeoutSeconds": "Timeout RTP (secondi)",
+        "codecs": "Codec",
+        "codecsPlaceholder": "es. pcma",
+        "codecsEmpty": "Nessun codec",
+        "dtmfMode": "Modalità DTMF",
+        "natMode": "Modalità NAT"
+      },
+      "errors": {
+        "required": "Obbligatorio",
+        "tooLong": "Troppo lungo",
+        "intRequired": "Deve essere un intero positivo",
+        "minOne": "Deve essere almeno 1",
+        "invalidCodec": "I codec devono essere alfanumerici minuscoli (2–16 caratteri)",
+        "duplicate_name": "Esiste già un trunk con questo nome per questo carrier.",
+        "carrier_not_found": "Carrier non trovato.",
+        "rate_sheet_not_found": "Rate sheet non trovato.",
+        "auth_incomplete": "Utente e password sono obbligatori per questo tipo di auth.",
+        "rate_sheet_required": "Il rate sheet è obbligatorio quando lo stato è Attivo.",
+        "not_found": "Trunk non trovato.",
+        "no_changes": "Nessuna modifica da salvare.",
+        "saveError": "Salvataggio non riuscito. Riprova."
+      }
     },
     "pagination": {
       "prev": "Precedente",
@@ -256,10 +342,10 @@
       "saving": "Salvataggio…",
       "edit": "Modifica",
       "editRange": "Modifica range",
-      "delete": "Elimina",
-      "deleteRange": "Elimina range",
+      "trash": "Cestina",
+      "trashRange": "Cestina range",
       "cancel": "Annulla",
-      "confirmDelete": "Confermi?",
+      "confirmTrash": "Spostare nel cestino?",
       "expand": "Espandi range",
       "collapse": "Comprimi range",
       "empty": "Nessun IP configurato.",
@@ -329,7 +415,7 @@
     "actions": {
       "view": "Visualizza",
       "edit": "Modifica",
-      "delete": "Elimina",
+      "trash": "Cestina",
       "open": "Apri menu azioni",
       "cancel": "Annulla",
       "close": "Chiudi"

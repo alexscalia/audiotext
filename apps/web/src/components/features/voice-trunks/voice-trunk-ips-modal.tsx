@@ -707,8 +707,8 @@ function IpRow({ trunkId, ip, onChanged, tStatus, tErrors, t }: IpRowProps) {
           <Button
             variant={confirmDelete ? "danger" : "ghost"}
             size="sm"
-            aria-label={confirmDelete ? t("confirmDelete") : t("delete")}
-            title={confirmDelete ? t("confirmDelete") : t("delete")}
+            aria-label={confirmDelete ? t("confirmTrash") : t("trash")}
+            title={confirmDelete ? t("confirmTrash") : t("trash")}
             onClick={onDeleteClick}
             disabled={deleteMutation.isPending}
           >
@@ -972,8 +972,8 @@ function CidrGroupRow({
           <Button
             variant={confirmDelete ? "danger" : "ghost"}
             size="sm"
-            aria-label={confirmDelete ? t("confirmDelete") : t("deleteRange")}
-            title={confirmDelete ? t("confirmDelete") : t("deleteRange")}
+            aria-label={confirmDelete ? t("confirmTrash") : t("trashRange")}
+            title={confirmDelete ? t("confirmTrash") : t("trashRange")}
             onClick={onDeleteClick}
             disabled={deleteMutation.isPending}
           >

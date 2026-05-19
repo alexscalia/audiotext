@@ -113,7 +113,7 @@
     "actions": {
       "view": "View",
       "edit": "Edit",
-      "delete": "Delete",
+      "trash": "Trash",
       "openWebsite": "Open {name} website",
       "open": "Open actions menu",
       "cancel": "Cancel",
@@ -188,7 +188,7 @@
     "actions": {
       "view": "View",
       "edit": "Edit",
-      "delete": "Delete",
+      "trash": "Trash",
       "open": "Open actions menu"
     },
     "pagination": {
@@ -203,6 +203,11 @@
     "title": "Voice trunks",
     "subtitle": "SIP trunks connected to carriers",
     "search": "Search trunks",
+    "view": {
+      "ariaLabel": "Switch view",
+      "active": "Active",
+      "trashed": "Trashed"
+    },
     "filters": {
       "carrier": "Filter by carrier",
       "ip": "Filter by IP",
@@ -220,6 +225,7 @@
       "rateSheet": "Rate Sheet",
       "ips": "IPs",
       "status": "Status",
+      "deletedAt": "Deleted at",
       "actions": "Actions"
     },
     "status": {
@@ -230,8 +236,88 @@
     "actions": {
       "view": "IPs",
       "edit": "Edit",
-      "delete": "Delete",
-      "open": "Open actions menu"
+      "trash": "Trash",
+      "restore": "Restore",
+      "open": "Open actions menu",
+      "close": "Close",
+      "new": "New trunk",
+      "confirmTrash": "Move to trash?",
+      "confirmRestore": "Restore this trunk?",
+      "restoreFailed": "Restore failed.",
+      "duplicateNameOnRestore": "Cannot restore: another active trunk uses this name."
+    },
+    "form": {
+      "titleCreate": "New voice trunk",
+      "titleEdit": "Edit voice trunk",
+      "subtitle": "Configure carrier endpoint, auth, capacity and media settings.",
+      "save": "Save",
+      "saving": "Saving…",
+      "cancel": "Cancel",
+      "changePassword": "Change password",
+      "addCodec": "Add",
+      "removeCodec": "Remove codec {codec}",
+      "sections": {
+        "identity": "Identity",
+        "auth": "Authentication",
+        "signaling": "Signaling",
+        "capacity": "Capacity",
+        "media": "Media"
+      },
+      "fields": {
+        "carrier": "Carrier",
+        "carrierPlaceholder": "Select a carrier",
+        "voiceRateSheet": "Rate sheet",
+        "voiceRateSheetNone": "— No rate sheet —",
+        "name": "Name",
+        "status": "Status",
+        "direction": "Direction",
+        "directionValues": {
+          "inbound": "Inbound",
+          "outbound": "Outbound",
+          "both": "Both"
+        },
+        "protocol": "Protocol",
+        "transport": "Transport",
+        "authType": "Auth type",
+        "authTypeValues": {
+          "ip": "IP",
+          "userpass": "Username + password",
+          "both": "Both"
+        },
+        "username": "Username",
+        "password": "Password",
+        "realm": "Realm",
+        "fromUser": "From user",
+        "fromDomain": "From domain",
+        "registerEnabled": "Send REGISTER",
+        "expiresSeconds": "Expires (seconds)",
+        "qualifySeconds": "Qualify (seconds)",
+        "maxChannels": "Max channels",
+        "cpsLimit": "CPS limit",
+        "maxCallDurationSeconds": "Max call duration (seconds)",
+        "capacityLines": "Capacity lines",
+        "rtpTimeoutSeconds": "RTP timeout (seconds)",
+        "codecs": "Codecs",
+        "codecsPlaceholder": "e.g. pcma",
+        "codecsEmpty": "No codecs",
+        "dtmfMode": "DTMF mode",
+        "natMode": "NAT mode"
+      },
+      "errors": {
+        "required": "Required",
+        "tooLong": "Too long",
+        "intRequired": "Must be a positive integer",
+        "minOne": "Must be at least 1",
+        "invalidCodec": "Codecs must be lowercase alphanumeric (2–16 chars)",
+        "duplicate_name": "A trunk with this name already exists for this carrier.",
+        "carrier_not_found": "Carrier not found.",
+        "rate_sheet_not_found": "Rate sheet not found.",
+        "auth_incomplete": "Username and password are required for this auth type.",
+        "rate_sheet_required": "A rate sheet is required when status is Active.",
+        "not_found": "Trunk not found.",
+        "no_changes": "No changes to save.",
+        "saveError": "Could not save. Try again."
+      }
     },
     "pagination": {
       "prev": "Previous",
@@ -256,10 +342,10 @@
       "saving": "Saving…",
       "edit": "Edit",
       "editRange": "Edit range",
-      "delete": "Delete",
-      "deleteRange": "Delete range",
+      "trash": "Trash",
+      "trashRange": "Trash range",
       "cancel": "Cancel",
-      "confirmDelete": "Confirm?",
+      "confirmTrash": "Move to trash?",
       "expand": "Expand range",
       "collapse": "Collapse range",
       "empty": "No IPs configured.",
@@ -329,7 +415,7 @@
     "actions": {
       "view": "View",
       "edit": "Edit",
-      "delete": "Delete",
+      "trash": "Trash",
       "open": "Open actions menu",
       "cancel": "Cancel",
       "close": "Close"

@@ -9,6 +9,7 @@ import type {
   NewCarrierRow,
   NewVoiceTrunkRow,
 } from "./schema.js";
+import { encryptSecret } from "./crypto.js";
 import { seedAtVoiceNumbers } from "./seed-at-voice-numbers.js";
 import { seedAtVoiceRanges } from "./seed-at-voice-ranges.js";
 import { seedCountries } from "./seed-countries.js";
@@ -573,6 +574,7 @@ function buildCarrierTrunks(
   carrierId: string,
   carrierName: string,
   index: number,
+  rateSheetIds: string[],
 ): NewVoiceTrunkRow[] {
   const trunkCount = (index % 2) + 1;
   const trunks: NewVoiceTrunkRow[] = [];
@@ -581,12 +583,18 @@ function buildCarrierTrunks(
       (index + t) % 3
     ] as TrunkAuthType;
     const needsCreds = authType === "userpass" || authType === "both";
+    const status = ["active", "active", "testing", "inactive"][
+      (index + t) % 4
+    ] as schema.VoiceTrunkStatus;
+    const rateSheetId =
+      rateSheetIds.length > 0
+        ? rateSheetIds[(index + t) % rateSheetIds.length]!
+        : null;
     trunks.push({
       carrierId,
+      voiceRateSheetId: status === "active" ? rateSheetId : rateSheetId,
       name: `${carrierName}-trunk-${pad(t, 2)}`,
-      status: ["active", "active", "testing", "inactive"][
-        (index + t) % 4
-      ] as schema.VoiceTrunkStatus,
+      status,
       direction: ["both", "outbound", "inbound"][
         (index + t) % 3
       ] as schema.VoiceTrunkDirection,
@@ -596,12 +604,13 @@ function buildCarrierTrunks(
       ] as schema.VoiceTrunkTransport,
       authType,
       username: needsCreds ? `${carrierName}-u${t}` : null,
-      passwordEncrypted: needsCreds ? `seed-encrypted-${carrierName}-${t}` : null,
+      passwordEncrypted: needsCreds
+        ? encryptSecret(`seed-${carrierName}-${t}`)
+        : null,
       realm: needsCreds ? `${carrierName}.sip` : null,
       fromUser: `${carrierName}-from`,
       fromDomain: `${carrierName}.sip`,
       registerEnabled: needsCreds && t === 1,
-      proxy: `sip.${carrierName}.example.com:5060`,
       expiresSeconds: 3600,
       qualifySeconds: 60,
       maxChannels: 100 + index,
@@ -609,7 +618,7 @@ function buildCarrierTrunks(
       maxCallDurationSeconds: 3600 + (index % 4) * 1800,
       capacityLines: 50 + index,
       rtpTimeoutSeconds: [30, 60, 90, 120][index % 4]!,
-      codecs: ["PCMA", "PCMU", "G729"],
+      codecs: ["pcma", "pcmu", "g729"],
       dtmfMode: "rfc2833",
       natMode: "no",
       metadata: { seed: true },
@@ -675,8 +684,14 @@ async function seedCarrierTrunks(
   carrierId: string,
   carrierName: string,
   index: number,
+  rateSheetIds: string[],
 ): Promise<void> {
-  for (const trunk of buildCarrierTrunks(carrierId, carrierName, index)) {
+  for (const trunk of buildCarrierTrunks(
+    carrierId,
+    carrierName,
+    index,
+    rateSheetIds,
+  )) {
     const existing = await db
       .select()
       .from(schema.voiceTrunks)
@@ -804,6 +819,16 @@ async function main() {
   }
   const userRoleId = await ensureUserRole();
   await seedStandardUsers(userRoleId, passwordHash, USER_COUNT);
+  await seedCountries(db);
+  await seedVoiceNumberingPlan(db);
+  await seedVoiceRateSheets(db);
+
+  const availableRateSheets = await db
+    .select({ id: schema.voiceRateSheets.id })
+    .from(schema.voiceRateSheets)
+    .where(isNull(schema.voiceRateSheets.deletedAt));
+  const rateSheetIds = availableRateSheets.map((r) => r.id);
+
   const allCarriers = [
     ...CARRIERS,
     ...buildGeneratedCarriers(100, CARRIERS.length),
@@ -811,12 +836,14 @@ async function main() {
   for (let i = 0; i < allCarriers.length; i += 1) {
     const fixture = allCarriers[i]!;
     const carrierId = await seedCarrier(fixture);
-    await seedCarrierTrunks(carrierId, fixture.carrier.name, i + 1);
+    await seedCarrierTrunks(
+      carrierId,
+      fixture.carrier.name,
+      i + 1,
+      rateSheetIds,
+    );
   }
   await seedAdminChatContacts();
-  await seedCountries(db);
-  await seedVoiceNumberingPlan(db);
-  await seedVoiceRateSheets(db);
   await seedAtVoiceRanges(db);
   await seedAtVoiceNumbers(db);
   console.log("seed complete");

@@ -896,7 +896,6 @@ export const voiceTrunks = pgTable(
     fromUser: text("from_user"),
     fromDomain: text("from_domain"),
     registerEnabled: boolean("register_enabled").notNull().default(false),
-    proxy: text("proxy"),
     expiresSeconds: integer("expires_seconds"),
     qualifySeconds: integer("qualify_seconds"),
     maxChannels: integer("max_channels"),
@@ -951,6 +950,10 @@ export const voiceTrunks = pgTable(
     check(
       "voice_trunks_rtp_timeout_positive",
       sql`${t.rtpTimeoutSeconds} IS NULL OR ${t.rtpTimeoutSeconds} > 0`,
+    ),
+    check(
+      "voice_trunks_active_requires_rate_sheet",
+      sql`${t.status} <> 'active' OR ${t.voiceRateSheetId} IS NOT NULL`,
     ),
   ],
 );
