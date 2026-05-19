@@ -228,7 +228,7 @@
       "testing": "Testing"
     },
     "actions": {
-      "view": "View",
+      "view": "IPs",
       "edit": "Edit",
       "delete": "Delete",
       "open": "Open actions menu"
@@ -240,7 +240,66 @@
       "pageOf": "Page {page} of {total}",
       "showing": "Showing {from}–{to} of {total}"
     },
-    "noRateSheet": "—"
+    "noRateSheet": "—",
+    "ipsModal": {
+      "subtitle": "Manage IP authorizations for this trunk",
+      "columns": {
+        "ip": "IP / CIDR",
+        "prefix": "Prefix",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "add": "Add IP",
+      "addCidr": "Add CIDR",
+      "adding": "Adding…",
+      "save": "Save",
+      "saving": "Saving…",
+      "edit": "Edit",
+      "editRange": "Edit range",
+      "delete": "Delete",
+      "deleteRange": "Delete range",
+      "cancel": "Cancel",
+      "confirmDelete": "Confirm?",
+      "expand": "Expand range",
+      "collapse": "Collapse range",
+      "empty": "No IPs configured.",
+      "loading": "Loading IPs…",
+      "loadError": "Could not load IPs.",
+      "memberCount": "{count, plural, one {# IP} other {# IPs}}",
+      "statusMixed": "Mixed",
+      "prefixMixed": "Mixed",
+      "prefixSharedPlaceholder": "Applies to all members",
+      "rangeEditHint": "Changes apply to all {count} members.",
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "tabs": {
+        "all": "All",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "filterByStatus": "Filter by status",
+      "fields": {
+        "ip": "IP address",
+        "ipPlaceholder": "1.2.3.4 or 2001:db8::1",
+        "ipOrCidr": "IP address or CIDR",
+        "ipOrCidrPlaceholder": "1.2.3.4 or 1.2.3.0/24 or 2001:db8::/120",
+        "prefix": "Prefix",
+        "prefixPlaceholder": "Optional",
+        "status": "Status"
+      },
+      "errors": {
+        "required": "Required",
+        "ipInvalid": "Must be a valid IPv4 or IPv6 address",
+        "cidrInvalid": "Not a valid CIDR (e.g. 1.2.3.0/24)",
+        "cidrTooLarge": "CIDR too large (max 256 hosts)",
+        "tooLong": "Too long",
+        "duplicate": "This IP + prefix combination already exists for this trunk",
+        "ownedByOtherCarrier": "IP {ip} is already used by carrier '{carrier}'. An IP can only belong to one carrier.",
+        "saveError": "Could not save. Try again."
+      }
+    }
   },
   "Carriers": {
     "title": "Carriers",

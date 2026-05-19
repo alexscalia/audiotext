@@ -778,6 +778,108 @@ export const VoiceTrunkListResponseSchema = z.object({
 });
 export type VoiceTrunkListResponse = z.infer<typeof VoiceTrunkListResponseSchema>;
 
+export const VoiceTrunkIpStatusEnum = z.enum(["active", "inactive"]);
+export type VoiceTrunkIpStatus = z.infer<typeof VoiceTrunkIpStatusEnum>;
+
+export const IpAddress = z.union([z.ipv4(), z.ipv6()]);
+
+export const VoiceTrunkIpSchema = z.object({
+  id: z.string().uuid(),
+  voiceTrunkId: z.string().uuid(),
+  ip: z.string(),
+  prefix: z.string().nullable(),
+  sourceCidr: z.string().nullable(),
+  status: VoiceTrunkIpStatusEnum,
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+});
+export type VoiceTrunkIp = z.infer<typeof VoiceTrunkIpSchema>;
+
+const CidrString = z
+  .string()
+  .trim()
+  .regex(/^[0-9a-fA-F.:]+\/\d{1,3}$/, "must look like 1.2.3.0/24 or 2001:db8::/120");
+
+export const CreateVoiceTrunkIpInput = z.discriminatedUnion("kind", [
+  z.object({
+    kind: z.literal("single"),
+    ip: IpAddress,
+    prefix: z.string().trim().min(1).max(64).optional(),
+    status: VoiceTrunkIpStatusEnum.default("active"),
+  }),
+  z.object({
+    kind: z.literal("cidr"),
+    cidr: CidrString,
+    prefix: z.string().trim().min(1).max(64).optional(),
+    status: VoiceTrunkIpStatusEnum.default("active"),
+  }),
+]);
+export type CreateVoiceTrunkIpInput = z.infer<typeof CreateVoiceTrunkIpInput>;
+
+export const CreateVoiceTrunkIpCidrResultSchema = z.object({
+  kind: z.literal("cidr"),
+  canonicalCidr: z.string(),
+  inserted: z.number().int().nonnegative(),
+  skipped: z.number().int().nonnegative(),
+});
+export type CreateVoiceTrunkIpCidrResult = z.infer<
+  typeof CreateVoiceTrunkIpCidrResultSchema
+>;
+
+export const CreateVoiceTrunkIpResponseSchema = z.union([
+  VoiceTrunkIpSchema,
+  CreateVoiceTrunkIpCidrResultSchema,
+]);
+
+export const UpdateVoiceTrunkIpInput = z.object({
+  prefix: z.string().trim().min(1).max(64).nullable().optional(),
+  status: VoiceTrunkIpStatusEnum.optional(),
+});
+export type UpdateVoiceTrunkIpInput = z.infer<typeof UpdateVoiceTrunkIpInput>;
+
+export const UpdateVoiceTrunkIpRangeInput = z.object({
+  sourceCidr: CidrString,
+  prefix: z.string().trim().min(1).max(64).nullable().optional(),
+  status: VoiceTrunkIpStatusEnum.optional(),
+});
+export type UpdateVoiceTrunkIpRangeInput = z.infer<
+  typeof UpdateVoiceTrunkIpRangeInput
+>;
+
+export const DeleteVoiceTrunkIpRangeInput = z.object({
+  sourceCidr: CidrString,
+});
+export type DeleteVoiceTrunkIpRangeInput = z.infer<
+  typeof DeleteVoiceTrunkIpRangeInput
+>;
+
+export const VoiceTrunkIpRangeMutationResultSchema = z.object({
+  affected: z.number().int().nonnegative(),
+});
+export type VoiceTrunkIpRangeMutationResult = z.infer<
+  typeof VoiceTrunkIpRangeMutationResultSchema
+>;
+
+export const VoiceTrunkIpListResponseSchema = z.object({
+  ips: z.array(VoiceTrunkIpSchema),
+});
+export type VoiceTrunkIpListResponse = z.infer<typeof VoiceTrunkIpListResponseSchema>;
+
+export const VoiceTrunkIpConflictResponseSchema = z.object({
+  error: z.enum([
+    "duplicate_ip",
+    "ip_owned_by_other_carrier",
+    "cidr_too_large",
+    "cidr_invalid",
+  ]),
+  existingCarrierName: z.string().optional(),
+  conflictingIp: z.string().optional(),
+  detail: z.string().optional(),
+});
+export type VoiceTrunkIpConflictResponse = z.infer<
+  typeof VoiceTrunkIpConflictResponseSchema
+>;
+
 export const AtVoiceNumberDigits = z
   .string()
   .min(3)

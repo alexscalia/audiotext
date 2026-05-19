@@ -53,7 +53,7 @@
     "numberingSms": "SMS",
     "rateSheets": "Listini",
     "rateSheetsVoice": "Voce",
-    "interconnections": "Interconnections",
+    "interconnections": "Interconnessioni",
     "trunks": "Trunk voce",
     "carriers": "Carrier",
     "audiotextVoice": "Audiotext Voce",
@@ -228,7 +228,7 @@
       "testing": "In test"
     },
     "actions": {
-      "view": "Visualizza",
+      "view": "IP",
       "edit": "Modifica",
       "delete": "Elimina",
       "open": "Apri menu azioni"
@@ -240,7 +240,66 @@
       "pageOf": "Pagina {page} di {total}",
       "showing": "Mostrate {from}–{to} di {total}"
     },
-    "noRateSheet": "—"
+    "noRateSheet": "—",
+    "ipsModal": {
+      "subtitle": "Gestisci le autorizzazioni IP di questo trunk",
+      "columns": {
+        "ip": "IP / CIDR",
+        "prefix": "Prefisso",
+        "status": "Stato",
+        "actions": "Azioni"
+      },
+      "add": "Aggiungi IP",
+      "addCidr": "Aggiungi CIDR",
+      "adding": "Aggiunta in corso…",
+      "save": "Salva",
+      "saving": "Salvataggio…",
+      "edit": "Modifica",
+      "editRange": "Modifica range",
+      "delete": "Elimina",
+      "deleteRange": "Elimina range",
+      "cancel": "Annulla",
+      "confirmDelete": "Confermi?",
+      "expand": "Espandi range",
+      "collapse": "Comprimi range",
+      "empty": "Nessun IP configurato.",
+      "loading": "Caricamento IP…",
+      "loadError": "Impossibile caricare gli IP.",
+      "memberCount": "{count, plural, one {# IP} other {# IP}}",
+      "statusMixed": "Misto",
+      "prefixMixed": "Misto",
+      "prefixSharedPlaceholder": "Applica a tutti i membri",
+      "rangeEditHint": "Le modifiche si applicano a tutti i {count} membri.",
+      "status": {
+        "active": "Attivo",
+        "inactive": "Inattivo"
+      },
+      "tabs": {
+        "all": "Tutti",
+        "active": "Attivi",
+        "inactive": "Inattivi"
+      },
+      "filterByStatus": "Filtra per stato",
+      "fields": {
+        "ip": "Indirizzo IP",
+        "ipPlaceholder": "1.2.3.4 oppure 2001:db8::1",
+        "ipOrCidr": "Indirizzo IP o CIDR",
+        "ipOrCidrPlaceholder": "1.2.3.4 oppure 1.2.3.0/24 oppure 2001:db8::/120",
+        "prefix": "Prefisso",
+        "prefixPlaceholder": "Opzionale",
+        "status": "Stato"
+      },
+      "errors": {
+        "required": "Obbligatorio",
+        "ipInvalid": "Deve essere un indirizzo IPv4 o IPv6 valido",
+        "cidrInvalid": "CIDR non valido (es. 1.2.3.0/24)",
+        "cidrTooLarge": "CIDR troppo grande (max 256 host)",
+        "tooLong": "Troppo lungo",
+        "duplicate": "Questa combinazione IP + prefisso esiste già per questo trunk",
+        "ownedByOtherCarrier": "L'IP {ip} è già usato dal carrier '{carrier}'. Un IP può appartenere a un solo carrier.",
+        "saveError": "Impossibile salvare. Riprova."
+      }
+    }
   },
   "Carriers": {
     "title": "Carrier",

@@ -21,6 +21,7 @@ import {
 import { useDebouncedValue, useListData } from "@/hooks/useListData";
 import { useStatusFilter } from "@/hooks/useStatusFilter";
 import { api } from "@/lib/api-client";
+import { VoiceTrunkIpsModal } from "@/components/features/voice-trunks/voice-trunk-ips-modal";
 
 type Trunk = VoiceTrunkListItem;
 
@@ -49,6 +50,7 @@ export default function VoiceTrunksPage() {
   const tStatus = useTranslations("VoiceTrunks.status");
   const [carrierInput, setCarrierInput] = useState("");
   const [ipInput, setIpInput] = useState("");
+  const [ipsTrunk, setIpsTrunk] = useState<Trunk | null>(null);
 
   const carrier = useDebouncedValue(carrierInput.trim());
   const ip = useDebouncedValue(ipInput.trim());
@@ -151,7 +153,11 @@ export default function VoiceTrunksPage() {
         id: "actions",
         header: t("columns.actions"),
         cell: ({ row }) => (
-          <StandardRowActions itemName={row.original.name} t={tActions} />
+          <StandardRowActions
+            itemName={row.original.name}
+            t={tActions}
+            onView={() => setIpsTrunk(row.original)}
+          />
         ),
         enableSorting: false,
         meta: { align: "right" },
@@ -197,6 +203,13 @@ export default function VoiceTrunksPage() {
           noResults: t("noResults"),
           ...makePaginationLabels(t),
         }}
+      />
+
+      <VoiceTrunkIpsModal
+        open={!!ipsTrunk}
+        trunk={ipsTrunk}
+        onClose={() => setIpsTrunk(null)}
+        onMutate={list.refresh}
       />
     </div>
   );

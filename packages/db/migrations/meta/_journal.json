@@ -8,6 +8,20 @@
       "when": 1779000842708,
       "tag": "0000_clumsy_talon",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1779100000000,
+      "tag": "0001_voice_trunk_ips_carrier_guard",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1779200000000,
+      "tag": "0002_voice_trunk_ips_source_cidr",
+      "breakpoints": true
     }
   ]
 }

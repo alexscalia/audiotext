@@ -986,6 +986,7 @@ export const voiceTrunkIps = pgTable(
       .references(() => voiceTrunks.id, { onDelete: "cascade" }),
     ip: text("ip").notNull(),
     prefix: text("prefix"),
+    sourceCidr: text("source_cidr"),
     status: voiceTrunkIpStatus("status").notNull().default("active"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
@@ -1003,6 +1004,9 @@ export const voiceTrunkIps = pgTable(
     index("voice_trunk_ips_trunk_idx").on(t.voiceTrunkId),
     index("voice_trunk_ips_status_idx").on(t.status),
     index("voice_trunk_ips_deleted_at_idx").on(t.deletedAt),
+    index("voice_trunk_ips_source_cidr_idx")
+      .on(t.voiceTrunkId, t.sourceCidr)
+      .where(sql`${t.deletedAt} IS NULL`),
   ],
 );
 
